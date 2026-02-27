@@ -62,8 +62,8 @@ module serializer #(
             // STEP 2: Transmission in progress
             else begin
                 if (baud_edge) begin
-                    o_serial_data <= shift_reg[DATA_WIDTH-1];
-                    shift_reg     <= shift_reg << 1;
+                    o_serial_data <= shift_reg[0];
+                    shift_reg     <= shift_reg >> 1;
 
                     if (bit_count == (DATA_WIDTH - 1)) begin
                         o_valid <= 1'b0; //End of transmission of the current byte
