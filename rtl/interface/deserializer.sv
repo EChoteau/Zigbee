@@ -44,8 +44,7 @@ module deserializer #(
         end 
         else begin
             if (baud_edge) begin
-                // (MSB first logic)
-                shift_reg <= {shift_reg[DATA_WIDTH-2:0], i_serial_data};
+                shift_reg <= {i_serial_data, shift_reg[DATA_WIDTH-1:1]}; //LSB first
             
                 if (bit_count == (DATA_WIDTH - 1)) begin
                     o_para_data      <= {shift_reg[DATA_WIDTH-2:0], i_serial_data};
