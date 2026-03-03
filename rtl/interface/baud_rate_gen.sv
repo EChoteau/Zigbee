@@ -30,7 +30,7 @@ module baud_rate_gen #(
             if (i_enable) begin
                 
                 // Si on atteint la valeur limite (i_div_val)
-                if (s_counter >= i_div_val) begin
+                if (s_counter == i_div_val) begin
                     s_counter <= '0;       // On remet à zéro
                     o_tick    <= 1'b1;     // On génère le "Tick" pendant 1 cycle
                 end else begin
