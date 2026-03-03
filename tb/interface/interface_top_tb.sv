@@ -49,6 +49,12 @@ module interface_top_tb;
     always #10 i_clk = ~i_clk;
 
 `include "include/apb_tasks.svh"
+`include "include/reset_tasks.svh"
+`include "tests/tc_t0_reset_smoke.svh"
+`include "tests/tc_t1_apb_regs.svh"
+`include "tests/tc_t2_tx_nominal.svh"
+`include "tests/tc_t3_rx_nominal.svh"
+`include "tests/test_plan_smoke.svh"
 
     initial begin
         i_clk              = 1'b0;
@@ -61,14 +67,7 @@ module interface_top_tb;
         i_serial_rx        = 1'b1;
         i_cdr_sample_valid = 1'b0;
 
-        repeat (5) @(posedge i_clk);
-        i_rst_n = 1'b1;
-
-        // TODO: Ajouter ici les scénarios de tests
-        // - APB config
-        // - Push TX FIFO + émission
-        // - Injection RX via i_serial_rx + i_cdr_sample_valid
-        // - Overflow/underrun + clear_err
+        run_test_plan_smoke();
 
         repeat (20) @(posedge i_clk);
         $finish;
