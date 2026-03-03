@@ -1,8 +1,10 @@
 module tb_cordic_top();
-    parameter WIDTH = 16;
-    parameter NUM_STEPS = 16;
+    parameter WIDTH = 8;
+    parameter WIDTH_PHASE = WIDTH + 2;
+    parameter NUM_STEPS = 8;
     
-    logic signed [WIDTH-1:0] I_in, Q_in, Phase_out;
+    logic signed [WIDTH-1:0] I_in, Q_in;
+    logic signed [WIDTH_PHASE-1:0] Phase_out;
 
     cordic_top #(
         .WIDTH(WIDTH), 

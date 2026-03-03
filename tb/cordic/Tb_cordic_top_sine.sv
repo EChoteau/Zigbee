@@ -3,8 +3,9 @@
 module tb_cordic_top_sine;
 
     // Parameters
-    parameter int WIDTH = 16;
-    parameter int NUM_STEPS = 6;
+    parameter WIDTH = 8;
+    parameter WIDTH_PHASE = WIDTH + 2;
+    parameter NUM_STEPS = 8;
     parameter real PI = 3.14159265359;
 
     // Clock
@@ -15,14 +16,15 @@ module tb_cordic_top_sine;
     logic signed [WIDTH-1:0] Q_in_reg;
 
     // DUT Output (Registered)
-    logic signed [WIDTH-1:0] Phase_out_reg;
+    logic signed [WIDTH_PHASE-1:0] Phase_out_reg;
     
     // --- Fix: Declare raw output wire here ---
-    wire signed [WIDTH-1:0] Phase_out_raw;
+    wire signed [WIDTH_PHASE-1:0] Phase_out_raw;
 
     // --- Instantiate the Device Under Test (DUT) ---
     cordic_top #(
-        .WIDTH(WIDTH),
+        .WIDTH_IN(WIDTH),
+        .WIDTH_PHASE(WIDTH_PHASE),
         .NUM_STEPS(NUM_STEPS)
     ) dut (
         .I_in(I_in_reg),
@@ -40,8 +42,8 @@ module tb_cordic_top_sine;
     real angle;
     real i_val, q_val;
     
-    // Fixed-point scaling factor (Assuming signed 16-bit, max value is 32767)
-    localparam real SCALE = 32767.0; 
+    // Fixed-point scaling factor
+    localparam real SCALE = 2**(WIDTH-1)-1; 
 
     initial begin
         // Initialize

@@ -1,6 +1,6 @@
 import math
 
-def generate_cordic_table(width=16, num_steps=16):
+def generate_cordic_table(width, num_steps):
     # Scaling factor: PI maps to 2^(WIDTH-1)
     # This assumes a signed representation where 180 degrees is 0x8000...
     scale_factor = (2**(width - 1)) / math.pi
@@ -23,4 +23,4 @@ def generate_cordic_table(width=16, num_steps=16):
     print("};")
 
 if __name__ == "__main__":
-    generate_cordic_table(width=16, num_steps=16)
+    generate_cordic_table(width=10, num_steps=8)

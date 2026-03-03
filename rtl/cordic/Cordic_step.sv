@@ -1,14 +1,15 @@
 module cordic_step #(
     parameter int WIDTH = 16,
+    parameter int WIDTH_PHASE = WIDTH + 2,
     parameter int ITER  = 0,
-    parameter signed [WIDTH-1:0] ANGLE_VAL = 16'h1234 
+    parameter signed [WIDTH_PHASE-1:0] ANGLE_VAL = 16'h1234 
 )(
     input  logic signed [WIDTH-1:0] I_in,
     input  logic signed [WIDTH-1:0] Q_in,
-    input  logic signed [WIDTH-1:0] PHASE_in,
+    input  logic signed [WIDTH_PHASE-1:0] PHASE_in,
     output logic signed [WIDTH-1:0] I_next,
     output logic signed [WIDTH-1:0] Q_next,
-    output logic signed [WIDTH-1:0] PHASE_next
+    output logic signed [WIDTH_PHASE-1:0] PHASE_next
 );
 
     // Décalages arithmétiques
