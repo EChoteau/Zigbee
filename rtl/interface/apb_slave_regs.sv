@@ -136,27 +136,29 @@ module apb_slave_regs #(
     always_comb begin
         // Valeur par défaut pour empêcher l'inférence de Latch 
         o_prdata = '0; 
-        
-        case (i_paddr)
-            ADDR_DATA: begin
-                o_prdata[7:0] = i_rx_data; // Donnée venant de la FIFO RX
-            end
-            ADDR_STATUS: begin
-                // Construction du tableau de bord (Status Reg)
-                o_prdata[0] = i_rx_empty;
-                o_prdata[1] = i_tx_full;
-                o_prdata[2] = i_tx_busy;
-                o_prdata[3] = i_rx_ovf_err;
-                o_prdata[4] = i_tx_und_err;
-            end
-            ADDR_CONTROL: begin
-                o_prdata[4:0] = s_reg_control; // Relecture de la conf actuelle
-            end
-            ADDR_DIVIDER: begin
-                o_prdata[7:0] = s_reg_divider; // Relecture de la vitesse
-            end
-            default: o_prdata = '0;
-        endcase
+
+        if (i_psel) begin
+            case (i_paddr)
+                ADDR_DATA: begin
+                    o_prdata[7:0] = i_rx_data; // Donnée venant de la FIFO RX
+                end
+                ADDR_STATUS: begin
+                    // Construction du tableau de bord (Status Reg)
+                    o_prdata[0] = i_rx_empty;
+                    o_prdata[1] = i_tx_full;
+                    o_prdata[2] = i_tx_busy;
+                    o_prdata[3] = i_rx_ovf_err;
+                    o_prdata[4] = i_tx_und_err;
+                end
+                ADDR_CONTROL: begin
+                    o_prdata[4:0] = s_reg_control; // Relecture de la conf actuelle
+                end
+                ADDR_DIVIDER: begin
+                    o_prdata[7:0] = s_reg_divider; // Relecture de la vitesse
+                end
+                default: o_prdata = '0;
+            endcase
+        end
     end
 
 endmodule
