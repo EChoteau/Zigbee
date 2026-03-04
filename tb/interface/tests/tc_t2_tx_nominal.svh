@@ -6,7 +6,7 @@ task automatic run_tc_t2_tx_nominal;
 begin
     $display("[T2] TX nominal test start");
 
-    apb_write(ADDR_DIVIDER, 8'h00);
+    apb_write(ADDR_DIVIDER, 8'h02);
     apb_write(ADDR_CONTROL, 8'h09); // global_en=1, tx_start=1
 
     apb_write(ADDR_DATA, 8'hA5);
@@ -14,7 +14,6 @@ begin
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b1) && (timeout_cycles < 50)) begin
         @(posedge i_clk);
-        #1;
         timeout_cycles++;
     end
     assert (o_tx_valid === 1'b1)
@@ -25,7 +24,6 @@ begin
     timeout_cycles = 0;
     while (bit_idx < 8) begin
         @(posedge i_clk);
-        #1;
         if (o_tx_sample_tick) begin
             tx_captured[bit_idx] = o_serial_tx;
             bit_idx++;
@@ -41,7 +39,6 @@ begin
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b0) && (timeout_cycles < 20)) begin
         @(posedge i_clk);
-        #1;
         timeout_cycles++;
     end
     assert (o_tx_valid === 1'b0)
