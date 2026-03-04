@@ -28,6 +28,7 @@ module interface_top #(
 	logic                  w_tx_fifo_full;
 	logic                  w_tx_fifo_pop;
 	logic [DATA_WIDTH-1:0] w_tx_fifo_q;
+	logic                  w_tx_fifo_rd_valid;
 	logic                  w_tx_fifo_empty;
 
 	logic [DATA_WIDTH-1:0] w_rx_fifo_data;
@@ -35,6 +36,7 @@ module interface_top #(
 	logic                  w_rx_fifo_full;
 	logic                  w_rx_fifo_pop;
 	logic [DATA_WIDTH-1:0] w_rx_fifo_q;
+	logic                  w_rx_fifo_rd_valid;
 	logic                  w_rx_fifo_empty;
 
 	logic                  w_global_en;
@@ -125,6 +127,7 @@ module interface_top #(
 		.o_full(w_tx_fifo_full),
 		.i_rd_en(w_tx_fifo_pop),
 		.o_data(w_tx_fifo_q),
+		.o_rd_valid(w_tx_fifo_rd_valid),
 		.o_empty(w_tx_fifo_empty)
 	);
 
@@ -139,6 +142,7 @@ module interface_top #(
 		.o_full(w_rx_fifo_full),
 		.i_rd_en(w_rx_fifo_pop),
 		.o_data(w_rx_fifo_q),
+		.o_rd_valid(w_rx_fifo_rd_valid),
 		.o_empty(w_rx_fifo_empty)
 	);
 
@@ -150,6 +154,7 @@ module interface_top #(
 		.baud_rate_en(w_tx_tick),
 		.i_data(w_tx_fifo_q),
 		.i_fifo_empty(w_tx_fifo_empty | ~w_tx_path_en),
+		.i_fifo_data_valid(w_tx_fifo_rd_valid),
 		.o_fifo_pop(w_tx_fifo_pop),
 		.o_serial_data(o_serial_tx),
 		.o_valid(w_tx_busy)

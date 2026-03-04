@@ -9,6 +9,7 @@ module serializer #(
         //Parallel input interface
         input logic [DATA_WIDTH-1:0] i_data,
         input logic i_fifo_empty,
+        input logic i_fifo_data_valid,
         output logic o_fifo_pop,
 
         //Serial output interface
@@ -40,10 +41,12 @@ module serializer #(
             // STEP 1: Ready to load
             if (!o_valid) begin
                 if (s_pop_pending) begin
-                    shift_reg <= i_data;
-                    bit_count <= '0;
-                    s_pop_pending <= 1'b0;
-                    o_valid   <= 1'b1;
+                    if (i_fifo_data_valid) begin
+                        shift_reg <= i_data;
+                        bit_count <= '0;
+                        s_pop_pending <= 1'b0;
+                        o_valid   <= 1'b1;
+                    end
                 end else if (!i_fifo_empty) begin
                     o_fifo_pop <= 1'b1;
                     s_pop_pending <= 1'b1;
