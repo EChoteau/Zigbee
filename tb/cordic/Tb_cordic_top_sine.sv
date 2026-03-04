@@ -20,6 +20,7 @@ module tb_cordic_top_sine;
     
     // --- Fix: Declare raw output wire here ---
     wire signed [WIDTH_PHASE-1:0] Phase_out_raw;
+    assign Phase_out_reg = Phase_out_raw;
 
     // --- Instantiate the Device Under Test (DUT) ---
     cordic_top #(
