@@ -14,6 +14,7 @@ begin
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b1) && (timeout_cycles < 50)) begin
         @(posedge i_clk);
+        #1;
         timeout_cycles++;
     end
     assert (o_tx_valid === 1'b1)
@@ -24,7 +25,8 @@ begin
     timeout_cycles = 0;
     while (bit_idx < 8) begin
         @(posedge i_clk);
-        if (dut.w_tx_tick) begin
+        #1;
+        if (o_tx_sample_tick) begin
             tx_captured[bit_idx] = o_serial_tx;
             bit_idx++;
         end
@@ -39,6 +41,7 @@ begin
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b0) && (timeout_cycles < 20)) begin
         @(posedge i_clk);
+        #1;
         timeout_cycles++;
     end
     assert (o_tx_valid === 1'b0)
