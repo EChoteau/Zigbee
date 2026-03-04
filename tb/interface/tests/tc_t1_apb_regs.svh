@@ -3,12 +3,12 @@ task automatic run_tc_t1_apb_regs;
 begin
     $display("[T1] APB registers test start");
 
-    apb_write(ADDR_DIVIDER, 32'h0000_0031);
+    apb_write(ADDR_DIVIDER, 8'h31);
     apb_read(ADDR_DIVIDER, rd);
     assert (rd[7:0] == 8'h31)
         else $fatal(1, "[T1] DIVIDER write/read mismatch. got=%0h expected=31", rd[7:0]);
 
-    apb_write(ADDR_CONTROL, 32'h0000_001F);
+    apb_write(ADDR_CONTROL, 8'h1F);
     repeat (2) @(posedge i_clk);
     apb_read(ADDR_CONTROL, rd);
     assert (rd[4:0] == 5'b11001)

@@ -1,7 +1,7 @@
 package tb_pkg;
 
     localparam int APB_ADDR_WIDTH = 8;
-    localparam int APB_DATA_WIDTH = 32;
+    localparam int APB_DATA_WIDTH = 8;
     localparam int DATA_WIDTH     = 8;
     localparam int FIFO_DEPTH     = 8;
     localparam int DIV_WIDTH      = 8;
