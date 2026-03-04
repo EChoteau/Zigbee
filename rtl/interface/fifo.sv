@@ -13,6 +13,7 @@ module fifo #(
         //Read interface
         input logic i_rd_en,
         output logic [DATA_WIDTH-1:0] o_data,
+        output logic o_rd_valid,
         output logic o_empty
     );
 
@@ -30,7 +31,9 @@ module fifo #(
             wr_ptr <= 0;
             rd_ptr <= 0;
             o_data <= 0;
+            o_rd_valid <= 1'b0;
         end else begin
+            o_rd_valid <= 1'b0;
             // Write operation
             if (i_wr_en && !o_full) begin
                 mem[wr_ptr[ADDR_WIDTH-1:0]] <= i_data;
@@ -40,6 +43,7 @@ module fifo #(
             if (i_rd_en && !o_empty) begin
                 o_data <= mem[rd_ptr[ADDR_WIDTH-1:0]];
                 rd_ptr <= rd_ptr + 1;
+                o_rd_valid <= 1'b1;
             end
         end
     end
