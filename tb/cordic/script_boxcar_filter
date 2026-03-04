@@ -1,8 +1,0 @@
-vdel -all -lib lib_RTL
-vlib lib_RTL
-vmap lib_RTL lib_RTL
-
-vlog -sv rtl/cordic/*.sv -work lib_RTL +acc
-vlog -sv tb/cordic/*.sv 	-work lib_RTL +acc
-
-vsim -voptargs=+acc lib_RTL.tb_boxcar_filter -L c35_CORELIB -do "add wave -r *; run -all"
