@@ -3,6 +3,9 @@ begin
     $display("[PLAN] Start smoke/basic plan");
 
     apply_reset(5);
+    run_tc_t0_baud_gen_only();
+
+    apply_reset(5);
     run_tc_t0_reset_smoke();
 
     apply_reset(5);

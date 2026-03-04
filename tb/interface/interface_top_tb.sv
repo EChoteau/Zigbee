@@ -21,6 +21,10 @@ module interface_top_tb;
     logic                      o_serial_tx;
     logic                      o_tx_valid;
 
+    logic                      tb_baud_enable;
+    logic [DIV_WIDTH-1:0]      tb_baud_div;
+    logic                      tb_baud_tick;
+
     logic [APB_DATA_WIDTH-1:0] rdata;
 
     interface_top #(
@@ -46,10 +50,21 @@ module interface_top_tb;
         .o_tx_valid(o_tx_valid)
     );
 
+    baud_rate_gen #(
+        .DIV_WIDTH(DIV_WIDTH)
+    ) u_baud_rate_gen_tb (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_enable(tb_baud_enable),
+        .i_div_val(tb_baud_div),
+        .o_tick(tb_baud_tick)
+    );
+
     always #10 i_clk = ~i_clk;
 
 `include "include/apb_tasks.svh"
 `include "include/reset_tasks.svh"
+`include "tests/tc_t0_baud_gen_only.svh"
 `include "tests/tc_t0_reset_smoke.svh"
 `include "tests/tc_t1_apb_regs.svh"
 `include "tests/tc_t2_tx_nominal.svh"
@@ -66,6 +81,8 @@ module interface_top_tb;
         i_pwdata           = '0;
         i_serial_rx        = 1'b1;
         i_cdr_sample_valid = 1'b0;
+        tb_baud_enable     = 1'b0;
+        tb_baud_div        = '0;
 
         run_test_plan_smoke();
 

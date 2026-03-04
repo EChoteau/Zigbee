@@ -6,10 +6,10 @@ task automatic run_tc_t2_tx_nominal;
 begin
     $display("[T2] TX nominal test start");
 
-    apb_write(ADDR_DIVIDER, 32'h0000_0000);
-    apb_write(ADDR_CONTROL, 32'h0000_0009); // global_en=1, tx_start=1
+    apb_write(ADDR_DIVIDER, 8'h00);
+    apb_write(ADDR_CONTROL, 8'h09); // global_en=1, tx_start=1
 
-    apb_write(ADDR_DATA, 32'h0000_00A5);
+    apb_write(ADDR_DATA, 8'hA5);
 
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b1) && (timeout_cycles < 50)) begin

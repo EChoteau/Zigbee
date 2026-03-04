@@ -21,7 +21,7 @@ begin
     $display("[T3] RX nominal test start");
 
     i_serial_rx <= 1'b1;
-    apb_write(ADDR_CONTROL, 32'h0000_0011); // global_en=1, rx_enable=1
+    apb_write(ADDR_CONTROL, 8'h11); // global_en=1, rx_enable=1
 
     cdr_push_rx_byte(8'h3C);
     repeat (2) @(posedge i_clk);
