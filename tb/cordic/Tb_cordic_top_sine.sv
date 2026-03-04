@@ -35,7 +35,7 @@ module tb_cordic_top_sine;
     // --- Clock Generation ---
     initial begin
         clk = 0;
-        forever #5 clk = ~clk; // 100MHz clock
+        forever #5 clk = ~clk;
     end
 
     // --- Input Generation (Rotating Vector) ---
@@ -65,20 +65,8 @@ module tb_cordic_top_sine;
             // Assign to registered inputs
             I_in_reg <= $rtoi(i_val * SCALE);
             Q_in_reg <= $rtoi(q_val * SCALE);
-            
-            // Display values
-            $display("Time: %t | Angle: %d deg | Cos: %d | Sin: %d", 
-                     $time, i, $rtoi(i_val), $rtoi(q_val));
         end
-        
         #100;
         $finish;
     end
-
-    // --- Output Registration ---
-    always @(posedge clk) begin
-        Phase_out_reg <= Phase_out_raw;
-        $display("Time: %t | Phase Out (Raw): %d", $time, Phase_out_raw);
-    end
-
 endmodule

@@ -7,7 +7,8 @@ module tb_cordic_top();
     logic signed [WIDTH_PHASE-1:0] Phase_out;
 
     cordic_top #(
-        .WIDTH(WIDTH), 
+        .WIDTH_IN(WIDTH),
+        .WIDTH_PHASE(WIDTH_PHASE),
         .NUM_STEPS(NUM_STEPS)
     ) dut (.*);
 
@@ -22,19 +23,19 @@ module tb_cordic_top();
         $display("--- Starting Full CORDIC Phase Test ---");
         
         // Test 0 degrees (I=max, Q=0) -> Expected Phase: 0
-        check_phase("0   Deg", 16'h4000, 16'h0000);
+        check_phase("0   Deg", 8'h40, 8'h00);
         
         // Test 90 degrees (I=0, Q=max) -> Expected Phase: 0x4000 (your 0.5 scale)
-        check_phase("90  Deg", 16'h0000, 16'h4000);
+        check_phase("90  Deg", 8'h00, 8'h40);
         
         // Test -90 degrees (I=0, Q=-max) -> Expected Phase: 0xC000 (signed -0.5)
-        check_phase("-90 Deg", 16'h0000, -16'h4000);
+        check_phase("-90 Deg", 8'h00, -8'h40);
         
         // Test 45 degrees (I=Q) -> Expected Phase: 0x2000 (0.25 scale)
-        check_phase("45  Deg", 16'h2000, 16'h2000);
+        check_phase("45  Deg", 8'h20, 8'h20);
         
         // Test 180 degrees (I=-max, Q=0) -> Should rotate via Q2/Q3 logic
-        check_phase("180 Deg", -16'h4000, 16'h0001);
+        check_phase("180 Deg", -8'h40, 8'h01);
 
         $display("---------------------------------------");
     end

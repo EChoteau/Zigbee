@@ -4,7 +4,8 @@ module tb_cordic_step();
 
     // Instance of a single step (Step 0: 45 degrees)
     cordic_step #(
-        .WIDTH(WIDTH), 
+        .WIDTH(WIDTH),
+	.WIDTH_PHASE(WIDTH),
         .ITER(0), 
         .ANGLE_VAL(16'h1000) // Arbitrary test angle
     ) dut (

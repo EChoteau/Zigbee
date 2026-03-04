@@ -1,33 +1,10 @@
 # =====================================================
-# Script de simulation Questa pour filter + testbench
+# Script qui lance les sims
 # =====================================================
 
-# 1) Nettoyage
-vdel -all -lib lib_RTL
-vlib lib_RTL
-vmap lib_RTL lib_RTL
-
-# 2) Compilation des fichiers RTL et Testbench
-# vlog -sv ../asic/par/Innovus/filter_io.v    -work lib_RTL +acc
-vlog -sv rtl/cordic/*.sv -work lib_RTL +acc
-vlog -sv tb/cordic/*.sv 	-work lib_RTL +acc
-
-# 3) Simulation du testbench avec GUI
-#vsim -voptargs=+acc lib_RTL.nommoduletbench -sdfnoerror -sdfnowarn -L c35_CORELIB -sdftyp "/duv=/tp/xph2app/xph2app004/TP_Filtre/asic/par/Innovus/filter_io.sdf"
-#vsim -voptargs=+acc lib_RTL.tb_cordic_init -sdfnoerror -sdfnowarn -L c35_CORELIB
-#vsim -voptargs=+acc lib_RTL.tb_cordic_step -sdfnoerror -sdfnowarn -L c35_CORELIB
-#vsim -voptargs=+acc lib_RTL.tb_cordic_top -sdfnoerror -sdfnowarn -L c35_CORELIB
-#vsim -voptargs=+acc lib_RTL.tb_cordic_top_sine -sdfnoerror -sdfnowarn -L c35_CORELIB
-vsim -voptargs=+acc lib_RTL.tb_boxcar_filter -sdfnoerror -sdfnowarn -L c35_CORELIB
-#vsim -voptargs=+acc lib_RTL.tb_derivate -sdfnoerror -sdfnowarn -L c35_CORELIB
-
-# 4) Ajout des courbes à visualiser
-
-#add wave -position end sim:/tbench/clk
-#add wave -position end sim:/tbench/reset
-
-# 5) Lancement de la simulation sur la durée associée
-run 2us
-
-
- 
+vsim -c -do tb/cordic/Tb_cordic_init.do
+vsim -c -do tb/cordic/Tb_cordic_step.do
+vsim -c -do tb/cordic/Tb_cordic_top.do
+vsim -do tb/cordic/Tb_cordic_top_sine.do
+#vsim -do tb/cordic/Tb_boxcar_filter.do
+#vsim -do tb/cordic/Tb_derive.do
