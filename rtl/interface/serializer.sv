@@ -4,84 +4,75 @@ module serializer #(
         input logic i_clk,
         input logic i_rst_n,
 
-        input logic baud_rate_en, // Tick de baud rate (impulsion 1 cycle)
+        input logic i_baud_tick, // Tick de baud rate (impulsion 1 cycle)
 
         //Parallel input interface
-        input logic [DATA_WIDTH-1:0] i_data,
-        input logic i_fifo_empty,
-        input logic i_fifo_data_valid,
-        output logic o_fifo_pop,
+        input logic [DATA_WIDTH-1:0] i_tx_data,
+        input logic i_tx_fifo_empty,
+        input logic i_tx_data_valid,
+        output logic o_tx_fifo_pop,
 
         //Serial output interface
         output logic o_serial_data,
-        output logic o_valid,
-        output logic o_sample_tick
+        output logic o_tx_busy,
+        output logic o_tx_sample_tick
 
     );
 
     localparam BIT_CNT = $clog2(DATA_WIDTH);
 
-    logic [DATA_WIDTH-1:0] shift_reg;
-    logic [BIT_CNT-1:0] bit_count;
-    logic s_pop_pending;
-    logic s_end_pending;
-    logic s_sample_pending;
+    logic [DATA_WIDTH-1:0] s_shift_reg;
+    logic [BIT_CNT-1:0] s_bit_count;
+    logic s_waiting_fifo_data;
+    logic s_sample_tick_pending;
 
     // --- Serialization logic ---
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
-            shift_reg     <= '0;
-            bit_count     <= '0;
-            s_pop_pending <= 1'b0;
-            s_end_pending <= 1'b0;
-            s_sample_pending <= 1'b0;
-            o_fifo_pop    <= 1'b0;
+            s_shift_reg     <= '0;
+            s_bit_count     <= '0;
+            s_waiting_fifo_data <= 1'b0;
+            s_sample_tick_pending <= 1'b0;
+            o_tx_fifo_pop    <= 1'b0;
             o_serial_data <= 1'b0;
-            o_valid       <= 1'b0;
-            o_sample_tick <= 1'b0;
+            o_tx_busy       <= 1'b0;
+            o_tx_sample_tick <= 1'b0;
         end 
         
         else begin
-            o_fifo_pop <= 1'b0;
-            o_sample_tick <= 1'b0;
+            o_tx_fifo_pop <= 1'b0;
+            o_tx_sample_tick <= 1'b0;
 
-            if (s_sample_pending) begin
-                o_sample_tick <= 1'b1;
-                s_sample_pending <= 1'b0;
+            if (s_sample_tick_pending) begin
+                o_tx_sample_tick <= 1'b1;
+                s_sample_tick_pending <= 1'b0;
             end
 
-            if (s_end_pending) begin
-                o_valid <= 1'b0;
-                s_end_pending <= 1'b0;
-            end else begin
-                // STEP 1: Ready to load
-                if (!o_valid) begin
-                    if (s_pop_pending) begin
-                        if (i_fifo_data_valid) begin
-                            shift_reg <= i_data;
-                            bit_count <= '0;
-                            s_pop_pending <= 1'b0;
-                            o_valid   <= 1'b1;
-                        end
-                    end else if (!i_fifo_empty) begin
-                        o_fifo_pop <= 1'b1;
-                        s_pop_pending <= 1'b1;
+            // STEP 1: Ready to load
+            if (!o_tx_busy) begin
+                if (s_waiting_fifo_data) begin
+                    if (i_tx_data_valid) begin
+                        s_shift_reg <= i_tx_data;
+                        s_bit_count <= '0;
+                        s_waiting_fifo_data <= 1'b0;
+                        o_tx_busy   <= 1'b1;
                     end
+                end else if (!i_tx_fifo_empty) begin
+                    o_tx_fifo_pop <= 1'b1;
+                    s_waiting_fifo_data <= 1'b1;
                 end
+            end
 
-                // STEP 2: Transmission in progress
-                else begin
-                    if (baud_rate_en) begin
-                        o_serial_data <= shift_reg[0];
-                        shift_reg     <= shift_reg >> 1;
-                        s_sample_pending <= 1'b1;
+            // STEP 2: Transmission in progress
+            else if (i_baud_tick) begin
+                o_serial_data <= s_shift_reg[0];
+                s_sample_tick_pending <= 1'b1;
 
-                        if (bit_count == (DATA_WIDTH - 1)) begin
-                            s_end_pending <= 1'b1; // End of transmission after this tick
-                        end else begin
-                            bit_count <= bit_count + 1'b1;
-                        end
-                    end
+                if (s_bit_count == (DATA_WIDTH - 1)) begin
+                    o_tx_busy <= 1'b0;
+                end else begin
+                    s_shift_reg <= s_shift_reg >> 1;
+                    s_bit_count <= s_bit_count + 1'b1;
                 end
             end
         end
