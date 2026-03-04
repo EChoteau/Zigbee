@@ -21,12 +21,16 @@ begin
 
     tx_captured = 8'h00;
     bit_idx = 0;
+    timeout_cycles = 0;
     while (bit_idx < 8) begin
         @(posedge i_clk);
-        if (dut.w_tx_tick && o_tx_valid) begin
+        if (dut.w_tx_tick) begin
             tx_captured[bit_idx] = o_serial_tx;
             bit_idx++;
         end
+        timeout_cycles++;
+        assert (timeout_cycles < 200)
+            else $fatal(1, "[T2] Timeout waiting to capture 8 TX bits");
     end
 
     assert (tx_captured == 8'hA5)

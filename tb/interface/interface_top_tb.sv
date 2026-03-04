@@ -20,6 +20,7 @@ module interface_top_tb;
     logic                      i_cdr_sample_valid;
     logic                      o_serial_tx;
     logic                      o_tx_valid;
+    logic                      o_tx_sample_tick;
 
     logic                      tb_baud_enable;
     logic [DIV_WIDTH-1:0]      tb_baud_div;
@@ -47,7 +48,8 @@ module interface_top_tb;
         .i_serial_rx(i_serial_rx),
         .i_cdr_sample_valid(i_cdr_sample_valid),
         .o_serial_tx(o_serial_tx),
-        .o_tx_valid(o_tx_valid)
+        .o_tx_valid(o_tx_valid),
+        .o_tx_sample_tick(o_tx_sample_tick)
     );
 
     baud_rate_gen #(
