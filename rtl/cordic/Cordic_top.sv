@@ -1,5 +1,5 @@
 module cordic_top #(
-    parameter int WIDTH_IN = 16,
+    parameter int WIDTH_IN = 8,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
     parameter int NUM_STEPS = WIDTH_IN
@@ -10,7 +10,7 @@ module cordic_top #(
 );
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
-    // CORDIC Atan Table for WIDTH=10, NUM_STEPS=10
+    // CORDIC Atan Table for WIDTH_PHASE=10, NUM_STEPS=10
     localparam logic signed [10-1:0] ATAN_TABLE [0:9] = '{
         10'sh80, // step 0: 45.0000 deg
         10'sh4c, // step 1: 26.5651 deg
