@@ -20,7 +20,8 @@ module interface_top #(
 	input  logic                       i_serial_rx,
 	input  logic                       i_cdr_sample_valid,
 	output logic                       o_serial_tx,
-	output logic                       o_tx_valid
+	output logic                       o_tx_valid,
+	output logic                       o_tx_sample_tick
 );
 
 	logic [DATA_WIDTH-1:0] w_tx_fifo_data;
@@ -157,7 +158,8 @@ module interface_top #(
 		.i_fifo_data_valid(w_tx_fifo_rd_valid),
 		.o_fifo_pop(w_tx_fifo_pop),
 		.o_serial_data(o_serial_tx),
-		.o_valid(w_tx_busy)
+		.o_valid(w_tx_busy),
+		.o_sample_tick(o_tx_sample_tick)
 	);
 
 	deserializer #(
