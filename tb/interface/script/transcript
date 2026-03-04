@@ -1,5 +1,3 @@
-# ** Warning: (vsim-14) Failed to open "/tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini" specified by the MODELSIM environment variable.
-# No such file or directory. (errno = ENOENT)
 # //  Questa Sim-64
 # //  Version 10.7c linux_x86_64 Aug 17 2018
 # //
@@ -15,42 +13,11 @@
 # //  18 U.S.C. Section 1905.
 # //
 # do script1
-# ** Error (suppressible): (vdel-19) Failed to access library 'lib_rtl' at "lib_rtl".
-# No such file or directory. (errno = ENOENT)
-# ** Warning: (vdel-57) Library 'lib_rtl' is missing or is not a valid QuestaSim library.
-# ** Error: /softl3/questa_core_prime_10_7c/questasim/linux_x86_64/vdel failed.
-# Error in macro ./script1 line 1
-# /softl3/questa_core_prime_10_7c/questasim/linux_x86_64/vdel failed.
-#     while executing
-# "error [FixExecError $msg]"
-#     (procedure "vdel" line 6)
-#     invoked from within
-# "vdel -all -lib lib_rtl"
-vlib lib_rtl
-vmap lib_rtl lib_rtl
-# /tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini not found
-# ** Warning: (vmap-14) Failed to open "/tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini" specified by the MODELSIM environment variable.
-# No such file or directory. (errno = ENOENT)
-# QuestaSim-64 vmap 10.7c Lib Mapping Utility 2018.08 Aug 17 2018
-# vmap lib_rtl lib_rtl 
-# Copying /softl3/questa_core_prime_10_7c/questasim/linux_x86_64/../modelsim.ini to /tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini
-# Modifying /tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini
-vmap lib_rtl lib_rtl
 # QuestaSim-64 vmap 10.7c Lib Mapping Utility 2018.08 Aug 17 2018
 # vmap lib_rtl lib_rtl 
 # Modifying /tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/config/modelsim.ini
-vlog -sv ../../../rtl/interface*.sv -work lib_rtl
 # QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
-# Start time: 11:33:23 on Mar 03,2026
-# vlog -reportprogress 300 -sv ../../../rtl/interface*.sv -work lib_rtl 
-# ** Error: (vlog-7) Failed to open design unit file "../../../rtl/interface*.sv" in read mode.
-# No such file or directory. (errno = ENOENT)
-# End time: 11:33:23 on Mar 03,2026, Elapsed time: 0:00:00
-# Errors: 1, Warnings: 0
-# /softl3/questa_core_prime_10_7c/questasim/linux_x86_64/vlog failed.
-vlog -sv ../../../rtl/interface/*.sv -work lib_rtl
-# QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
-# Start time: 11:33:36 on Mar 03,2026
+# Start time: 11:26:56 on Mar 04,2026
 # vlog -reportprogress 300 -sv ../../../rtl/interface/apb_slave_regs.sv ../../../rtl/interface/baud_rate_gen.sv ../../../rtl/interface/deserializer.sv ../../../rtl/interface/fifo.sv ../../../rtl/interface/interface_top.sv ../../../rtl/interface/serializer.sv -work lib_rtl 
 # -- Compiling module apb_slave_regs
 # -- Compiling module baud_rate_gen
@@ -61,16 +28,85 @@ vlog -sv ../../../rtl/interface/*.sv -work lib_rtl
 # 
 # Top level modules:
 # 	interface_top
-# End time: 11:33:36 on Mar 03,2026, Elapsed time: 0:00:00
+# End time: 11:26:56 on Mar 04,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-vlog -sv ../*.sv -work lib_rtl
 # QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
-# Start time: 11:33:40 on Mar 03,2026
+# Start time: 11:26:56 on Mar 04,2026
+# vlog -reportprogress 300 -sv ../common/tb_pkg.sv -work lib_rtl 
+# -- Compiling package tb_pkg
+# 
+# Top level modules:
+# 	--none--
+# End time: 11:26:56 on Mar 04,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 17 2018
+# Start time: 11:26:56 on Mar 04,2026
 # vlog -reportprogress 300 -sv ../interface_top_tb.sv -work lib_rtl 
-# ** Error: ../interface_top_tb.sv(3): (vlog-13006) Could not find the package (tb_pkg).  Design read will continue, but expect a cascade of errors after this failure.  Furthermore if you experience a vopt-7 error immediately before this error then please check the package names or the library search paths on the command line.
-# ** Error: ../interface_top_tb.sv(13): (vlog-2730) Undefined variable: 'APB_ADDR_WIDTH'.
-# ** Error: ../interface_top_tb.sv(14): (vlog-2730) Undefined variable: 'APB_DATA_WIDTH'.
-# End time: 11:33:40 on Mar 03,2026, Elapsed time: 0:00:00
-# Errors: 3, Warnings: 0
-# /softl3/questa_core_prime_10_7c/questasim/linux_x86_64/vlog failed.
-# Break key hit
+# -- Compiling package interface_top_tb_sv_unit
+# -- Importing package tb_pkg
+# -- Compiling module interface_top_tb
+# 
+# Top level modules:
+# 	interface_top_tb
+# End time: 11:26:56 on Mar 04,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -voptargs="+acc" lib_rtl.interface_top_tb 
+# Start time: 11:26:56 on Mar 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# Loading sv_std.std
+# Loading work.tb_pkg(fast)
+# Loading work.interface_top_tb_sv_unit(fast)
+# Loading work.interface_top_tb(fast)
+# Loading work.interface_top(fast)
+# Loading work.apb_slave_regs(fast)
+# Loading work.fifo(fast)
+# Loading work.serializer(fast)
+# Loading work.deserializer(fast)
+# Loading work.baud_rate_gen(fast)
+add wave -position end sim:/interface_top_tb/dut/u_tx_baud_rate_gen/*
+add wave -position end sim:/interface_top_tb/dut/u_serializer/*
+run -all
+# [PLAN] Start smoke/basic plan
+# [T0_BAUD] Baud generator standalone test start
+# [T0_BAUD] Baud generator standalone test PASS
+# [T0] Reset/Smoke test start
+# [T0] Reset/Smoke test PASS
+# [T1] APB registers test start
+# [T1] APB registers test PASS
+# [T2] TX nominal test start
+# [T2] TX nominal test PASS
+# [T3] RX nominal test start
+# [T3] RX nominal test PASS
+# [PLAN] Smoke/basic plan PASS
+# ** Note: $finish    : ../interface_top_tb.sv(92)
+#    Time: 3470 ns  Iteration: 1  Instance: /interface_top_tb
+# 1
+# Break in Module interface_top_tb at ../interface_top_tb.sv line 92
+restart
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Loading work.tb_pkg(fast)
+# Loading work.interface_top_tb_sv_unit(fast)
+# Loading work.interface_top_tb(fast)
+# Loading work.interface_top(fast)
+# Loading work.apb_slave_regs(fast)
+# Loading work.fifo(fast)
+# Loading work.serializer(fast)
+# Loading work.deserializer(fast)
+# Loading work.baud_rate_gen(fast)
+run -all
+# [PLAN] Start smoke/basic plan
+# [T0_BAUD] Baud generator standalone test start
+# [T0_BAUD] Baud generator standalone test PASS
+# [T0] Reset/Smoke test start
+# [T0] Reset/Smoke test PASS
+# [T1] APB registers test start
+# [T1] APB registers test PASS
+# [T2] TX nominal test start
+# [T2] TX nominal test PASS
+# [T3] RX nominal test start
+# [T3] RX nominal test PASS
+# [PLAN] Smoke/basic plan PASS
+# ** Note: $finish    : ../interface_top_tb.sv(92)
+#    Time: 3470 ns  Iteration: 1  Instance: /interface_top_tb
+# 1
+# Break in Module interface_top_tb at ../interface_top_tb.sv line 92

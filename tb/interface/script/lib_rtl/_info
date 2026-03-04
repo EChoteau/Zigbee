@@ -8,147 +8,236 @@ z2
 !i10f 100
 cModel Technology
 Z0 d/tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/script
+T_opt
+Z1 !s110 1772620016
+V>JzlfOgaHK`XdkTSzF4bV1
+04 16 4 work interface_top_tb fast 0
+=1-b49691b40b11-69a808f0-48159-6a9e
+o-quiet -auto_acc_if_foreign -work lib_rtl +acc
+Z2 tCvgOpt 0
+n@_opt
+OL;O;10.7c;67
 vapb_slave_regs
-Z1 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
-Z2 !s110 1772534016
+Z3 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+R1
 !i10b 1
 !s100 `@ljdi;LRchYVZSdADfUG3
 IPKV]Phbi30XmZSMe4i]z83
-Z3 VDg1SIo80bB@j0V0VzS_@n1
+Z4 VDg1SIo80bB@j0V0VzS_@n1
 !s105 apb_slave_regs_sv_unit
 S1
 R0
-Z4 w1772532216
+Z5 w1772532216
 8../../../rtl/interface/apb_slave_regs.sv
 F../../../rtl/interface/apb_slave_regs.sv
 L0 7
-Z5 OL;L;10.7c;67
+Z6 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z6 !s108 1772534016.000000
-!s107 ../../../rtl/interface/serializer.sv|../../../rtl/interface/interface_top.sv|../../../rtl/interface/fifo.sv|../../../rtl/interface/deserializer.sv|../../../rtl/interface/baud_rate_gen.sv|../../../rtl/interface/apb_slave_regs.sv|
-Z7 !s90 -reportprogress|300|-sv|../../../rtl/interface/apb_slave_regs.sv|../../../rtl/interface/baud_rate_gen.sv|../../../rtl/interface/deserializer.sv|../../../rtl/interface/fifo.sv|../../../rtl/interface/interface_top.sv|../../../rtl/interface/serializer.sv|-work|lib_rtl|
+Z7 !s108 1772620016.000000
+Z8 !s107 ../../../rtl/interface/serializer.sv|../../../rtl/interface/interface_top.sv|../../../rtl/interface/fifo.sv|../../../rtl/interface/deserializer.sv|../../../rtl/interface/baud_rate_gen.sv|../../../rtl/interface/apb_slave_regs.sv|
+Z9 !s90 -reportprogress|300|-sv|../../../rtl/interface/apb_slave_regs.sv|../../../rtl/interface/baud_rate_gen.sv|../../../rtl/interface/deserializer.sv|../../../rtl/interface/fifo.sv|../../../rtl/interface/interface_top.sv|../../../rtl/interface/serializer.sv|-work|lib_rtl|
 !i113 0
-Z8 o-sv -work lib_rtl -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
-Z9 tCvgOpt 0
-vbaud_rate_gen
-R1
+Z10 o-sv -work lib_rtl -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
 R2
+vbaud_rate_gen
+R3
+R1
 !i10b 1
 !s100 W2BAaBZG;mU3S;IJdX02X1
 IdPTZkmj_9b:ETK_MgLP]^1
-R3
+R4
 !s105 baud_rate_gen_sv_unit
 S1
 R0
-R4
+R5
 8../../../rtl/interface/baud_rate_gen.sv
 F../../../rtl/interface/baud_rate_gen.sv
 L0 8
-R5
+R6
 r1
 !s85 0
 31
-R6
-Z10 !s107 ../../../rtl/interface/serializer.sv|../../../rtl/interface/interface_top.sv|../../../rtl/interface/fifo.sv|../../../rtl/interface/deserializer.sv|../../../rtl/interface/baud_rate_gen.sv|../../../rtl/interface/apb_slave_regs.sv|
 R7
-!i113 0
 R8
 R9
-vdeserializer
-R1
+!i113 0
+R10
 R2
+vdeserializer
+R3
+R1
 !i10b 1
 !s100 V0FOPdcVoOJld@5zdcB`:0
 IJeHDDnAAN3cE1^BVB<>IQ3
-R3
+R4
 !s105 deserializer_sv_unit
 S1
 R0
-R4
+R5
 8../../../rtl/interface/deserializer.sv
 F../../../rtl/interface/deserializer.sv
 L0 1
-R5
+R6
 r1
 !s85 0
 31
-R6
-R10
 R7
-!i113 0
 R8
 R9
-vfifo
-R1
+!i113 0
+R10
 R2
-!i10b 1
-!s100 FXG8KcoPTk4XjgGIfnnoX0
-ISVA@_Z`Z4eDXI<NVi`Cg90
+vfifo
 R3
+R1
+!i10b 1
+!s100 niU;kbA2DUo1GJgAiAz@;2
+IRFG^YmB9Bn6hzP99Iz9>m0
+R4
 !s105 fifo_sv_unit
 S1
 R0
-R4
+w1772618389
 8../../../rtl/interface/fifo.sv
 F../../../rtl/interface/fifo.sv
 L0 1
-R5
+R6
 r1
 !s85 0
 31
-R6
-R10
 R7
-!i113 0
 R8
 R9
-vinterface_top
-R1
+!i113 0
+R10
 R2
-!i10b 1
-!s100 R`M=ObUmAWV2zhX`?BTIA2
-IG_OJ4miA>k?]QRNacIno[0
+vinterface_top
 R3
+R1
+!i10b 1
+!s100 PUZ>g9kL_f1F^oiE[z9AW0
+IY1VoQGX<b7Hd8YOdUJ>;g3
+R4
 !s105 interface_top_sv_unit
 S1
 R0
-R4
+Z11 w1772619222
 8../../../rtl/interface/interface_top.sv
 F../../../rtl/interface/interface_top.sv
 L0 1
-R5
+R6
 r1
 !s85 0
 31
-R6
-R10
 R7
-!i113 0
 R8
 R9
-vserializer
-R1
+!i113 0
+R10
 R2
-!i10b 1
-!s100 `YmCPZjD>D5PUQ:COljE=0
-ILD<7X3g5YFW?6;NOdhFKF3
+vinterface_top_tb
 R3
+Z12 DXx4 work 6 tb_pkg 0 22 :m=IkhUjgQ?5nTF;EE5n?2
+DXx4 work 24 interface_top_tb_sv_unit 0 22 o]oZg=:^_6ZfI[NaUUVdj3
+R4
+r1
+!s85 0
+!i10b 1
+!s100 Km@B;O]hD7b_SGY?anl]T2
+In@`DGIZc<?K8B5iRX9G?n2
+!s105 interface_top_tb_sv_unit
+S1
+R0
+w1772619978
+Z13 8../interface_top_tb.sv
+Z14 F../interface_top_tb.sv
+F../include/apb_tasks.svh
+F../include/reset_tasks.svh
+F../tests/tc_t0_baud_gen_only.svh
+F../tests/tc_t0_reset_smoke.svh
+F../tests/tc_t1_apb_regs.svh
+F../tests/tc_t2_tx_nominal.svh
+F../tests/tc_t3_rx_nominal.svh
+F../tests/test_plan_smoke.svh
+L0 5
+R6
+31
+R7
+Z15 !s107 ../tests/test_plan_smoke.svh|../tests/tc_t3_rx_nominal.svh|../tests/tc_t2_tx_nominal.svh|../tests/tc_t1_apb_regs.svh|../tests/tc_t0_reset_smoke.svh|../tests/tc_t0_baud_gen_only.svh|../include/reset_tasks.svh|../include/apb_tasks.svh|../interface_top_tb.sv|
+Z16 !s90 -reportprogress|300|-sv|../interface_top_tb.sv|-work|lib_rtl|
+!i113 0
+R10
+R2
+Xinterface_top_tb_sv_unit
+R3
+R12
+Vo]oZg=:^_6ZfI[NaUUVdj3
+r1
+!s85 0
+!i10b 1
+!s100 fdDn0@2i@<NCUnoT5GXAm2
+Io]oZg=:^_6ZfI[NaUUVdj3
+!i103 1
+S1
+R0
+R11
+R13
+R14
+L0 3
+R6
+31
+R7
+R15
+R16
+!i113 0
+R10
+R2
+vserializer
+R3
+R1
+!i10b 1
+!s100 b?9K:`HC3DL2<VXkjm>DI2
+IQkI:8[^M2=6fB@CFJ_j?z0
+R4
 !s105 serializer_sv_unit
 S1
 R0
-R4
+w1772619891
 8../../../rtl/interface/serializer.sv
 F../../../rtl/interface/serializer.sv
 L0 1
-R5
+R6
 r1
 !s85 0
 31
-R6
-R10
 R7
-!i113 0
 R8
 R9
+!i113 0
+R10
+R2
+Xtb_pkg
+R3
+R1
+!i10b 1
+!s100 a`@EL<1<?Mf0BBG:XA5dW1
+I:m=IkhUjgQ?5nTF;EE5n?2
+V:m=IkhUjgQ?5nTF;EE5n?2
+S1
+R0
+w1772615361
+8../common/tb_pkg.sv
+F../common/tb_pkg.sv
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+!s107 ../common/tb_pkg.sv|
+!s90 -reportprogress|300|-sv|../common/tb_pkg.sv|-work|lib_rtl|
+!i113 0
+R10
+R2
