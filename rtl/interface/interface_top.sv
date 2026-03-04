@@ -152,14 +152,14 @@ module interface_top #(
 	) u_serializer (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n & ~w_sw_reset),
-		.baud_rate_en(w_tx_tick),
-		.i_data(w_tx_fifo_q),
-		.i_fifo_empty(w_tx_fifo_empty | ~w_tx_path_en),
-		.i_fifo_data_valid(w_tx_fifo_rd_valid),
-		.o_fifo_pop(w_tx_fifo_pop),
+		.i_baud_tick(w_tx_tick),
+		.i_tx_data(w_tx_fifo_q),
+		.i_tx_fifo_empty(w_tx_fifo_empty | ~w_tx_path_en),
+		.i_tx_data_valid(w_tx_fifo_rd_valid),
+		.o_tx_fifo_pop(w_tx_fifo_pop),
 		.o_serial_data(o_serial_tx),
-		.o_valid(w_tx_busy),
-		.o_sample_tick(o_tx_sample_tick)
+		.o_tx_busy(w_tx_busy),
+		.o_tx_sample_tick(o_tx_sample_tick)
 	);
 
 	deserializer #(
