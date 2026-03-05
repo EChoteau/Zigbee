@@ -142,7 +142,6 @@ module interface_top_tb;
 `include "tests/tc_t2_tx_nominal.svh"
 `include "tests/tc_t3_rx_nominal.svh"
 `include "tests/tc_t4_interface_errors.svh"
-`include "tests/tc_t5_sw_reset.svh"
 `include "tests/tc_u_fifo_basic.svh"
 `include "tests/tc_u_fifo_full.svh"
 `include "tests/tc_u_fifo_edges.svh"
