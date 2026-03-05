@@ -6,16 +6,28 @@ begin
     run_tc_t0_baud_gen_only();
 
     apply_reset(5);
+    run_tc_t0_baud_gen_edges();
+
+    apply_reset(5);
     run_tc_u_fifo_basic();
 
     apply_reset(5);
     run_tc_u_fifo_full();
 
     apply_reset(5);
+    run_tc_u_fifo_edges();
+
+    apply_reset(5);
     run_tc_u_serializer_basic();
 
     apply_reset(5);
+    run_tc_u_serializer_edges();
+
+    apply_reset(5);
     run_tc_u_deserializer_basic();
+
+    apply_reset(5);
+    run_tc_u_deserializer_edges();
 
     apply_reset(5);
     run_tc_t0_reset_smoke();
