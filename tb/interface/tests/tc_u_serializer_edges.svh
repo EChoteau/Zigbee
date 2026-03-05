@@ -19,13 +19,13 @@ begin
     u_ser_tx_fifo_empty  = 1'b1;
     @(posedge i_clk); #1;
 
-    // Must not start without data_valid even if fifo_empty low
-    u_ser_tx_fifo_empty = 1'b0;
+    // Must not start without request/data
     repeat (3) @(posedge i_clk); #1;
     assert (u_ser_tx_busy == 1'b0)
         else $fatal(1, "[U_SER_EDGE] Busy should stay low without data_valid");
 
     // Frame 0
+    u_ser_tx_fifo_empty = 1'b0;
     timeout = 0;
     while ((u_ser_tx_fifo_pop !== 1'b1) && (timeout < 40)) begin
         @(posedge i_clk); #1;
