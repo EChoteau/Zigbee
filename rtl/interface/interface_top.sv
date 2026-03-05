@@ -121,7 +121,7 @@ module interface_top #(
 		.DEPTH(FIFO_DEPTH)
 	) u_fifo_tx (
 		.i_clk(i_clk),
-		.i_rst_n(i_rst_n & ~w_sw_reset),
+		.i_rst_n(i_rst_n),
 		.i_wr_en(w_tx_fifo_push),
 		.i_data(w_tx_fifo_data),
 		.o_full(w_tx_fifo_full),
@@ -136,7 +136,7 @@ module interface_top #(
 		.DEPTH(FIFO_DEPTH)
 	) u_fifo_rx (
 		.i_clk(i_clk),
-		.i_rst_n(i_rst_n & ~w_sw_reset),
+		.i_rst_n(i_rst_n),
 		.i_wr_en(w_rx_fifo_push),
 		.i_data(w_rx_fifo_data),
 		.o_full(w_rx_fifo_full),
@@ -150,7 +150,7 @@ module interface_top #(
 		.DATA_WIDTH(DATA_WIDTH)
 	) u_serializer (
 		.i_clk(i_clk),
-		.i_rst_n(i_rst_n & ~w_sw_reset),
+		.i_rst_n(i_rst_n),
 		.i_baud_tick(w_tx_tick),
 		.i_tx_data(w_tx_fifo_q),
 		.i_tx_fifo_empty(w_tx_fifo_empty | ~w_tx_path_en),
@@ -165,7 +165,7 @@ module interface_top #(
 		.DATA_WIDTH(DATA_WIDTH)
 	) u_deserializer (
 		.i_clk(i_clk),
-		.i_rst_n(i_rst_n & ~w_sw_reset),
+		.i_rst_n(i_rst_n),
 		.i_serial_data(i_serial_rx),
 		.i_sample_valid(i_cdr_sample_valid),
 		.i_enable(w_rx_path_en),
@@ -179,7 +179,7 @@ module interface_top #(
 		.DIV_WIDTH(DIV_WIDTH)
 	) u_tx_baud_rate_gen (
 		.i_clk(i_clk),
-		.i_rst_n(i_rst_n & ~w_sw_reset),
+		.i_rst_n(i_rst_n),
 		.i_enable(w_global_en & w_tx_busy),
 		.i_div_val(w_div_val),
 		.o_tick(w_tx_tick)
