@@ -92,7 +92,7 @@ module apb_slave_regs #(
         if (!i_rst_n) begin
             // Reset asynchrone actif bas [cite: 102]
             s_reg_control <= '0;
-            s_reg_divider <= '0;
+            s_reg_divider <= 8'h01;
             o_tx_data     <= '0;
             o_tx_push     <= 1'b0;
         end else begin
@@ -118,7 +118,11 @@ module apb_slave_regs #(
                         s_reg_control <= i_pwdata[4:0];
                     end
                     ADDR_DIVIDER: begin
-                        s_reg_divider <= i_pwdata[7:0];
+                        if (i_pwdata[7:0] == 8'h00) begin
+                            s_reg_divider <= 8'h01;
+                        end else begin
+                            s_reg_divider <= i_pwdata[7:0];
+                        end
                     end
                     default: ; // Ne rien faire pour les autres adresses (protection)
                 endcase

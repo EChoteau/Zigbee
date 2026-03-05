@@ -19,6 +19,9 @@ module baud_rate_gen #(
 
     // Signal interne pour le compteur
     logic [DIV_WIDTH-1:0] s_counter;
+    logic [DIV_WIDTH-1:0] w_div_eff;
+
+    assign w_div_eff = (i_div_val == '0) ? {{(DIV_WIDTH-1){1'b0}}, 1'b1} : i_div_val;
 
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
@@ -30,7 +33,7 @@ module baud_rate_gen #(
             if (i_enable) begin
                 
                 // Si on atteint la valeur limite (i_div_val)
-                if (s_counter == i_div_val) begin
+                if (s_counter == w_div_eff) begin
                     s_counter <= '0;       // On remet à zéro
                     o_tick    <= 1'b1;     // On génère le "Tick" pendant 1 cycle
                 end else begin

@@ -17,8 +17,8 @@ begin
         else $fatal(1, "[T0] CONTROL reset mismatch. got=%0h", rd[4:0]);
 
     apb_read(ADDR_DIVIDER, rd);
-    assert (rd[7:0] == 8'h00)
-        else $fatal(1, "[T0] DIVIDER reset mismatch. got=%0h", rd[7:0]);
+    assert (rd[7:0] == 8'h01)
+        else $fatal(1, "[T0] DIVIDER reset mismatch. got=%0h expected=01", rd[7:0]);
 
     apb_read(ADDR_STATUS, rd);
     assert (rd[4:0] == 5'b00001)
