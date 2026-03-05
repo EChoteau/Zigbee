@@ -9,6 +9,9 @@ begin
     run_tc_u_fifo_basic();
 
     apply_reset(5);
+    run_tc_u_fifo_full();
+
+    apply_reset(5);
     run_tc_u_serializer_basic();
 
     apply_reset(5);

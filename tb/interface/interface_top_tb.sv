@@ -141,6 +141,7 @@ module interface_top_tb;
 `include "tests/tc_t2_tx_nominal.svh"
 `include "tests/tc_t3_rx_nominal.svh"
 `include "tests/tc_u_fifo_basic.svh"
+`include "tests/tc_u_fifo_full.svh"
 `include "tests/tc_u_serializer_basic.svh"
 `include "tests/tc_u_deserializer_basic.svh"
 `include "tests/tc_stress_tx_rx_noreset.svh"
