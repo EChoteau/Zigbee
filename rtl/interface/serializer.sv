@@ -24,7 +24,7 @@ module serializer #(
     logic [DATA_WIDTH-1:0] s_shift_reg;
     logic [BIT_CNT-1:0] s_bit_count;
     logic s_waiting_fifo_data;
-    logic s_sample_tick_pending;
+    logic s_bit_event_d;
 
     // --- Serialization logic ---
     always_ff @(posedge i_clk or negedge i_rst_n) begin
@@ -32,7 +32,7 @@ module serializer #(
             s_shift_reg     <= '0;
             s_bit_count     <= '0;
             s_waiting_fifo_data <= 1'b0;
-            s_sample_tick_pending <= 1'b0;
+            s_bit_event_d <= 1'b0;
             o_tx_fifo_pop    <= 1'b0;
             o_serial_data <= 1'b0;
             o_tx_busy       <= 1'b0;
@@ -41,12 +41,8 @@ module serializer #(
         
         else begin
             o_tx_fifo_pop <= 1'b0;
-            o_tx_sample_tick <= 1'b0;
-
-            if (s_sample_tick_pending) begin
-                o_tx_sample_tick <= 1'b1;
-                s_sample_tick_pending <= 1'b0;
-            end
+            o_tx_sample_tick <= s_bit_event_d;
+            s_bit_event_d <= o_tx_busy && i_baud_tick;
 
             // STEP 1: Ready to load
             if (!o_tx_busy) begin
@@ -66,7 +62,6 @@ module serializer #(
             // STEP 2: Transmission in progress
             else if (i_baud_tick) begin
                 o_serial_data <= s_shift_reg[0];
-                s_sample_tick_pending <= 1'b1;
 
                 if (s_bit_count == (DATA_WIDTH - 1)) begin
                     o_tx_busy <= 1'b0;
