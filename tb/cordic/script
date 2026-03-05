@@ -2,7 +2,7 @@
 # Script qui lance les sims
 # =====================================================
 
-#vsim -c -do tb/cordic/Tb_cordic_init.do
+vsim -c -do tb/cordic/Tb_cordic_init.do
 #vsim -c -do tb/cordic/Tb_cordic_step.do
 #vsim -c -do tb/cordic/Tb_cordic_top.do
 #vsim -do tb/cordic/Tb_cordic_top_sine.do

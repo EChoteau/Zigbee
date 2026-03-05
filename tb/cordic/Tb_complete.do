@@ -18,9 +18,7 @@ sim:/tb_complete/clk \
 sim:/tb_complete/rst_n \
 sim:/tb_complete/I_in \
 sim:/tb_complete/Q_in \
-sim:/tb_complete/phase_cordic \
-sim:/tb_complete/phase_deriv \
-sim:/tb_complete/phase_filter
+sim:/tb_complete/phase_out \
 
 run -all
 

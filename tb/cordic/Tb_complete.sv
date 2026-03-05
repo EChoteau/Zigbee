@@ -1,41 +1,26 @@
 module tb_complete();
     parameter WIDTH = 8;
-    parameter WIDTH_PHASE = WIDTH + 2;
     parameter FILTER_N = 8;
     parameter real PI = 3.14159265359;
-    parameter int OUT_WIDTH = WIDTH + $clog2(FILTER_N);
+    parameter int OUT_WIDTH = WIDTH + $clog2(FILTER_N)+2;
 
     logic clk;
     logic rst_n;
     logic signed [WIDTH-1:0] I_in, Q_in;
-    logic signed [WIDTH_PHASE-1:0] phase_cordic;
-    logic signed [WIDTH_PHASE-1:0] phase_deriv;
-    logic signed [OUT_WIDTH-1:0] phase_filter;
+
+    logic signed [OUT_WIDTH-1:0] phase_out;
     
 
-    cordic_top #(
+    cordic_system_complete #(
         .WIDTH_IN(WIDTH),
-        .WIDTH_PHASE(WIDTH_PHASE)
-    ) cordic_top_inst (
+	.FILTER_N(FILTER_N),
+        .OUT_WIDTH(OUT_WIDTH)
+    ) dut (
+	.clk(clk), .rst_n(rst_n),
         .I_in(I_in), .Q_in(Q_in),
-        .Phase_out(phase_cordic)
+        .Phase_out(phase_out)
     );
 
-    derivative #(.WIDTH(WIDTH_PHASE)) derivative_inst (
-        .clk(clk),
-        .rst_n(rst_n),
-        .phase_in(phase_cordic),
-        .phase_deriv(phase_deriv)
-    );
-
-    boxcar_filter #(
-        .WIDTH(WIDTH_PHASE), 
-        .N(FILTER_N)
-    ) boxcar_filter_inst (
-        .clk(clk), .rst_n(rst_n),
-        .data_in(phase_deriv), .data_out(phase_filter)
-    );
-    
     // --- Clock Generation ---
     initial begin
         clk = 0;
