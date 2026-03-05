@@ -12,7 +12,7 @@ begin
 
     for (phase = 0; phase < 3; phase++) begin
         case (phase)
-            0: apb_write(ADDR_DIVIDER, 8'h00);
+            0: apb_write(ADDR_DIVIDER, 8'h01);
             1: apb_write(ADDR_DIVIDER, 8'h01);
             default: apb_write(ADDR_DIVIDER, 8'h03);
         endcase
@@ -23,7 +23,6 @@ begin
 
             apb_write(ADDR_DATA, tx_byte);
             apb_write(ADDR_CONTROL, 8'h19); // arm TX only after data is queued
-            cdr_push_rx_byte(rx_byte);
 
             timeout = 0;
             while ((o_tx_valid !== 1'b1) && (timeout < 100)) begin
@@ -34,6 +33,8 @@ begin
                 else $fatal(1, "[STRESS] Timeout waiting TX start");
 
             apb_write(ADDR_CONTROL, 8'h11); // drop tx_start before end-of-frame to avoid underrun flag
+
+            cdr_push_rx_byte(rx_byte);
 
             timeout = 0;
             while ((o_tx_valid !== 1'b0) && (timeout < 200)) begin
