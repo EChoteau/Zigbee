@@ -37,7 +37,6 @@ module interface_top #(
 	logic                  w_rx_fifo_full;
 	logic                  w_rx_fifo_pop;
 	logic [DATA_WIDTH-1:0] w_rx_fifo_q;
-	logic                  w_rx_fifo_rd_valid;
 	logic                  w_rx_fifo_empty;
 
 	logic                  w_global_en;
@@ -143,7 +142,7 @@ module interface_top #(
 		.o_full(w_rx_fifo_full),
 		.i_rd_en(w_rx_fifo_pop),
 		.o_data(w_rx_fifo_q),
-		.o_rd_valid(w_rx_fifo_rd_valid),
+		.o_rd_valid(),
 		.o_empty(w_rx_fifo_empty)
 	);
 

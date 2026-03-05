@@ -58,6 +58,10 @@ module apb_slave_regs #(
     // Registres physiques (ceux qui stockent vraiment une valeur)
     logic [4:0] s_reg_control; 
     logic [7:0] s_reg_divider;
+    logic [4:0] s_reg_control_n;
+    logic [7:0] s_reg_divider_n;
+    logic [7:0] s_tx_data_n;
+    logic       s_tx_push_n;
 
     // Détection des phases du protocole APB
     logic w_write_en;
@@ -83,7 +87,43 @@ module apb_slave_regs #(
     assign o_clear_err = s_reg_control[2];
     assign o_tx_start  = s_reg_control[3];
     assign o_rx_enable = s_reg_control[4];
-    assign o_div_val   = s_reg_divider;
+    assign o_div_val   = (s_reg_divider == 8'h00) ? 8'h01 : s_reg_divider;
+
+    // ==========================================
+    // PROCESSUS COMBINATOIRE : NEXT-STATE ÉCRITURE
+    // ==========================================
+    always_comb begin
+        s_reg_control_n = s_reg_control;
+        s_reg_divider_n = s_reg_divider;
+        s_tx_data_n     = o_tx_data;
+        s_tx_push_n     = 1'b0;
+
+        // Auto-clear SW_RESET et CLEAR_ERR au cycle suivant
+        if (s_reg_control[1]) s_reg_control_n[1] = 1'b0;
+        if (s_reg_control[2]) s_reg_control_n[2] = 1'b0;
+
+        if (w_write_en) begin
+            case (i_paddr)
+                ADDR_DATA: begin
+                    if (!i_tx_full) begin
+                        s_tx_data_n = i_pwdata[7:0];
+                        s_tx_push_n = 1'b1;
+                    end
+                end
+                ADDR_CONTROL: begin
+                    s_reg_control_n = i_pwdata[4:0];
+                end
+                ADDR_DIVIDER: begin
+                    if (i_pwdata[7:0] == 8'h00) begin
+                        s_reg_divider_n = 8'h01;
+                    end else begin
+                        s_reg_divider_n = i_pwdata[7:0];
+                    end
+                end
+                default: ;
+            endcase
+        end
+    end
 
     // ==========================================
     // PROCESSUS SÉQUENTIEL : ÉCRITURE
@@ -92,41 +132,14 @@ module apb_slave_regs #(
         if (!i_rst_n) begin
             // Reset asynchrone actif bas [cite: 102]
             s_reg_control <= '0;
-            s_reg_divider <= 8'h01;
+            s_reg_divider <= '0;
             o_tx_data     <= '0;
             o_tx_push     <= 1'b0;
         end else begin
-            // 1. Par défaut, le PUSH de la FIFO retombe à 0 (C'est une impulsion d'un cycle)
-            o_tx_push <= 1'b0;
-
-            // 2. Auto-Clear pour le SW_RESET et CLEAR_ERR
-            // Si le processeur les passe à 1, on les remet à 0 automatiquement au cycle d'après
-            if (s_reg_control[1]) s_reg_control[1] <= 1'b0;
-            if (s_reg_control[2]) s_reg_control[2] <= 1'b0;
-
-            // 3. Gestion de l'écriture APB
-            if (w_write_en) begin
-                case (i_paddr)
-                    ADDR_DATA: begin
-                        // On pousse la donnée dans la FIFO TX que si elle n'est pas pleine
-                        if (!i_tx_full) begin
-                            o_tx_data <= i_pwdata[7:0];
-                            o_tx_push <= 1'b1;
-                        end
-                    end
-                    ADDR_CONTROL: begin
-                        s_reg_control <= i_pwdata[4:0];
-                    end
-                    ADDR_DIVIDER: begin
-                        if (i_pwdata[7:0] == 8'h00) begin
-                            s_reg_divider <= 8'h01;
-                        end else begin
-                            s_reg_divider <= i_pwdata[7:0];
-                        end
-                    end
-                    default: ; // Ne rien faire pour les autres adresses (protection)
-                endcase
-            end
+            s_reg_control <= s_reg_control_n;
+            s_reg_divider <= s_reg_divider_n;
+            o_tx_data     <= s_tx_data_n;
+            o_tx_push     <= s_tx_push_n;
         end
     end
 
@@ -158,7 +171,7 @@ module apb_slave_regs #(
                     o_prdata[4:0] = s_reg_control; // Relecture de la conf actuelle
                 end
                 ADDR_DIVIDER: begin
-                    o_prdata[7:0] = s_reg_divider; // Relecture de la vitesse
+                    o_prdata[7:0] = o_div_val; // Relecture de la vitesse (clamp min=1)
                 end
                 default: o_prdata = '0;
             endcase
