@@ -8,7 +8,7 @@ task automatic run_tc_stress_tx_rx_noreset;
 begin
     $display("[STRESS] TX/RX no-reset with baud changes start");
 
-    apb_write(ADDR_CONTROL, 8'h19); // global_en=1, tx_start=1, rx_enable=1
+    apb_write(ADDR_CONTROL, 8'h11); // global_en=1, rx_enable=1, tx_start=0
 
     for (phase = 0; phase < 3; phase++) begin
         case (phase)
@@ -22,7 +22,18 @@ begin
             rx_byte = 8'hA0 + (phase * 8) + i;
 
             apb_write(ADDR_DATA, tx_byte);
+            apb_write(ADDR_CONTROL, 8'h19); // arm TX only after data is queued
             cdr_push_rx_byte(rx_byte);
+
+            timeout = 0;
+            while ((o_tx_valid !== 1'b1) && (timeout < 100)) begin
+                @(posedge i_clk); #1;
+                timeout++;
+            end
+            assert (o_tx_valid == 1'b1)
+                else $fatal(1, "[STRESS] Timeout waiting TX start");
+
+            apb_write(ADDR_CONTROL, 8'h11); // drop tx_start before end-of-frame to avoid underrun flag
 
             timeout = 0;
             while ((o_tx_valid !== 1'b0) && (timeout < 200)) begin
