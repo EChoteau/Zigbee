@@ -42,6 +42,12 @@ begin
     run_tc_t3_rx_nominal();
 
     apply_reset(5);
+    run_tc_t4_interface_errors();
+
+    apply_reset(5);
+    run_tc_t5_sw_reset();
+
+    apply_reset(5);
     run_tc_stress_tx_rx_noreset();
 
     $display("[PLAN] Full interface plan PASS");
