@@ -39,7 +39,7 @@ module demux_msk_tb(); // Règle 4.1 : Aucune entrée/sortie
         // ==========================================
         // ETAPE 2 : Test nominal (Aiguillage I puis Q)
         // ==========================================
-        @(posedge s_clk);
+        @(posedge s_clk);// pour la synchronisation 
         
         // --- Envoi d'un '0' (devrait aller sur la voie I) ---
         s_b_enc = 0;
@@ -64,6 +64,33 @@ module demux_msk_tb(); // Règle 4.1 : Aucune entrée/sortie
         assert (s_a_Q == 1'b1) else $error("Erreur FATALE : La voie Q devrait etre a 1 !");
         assert (s_a_I == 1'b0) else $error("Erreur FATALE : La voie I aurait du garder son ancienne valeur (0) !");
         #39;
+
+        // --- Envoi d'un '1' (devrait aller sur la voie I) ---
+        s_b_enc = 1;
+        s_flag_enable = 1;
+        @(posedge s_clk);
+        s_flag_enable = 0;
+        #1;
+        
+        // AUTO-VERIFICATION
+        assert (s_a_Q == 1'b1) else $error("Erreur FATALE : La voie Q devrait etre a 1 !");
+        assert (s_a_I == 1'b1) else $error("Erreur FATALE : La voie I aurait du garder son ancienne valeur (0) !");
+        #39;
+
+        // --- Envoi d'un '0' (devrait aller sur la voie Q) ---
+        s_b_enc = 0;
+        s_flag_enable = 1;
+        @(posedge s_clk);
+        s_flag_enable = 0;
+        #1;
+        
+        // AUTO-VERIFICATION
+        assert (s_a_Q == 1'b0) else $error("Erreur FATALE : La voie Q devrait etre a 1 !");
+        assert (s_a_I == 1'b1) else $error("Erreur FATALE : La voie I aurait du garder son ancienne valeur (0) !");
+        #39;
+
+
+
 
         // ==========================================
         // ETAPE 3 : Test du Reset en cours de route (Règle 4.3)
