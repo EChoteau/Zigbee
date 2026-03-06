@@ -12,12 +12,12 @@ vmap work work
 # 2. Compilation des fichiers
 # -sv indique que nous utilisons le SystemVerilog
 echo "Compiling design..."
-vlog -sv wave_generator.sv
-vlog -sv demod.sv
+vlog -sv +acc wave_generator.sv
+vlog -sv +acc demod.sv
 
 echo "Compiling testbench..."
-vlog -sv wave_generator_tb.sv
-vlog -sv demod_tb.sv
+vlog -sv +acc wave_generator_tb.sv
+vlog -sv +acc demod_tb.sv
 
 # 3. Vérification du succès
 if [ $? -eq 0 ]; then
