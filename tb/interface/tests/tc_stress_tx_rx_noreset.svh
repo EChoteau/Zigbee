@@ -32,7 +32,7 @@ begin
             assert (o_tx_valid == 1'b1)
                 else $fatal(1, "[STRESS] Timeout waiting TX start");
 
-            apb_write(ADDR_CONTROL, 8'h11); // drop tx_start before end-of-frame to avoid underrun flag
+            apb_write(ADDR_CONTROL, 8'h11); // keep global/rx config between TX pulses
 
             cdr_push_rx_byte(rx_byte);
 

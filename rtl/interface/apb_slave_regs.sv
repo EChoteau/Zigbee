@@ -98,9 +98,10 @@ module apb_slave_regs #(
         s_tx_data_n     = o_tx_data;
         s_tx_push_n     = 1'b0;
 
-        // Auto-clear SW_RESET et CLEAR_ERR au cycle suivant
+        // Auto-clear des commandes impulsionnelles au cycle suivant
         if (s_reg_control[1]) s_reg_control_n[1] = 1'b0;
         if (s_reg_control[2]) s_reg_control_n[2] = 1'b0;
+        if (s_reg_control[3]) s_reg_control_n[3] = 1'b0;
 
         if (w_write_en) begin
             case (i_paddr)
