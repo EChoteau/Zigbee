@@ -6,7 +6,7 @@ module fir_core #(
     parameter OUT_WIDTH = PROD_WIDTH + 5
 )(
     input  wire clk,
-    input  wire rst,
+    input  wire rstn,
     input  wire signed [N*IN_WIDTH-1:0]   x_flat,
     input  wire signed [N*COEF_WIDTH-1:0] h_flat,
     output reg  signed [OUT_WIDTH-1:0]    y_out
@@ -98,7 +98,7 @@ module fir_core #(
     // Sortie avec reset
     // =========================
     always @(posedge clk) begin
-        if (!rst)
+        if (!rstn)
             y_out <= 0;
         else
             y_out <= sum_final;

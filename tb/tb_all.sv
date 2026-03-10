@@ -3,7 +3,7 @@
 module system_tb();
     logic CLK, RSTn, adc_eoc;
     logic [5:0] I_in, Q_in;
-    logic signed [22:0] I_out, Q_out;
+    logic signed [7:0] I_out, Q_out;
 
     // Instanciation explicite 
     receiver_system dut (

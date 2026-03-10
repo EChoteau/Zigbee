@@ -4,8 +4,8 @@ module receiver_system (
     input  logic adc_eoc,
     input  logic [5:0] I_in,  // Entrée brute ADC
     input  logic [5:0] Q_in,
-    output logic signed [22:0] I_filtered,
-    output logic signed [22:0] Q_filtered
+    output logic signed [7:0] I_filtered,
+    output logic signed [7:0] Q_filtered
 );
 
     logic signed [12:0] I_demod, Q_demod;

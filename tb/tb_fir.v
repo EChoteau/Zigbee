@@ -13,10 +13,10 @@ module tb_fir;
     // =========================
 
     reg clk;
-    reg rst;
+    reg rstn;
     reg sample_en;
-    reg signed [5:0] x_in;
-    wire signed [22:0] y_out;
+    reg signed [12:0] x_in;
+    wire signed [7:0] y_out;
 
     // =========================
     // DUT
@@ -24,7 +24,7 @@ module tb_fir;
 
     fir_top DUT (
         .clk(clk),
-        .rst(rst),
+        .rstn(rst),
         .sample_en(sample_en),
         .x_in(x_in),
         .y_out(y_out)
@@ -49,13 +49,13 @@ module tb_fir;
     initial begin
 
         // Init
-        rst = 0;
+        rstn = 0;
         sample_en = 0;
         x_in = 0;
 
         #(5*CLK_PERIOD);
 
-        rst = 1;
+        rstn = 1;
         sample_en = 1;
 
 

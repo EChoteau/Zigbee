@@ -3,7 +3,7 @@ module delay_line #(
     parameter IN_WIDTH = 6
 )(
     input  wire clk,
-    input  wire rst,
+    input  wire rstn,
     input  wire sample_en,
     input  wire signed [IN_WIDTH-1:0] x_in,
     output reg signed [N*IN_WIDTH-1:0] x_out_flat
@@ -12,8 +12,8 @@ module delay_line #(
     reg signed [IN_WIDTH-1:0] i_x_out [0:N-1]; // signal interne en Verilog
     integer i;
 
-    always @(posedge clk or negedge rst) begin
-        if (!rst) begin
+    always @(posedge clk or negedge rstn) begin
+        if (!rstn) begin
             for (i = 0; i < N; i = i + 1)
                 i_x_out[i] <= 0;
         end
