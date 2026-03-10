@@ -1,0 +1,12 @@
+module phase_detector(clk,data_in,data_out, early,late)
+{
+ input wire  clk;
+ input wire  data_in;
+ output wire data_out;
+ output wire early;
+ output wire late;
+ de;;;;;;;;;;;;
+ logic decision;
+
+}
+ 
