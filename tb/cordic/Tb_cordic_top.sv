@@ -6,6 +6,10 @@ module tb_cordic_top();
     logic signed [WIDTH-1:0] I_in, Q_in;
     logic signed [WIDTH_PHASE-1:0] Phase_out;
 
+    // Clock
+    logic clk;
+    logic rst_n;
+
     cordic_top #(
         .WIDTH_IN(WIDTH),
         .WIDTH_PHASE(WIDTH_PHASE),
@@ -15,7 +19,8 @@ module tb_cordic_top();
     // Helper to display results
     task check_phase(string label, int i, int q);
         I_in = i; Q_in = q;
-        #10;
+        #5 clk = ~clk;
+	#5 clk = ~clk;
         $display("%s | Input: (%d, %d) -> Phase Output: %h (%d)", label, i, q, Phase_out, Phase_out);
     endtask
 

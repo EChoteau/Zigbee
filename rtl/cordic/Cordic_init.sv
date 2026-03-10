@@ -11,9 +11,9 @@ module cordic_init #(
 );
 
     // Constantes pour Phase: 0.5 et -0.5 en virgule fixe
-    // 0.5 correspond à 2^(WIDTH-2)
-    logic signed [WIDTH_PHASE-1:0] PHASE_05  = (1 << (WIDTH_PHASE-2));
-    logic signed [WIDTH_PHASE-1:0] PHASE_M05 = -(1 << (WIDTH_PHASE-2));
+    // 0.5 correspond   2^(WIDTH-2)
+    localparam logic signed [WIDTH_PHASE-1:0] PHASE_05  = (1 << (WIDTH_PHASE-2));
+    localparam logic signed [WIDTH_PHASE-1:0] PHASE_M05 = -(1 << (WIDTH_PHASE-2));
 
     // Internal helper signals for bit-growth conversion
     // We sign-extend the input then shift left by 3 to add LSBs
@@ -31,12 +31,12 @@ module cordic_init #(
             PHASE_init = 0;
         end else begin
             if (Q_in >= 0) begin
-                // Quadrant 2: Rotation -90°
+                // Quadrant 2: Rotation -90
                 I_init     = Q_ext;
                 Q_init     = -I_ext;
                 PHASE_init = PHASE_05;
             end else begin
-                // Quadrant 3: Rotation +90°
+                // Quadrant 3: Rotation +90
                 I_init     = -Q_ext;
                 Q_init     = I_ext;
                 PHASE_init = PHASE_M05;

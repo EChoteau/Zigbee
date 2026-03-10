@@ -14,14 +14,21 @@ module cordic_system_complete #(
 
     logic signed [WIDTH_PHASE-1:0] phase_cordic;
     logic signed [WIDTH_PHASE-1:0] phase_deriv;
+	logic signed [WIDTH_IN-1:0] I_in_buf;
+	logic signed [WIDTH_IN-1:0] Q_in_buf;
 
-    
+    always_ff @(posedge clk) begin
+       	Q_in_buf <= Q_in;
+	I_in_buf <= I_in;
+    end
 
     cordic_top #(
         .WIDTH_IN(WIDTH_IN),
         .WIDTH_PHASE(WIDTH_PHASE)
     ) cordic_top_inst (
-        .I_in(I_in), .Q_in(Q_in),
+        .clk(clk),
+        .rst_n(rst_n),
+        .I_in(I_in_buf), .Q_in(Q_in_buf),
         .Phase_out(phase_cordic)
     );
 

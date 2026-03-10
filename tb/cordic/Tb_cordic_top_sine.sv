@@ -10,6 +10,7 @@ module tb_cordic_top_sine;
 
     // Clock
     logic clk;
+    logic rst_n;
 
     // DUT Inputs (Registered)
     logic signed [WIDTH-1:0] I_in_reg;
@@ -28,6 +29,8 @@ module tb_cordic_top_sine;
         .WIDTH_PHASE(WIDTH_PHASE),
         .NUM_STEPS(NUM_STEPS)
     ) dut (
+        .clk(clk),
+        .rst_n(rst_n),
         .I_in(I_in_reg),
         .Q_in(Q_in_reg),
         .Phase_out(Phase_out_raw) // Connected to wire declared above
@@ -51,6 +54,7 @@ module tb_cordic_top_sine;
         I_in_reg = 0;
         Q_in_reg = 0;
         angle = 0.0;
+	    rst_n = 1;
         
         @(posedge clk);
         

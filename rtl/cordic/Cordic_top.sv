@@ -2,8 +2,10 @@ module cordic_top #(
     parameter int WIDTH_IN = 8,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
-    parameter int NUM_STEPS = WIDTH_IN
+    parameter int NUM_STEPS = 10 //WIDTH_IN
 )(
+    input  logic clk,
+    input  logic rst_n,
     input  logic signed [WIDTH_IN-1:0] I_in,
     input  logic signed [WIDTH_IN-1:0] Q_in,
     output logic signed [WIDTH_PHASE-1:0] Phase_out
@@ -14,7 +16,7 @@ module cordic_top #(
     localparam logic signed [10-1:0] ATAN_TABLE [0:9] = '{
         10'sh80, // step 0: 45.0000 deg
         10'sh4c, // step 1: 26.5651 deg
-        10'sh28, // step 2: 14.0362 deg
+        10'sh28, // step 2: 14.0362 degs
         10'sh14, // step 3: 7.1250 deg
         10'sh0a, // step 4: 3.5763 deg
         10'sh05, // step 5: 1.7899 deg
@@ -65,7 +67,10 @@ module cordic_top #(
     endgenerate
 
     // --- 5. Final Output ---
-    assign Phase_out = p_wire[NUM_STEPS];
+    
+    always_ff @(posedge clk) begin
+        Phase_out <= p_wire[NUM_STEPS];
+    end
 
 endmodule
 
