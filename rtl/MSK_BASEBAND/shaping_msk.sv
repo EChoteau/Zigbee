@@ -21,7 +21,7 @@ module shaping_msk (
     logic [5:0] s_phase;         // Compteur de temps principal (0 à 63 pour une arche entière)
     
     // Préfixe w_ pour les fils (combinatoire)
-    logic [5:0] w_phase_Q;       // Phase décalée pour la voie Q
+    logic [5:0] w_phase_I;       // Phase décalée pour la voie I
     logic [4:0] w_ad_rom_I;      // Adresse de lecture ROM pour I (0 à 31)
     logic [4:0] w_ad_rom_Q;      // Adresse de lecture ROM pour Q (0 à 31)
     
@@ -47,14 +47,15 @@ module shaping_msk (
     // 3. LOGIQUE COMBINATOIRE : DÉPHASAGE ET SYMÉTRIE
     // --------------------------------------------------------------------------
     // -> Le retard de Tb pour la voie Q (Déphasage de Pi/2)
-    assign w_phase_Q = s_phase + 6'd32;
+    assign w_phase_I = s_phase + 6'd32;
 
     // -> Astuce du quart d'onde : Lecture Endroit/Envers
     // Si la phase < 32 (Montée) : on lit normalement de 0 à 31
     // Si la phase >= 32 (Descente) : le ~ inverse les bits 
-    assign w_ad_rom_I = (s_phase < 6'd32)   ? s_phase[4:0]   : ~s_phase[4:0];
-    assign w_ad_rom_Q = (w_phase_Q < 6'd32) ? w_phase_Q[4:0] : ~w_phase_Q[4:0];
-
+    
+    assign w_ad_rom_I = (w_phase_I < 6'd32) ? w_phase_I[4:0] : ~w_phase_I[4:0];
+    
+    assign w_ad_rom_Q = (s_phase < 6'd32)   ? s_phase[4:0]   : ~s_phase[4:0];
 
     // --------------------------------------------------------------------------
     // 4. LA ROM (Le tableau constant SystemVerilog) :

@@ -24,7 +24,7 @@ module demux_msk (
         if (i_rst_n == 1'b0) begin
             o_a_I  <= 1'b1; 
             o_a_Q  <= 1'b1; 
-            s_tour <= 1'b0; // On décide que c'est la voie I qui commence
+            s_tour <= 1'b1; // On décide que c'est la voie Q qui commence
             
         end else begin
             
