@@ -25,7 +25,7 @@ begin
     // Clear error
     apb_write(ADDR_CONTROL, 8'h0F); // clear_err=1 (bit 2)
     @(posedge i_clk); #1;
-    apb_write(ADDR_CONTROL, 8'h09); // tx_start=1
+    apb_write(ADDR_CONTROL, 8'h01); // keep global_en=1, no tx_start retrigger
     
     apb_read(ADDR_STATUS, rd);
     assert (rd[4] == 1'b0)

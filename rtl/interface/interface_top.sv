@@ -51,24 +51,33 @@ module interface_top #(
 	logic                  w_rx_ovf_pulse;
 	logic                  s_rx_ovf_err;
 	logic                  s_tx_und_err;
-	logic                  s_tx_busy_d;
 	logic                  s_tx_path_en_d;
+	logic                  s_tx_run;
 
 	logic                  w_tx_path_en;
 	logic                  w_rx_path_en;
 
-	assign w_tx_path_en = w_global_en & w_tx_start;
+	assign w_tx_path_en = w_global_en & s_tx_run;
 	assign w_rx_path_en = w_global_en & w_rx_enable;
 
 	always_ff @(posedge i_clk or negedge i_rst_n) begin
 		if (!i_rst_n) begin
 			s_rx_ovf_err <= 1'b0;
 			s_tx_und_err <= 1'b0;
-			s_tx_busy_d  <= 1'b0;
 			s_tx_path_en_d <= 1'b0;
+			s_tx_run <= 1'b0;
 		end else begin
-			s_tx_busy_d    <= w_tx_busy;
 			s_tx_path_en_d <= w_tx_path_en;
+
+			if (w_sw_reset || !w_global_en) begin
+				s_tx_run <= 1'b0;
+			end else begin
+				if (w_tx_start) begin
+					s_tx_run <= 1'b1;
+				end else if (s_tx_run && !w_tx_busy && w_tx_fifo_empty) begin
+					s_tx_run <= 1'b0;
+				end
+			end
 
 			if (w_sw_reset || w_clear_err) begin
 				s_rx_ovf_err <= 1'b0;
@@ -77,8 +86,7 @@ module interface_top #(
 				if (w_rx_ovf_pulse) begin
 					s_rx_ovf_err <= 1'b1;
 				end
-				if ((w_tx_path_en && !s_tx_path_en_d && !w_tx_busy && w_tx_fifo_empty) ||
-					(s_tx_busy_d && !w_tx_busy && w_tx_path_en && w_tx_fifo_empty)) begin
+				if (w_tx_path_en && !s_tx_path_en_d && !w_tx_busy && w_tx_fifo_empty) begin
 					s_tx_und_err <= 1'b1;
 				end
 			end

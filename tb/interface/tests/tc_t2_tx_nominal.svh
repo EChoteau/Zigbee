@@ -7,9 +7,10 @@ begin
     $display("[T2] TX nominal test start");
 
     apb_write(ADDR_DIVIDER, 8'h02);
-    apb_write(ADDR_CONTROL, 8'h09); // global_en=1, tx_start=1
+    apb_write(ADDR_CONTROL, 8'h01); // global_en=1
 
     apb_write(ADDR_DATA, 8'hA5);
+    apb_write(ADDR_CONTROL, 8'h09); // pulse tx_start=1
 
     timeout_cycles = 0;
     while ((o_tx_valid !== 1'b1) && (timeout_cycles < 50)) begin

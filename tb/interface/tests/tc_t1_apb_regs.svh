@@ -11,8 +11,8 @@ begin
     apb_write(ADDR_CONTROL, 8'h1F);
     repeat (2) @(posedge i_clk);
     apb_read(ADDR_CONTROL, rd);
-    assert (rd[4:0] == 5'b11001)
-        else $fatal(1, "[T1] CONTROL autoclear mismatch. got=%0b expected=11001", rd[4:0]);
+    assert (rd[4:0] == 5'b10001)
+        else $fatal(1, "[T1] CONTROL autoclear mismatch. got=%0b expected=10001", rd[4:0]);
 
     apb_read(ADDR_STATUS, rd);
     assert (rd[0] == 1'b1)
