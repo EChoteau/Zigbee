@@ -7,83 +7,95 @@ module fir_core #(
 )(
     input  wire clk,
     input  wire rst,
-    input  wire signed [N*IN_WIDTH-1:0] x_flat,
+    input  wire signed [N*IN_WIDTH-1:0]   x_flat,
     input  wire signed [N*COEF_WIDTH-1:0] h_flat,
-    output reg  signed [OUT_WIDTH-1:0] y_out
+    output reg  signed [OUT_WIDTH-1:0]    y_out
 );
 
     // =========================
     // Tableaux internes
     // =========================
-    wire signed [IN_WIDTH-1:0]  i_x_int [0:N-1];
+    wire signed [IN_WIDTH-1:0]   i_x_int [0:N-1];
     wire signed [COEF_WIDTH-1:0] i_h_int [0:N-1];
     genvar i;
 
     generate
-        for (i = 0; i < N; i = i + 1) begin : unpack_inputs
+        for (i = 0; i < N; i = i + 1) begin : get_inputs
             assign i_x_int[i] = x_flat[(i+1)*IN_WIDTH-1 -: IN_WIDTH];
             assign i_h_int[i] = h_flat[(i+1)*COEF_WIDTH-1 -: COEF_WIDTH];
         end
     endgenerate
 
+
     // =========================
-    // 32 Multiplications
+    // Somme des entrees symetriques
     // =========================
-    wire signed [PROD_WIDTH-1:0] p [0:N-1];
+    wire signed [IN_WIDTH:0] x_sum [0:15];
+
     generate
-        for (i = 0; i < N; i = i + 1) begin : multiplication
-            assign p[i] = i_x_int[i] * i_h_int[i];
+        for (i = 0; i < 16; i = i + 1) begin : sym_sum
+            assign x_sum[i] = i_x_int[i] + i_x_int[N-1-i];
         end
     endgenerate
 
+
     // =========================
-    // Niveau 1 -> 16 sommes
+    // 16 Multiplications
     // =========================
-    wire signed [OUT_WIDTH-1:0] s1 [0:15];
+    wire signed [PROD_WIDTH-1:0] p [0:15];
+
     generate
-        for (i = 0; i < 16; i = i + 1) begin : SommeN1
+        for (i = 0; i < 16; i = i + 1) begin : multiplication
+            assign p[i] = x_sum[i] * i_h_int[i];
+        end
+    endgenerate
+
+
+    // =========================
+    // Niveau 1 -> 8 sommes
+    // =========================
+    wire signed [OUT_WIDTH-1:0] s1 [0:7];
+
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : SommeN1
             assign s1[i] = p[2*i] + p[2*i+1];
         end
     endgenerate
 
+
     // =========================
-    // Niveau 2 ->  8
+    // Niveau 2 -> 4
     // =========================
-    wire signed [OUT_WIDTH-1:0] s2 [0:7];
+    wire signed [OUT_WIDTH-1:0] s2 [0:3];
+
     generate
-        for (i = 0; i < 8; i = i + 1) begin : SommeN2
+        for (i = 0; i < 4; i = i + 1) begin : SommeN2
             assign s2[i] = s1[2*i] + s1[2*i+1];
         end
     endgenerate
 
+
     // =========================
-    // Niveau 3 -> 4
+    // Niveau 3 -> 2
     // =========================
-    wire signed [OUT_WIDTH-1:0] s3 [0:3];
+    wire signed [OUT_WIDTH-1:0] s3 [0:1];
+
     generate
-        for (i = 0; i < 4; i = i + 1) begin : SommeN3
+        for (i = 0; i < 2; i = i + 1) begin : SommeN3
             assign s3[i] = s2[2*i] + s2[2*i+1];
         end
     endgenerate
 
-    // =========================
-    // Niveau 4 ->  2
-    // =========================
-    wire signed [OUT_WIDTH-1:0] s4 [0:1];
-    generate
-        for (i = 0; i < 2; i = i + 1) begin : SommeN4
-            assign s4[i] = s3[2*i] + s3[2*i+1];
-        end
-    endgenerate
 
     // =========================
-    // Niveau 5 -> 1
+    // Niveau 4 -> 1
     // =========================
     wire signed [OUT_WIDTH-1:0] sum_final;
-    assign sum_final = s4[0] + s4[1];
+    assign sum_final = s3[0] + s3[1];
+
 
     // =========================
-    //  Sortie avec reset
+    // Sortie avec reset
     // =========================
     always @(posedge clk) begin
         if (!rst)

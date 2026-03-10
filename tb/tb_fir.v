@@ -44,6 +44,7 @@ module tb_fir;
     // =========================
 
     integer i;
+    integer period; 
 
     initial begin
 
@@ -57,41 +58,34 @@ module tb_fir;
         rst = 1;
         sample_en = 1;
 
+
         // =====================================
         // Test impulse response
         // =====================================
 
         $display("---- Impulse Response Test ----");
 
-        x_in = 20;  // impulsion
+        x_in = 20;
         #(CLK_PERIOD);
 
         x_in = 0;
 
-        // Wait 40 cycles
         for (i = 0; i < 40; i = i + 1)
             #(CLK_PERIOD);
 
         // =====================================
-        // Test Sinus - basse freq
+        // Frequency sweep sine test
         // =====================================
 
-        $display("---- Low Frequency Sine Test ----");
+        $display("---- Frequency Sweep Test ----");
 
-        for (i = 0; i < 200; i = i + 1) begin
-            x_in = 20 * $sin(2*3.14159*i/40);
-            #(CLK_PERIOD);
-        end
+        for (period = 80; period >= 4; period = period - 4) begin
+            $display("Testing sine period = %d", period);
 
-        // =====================================
-        // Test Sinus - Haute Freq
-        // =====================================
-
-        $display("---- High Frequency Test ----");
-
-        for (i = 0; i < 200; i = i + 1) begin
-            x_in = 6'sd20 * $sin(2*3.14159*i/4);
-            #(CLK_PERIOD);
+            for (i = 0; i < 200; i = i + 1) begin
+                x_in = 20 * $sin(2*3.14159*i/period);
+                #(CLK_PERIOD);
+            end
         end
 
         $display("Simulation finished.");
