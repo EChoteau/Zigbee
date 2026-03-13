@@ -1,0 +1,8 @@
+source config/config_ASIC
+
+cd asic/synth/
+
+dc_shell -f dc_shell_script.tcl | tee log_synthese.log
+#design_vision
+
+
