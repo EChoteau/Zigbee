@@ -6,9 +6,21 @@ module tb_cordic_top();
     logic signed [WIDTH-1:0] I_in, Q_in;
     logic signed [WIDTH_PHASE-1:0] Phase_out;
 
-    // Clock
+    // Clock and reset
     logic clk;
     logic rst_n;
+
+    // Clock generator
+    initial clk = 1'b0;
+    always #5 clk = ~clk;
+
+    // Reset sequence
+    initial begin
+        rst_n = 1'b0;
+        // Hold reset for a few clock cycles
+        repeat (4) @(posedge clk);
+        rst_n = 1'b1;
+    end
 
     cordic_top #(
         .WIDTH_IN(WIDTH),
@@ -18,13 +30,17 @@ module tb_cordic_top();
 
     // Helper to display results
     task check_phase(string label, int i, int q);
-        I_in = i; Q_in = q;
-        #5 clk = ~clk;
-	#5 clk = ~clk;
+        I_in = i;
+        Q_in = q;
+        // Wait for a couple of clock cycles for the output to settle
+        @(posedge clk);
+        @(posedge clk);
         $display("%s | Input: (%d, %d) -> Phase Output: %h (%d)", label, i, q, Phase_out, Phase_out);
     endtask
 
     initial begin
+        // Wait for reset deassertion before starting tests
+        @(posedge rst_n);
         $display("--- Starting Full CORDIC Phase Test ---");
         
         // Test 0 degrees (I=max, Q=0) -> Expected Phase: 0
