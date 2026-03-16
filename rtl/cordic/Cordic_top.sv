@@ -12,8 +12,9 @@ module cordic_top #(
 );
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
-    // CORDIC Atan Table for WIDTH_PHASE=10, NUM_STEPS=10
-    localparam logic signed [10-1:0] ATAN_TABLE [0:9] = '{
+    // CORDIC Atan Table originally generated for WIDTH_PHASE=10, NUM_STEPS=10
+    // Stored with element width tied to WIDTH_PHASE to avoid truncation/extension.
+    localparam logic signed [WIDTH_PHASE-1:0] ATAN_TABLE [0:9] = '{
         10'sh80, // step 0: 45.0000 deg
         10'sh4c, // step 1: 26.5651 deg
         10'sh28, // step 2: 14.0362 degs
@@ -23,8 +24,18 @@ module cordic_top #(
         10'sh03, // step 6: 0.8952 deg
         10'sh01, // step 7: 0.4476 deg
         10'sh01, // step 8: 0.2238 deg
-        10'sh00 // step 9: 0.1119 deg
+        10'sh00  // step 9: 0.1119 deg
     };
+
+    // Elaboration-time parameter checks to ensure safe use of ATAN_TABLE
+    initial begin
+        if (NUM_STEPS > 10) begin
+            $error("cordic_top: NUM_STEPS (%0d) exceeds size of ATAN_TABLE (10 entries).", NUM_STEPS);
+        end
+        if (WIDTH_PHASE < 10) begin
+            $error("cordic_top: WIDTH_PHASE (%0d) is less than 10; ATAN_TABLE constants are 10-bit values.", WIDTH_PHASE);
+        end
+    end
 
     // --- 2. Internal Interconnects ---
     // Arrays to hold the signals between each step
