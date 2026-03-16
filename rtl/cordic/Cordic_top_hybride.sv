@@ -45,6 +45,9 @@ module cordic_top_hybride #(
         if (NUM_STEPS > TABLE_STEPS) begin
             $error("NUM_STEPS (%0d) exceeds ATAN_TABLE size (%0d)", NUM_STEPS, TABLE_STEPS);
         end
+        if (WIDTH_PHASE != 10) begin
+            $error("WIDTH_PHASE (%0d) must be 10 to match ATAN_TABLE width (10)", WIDTH_PHASE);
+        end
     end
 
     // --- 2. Pipeline Registers ---
