@@ -79,8 +79,12 @@ module cordic_top #(
 
     // --- 5. Final Output ---
     
-    always_ff @(posedge clk) begin
-        Phase_out <= p_wire[NUM_STEPS];
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            Phase_out <= '0;
+        end else begin
+            Phase_out <= p_wire[NUM_STEPS];
+        end
     end
 
 endmodule
