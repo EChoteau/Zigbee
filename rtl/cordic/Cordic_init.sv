@@ -18,6 +18,14 @@ module cordic_init #(
     // Internal helper signals for bit-growth conversion
     // We sign-extend the input then shift left by 3 to add LSBs
     logic signed [WIDTH_INTERNAL-1:0] I_ext, Q_ext;
+
+    // Elaboration-time check: enforce internal width relationship to keep scaling consistent
+    initial begin
+        if (WIDTH_INTERNAL != WIDTH_IN + 4) begin
+            $fatal(1, "cordic_init: WIDTH_INTERNAL (%0d) must equal WIDTH_IN + 4 (%0d) to preserve internal scaling.",
+                      WIDTH_INTERNAL, WIDTH_IN + 4);
+        end
+    end
     
     always_comb begin
         // Perform sign extension and LSB padding
