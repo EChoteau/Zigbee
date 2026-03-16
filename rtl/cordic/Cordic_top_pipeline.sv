@@ -26,6 +26,11 @@ module cordic_top_pipeline #(
         10'sh00 // step 9: 0.1119 deg
     };
 
+    // Elaboration-time guard: prevent out-of-bounds access to ATAN_TABLE
+    if (NUM_STEPS > 10) begin : gen_num_steps_check
+        initial $error("cordic_top_pipeline: NUM_STEPS (%0d) exceeds ATAN_TABLE size (10).", NUM_STEPS);
+    end
+
     // --- 2. Pipeline Registers ---
     // We use logic instead of wire to create the buffers between stages
     logic signed [WIDTH_INTERNAL-1:0] i_reg [0:NUM_STEPS];
