@@ -8,4 +8,6 @@ vsim -c -do tb/cordic/Tb_cordic_init.do
 #vsim -do tb/cordic/Tb_cordic_top_sine.do
 #vsim -do tb/cordic/Tb_boxcar_filter.do
 #vsim -do tb/cordic/Tb_derive.do
-vsim -do tb/cordic/Tb_complete.do
+vsim -c -do tb/cordic/Tb_complete.do
+
+vsim -c -do tb/cordic/Tb_post_complete.do

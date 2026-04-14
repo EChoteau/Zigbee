@@ -33,7 +33,6 @@ compile_ultra -gate_clock
 # compile_ultra -incremental
 
 
-
 # --- 5. Rapports ---
 # On crée un dossier 'reports' pour ne pas polluer l'espace de travail
 file mkdir reports
@@ -41,3 +40,14 @@ report_timing > reports/timing.rpt
 report_area   > reports/area.rpt
 report_power  > reports/power.rpt
 report_constraint -all_violators > reports/violations.rpt
+
+
+# --- 6. Export Files for Simulation ---
+# Write the Gate-Level Netlist
+write -format verilog -hierarchy -output netlist/cordic_system_complete.v
+
+# Write the SDF timing file
+write_sdf netlist/cordic_system_complete.sdf
+
+# (Optional) Write SDC for downstream P&R tools
+write_sdc netlist/cordic_system_complete.sdc
