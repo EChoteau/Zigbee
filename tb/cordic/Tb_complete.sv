@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module tb_complete();
     parameter WIDTH = 8;
     parameter FILTER_N = 8;
