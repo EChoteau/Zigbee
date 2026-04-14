@@ -12,4 +12,4 @@ vsim -c -do tb/cordic/Tb_cordic_init.do
 #vsim -do tb/cordic/Tb_derive.do
 vsim -c -do tb/cordic/Tb_complete.do
 
-vsim -c -do tb/cordic/Tb_post_complete.do
+vsim -do tb/cordic/Tb_post_complete.do
