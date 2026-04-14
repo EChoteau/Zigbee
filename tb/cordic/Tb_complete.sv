@@ -22,7 +22,7 @@ module tb_complete();
     // --- Clock Generation ---
     initial begin
         clk = 0;
-        forever #5 clk = ~clk;
+        forever #10 clk = ~clk;
     end
 
     // --- Input Generation (Rotating Vector) ---
@@ -50,10 +50,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
+            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
-            @(posedge clk);
         end
         for (int i = 0; i < 10; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -61,10 +61,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
+            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
-            @(posedge clk);
         end
         // Generate a full rotation
         for (int i = 0; i < 40; i = i + 1) begin
@@ -73,10 +73,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
+            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
-            @(posedge clk);
         end
         for (int i = 0; i < 40; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -84,10 +84,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
+            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
-            @(posedge clk);
         end
         #100;
         $finish;
