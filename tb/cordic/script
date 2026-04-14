@@ -2,6 +2,8 @@
 # Script qui lance les sims
 # =====================================================
 
+source config/config_RTL
+
 vsim -c -do tb/cordic/Tb_cordic_init.do
 #vsim -c -do tb/cordic/Tb_cordic_step.do
 #vsim -c -do tb/cordic/Tb_cordic_top.do

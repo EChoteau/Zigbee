@@ -48,6 +48,3 @@ write -format verilog -hierarchy -output netlist/cordic_system_complete.v
 
 # Write the SDF timing file
 write_sdf netlist/cordic_system_complete.sdf
-
-# (Optional) Write SDC for downstream P&R tools
-write_sdc netlist/cordic_system_complete.sdc
