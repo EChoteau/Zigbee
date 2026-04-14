@@ -34,11 +34,11 @@ module tb_complete();
 
     initial begin
         // Initialize
-        i_val = SCALE;
+        i_val = 0;
         q_val = 0;
         angle = 0.0;
         rst_n = 0;
-        I_in <= 0;
+        I_in <= SCALE;
         Q_in <= 0;
         @(posedge clk);
         @(posedge clk);
