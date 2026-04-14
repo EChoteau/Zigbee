@@ -11,12 +11,8 @@ module tb_complete();
     logic signed [OUT_WIDTH-1:0] phase_out;
     
 
-    cordic_system_complete #(
-        .WIDTH_IN(WIDTH),
-	.FILTER_N(FILTER_N),
-        .OUT_WIDTH(OUT_WIDTH)
-    ) dut (
-	.clk(clk), .rst_n(rst_n),
+    cordic_system_complete dut (
+	    .clk(clk), .rst_n(rst_n),
         .I_in(I_in), .Q_in(Q_in),
         .Phase_out(phase_out)
     );
