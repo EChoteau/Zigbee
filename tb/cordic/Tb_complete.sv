@@ -34,7 +34,7 @@ module tb_complete();
 
     initial begin
         // Initialize
-        i_val = 0;
+        i_val = SCALE;
         q_val = 0;
         angle = 0.0;
         rst_n = 0;
@@ -42,7 +42,7 @@ module tb_complete();
         Q_in <= 0;
         @(posedge clk);
         @(posedge clk);
-        #2 rst_n <= 1;
+        #2 rst_n <= 1; #2;
         
         for (int i = 0; i < 10; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -50,10 +50,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
-            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
+            @(posedge clk); #1;
         end
         for (int i = 0; i < 10; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -61,10 +61,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
-            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
+            @(posedge clk); #1;
         end
         // Generate a full rotation
         for (int i = 0; i < 40; i = i + 1) begin
@@ -73,10 +73,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
-            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
+            @(posedge clk); #1;
         end
         for (int i = 0; i < 40; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -84,10 +84,10 @@ module tb_complete();
             i_val = $cos(angle);
             q_val = $sin(angle);
             
-            @(posedge clk); #1;
             // Assign to registered inputs
             I_in <= $rtoi(i_val * SCALE);
             Q_in <= $rtoi(q_val * SCALE);
+            @(posedge clk); #1;
         end
         #100;
         $finish;
