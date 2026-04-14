@@ -42,7 +42,7 @@ module tb_complete();
         Q_in <= 0;
         @(posedge clk);
         @(posedge clk);
-        rst_n = 1;
+        #2 rst_n <= 1;
         
         for (int i = 0; i < 10; i = i + 1) begin
             // Calculate cos/sin in simulation
