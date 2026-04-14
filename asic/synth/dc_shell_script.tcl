@@ -22,7 +22,7 @@ link
 
 # --- 3. Contraintes ---
 create_clock -name clk -period 20 clk
-#set_clock_uncertainty 2 clk
+set_clock_uncertainty 5 clk
 set_max_area 0
 
 # --- 4. Synthèse ---
