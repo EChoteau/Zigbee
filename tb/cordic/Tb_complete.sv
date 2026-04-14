@@ -22,7 +22,7 @@ module tb_complete();
     // --- Clock Generation ---
     initial begin
         clk = 0;
-        forever #10 clk = ~clk;
+        forever #50 clk = ~clk;
     end
 
     // --- Input Generation (Rotating Vector) ---
