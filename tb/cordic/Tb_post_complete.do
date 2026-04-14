@@ -11,7 +11,7 @@ vlog -incr -sv -work lib_SYNTH +acc asic/synth/netlist/cordic_system_complete.v
 vlog -incr -sv -work lib_SYNTH +acc tb/cordic/Tb_complete.sv
 
 vsim -voptargs=+acc lib_SYNTH.tb_complete \
-     -sdfmax /tb_complete/DUT=asic/synth/netlist/cordic_system_complete.sdf \
+     -sdfmax /tb_complete/dut=asic/synth/netlist/cordic_system_complete.sdf \
      -sdfnoerror -sdfnowarn \
      -L c35_CORELIB
 
