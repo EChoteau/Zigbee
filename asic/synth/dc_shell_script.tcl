@@ -21,7 +21,7 @@ current_design cordic_system_complete
 link
 
 # --- 3. Contraintes ---
-create_clock -name clk -period 20 clk
+create_clock -name clk -period 100 clk
 set_clock_uncertainty 5 clk
 set_max_area 0
 
