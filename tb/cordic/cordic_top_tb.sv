@@ -64,5 +64,6 @@ module cordic_top_tb();
         check_phase("180 Deg", -8'h40, 8'h00, SCALE);
 
         $display("---------------------------------------");
+        $finish;
     end
 endmodule
