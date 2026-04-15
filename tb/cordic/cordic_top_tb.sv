@@ -61,7 +61,7 @@ module cordic_top_tb();
         check_phase("45  Deg", 8'h20, 8'h20, SCALE/4);
         
         // Test 180 degrees (I=-max, Q=0) -> Should rotate via Q2/Q3 logic
-        check_phase("180 Deg", -8'h40, 8'h01, SCALE);
+        check_phase("180 Deg", -8'h40, 8'h00, SCALE);
 
         $display("---------------------------------------");
     end
