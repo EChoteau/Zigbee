@@ -12,13 +12,13 @@ vmap work work
 # 2. Compilation des fichiers
 # -sv indique que nous utilisons le SystemVerilog
 echo "Compiling design..."
-vlog -sv +acc rtl/WAVE/wave_generator.sv
+vlog -sv +acc rtl/demod/WAVE/wave_generator.sv
 vlog -sv +acc demod.sv
 
-vlog -sv +acc rtl/FIR/delay_line.v
-vlog -sv +acc rtl/FIR/coeff_rom.v
-vlog -sv +acc rtl/FIR/fir_core.v
-vlog -sv +acc rtl/FIR/fir_top.v
+vlog -sv +acc rtl/demod/FIR/delay_line.v
+vlog -sv +acc rtl/demod/FIR/coeff_rom.v
+vlog -sv +acc rtl/demod/FIR/fir_core.v
+vlog -sv +acc rtl/demod/FIR/fir_top.v
 
 echo "Compiling testbench..."
 vlog -sv +acc tb/wave_generator_tb.sv
