@@ -1,34 +1,52 @@
 module receiver_system (
-    input  logic CLK,
-    input  logic RSTn,
-    input  logic adc_eoc,
-    input  logic [5:0] I_in,  // Entrée brute ADC
-    input  logic [5:0] Q_in,
-    output logic signed [7:0] I_filtered,
-    output logic signed [7:0] Q_filtered
+    input  logic              i_clk,
+    input  logic              i_rst_n,
+    input  logic              i_adc_eoc,
+    input  logic [3:0]        i_I_in,
+    input  logic [3:0]        i_Q_in,
+    output logic signed [7:0] o_I_filtered,
+    output logic signed [7:0] o_Q_filtered
 );
 
-    logic signed [12:0] I_demod, Q_demod;
+    // =========================
+    // Signaux internes
+    // =========================
+    logic signed [7:0] s_I_demod;
+    logic signed [7:0] s_Q_demod;
 
-    // 1. Démodulation IQ
+    // =========================
+    // Démodulation IQ
+    // =========================
     IQ_DEMOD u_demod (
-        .CLK(CLK), .RSTn(RSTn), .adc_eoc(adc_eoc),
-        .I_in(I_in), .Q_in(Q_in),
-        .I_out(I_demod), .Q_out(Q_demod)
+        .i_clk    (i_clk),
+        .i_rst_n  (i_rst_n),
+        .i_adc_eoc(i_adc_eoc),
+        .i_I_in   (i_I_in),
+        .i_Q_in   (i_Q_in),
+        .o_I_out  (s_I_demod),
+        .o_Q_out  (s_Q_demod)
     );
 
-    // 2. Filtrage FIR Voie I (On tronque l'entrée à 6 bits pour ton FIR)
+    // =========================
+    // FIR voie I
+    // =========================
     fir_top u_fir_i (
-        .clk(CLK), .rstn(RSTn), .sample_en(adc_eoc),
-        .x_in(I_demod), 
-        .y_out(I_filtered)
+        .i_clk      (i_clk),
+        .i_rst_n    (i_rst_n),
+        .i_sample_en(i_adc_eoc),
+        .i_x_in     (s_I_demod),
+        .o_y_out    (o_I_filtered)
     );
 
-    // 3. Filtrage FIR Voie Q
+    // =========================
+    // FIR voie Q
+    // =========================
     fir_top u_fir_q (
-        .clk(CLK), .rstn(RSTn), .sample_en(adc_eoc),
-        .x_in(Q_demod), 
-        .y_out(Q_filtered)
+        .i_clk      (i_clk),
+        .i_rst_n    (i_rst_n),
+        .i_sample_en(i_adc_eoc),
+        .i_x_in     (s_Q_demod),
+        .o_y_out    (o_Q_filtered)
     );
 
 endmodule

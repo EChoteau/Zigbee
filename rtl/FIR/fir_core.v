@@ -1,107 +1,77 @@
 module fir_core #(
-    parameter N = 32,
-    parameter IN_WIDTH = 6,
-    parameter COEF_WIDTH = 12,
+    parameter N = 9,
+    parameter IN_WIDTH = 8,
+    parameter COEF_WIDTH = 8,
     parameter PROD_WIDTH = IN_WIDTH + COEF_WIDTH,
-    parameter OUT_WIDTH = PROD_WIDTH + 5
+    parameter OUT_WIDTH = PROD_WIDTH + 2
 )(
-    input  wire clk,
-    input  wire rstn,
-    input  wire signed [N*IN_WIDTH-1:0]   x_flat,
-    input  wire signed [N*COEF_WIDTH-1:0] h_flat,
-    output reg  signed [OUT_WIDTH-1:0]    y_out
+    input  wire                              i_clk,
+    input  wire                              i_rst_n,
+    input  wire signed [N*IN_WIDTH-1:0]      i_x_flat,
+    input  wire signed [N*COEF_WIDTH-1:0]    i_h_flat,
+    output reg  signed [OUT_WIDTH-1:0]       o_y_out
 );
 
     // =========================
     // Tableaux internes
     // =========================
-    wire signed [IN_WIDTH-1:0]   i_x_int [0:N-1];
-    wire signed [COEF_WIDTH-1:0] i_h_int [0:N-1];
+    wire signed [IN_WIDTH-1:0]   w_x_int [0:N-1];
+    wire signed [COEF_WIDTH-1:0] w_h_int [0:N-1];
     genvar i;
 
     generate
-        for (i = 0; i < N; i = i + 1) begin : get_inputs
-            assign i_x_int[i] = x_flat[(i+1)*IN_WIDTH-1 -: IN_WIDTH];
-            assign i_h_int[i] = h_flat[(i+1)*COEF_WIDTH-1 -: COEF_WIDTH];
+        for (i = 0; i < N; i = i + 1) begin : gen_get_inputs
+            assign w_x_int[i] = i_x_flat[(i+1)*IN_WIDTH-1 -: IN_WIDTH];
+            assign w_h_int[i] = i_h_flat[(i+1)*COEF_WIDTH-1 -: COEF_WIDTH];
         end
     endgenerate
 
-
     // =========================
-    // Somme des entrees symetriques
+    // Somme des entrées symétriques
+    // N=9 : paires (0,8), (1,7), (2,6), (3,5)
     // =========================
-    wire signed [IN_WIDTH:0] x_sum [0:15];
+    wire signed [IN_WIDTH:0] w_x_sum [0:3];
 
     generate
-        for (i = 0; i < 16; i = i + 1) begin : sym_sum
-            assign x_sum[i] = i_x_int[i] + i_x_int[N-1-i];
+        for (i = 0; i < 4; i = i + 1) begin : gen_sym_sum
+            assign w_x_sum[i] = w_x_int[i] + w_x_int[N-1-i];
         end
     endgenerate
 
-
     // =========================
-    // 16 Multiplications
+    // Multiplications
     // =========================
-    wire signed [PROD_WIDTH-1:0] p [0:15];
+    wire signed [PROD_WIDTH-1:0] w_p [0:3];
 
     generate
-        for (i = 0; i < 16; i = i + 1) begin : multiplication
-            assign p[i] = x_sum[i] * i_h_int[i];
+        for (i = 0; i < 4; i = i + 1) begin : gen_multiplication
+            assign w_p[i] = w_x_sum[i] * w_h_int[i];
         end
     endgenerate
 
+    // Tap central
+    wire signed [PROD_WIDTH-1:0] w_p_center;
+    assign w_p_center = w_x_int[4] * w_h_int[4];
 
     // =========================
-    // Niveau 1 -> 8 sommes
+    // Arbre de somme
     // =========================
-    wire signed [OUT_WIDTH-1:0] s1 [0:7];
+    wire signed [OUT_WIDTH-1:0] w_s1_0;
+    wire signed [OUT_WIDTH-1:0] w_s1_1;
+    wire signed [OUT_WIDTH-1:0] w_sum_final;
 
-    generate
-        for (i = 0; i < 8; i = i + 1) begin : SommeN1
-            assign s1[i] = p[2*i] + p[2*i+1];
-        end
-    endgenerate
-
-
-    // =========================
-    // Niveau 2 -> 4
-    // =========================
-    wire signed [OUT_WIDTH-1:0] s2 [0:3];
-
-    generate
-        for (i = 0; i < 4; i = i + 1) begin : SommeN2
-            assign s2[i] = s1[2*i] + s1[2*i+1];
-        end
-    endgenerate
-
+    assign w_s1_0     = w_p[0] + w_p[1];
+    assign w_s1_1     = w_p[2] + w_p[3];
+    assign w_sum_final = w_s1_0 + w_s1_1 + w_p_center;
 
     // =========================
-    // Niveau 3 -> 2
+    // Sortie avec reset asynchrone
     // =========================
-    wire signed [OUT_WIDTH-1:0] s3 [0:1];
-
-    generate
-        for (i = 0; i < 2; i = i + 1) begin : SommeN3
-            assign s3[i] = s2[2*i] + s2[2*i+1];
-        end
-    endgenerate
-
-
-    // =========================
-    // Niveau 4 -> 1
-    // =========================
-    wire signed [OUT_WIDTH-1:0] sum_final;
-    assign sum_final = s3[0] + s3[1];
-
-
-    // =========================
-    // Sortie avec reset
-    // =========================
-    always @(posedge clk) begin
-        if (!rstn)
-            y_out <= 0;
+    always @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n)
+            o_y_out <= '0;
         else
-            y_out <= sum_final;
+            o_y_out <= w_sum_final;
     end
 
 endmodule
