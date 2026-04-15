@@ -1,0 +1,15 @@
+source config/config_ASIC
+
+cd asic/synth/
+
+dc_shell -f cordic_dc_shell_script.tcl | tee log_synthese.log
+#design_vision
+
+cd ..
+
+cp synth/netlist/cordic_system_complete.v pnr/top/input_data/TOP_netlist.v
+cp synth/netlist/cordic_system_complete.sdf pnr/top/input_data/TOP_netlist.sdf
+
+cd pnr/
+
+./run_pnr.sh
