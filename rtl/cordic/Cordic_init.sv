@@ -3,11 +3,11 @@ module cordic_init #(
     parameter WIDTH_PHASE = WIDTH_IN + 2,
     parameter WIDTH_INTERNAL = WIDTH_IN + 4 // +3 LSB bits, +1 MSB bit
 )(
-    input  signed [WIDTH_IN-1:0] I_in,
-    input  signed [WIDTH_IN-1:0] Q_in,
-    output logic signed [WIDTH_INTERNAL-1:0] I_init,
-    output logic signed [WIDTH_INTERNAL-1:0] Q_init,
-    output logic signed [WIDTH_PHASE-1:0] PHASE_init // Format Q1.15 (si WIDTH=16)
+    input  signed [WIDTH_IN-1:0] i_i_in,
+    input  signed [WIDTH_IN-1:0] i_q_in,
+    output logic signed [WIDTH_INTERNAL-1:0] o_i_init,
+    output logic signed [WIDTH_INTERNAL-1:0] o_q_init,
+    output logic signed [WIDTH_PHASE-1:0] o_phase_init // Format Q1.15 (si WIDTH=16)
 );
 
     // Constantes pour Phase: 0.5 et -0.5 en virgule fixe
@@ -17,7 +17,7 @@ module cordic_init #(
 
     // Internal helper signals for bit-growth conversion
     // We sign-extend the input then shift left by 3 to add LSBs
-    logic signed [WIDTH_INTERNAL-1:0] I_ext, Q_ext;
+    logic signed [WIDTH_INTERNAL-1:0] w_i_ext, w_q_ext;
 
     // Elaboration-time check: enforce internal width relationship to keep scaling consistent
     initial begin
@@ -30,24 +30,24 @@ module cordic_init #(
     always_comb begin
         // Perform sign extension and LSB padding
         // SystemVerilog automatically sign-extends during the cast/assignment
-        I_ext = (WIDTH_INTERNAL)'(I_in) << 3;
-        Q_ext = (WIDTH_INTERNAL)'(Q_in) << 3;
+        w_i_ext = (WIDTH_INTERNAL)'(i_i_in) << 3;
+        w_q_ext = (WIDTH_INTERNAL)'(i_q_in) << 3;
 
-        if (I_in >= 0) begin
-            I_init     = I_ext;
-            Q_init     = Q_ext;
-            PHASE_init = 0;
+        if (i_i_in >= 0) begin
+            o_i_init     = w_i_ext;
+            o_q_init     = w_q_ext;
+            o_phase_init = 0;
         end else begin
-            if (Q_in >= 0) begin
+            if (i_q_in >= 0) begin
                 // Quadrant 2: Rotation -90
-                I_init     = Q_ext;
-                Q_init     = -I_ext;
-                PHASE_init = PHASE_05;
+                o_i_init     = w_q_ext;
+                o_q_init     = -w_i_ext;
+                o_phase_init = PHASE_05;
             end else begin
                 // Quadrant 3: Rotation +90
-                I_init     = -Q_ext;
-                Q_init     = I_ext;
-                PHASE_init = PHASE_M05;
+                o_i_init     = -w_q_ext;
+                o_q_init     = w_i_ext;
+                o_phase_init = PHASE_M05;
             end
         end
     end

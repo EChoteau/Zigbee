@@ -4,12 +4,12 @@
 
 source config/config_RTL
 
-vsim -c -do tb/cordic/Tb_cordic_init.do
-#vsim -c -do tb/cordic/Tb_cordic_step.do
-#vsim -c -do tb/cordic/Tb_cordic_top.do
-#vsim -do tb/cordic/Tb_cordic_top_sine.do
-#vsim -do tb/cordic/Tb_boxcar_filter.do
-#vsim -do tb/cordic/Tb_derive.do
-vsim -c -do tb/cordic/Tb_complete.do
+vsim -c -do tb/cordic/cordic_init_tb.do
+#vsim -c -do tb/cordic/cordic_step_tb.do
+#vsim -c -do tb/cordic/cordic_top_tb.do
+#vsim -do tb/cordic/cordic_top_sine_tb.do
+#vsim -do tb/cordic/boxcar_filter_tb.do
+#vsim -do tb/cordic/derive_tb.do
+vsim -c -do tb/cordic/complete_tb.do
 
-vsim -do tb/cordic/Tb_post_complete.do
+vsim -do tb/cordic/complete_post.do

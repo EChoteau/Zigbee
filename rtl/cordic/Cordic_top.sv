@@ -4,11 +4,11 @@ module cordic_top #(
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
     parameter int NUM_STEPS = 10 //WIDTH_IN
 )(
-    input  logic clk,
-    input  logic rst_n,
-    input  logic signed [WIDTH_IN-1:0] I_in,
-    input  logic signed [WIDTH_IN-1:0] Q_in,
-    output logic signed [WIDTH_PHASE-1:0] Phase_out
+    input  logic i_clk,
+    input  logic i_rst_n,
+    input  logic signed [WIDTH_IN-1:0] i_i_in,
+    input  logic signed [WIDTH_IN-1:0] i_q_in,
+    output logic signed [WIDTH_PHASE-1:0] o_phase_out
 );
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
@@ -39,9 +39,9 @@ module cordic_top #(
 
     // --- 2. Internal Interconnects ---
     // Arrays to hold the signals between each step
-    wire signed [WIDTH_INTERNAL-1:0] i_wire [0:NUM_STEPS];
-    wire signed [WIDTH_INTERNAL-1:0] q_wire [0:NUM_STEPS];
-    wire signed [WIDTH_PHASE-1:0] p_wire [0:NUM_STEPS];
+    wire signed [WIDTH_INTERNAL-1:0] w_i_chain [0:NUM_STEPS];
+    wire signed [WIDTH_INTERNAL-1:0] w_q_chain [0:NUM_STEPS];
+    wire signed [WIDTH_PHASE-1:0] w_phase_chain [0:NUM_STEPS];
 
     // --- 3. Pre-Processing ---
     // Mandatory to move the vector to the Right Half Plane (I > 0)
@@ -50,11 +50,11 @@ module cordic_top #(
         .WIDTH_PHASE(WIDTH_PHASE),
         .WIDTH_INTERNAL(WIDTH_INTERNAL)
     ) init_inst (
-        .I_in(I_in),
-        .Q_in(Q_in),
-        .I_init(i_wire[0]),
-        .Q_init(q_wire[0]),
-        .PHASE_init(p_wire[0])
+        .i_i_in(i_i_in),
+        .i_q_in(i_q_in),
+        .o_i_init(w_i_chain[0]),
+        .o_q_init(w_q_chain[0]),
+        .o_phase_init(w_phase_chain[0])
     );
 
     // --- 4. Iterative Chain ---
@@ -67,23 +67,23 @@ module cordic_top #(
                 .ITER(i),
                 .ANGLE_VAL(ATAN_TABLE[i])
             ) step_inst (
-                .I_in(i_wire[i]),
-                .Q_in(q_wire[i]),
-                .PHASE_in(p_wire[i]),
-                .I_next(i_wire[i+1]),
-                .Q_next(q_wire[i+1]),
-                .PHASE_next(p_wire[i+1])
+                .i_i_in(w_i_chain[i]),
+                .i_q_in(w_q_chain[i]),
+                .i_phase_in(w_phase_chain[i]),
+                .o_i_next(w_i_chain[i+1]),
+                .o_q_next(w_q_chain[i+1]),
+                .o_phase_next(w_phase_chain[i+1])
             );
         end
     endgenerate
 
     // --- 5. Final Output ---
     
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            Phase_out <= '0;
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n) begin
+            o_phase_out <= '0;
         end else begin
-            Phase_out <= p_wire[NUM_STEPS];
+            o_phase_out <= w_phase_chain[NUM_STEPS];
         end
     end
 

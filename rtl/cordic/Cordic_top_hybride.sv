@@ -6,11 +6,11 @@ module cordic_top_hybride #(
     parameter int N_COMB_STEPS = 2,
     parameter int M_PIPE_STAGES = NUM_STEPS / N_COMB_STEPS
 )(
-    input  logic clk,
-    input  logic rst_n,
-    input  logic signed [WIDTH_IN-1:0] I_in,
-    input  logic signed [WIDTH_IN-1:0] Q_in,
-    output logic signed [WIDTH_PHASE-1:0] Phase_out
+    input  logic i_clk,
+    input  logic i_rst_n,
+    input  logic signed [WIDTH_IN-1:0] i_i_in,
+    input  logic signed [WIDTH_IN-1:0] i_q_in,
+    output logic signed [WIDTH_PHASE-1:0] o_phase_out
 );
 
     localparam int TABLE_STEPS = 10;
@@ -52,38 +52,38 @@ module cordic_top_hybride #(
 
     // --- 2. Pipeline Registers ---
     // Registers store only the boundaries between combinational groups.
-    logic signed [WIDTH_INTERNAL-1:0] i_reg [0:M_PIPE_STAGES];
-    logic signed [WIDTH_INTERNAL-1:0] q_reg [0:M_PIPE_STAGES];
-    logic signed [WIDTH_PHASE-1:0]    p_reg [0:M_PIPE_STAGES];
+    logic signed [WIDTH_INTERNAL-1:0] s_i_reg [0:M_PIPE_STAGES];
+    logic signed [WIDTH_INTERNAL-1:0] s_q_reg [0:M_PIPE_STAGES];
+    logic signed [WIDTH_PHASE-1:0]    s_phase_reg [0:M_PIPE_STAGES];
 
     // --- 3. Pre-Processing (Stage 0) ---
     // Combinatorial signals for the output of the init block
-    logic signed [WIDTH_INTERNAL-1:0] i_init_comb;
-    logic signed [WIDTH_INTERNAL-1:0] q_init_comb;
-    logic signed [WIDTH_PHASE-1:0]    p_init_comb;
+    logic signed [WIDTH_INTERNAL-1:0] w_i_init_comb;
+    logic signed [WIDTH_INTERNAL-1:0] w_q_init_comb;
+    logic signed [WIDTH_PHASE-1:0]    w_phase_init_comb;
 
     cordic_init #(
         .WIDTH_IN(WIDTH_IN),
         .WIDTH_PHASE(WIDTH_PHASE),
         .WIDTH_INTERNAL(WIDTH_INTERNAL)
     ) init_inst (
-        .I_in(I_in),
-        .Q_in(Q_in),
-        .I_init(i_init_comb),
-        .Q_init(q_init_comb),
-        .PHASE_init(p_init_comb)
+        .i_i_in(i_i_in),
+        .i_q_in(i_q_in),
+        .o_i_init(w_i_init_comb),
+        .o_q_init(w_q_init_comb),
+        .o_phase_init(w_phase_init_comb)
     );
 
     // Buffer the initial stage
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            i_reg[0] <= '0;
-            q_reg[0] <= '0;
-            p_reg[0] <= '0;
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n) begin
+            s_i_reg[0] <= '0;
+            s_q_reg[0] <= '0;
+            s_phase_reg[0] <= '0;
         end else begin
-            i_reg[0] <= i_init_comb;
-            q_reg[0] <= q_init_comb;
-            p_reg[0] <= p_init_comb;
+            s_i_reg[0] <= w_i_init_comb;
+            s_q_reg[0] <= w_q_init_comb;
+            s_phase_reg[0] <= w_phase_init_comb;
         end
     end
 
@@ -93,13 +93,13 @@ module cordic_top_hybride #(
     genvar n;
     generate
         for (m = 0; m < M_PIPE_STAGES; m = m + 1) begin : pipe_groups
-            logic signed [WIDTH_INTERNAL-1:0] i_comb [0:N_COMB_STEPS];
-            logic signed [WIDTH_INTERNAL-1:0] q_comb [0:N_COMB_STEPS];
-            logic signed [WIDTH_PHASE-1:0]    p_comb [0:N_COMB_STEPS];
+            logic signed [WIDTH_INTERNAL-1:0] w_i_comb [0:N_COMB_STEPS];
+            logic signed [WIDTH_INTERNAL-1:0] w_q_comb [0:N_COMB_STEPS];
+            logic signed [WIDTH_PHASE-1:0]    w_phase_comb [0:N_COMB_STEPS];
 
-            assign i_comb[0] = i_reg[m];
-            assign q_comb[0] = q_reg[m];
-            assign p_comb[0] = p_reg[m];
+            assign w_i_comb[0] = s_i_reg[m];
+            assign w_q_comb[0] = s_q_reg[m];
+            assign w_phase_comb[0] = s_phase_reg[m];
 
             for (n = 0; n < N_COMB_STEPS; n = n + 1) begin : comb_steps
                 localparam int STEP_IDX = (m * N_COMB_STEPS) + n;
@@ -110,31 +110,31 @@ module cordic_top_hybride #(
                     .ITER(STEP_IDX),
                     .ANGLE_VAL(ATAN_TABLE[STEP_IDX])
                 ) step_inst (
-                    .I_in(i_comb[n]),
-                    .Q_in(q_comb[n]),
-                    .PHASE_in(p_comb[n]),
-                    .I_next(i_comb[n+1]),
-                    .Q_next(q_comb[n+1]),
-                    .PHASE_next(p_comb[n+1])
+                    .i_i_in(w_i_comb[n]),
+                    .i_q_in(w_q_comb[n]),
+                    .i_phase_in(w_phase_comb[n]),
+                    .o_i_next(w_i_comb[n+1]),
+                    .o_q_next(w_q_comb[n+1]),
+                    .o_phase_next(w_phase_comb[n+1])
                 );
             end
 
             // Pipeline register between two combinational groups.
-            always_ff @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin
-                    i_reg[m+1] <= '0;
-                    q_reg[m+1] <= '0;
-                    p_reg[m+1] <= '0;
+            always_ff @(posedge i_clk or negedge i_rst_n) begin
+                if (!i_rst_n) begin
+                    s_i_reg[m+1] <= '0;
+                    s_q_reg[m+1] <= '0;
+                    s_phase_reg[m+1] <= '0;
                 end else begin
-                    i_reg[m+1] <= i_comb[N_COMB_STEPS];
-                    q_reg[m+1] <= q_comb[N_COMB_STEPS];
-                    p_reg[m+1] <= p_comb[N_COMB_STEPS];
+                    s_i_reg[m+1] <= w_i_comb[N_COMB_STEPS];
+                    s_q_reg[m+1] <= w_q_comb[N_COMB_STEPS];
+                    s_phase_reg[m+1] <= w_phase_comb[N_COMB_STEPS];
                 end
             end
         end
     endgenerate
 
     // --- 5. Final Output ---
-    assign Phase_out = p_reg[M_PIPE_STAGES];
+    assign o_phase_out = s_phase_reg[M_PIPE_STAGES];
 
 endmodule

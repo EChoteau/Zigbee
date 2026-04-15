@@ -1,5 +1,5 @@
 # =====================================================
-# TB Cordic Step
+# TB Cordic Top
 # =====================================================
 
 # Create the library only if it doesn't exist
@@ -11,7 +11,7 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
 
-vsim -voptargs=+acc lib_RTL.tb_cordic_step -sdfnoerror -sdfnowarn -L c35_CORELIB
+vsim -voptargs=+acc lib_RTL.cordic_top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 run -all
 

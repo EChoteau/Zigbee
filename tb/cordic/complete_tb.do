@@ -11,8 +11,17 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
 
-vsim -voptargs=+acc lib_RTL.tb_cordic_top -sdfnoerror -sdfnowarn -L c35_CORELIB
+vsim -voptargs=+acc lib_RTL.complete_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
+
+add wave -position insertpoint  \
+sim:/complete_tb/i_clk \
+sim:/complete_tb/i_rst_n \
+sim:/complete_tb/i_i_in \
+sim:/complete_tb/i_q_in \
+sim:/complete_tb/o_phase_out
 
 run -all
 
-quit -f
+wave zoom full
+
+#quit -f

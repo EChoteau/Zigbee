@@ -1,5 +1,5 @@
 # =====================================================
-# TB Derive 
+# Boxcar Filter Waves
 # =====================================================
 
 # Create the library only if it doesn't exist
@@ -11,13 +11,13 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
 
-vsim -voptargs=+acc lib_RTL.tb_derive -sdfnoerror -sdfnowarn -L c35_CORELIB
+vsim -voptargs=+acc lib_RTL.boxcar_filter_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 add wave -position insertpoint  \
-sim:/tb_derive/clk \
-sim:/tb_derive/rst_n \
-sim:/tb_derive/phase_in \
-sim:/tb_derive/phase_deriv
+sim:/boxcar_filter_tb/i_clk \
+sim:/boxcar_filter_tb/i_rst_n \
+sim:/boxcar_filter_tb/i_data_in \
+sim:/boxcar_filter_tb/o_data_out
 
 run -all
 

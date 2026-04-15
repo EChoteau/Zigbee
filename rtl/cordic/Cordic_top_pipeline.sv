@@ -4,11 +4,11 @@ module cordic_top_pipeline #(
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
     parameter int NUM_STEPS = 10 
 )(
-    input  logic clk,
-    input  logic rst_n,
-    input  logic signed [WIDTH_IN-1:0] I_in,
-    input  logic signed [WIDTH_IN-1:0] Q_in,
-    output logic signed [WIDTH_PHASE-1:0] Phase_out
+    input  logic i_clk,
+    input  logic i_rst_n,
+    input  logic signed [WIDTH_IN-1:0] i_i_in,
+    input  logic signed [WIDTH_IN-1:0] i_q_in,
+    output logic signed [WIDTH_PHASE-1:0] o_phase_out
 );
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
@@ -33,38 +33,38 @@ module cordic_top_pipeline #(
 
     // --- 2. Pipeline Registers ---
     // We use logic instead of wire to create the buffers between stages
-    logic signed [WIDTH_INTERNAL-1:0] i_reg [0:NUM_STEPS];
-    logic signed [WIDTH_INTERNAL-1:0] q_reg [0:NUM_STEPS];
-    logic signed [WIDTH_PHASE-1:0]    p_reg [0:NUM_STEPS];
+    logic signed [WIDTH_INTERNAL-1:0] s_i_reg [0:NUM_STEPS];
+    logic signed [WIDTH_INTERNAL-1:0] s_q_reg [0:NUM_STEPS];
+    logic signed [WIDTH_PHASE-1:0]    s_phase_reg [0:NUM_STEPS];
 
     // --- 3. Pre-Processing (Stage 0) ---
     // Combinatorial signals for the output of the init block
-    logic signed [WIDTH_INTERNAL-1:0] i_init_comb;
-    logic signed [WIDTH_INTERNAL-1:0] q_init_comb;
-    logic signed [WIDTH_PHASE-1:0]    p_init_comb;
+    logic signed [WIDTH_INTERNAL-1:0] w_i_init_comb;
+    logic signed [WIDTH_INTERNAL-1:0] w_q_init_comb;
+    logic signed [WIDTH_PHASE-1:0]    w_phase_init_comb;
 
     cordic_init #(
         .WIDTH_IN(WIDTH_IN),
         .WIDTH_PHASE(WIDTH_PHASE),
         .WIDTH_INTERNAL(WIDTH_INTERNAL)
     ) init_inst (
-        .I_in(I_in),
-        .Q_in(Q_in),
-        .I_init(i_init_comb),
-        .Q_init(q_init_comb),
-        .PHASE_init(p_init_comb)
+        .i_i_in(i_i_in),
+        .i_q_in(i_q_in),
+        .o_i_init(w_i_init_comb),
+        .o_q_init(w_q_init_comb),
+        .o_phase_init(w_phase_init_comb)
     );
 
     // Buffer the initial stage
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            i_reg[0] <= '0;
-            q_reg[0] <= '0;
-            p_reg[0] <= '0;
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n) begin
+            s_i_reg[0] <= '0;
+            s_q_reg[0] <= '0;
+            s_phase_reg[0] <= '0;
         end else begin
-            i_reg[0] <= i_init_comb;
-            q_reg[0] <= q_init_comb;
-            p_reg[0] <= p_init_comb;
+            s_i_reg[0] <= w_i_init_comb;
+            s_q_reg[0] <= w_q_init_comb;
+            s_phase_reg[0] <= w_phase_init_comb;
         end
     end
 
@@ -73,9 +73,9 @@ module cordic_top_pipeline #(
     generate
         for (i = 0; i < NUM_STEPS; i = i + 1) begin : cordic_steps
             // Internal combinatorial wires for the step logic
-            logic signed [WIDTH_INTERNAL-1:0] i_next_comb;
-            logic signed [WIDTH_INTERNAL-1:0] q_next_comb;
-            logic signed [WIDTH_PHASE-1:0]    p_next_comb;
+            logic signed [WIDTH_INTERNAL-1:0] w_i_next_comb;
+            logic signed [WIDTH_INTERNAL-1:0] w_q_next_comb;
+            logic signed [WIDTH_PHASE-1:0]    w_phase_next_comb;
 
             cordic_step #(
                 .WIDTH(WIDTH_INTERNAL),
@@ -83,24 +83,24 @@ module cordic_top_pipeline #(
                 .ITER(i),
                 .ANGLE_VAL(ATAN_TABLE[i])
             ) step_inst (
-                .I_in(i_reg[i]),
-                .Q_in(q_reg[i]),
-                .PHASE_in(p_reg[i]),
-                .I_next(i_next_comb),
-                .Q_next(q_next_comb),
-                .PHASE_next(p_next_comb)
+                .i_i_in(s_i_reg[i]),
+                .i_q_in(s_q_reg[i]),
+                .i_phase_in(s_phase_reg[i]),
+                .o_i_next(w_i_next_comb),
+                .o_q_next(w_q_next_comb),
+                .o_phase_next(w_phase_next_comb)
             );
 
             // The Pipeline "Buffer"
-            always_ff @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin
-                    i_reg[i+1] <= '0;
-                    q_reg[i+1] <= '0;
-                    p_reg[i+1] <= '0;
+            always_ff @(posedge i_clk or negedge i_rst_n) begin
+                if (!i_rst_n) begin
+                    s_i_reg[i+1] <= '0;
+                    s_q_reg[i+1] <= '0;
+                    s_phase_reg[i+1] <= '0;
                 end else begin
-                    i_reg[i+1] <= i_next_comb;
-                    q_reg[i+1] <= q_next_comb;
-                    p_reg[i+1] <= p_next_comb;
+                    s_i_reg[i+1] <= w_i_next_comb;
+                    s_q_reg[i+1] <= w_q_next_comb;
+                    s_phase_reg[i+1] <= w_phase_next_comb;
                 end
             end
         end
@@ -108,6 +108,6 @@ module cordic_top_pipeline #(
 
     // --- 5. Final Output ---
     // The last stage of the pipeline is already buffered in i_reg[NUM_STEPS]
-    assign Phase_out = p_reg[NUM_STEPS];
+    assign o_phase_out = s_phase_reg[NUM_STEPS];
 
 endmodule
