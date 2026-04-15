@@ -18,9 +18,9 @@ vsim -voptargs=+acc lib_SYNTH.complete_tb \
 add wave -position insertpoint  \
 sim:/complete_tb/i_clk \
 sim:/complete_tb/i_rst_n \
-sim:/complete_tb/i_i_in \
-sim:/complete_tb/i_q_in \
-sim:/complete_tb/o_phase_out \
+sim:/complete_tb/i_i \
+sim:/complete_tb/i_q \
+sim:/complete_tb/o_phase \
 
 run -all
 wave zoom full

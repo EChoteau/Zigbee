@@ -8,15 +8,15 @@ module complete_tb();
 
     logic i_clk;
     logic i_rst_n;
-    logic signed [WIDTH-1:0] i_i_in, i_q_in;
+    logic signed [WIDTH-1:0] i_i, i_q;
 
-    logic signed [OUT_WIDTH-1:0] o_phase_out;
+    logic signed [OUT_WIDTH-1:0] o_phase;
     
 
     cordic_system_complete dut (
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),
-        .i_i_in(i_i_in), .i_q_in(i_q_in),
-        .o_phase_out(o_phase_out)
+        .i_i(i_i), .i_q(i_q),
+        .o_phase(o_phase)
     );
 
     // --- Clock Generation ---
@@ -38,8 +38,8 @@ module complete_tb();
         s_q_val = 0;
         s_angle = 0.0;
         i_rst_n = 0;
-        i_i_in <= SCALE;
-        i_q_in <= 0;
+        i_i <= SCALE;
+        i_q <= 0;
         @(posedge i_clk);
         @(posedge i_clk);
         #2 i_rst_n <= 1; #2;
@@ -51,8 +51,8 @@ module complete_tb();
             s_q_val = $sin(s_angle);
             
             // Assign to registered inputs
-            i_i_in <= $rtoi(s_i_val * SCALE);
-            i_q_in <= $rtoi(s_q_val * SCALE);
+            i_i <= $rtoi(s_i_val * SCALE);
+            i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
         for (int i = 0; i < 10; i = i + 1) begin
@@ -62,8 +62,8 @@ module complete_tb();
             s_q_val = $sin(s_angle);
             
             // Assign to registered inputs
-            i_i_in <= $rtoi(s_i_val * SCALE);
-            i_q_in <= $rtoi(s_q_val * SCALE);
+            i_i <= $rtoi(s_i_val * SCALE);
+            i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
         // Generate a full rotation
@@ -74,8 +74,8 @@ module complete_tb();
             s_q_val = $sin(s_angle);
             
             // Assign to registered inputs
-            i_i_in <= $rtoi(s_i_val * SCALE);
-            i_q_in <= $rtoi(s_q_val * SCALE);
+            i_i <= $rtoi(s_i_val * SCALE);
+            i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
         for (int i = 0; i < 40; i = i + 1) begin
@@ -85,8 +85,8 @@ module complete_tb();
             s_q_val = $sin(s_angle);
             
             // Assign to registered inputs
-            i_i_in <= $rtoi(s_i_val * SCALE);
-            i_q_in <= $rtoi(s_q_val * SCALE);
+            i_i <= $rtoi(s_i_val * SCALE);
+            i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
         #100;

@@ -3,8 +3,8 @@ module cordic_top_tb();
     parameter WIDTH_PHASE = WIDTH + 2;
     parameter NUM_STEPS = 8;
     
-    logic signed [WIDTH-1:0] i_i_in, i_q_in;
-    logic signed [WIDTH_PHASE-1:0] o_phase_out;
+    logic signed [WIDTH-1:0] i_i, i_q;
+    logic signed [WIDTH_PHASE-1:0] o_phase;
 
     // Clock and reset
     logic i_clk;
@@ -30,16 +30,16 @@ module cordic_top_tb();
 
     // Helper to display results
     task check_phase(string label, int i, int q, int expected_phase);
-        i_i_in = i;
-        i_q_in = q;
+        i_i = i;
+        i_q = q;
         // Wait for a couple of clock cycles for the output to settle
         @(posedge i_clk);
         @(posedge i_clk);
-        //$display("%s | Input: (%d, %d) -> Phase Output: %h (%d)", label, i, q, o_phase_out, o_phase_out);
+        //$display("%s | Input: (%d, %d) -> Phase Output: %h (%d)", label, i, q, o_phase, o_phase);
         assert (o_phase==expected_phase)
-            $display("PASS: %s | Expected Phase: %h, Got Phase: %h", label, expected_phase, o_phase_out); 
+            $display("PASS: %s | Expected Phase: %h, Got Phase: %h", label, expected_phase, o_phase); 
         else 
-            $display("ERROR: %s | Expected Phase: %h, Got Phase: %h", label, expected_phase, o_phase_out);
+            $display("ERROR: %s | Expected Phase: %h, Got Phase: %h", label, expected_phase, o_phase);
     endtask   
 
     initial begin

@@ -5,13 +5,13 @@ module derive_tb();
 
     logic i_clk;
     logic i_rst_n;
-    logic signed [WIDTH-1:0] i_phase_in;
+    logic signed [WIDTH-1:0] i_phase;
     logic signed [WIDTH-1:0] o_phase_deriv;
 
     derivative #(.WIDTH(WIDTH)) uut (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_phase_in(i_phase_in),
+        .i_phase(i_phase),
         .o_phase_deriv(o_phase_deriv)
     );
 
@@ -41,7 +41,7 @@ module derive_tb();
 
         // Initialize signals
         i_rst_n = 0;
-        i_phase_in = 0;
+        i_phase = 0;
         delta = 2.0 * PI / 50.0;
 
         // Reset the system
@@ -57,7 +57,7 @@ module derive_tb();
             
             // Drive input away from the sampling edge to avoid race conditions.
             @(negedge i_clk);
-            i_phase_in <= s_next_input;
+            i_phase <= s_next_input;
 
             // Check derivative right after DUT registers update.
             @(posedge i_clk);

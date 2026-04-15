@@ -6,8 +6,8 @@ module boxcar_filter #(
 )(
     input  logic i_clk,
     input  logic i_rst_n,
-    input  logic signed [WIDTH-1:0]     i_data_in,
-    output logic signed [OUT_WIDTH-1:0] o_data_out 
+    input  logic signed [WIDTH-1:0]     i_data,
+    output logic signed [OUT_WIDTH-1:0] o_data 
 );
 
     // Delay line to keep track of the oldest sample
@@ -24,10 +24,10 @@ module boxcar_filter #(
             end
         end else begin
             // 1. Update the accumulator: 
-            s_acc <= s_acc + i_data_in - s_delay_line[N-1];
+            s_acc <= s_acc + i_data - s_delay_line[N-1];
 
             // 2. Shift the delay line
-            s_delay_line[0] <= i_data_in;
+            s_delay_line[0] <= i_data;
             for (int i = 1; i < N; i++) begin
                 s_delay_line[i] <= s_delay_line[i-1];
             end
@@ -35,7 +35,7 @@ module boxcar_filter #(
     end
 
     // The output is the running sum
-    assign o_data_out = s_acc;
+    assign o_data = s_acc;
 
 endmodule
 

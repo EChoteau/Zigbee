@@ -16,7 +16,7 @@ vsim -voptargs=+acc lib_RTL.derive_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 add wave -position insertpoint  \
 sim:/derive_tb/i_clk \
 sim:/derive_tb/i_rst_n \
-sim:/derive_tb/i_phase_in \
+sim:/derive_tb/i_phase \
 sim:/derive_tb/o_phase_deriv
 
 run -all

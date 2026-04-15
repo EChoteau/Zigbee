@@ -31,9 +31,9 @@ module cordic_top_sine_tb;
     ) dut (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_i_in(i_i_in_reg),
-        .i_q_in(i_q_in_reg),
-        .o_phase_out(w_phase_out_raw) // Connected to wire declared above
+        .i_i(i_i_in_reg),
+        .i_q(i_q_in_reg),
+        .o_phase(w_phase_out_raw) // Connected to wire declared above
     );
 
     // --- Clock Generation ---

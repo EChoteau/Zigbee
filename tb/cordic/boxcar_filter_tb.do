@@ -16,8 +16,8 @@ vsim -voptargs=+acc lib_RTL.boxcar_filter_tb -sdfnoerror -sdfnowarn -L c35_COREL
 add wave -position insertpoint  \
 sim:/boxcar_filter_tb/i_clk \
 sim:/boxcar_filter_tb/i_rst_n \
-sim:/boxcar_filter_tb/i_data_in \
-sim:/boxcar_filter_tb/o_data_out
+sim:/boxcar_filter_tb/i_data \
+sim:/boxcar_filter_tb/o_data
 
 run -all
 

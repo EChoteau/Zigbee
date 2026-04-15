@@ -6,9 +6,9 @@ module cordic_top_pipeline #(
 )(
     input  logic i_clk,
     input  logic i_rst_n,
-    input  logic signed [WIDTH_IN-1:0] i_i_in,
-    input  logic signed [WIDTH_IN-1:0] i_q_in,
-    output logic signed [WIDTH_PHASE-1:0] o_phase_out
+    input  logic signed [WIDTH_IN-1:0] i_i,
+    input  logic signed [WIDTH_IN-1:0] i_q,
+    output logic signed [WIDTH_PHASE-1:0] o_phase
 );
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
@@ -48,8 +48,8 @@ module cordic_top_pipeline #(
         .WIDTH_PHASE(WIDTH_PHASE),
         .WIDTH_INTERNAL(WIDTH_INTERNAL)
     ) init_inst (
-        .i_i_in(i_i_in),
-        .i_q_in(i_q_in),
+        .i_i(i_i),
+        .i_q(i_q),
         .o_i_init(w_i_init_comb),
         .o_q_init(w_q_init_comb),
         .o_phase_init(w_phase_init_comb)
@@ -83,9 +83,9 @@ module cordic_top_pipeline #(
                 .ITER(i),
                 .ANGLE_VAL(ATAN_TABLE[i])
             ) step_inst (
-                .i_i_in(s_i_reg[i]),
-                .i_q_in(s_q_reg[i]),
-                .i_phase_in(s_phase_reg[i]),
+                .i_i(s_i_reg[i]),
+                .i_q(s_q_reg[i]),
+                .i_phase(s_phase_reg[i]),
                 .o_i_next(w_i_next_comb),
                 .o_q_next(w_q_next_comb),
                 .o_phase_next(w_phase_next_comb)
@@ -108,6 +108,6 @@ module cordic_top_pipeline #(
 
     // --- 5. Final Output ---
     // The last stage of the pipeline is already buffered in i_reg[NUM_STEPS]
-    assign o_phase_out = s_phase_reg[NUM_STEPS];
+    assign o_phase = s_phase_reg[NUM_STEPS];
 
 endmodule
