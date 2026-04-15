@@ -21,9 +21,9 @@ vlog -sv +acc rtl/demod/FIR/fir_core.v
 vlog -sv +acc rtl/demod/FIR/fir_top.v
 
 echo "Compiling testbench..."
-vlog -sv +acc tb/wave_generator_tb.sv
-vlog -sv +acc tb/demod_tb.sv
-vlog -sv +acc tb/tb_fir.v
+vlog -sv +acc tb/demod/wave_generator_tb.sv
+vlog -sv +acc tb/demod/demod_tb.sv
+vlog -sv +acc tb/demod/tb_fir.v
 
 # 3. Vérification du succès
 if [ $? -eq 0 ]; then
