@@ -12,23 +12,23 @@ vmap work work
 echo "Compiling design (WAVE, DEMOD, FIR)..."
 
 # Bloc WAVE (Générateur + Démodulateur)
-vlog -sv +acc ../rtl/WAVE/wave_generator.sv
+vlog -sv +acc rtl/WAVE/wave_generator.sv
 # Attention : Assure-toi que ton fichier s'appelle IQ_DEMOD.sv ou demod.sv
-vlog -sv +acc ../rtl/WAVE/demod.sv 
+vlog -sv +acc rtl/WAVE/demod.sv 
 
 # Bloc FIR
-vlog -sv +acc ../rtl/FIR/delay_line.v
-vlog -sv +acc ../rtl/FIR/coeff_rom.v
-vlog -sv +acc ../rtl/FIR/fir_core.v
-vlog -sv +acc ../rtl/FIR/fir_top.v
+vlog -sv +acc rtl/FIR/delay_line.v
+vlog -sv +acc rtl/FIR/coeff_rom.v
+vlog -sv +acc rtl/FIR/fir_core.v
+vlog -sv +acc rtl/FIR/fir_top.v
 
 # Bloc TOP (Le module qui relie tout)
-vlog -sv +acc ../rtl/top_level_all.sv
+vlog -sv +acc rtl/top_level_all.sv
 
 # 3. Compilation du Testbench Global
 echo "Compiling global testbench..."
-vlog -sv +acc ../tb/tb_all.sv
-vlog -sv +acc ../tb/tb_fir.v
+vlog -sv +acc tb/tb_all.sv
+vlog -sv +acc tb/tb_fir.v
 
 # 4. Vérification du succès
 if [ $? -eq 0 ]; then
