@@ -23,7 +23,7 @@
          bascule b2(.ck(~clk),.rst(rst),.D(decision_in), .Q(b));
          bascule b3(.ck(clk),.rst(rst),.D(a), .Q(c));
          bascule b4(.ck(clk),.rst(rst),.D(b), .Q(d));*/
-         assign decision_out = a;
+         assign decision_out = b;
          assign up      = (c ^ a) && ~(b ^ c);
          assign down    = (b ^ c) && ~(c ^ a);
        endmodule

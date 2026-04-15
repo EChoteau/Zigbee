@@ -10,30 +10,30 @@ module nco #
     input wire clk,
     input wire rst,
 
-    input wire signed [PHASE_WIDTH-1:0] ctrl,
+    input wire signed [7:0] ctrl,
 
-    output reg recovered_clk,
+    output wire recovered_clk,
     output reg sample_enable
 );
-reg [PHASE_WIDTH-1:0] phase;
-reg [PHASE_WIDTH-1:0] phase_next;
+reg signed [PHASE_WIDTH-1:0] phase;
+reg signed [PHASE_WIDTH-1:0] phase_next;
+reg signed [PHASE_WIDTH-1:0] ctrl_normalised;
 
 always @(posedge clk or negedge rst) begin
 
     if (~rst) begin
 
         phase <= 0;
-        recovered_clk <= 0;
         sample_enable <= 0;
 
     end
     else begin
-
-        phase_next = phase + K_NOMINAL + ctrl;
+        if (ctrl<0) ctrl_normalised = -{9'd0,ctrl[6:0]};
+        else ctrl_normalised = {9'd0,ctrl[6:0]};
+        phase_next = phase + K_NOMINAL + ctrl_normalised;
 
         sample_enable <= 0;
-        recovered_clk <= phase[15];
-        if (phase_next < phase) begin
+        if (phase_next[15] ==1'b0 && phase [15] ==1'b1) begin
             sample_enable <= 1;
             //recovered_clk <= ~recovered_clk;
         end
@@ -43,5 +43,5 @@ always @(posedge clk or negedge rst) begin
     end
 
 end
-
+assign recovered_clk = phase[15];
 endmodule
