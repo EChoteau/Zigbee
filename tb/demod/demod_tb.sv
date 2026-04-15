@@ -1,13 +1,13 @@
 `timescale 1ns/1ps
 
 // Testbench pour IQ_DEMOD (ADC 6 bits unsigned, Fs=20 MHz via adc_eoc)
-// CLK système = 50 MHz (20 ns). adc_eoc = pulse 1-cycle à ~20 MHz
+// i_clk système = 50 MHz (20 ns). adc_eoc = pulse 1-cycle à ~20 MHz
 module tb_IQ_DEMOD;
 
   // -------------------------
   // DUT I/O
   // -------------------------
-  logic CLK;
+  logic i_clk;
   logic RSTn;
   logic adc_eoc;
 
@@ -18,7 +18,7 @@ module tb_IQ_DEMOD;
   // Instantiate DUT
   // -------------------------
   IQ_DEMOD dut (
-    .CLK(CLK),
+    .i_clk(i_clk),
     .RSTn(RSTn),
     .adc_eoc(adc_eoc),
     .I_in(I_in),
@@ -30,8 +30,8 @@ module tb_IQ_DEMOD;
   // -------------------------
   // 50 MHz clock (20 ns)
   // -------------------------
-  initial CLK = 1'b0;
-  always #10 CLK = ~CLK;
+  initial i_clk = 1'b0;
+  always #10 i_clk = ~i_clk;
 
   // -------------------------
   // Async reset sequence
@@ -48,9 +48,9 @@ module tb_IQ_DEMOD;
   end
 
   // ---------------------------------------------------------
-  // Génération adc_eoc ~ 20 MHz à partir de CLK=50 MHz
+  // Génération adc_eoc ~ 20 MHz à partir de i_clk=50 MHz
   // 50/20 = 2.5 cycles -> on alterne attente 2 puis 3 cycles
-  // adc_eoc est un pulse d'1 cycle de CLK
+  // adc_eoc est un pulse d'1 cycle de i_clk
   // ---------------------------------------------------------
   int unsigned wait_cycles;
   bit alt_2_3;
@@ -63,10 +63,10 @@ module tb_IQ_DEMOD;
       wait_cycles = (alt_2_3) ? 3 : 2;
       alt_2_3 = ~alt_2_3;
 
-      repeat (wait_cycles) @(posedge CLK);
+      repeat (wait_cycles) @(posedge i_clk);
 
       adc_eoc <= 1'b1;
-      @(posedge CLK);
+      @(posedge i_clk);
       adc_eoc <= 1'b0;
     end
   end
@@ -140,7 +140,7 @@ module tb_IQ_DEMOD;
 
     // On applique de nouveaux samples uniquement sur adc_eoc
     repeat (200) begin
-      @(posedge CLK);
+      @(posedge i_clk);
       if (adc_eoc) begin
         c = lut_cos(n);
         s = lut_sin(n);
@@ -163,7 +163,7 @@ module tb_IQ_DEMOD;
   // ---------------------------------------------------------
   // Monitor (affiche à chaque nouveau sample)
   // ---------------------------------------------------------
-  always @(posedge CLK) begin
+  always @(posedge i_clk) begin
     if (RSTn && adc_eoc) begin
       $display("t=%0t ns | n=%0d | I_in=%0d Q_in=%0d | I_out=%0d Q_out=%0d",
                $time, n, I_in, Q_in, I_out, Q_out);
