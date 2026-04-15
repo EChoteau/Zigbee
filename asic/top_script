@@ -5,11 +5,9 @@ cd asic/synth/
 cd cordic && dc_shell -f cordic_system_complete.tcl | tee log_synthese.log
 #design_vision
 
-cd ..
+cd ../..
 
-cp synth/netlist/cordic_system_complete.v pnr/top/input_data/TOP_netlist.v
-cp synth/netlist/cordic_system_complete.sdf pnr/top/input_data/TOP_netlist.sdf
+cp asic/synth/netlist/cordic_system_complete.v asic/pnr/top/input_data/TOP_netlist.v
+cp asic/synth/netlist/cordic_system_complete.sdf asic/pnr/top/input_data/TOP_netlist.sdf
 
-cd pnr/
-
-./run_pnr.sh
+./asic/pnr/run_pnr.sh
