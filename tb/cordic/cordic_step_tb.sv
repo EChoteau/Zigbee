@@ -57,7 +57,7 @@ module cordic_step_tb();
 
         // Q == 0 follows non-negative branch (w_is_positive = 1)
         i_i = 16'sh0400; i_q = 16'sh0000; i_phase = 16'sh0200; #10;
-        check_case("STEP_Q_ZERO", 16'sh0800, -16'sh0400, 16'sh1200);
+        check_case("STEP_Q_ZERO", 16'sh0400, -16'sh0400, 16'sh1200);
 
         $display("cordic_step_tb completed with %0d failure(s)", failures);
         assert (failures == 0)
