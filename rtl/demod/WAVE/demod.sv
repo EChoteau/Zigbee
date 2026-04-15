@@ -41,14 +41,14 @@ module IQ_DEMOD (
     // =========================
     wave_generator #(0) u_cos_signal (
         .i_clk     (i_clk),
-        .RSTn    (i_rst_n),
+        .i_rst_n    (i_rst_n),
         .adc_eoc (i_adc_eoc),
         .data_out(s_IF_I)
     );
 
     wave_generator #(1) u_sin_signal (
         .i_clk     (i_clk),
-        .RSTn    (i_rst_n),
+        .i_rst_n    (i_rst_n),
         .adc_eoc (i_adc_eoc),
         .data_out(s_IF_Q)
     );

@@ -11,11 +11,11 @@ module wave_generator_tb();
 
     // 2. Instanciation
     wave_generator #(.phase(0)) dut_cos (
-        .i_clk(clk), .RSTn(rstn), .adc_eoc(adc_eoc), .data_out(data_out_cos)
+        .i_clk(clk), .i_rst_n(rstn), .adc_eoc(adc_eoc), .data_out(data_out_cos)
     );
 
     wave_generator #(.phase(1)) dut_sin (
-        .i_clk(clk), .RSTn(rstn), .adc_eoc(adc_eoc), .data_out(data_out_sin)
+        .i_clk(clk), .i_rst_n(rstn), .adc_eoc(adc_eoc), .data_out(data_out_sin)
     );
 
     // 3. Horloge 50 MHz (20ns)

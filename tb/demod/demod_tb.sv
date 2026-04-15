@@ -8,7 +8,7 @@ module tb_IQ_DEMOD;
   // DUT I/O
   // -------------------------
   logic i_clk;
-  logic RSTn;
+  logic i_rst_n;
   logic adc_eoc;
 
   logic [5:0] I_in, Q_in;
@@ -19,7 +19,7 @@ module tb_IQ_DEMOD;
   // -------------------------
   IQ_DEMOD dut (
     .i_clk(i_clk),
-    .RSTn(RSTn),
+    .i_rst_n(i_rst_n),
     .adc_eoc(adc_eoc),
     .I_in(I_in),
     .Q_in(Q_in),
@@ -37,14 +37,14 @@ module tb_IQ_DEMOD;
   // Async reset sequence
   // -------------------------
   initial begin
-    RSTn    = 1'b0;
+    i_rst_n    = 1'b0;
     adc_eoc = 1'b0;
     I_in    = 6'd32;   // offset-binary midscale => 0 signed
     Q_in    = 6'd32;
 
     // reset asynchrone maintenu un peu
     #75;
-    RSTn = 1'b1;
+    i_rst_n = 1'b1;
   end
 
   // ---------------------------------------------------------
@@ -57,7 +57,7 @@ module tb_IQ_DEMOD;
 
   initial begin
     alt_2_3 = 1'b0;
-    @(posedge RSTn);
+    @(posedge i_rst_n);
 
     forever begin
       wait_cycles = (alt_2_3) ? 3 : 2;
@@ -133,7 +133,7 @@ module tb_IQ_DEMOD;
   integer signed I_sig, Q_sig;
 
   initial begin
-    @(posedge RSTn);
+    @(posedge i_rst_n);
 
     A = 20;   // amplitude choisie (<=31 conseillé)
     n = 0;
@@ -164,7 +164,7 @@ module tb_IQ_DEMOD;
   // Monitor (affiche à chaque nouveau sample)
   // ---------------------------------------------------------
   always @(posedge i_clk) begin
-    if (RSTn && adc_eoc) begin
+    if (i_rst_n && adc_eoc) begin
       $display("t=%0t ns | n=%0d | I_in=%0d Q_in=%0d | I_out=%0d Q_out=%0d",
                $time, n, I_in, Q_in, I_out, Q_out);
     end
