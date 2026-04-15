@@ -1,4 +1,4 @@
-`include "../INPUT_DATA/TOP_netlist.v"
+`include "../input_data/TOP_netlist.v"
 
 module top_io ( 
 	input [3:0] in_inFIFO_inData,   //4
