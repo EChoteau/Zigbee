@@ -11,7 +11,7 @@ module loop_filter #
     input wire up,
     input wire down,
 
-    output reg signed [WIDTH-1:0] ctrl
+    output reg signed [7:0] ctrl
 );
 logic up_l,down_l;
 always @(posedge clk or negedge rst) begin
@@ -28,10 +28,10 @@ always @(posedge clk or negedge rst) begin
             up_l <= up;
             down_l <= down;
             if (up & ~up_l)
-                ctrl <= ctrl + 10;
+                ctrl <= 109;
 
             else if (down & down_l)
-                ctrl <= ctrl - 10;
+                ctrl <= -101;
             else ctrl <= ctrl;
        // end
         
