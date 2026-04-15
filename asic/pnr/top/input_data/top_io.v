@@ -10,7 +10,7 @@ module top_io (
   	input [1:0] in_MUX_inSEL9,	//2
   	input [2:0] in_MUX_inSEL15,	//3
 
-  	input inClock, 
+  	input i_clk, 
 	input inReset, 
 	input in_outFIFO_inReadEnable, 
 	input in_DEMUX_inDEMUX1,
@@ -34,7 +34,7 @@ wire [1:0] in_MUX_inSEL6_P 	;
 wire [1:0] in_MUX_inSEL9_P 	;
 wire [2:0] in_MUX_inSEL15_P	;
 
-wire inClock_P 			;
+wire i_clk_P 			;
 wire inReset_P 			;
 wire in_outFIFO_inReadEnable_P 	; 
 wire in_DEMUX_inDEMUX1_P 	;
@@ -60,7 +60,7 @@ TOP t_op (
   	.in_MUX_inSEL9 		(in_MUX_inSEL9_P),
   	.in_MUX_inSEL15 	(in_MUX_inSEL15_P),
 
-  	.inClock 		(inClock_P), 
+  	.i_clk 		(i_clk_P), 
 	.inReset 		(inReset_P), 
 	.in_outFIFO_inReadEnable(in_outFIFO_inReadEnable_P), 
 	.in_DEMUX_inDEMUX1 	(in_DEMUX_inDEMUX1_P),
@@ -108,7 +108,7 @@ TOP t_op (
 	ITP io_MUX_inSEL15_1 	( .PAD(in_MUX_inSEL15[1]), .Y(in_MUX_inSEL15_P[1]) );	//
 	ITP io_MUX_inSEL15_0 	( .PAD(in_MUX_inSEL15[0]), .Y(in_MUX_inSEL15_P[0]) );	//
 
-	ITP io_inClock 			( .PAD(inClock), .Y(inClock_P) );					//ok
+	ITP io_i_clk 			( .PAD(i_clk), .Y(i_clk_P) );					//ok
 
 	ITP io_inReset 			( .PAD(inReset), .Y(inReset_P) );					//ok
 		
