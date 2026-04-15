@@ -12,15 +12,15 @@ module cordic_init_tb();
         .WIDTH_INTERNAL(WIDTH_INTERNAL)
     ) dut (.*);
 
-    task check_init(
-        
+/*    task check_init(
+
     );
         assert ()
         else begin
             $error("ERROR: i");
         end
     endtask
-
+*/
     initial begin
         $display("Testing INIT Quadrant Logic...");
         
