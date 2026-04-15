@@ -7,7 +7,7 @@ source $vars(data_dir)/constraints_variables.sdc
 set_interactive_constraint_modes [all_constraint_modes -active]
 
 
-set_input_transition $input_transition_min_best -min [get_ports "inClock"]
+set_input_transition $input_transition_min_best -min [get_ports "i_clk"]
 set_input_transition $input_transition_min_best -min [get_ports "inReset"]
 set_input_transition $input_transition_min_best -min [get_ports "in_inFIFO_inData"]
 set_input_transition $input_transition_min_best -min [get_ports "in_DEMUX_inDEMUX17"]
@@ -26,7 +26,7 @@ set_input_transition $input_transition_min_best -min [get_ports "in_MUX_inSEL12"
 set_input_transition $input_transition_min_best -min [get_ports "in_DEMUX_inSEL17"]
 
 
-set_input_transition $input_transition_max_best -max [get_ports "inClock"]
+set_input_transition $input_transition_max_best -max [get_ports "i_clk"]
 set_input_transition $input_transition_max_best -max [get_ports "inReset"]
 set_input_transition $input_transition_max_best -max [get_ports "in_inFIFO_inData"]
 set_input_transition $input_transition_max_best -max [get_ports "in_DEMUX_inDEMUX17"]
@@ -45,7 +45,7 @@ set_input_transition $input_transition_max_best -max [get_ports "in_MUX_inSEL12"
 set_input_transition $input_transition_max_best -max [get_ports "in_DEMUX_inSEL17"]
 
 
-set_load -pin_load $std_load_best -min [get_ports "inClock"]
+set_load -pin_load $std_load_best -min [get_ports "i_clk"]
 set_load -pin_load $std_load_best -min [get_ports "inReset"]
 set_load -pin_load $std_load_best -min [get_ports "in_inFIFO_inData"]
 set_load -pin_load $std_load_best -min [get_ports "in_DEMUX_inDEMUX17"]

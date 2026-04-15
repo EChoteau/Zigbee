@@ -1,4 +1,4 @@
-set clk_root(clk)              "inClock"
+set clk_root(clk)              "i_clk"
 set clk_period(clk)            20.000
 
 set clock_uncertainty(setup) 5.0

@@ -10,7 +10,7 @@ Pad:	PWR1				N VDD3ALLP
 Pad:	GND1				N GND3ALLP
 Pad:	io_inFIFO_inData_1		N
 Pad:	io_inFIFO_inData_0		N
-Pad:	io_inClock			N
+Pad:	io_i_clk			N
 Pad:	io_inReset			N
 Pad:	io_DEMUX_inDEMUX17_3		N
 Pad:	io_DEMUX_inDEMUX17_2		N
