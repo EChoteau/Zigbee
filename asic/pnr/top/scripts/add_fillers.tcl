@@ -1,4 +1,13 @@
 
+proc amsFillperi {} {
+	##-- Add Peri Filler cells
+	set fillerList {100_P 50_P 20_P 10_P 5_P 2_P 1_P 01_P}
+	foreach fillcell $fillerList {
+		addIoFiller -cell PERI_SPACER_$fillcell -prefix pfill
+	}
+}
+
+
 setEdit -layer_horizontal {MET1}
 setEdit -layer_horizontal {MET3}
 setEdit -layer_vertical  {MET2} 
