@@ -118,6 +118,12 @@ clearGlobalNets
 globalNetConnect vdd! -type pgpin -pin vdd! -inst * -module {}
 globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
 
+globalNetConnect vdd! -type pgpin -pin vdd3r2! -inst io_i_* -module {}
+globalNetConnect vdd! -type pgpin -pin vdd3r1! -inst io_i_* -module {}
+globalNetConnect vdd! -type pgpin -pin vdd3o! -inst io_i_* -module {}
+globalNetConnect gnd! -type pgpin -pin gnd3r! -inst io_i_* -module {}
+globalNetConnect gnd! -type pgpin -pin gnd3o! -inst io_i_* -module {}
+
 globalNetConnect vdd! -type pgpin -pin A -inst PWR1 -module {}
 globalNetConnect vdd! -type pgpin -pin A -inst PWR2 -module {}
 globalNetConnect vdd! -type pgpin -pin A -inst PWR3 -module {}

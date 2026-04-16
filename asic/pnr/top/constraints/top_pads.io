@@ -6,36 +6,36 @@
 # Pad:	<pad_name>	<side> [<cell type>]
 
 # Definition des pads North
-Pad:	io_i_clk			N
-Pad:	io_i_rst_n			N
-Pad:	PWR1				N VDD3ALLP
-Pad:	GND1				N GND3ALLP
+Pad:	io_i_phase_0			N
+Pad:	io_i_phase_1			N
+Pad:	io_i_phase_2			N
+Pad:	io_i_phase_3			N
+Pad:	io_i_phase_4			N
+Pad:	io_i_phase_5			N
+Pad:	io_i_phase_6			N
+Pad:	io_i_phase_7			N
 
 # Definition des pads East
-Pad:	io_i_phase_0			E
-Pad:	io_i_phase_1			E
-Pad:	io_i_phase_2			E
-Pad:	io_i_phase_3			E
-Pad:	io_i_phase_4			E
-Pad:	io_i_phase_5			E
-Pad:	io_i_phase_6			E
-Pad:	io_i_phase_7			E
+Pad:	io_i_clk			E
+Pad:	io_i_rst_n			E
+Pad:	PWR1				E VDD3ALLP
+Pad:	GND1				E GND3ALLP
 
 # Definition des pads South
-Pad:	PWR2				S VDD3ALLP
-Pad:	GND2				S GND3ALLP
-Pad:	PWR3				S VDD3ALLP
-Pad:	GND3				S GND3ALLP
+Pad:	io_o_phase_deriv_0		S
+Pad:	io_o_phase_deriv_1		S
+Pad:	io_o_phase_deriv_2		S
+Pad:	io_o_phase_deriv_3		S
+Pad:	io_o_phase_deriv_4		S
+Pad:	io_o_phase_deriv_5		S
+Pad:	io_o_phase_deriv_6		S
+Pad:	io_o_phase_deriv_7		S
 
 # Definition des pads West
-Pad:	io_o_phase_deriv_0		W
-Pad:	io_o_phase_deriv_1		W
-Pad:	io_o_phase_deriv_2		W
-Pad:	io_o_phase_deriv_3		W
-Pad:	io_o_phase_deriv_4		W
-Pad:	io_o_phase_deriv_5		W
-Pad:	io_o_phase_deriv_6		W
-Pad:	io_o_phase_deriv_7		W
+Pad:	PWR2				W VDD3ALLP
+Pad:	GND2				W GND3ALLP
+Pad:	PWR3				W VDD3ALLP
+Pad:	GND3				W GND3ALLP
 
 # Definition des pads de Corner
 Pad:	io_CORNER0	NW CORNERP
