@@ -66,13 +66,9 @@ group_path -name in2gated 	-from $input_ports 	-to $gated_all
 # RAMs
 # Pas de rams dans notre circuit
 
-#Custom
-group_path -name reset2cdr -from inReset -to t_op/u_cdr/div1/o_nb_P_reg[3]/D
-group_path -name reset2cdr -from t_op/u_cdr/div1/o_nb_P_reg[4]/QN -to  t_op/u_cdr/phd1/cnt_phd/cnt_reg[4]/D
-
-
-#group_path -name my_path -from {t_op/u_decoder/fir_filter/Q_data_add_3_buff_reg[14]/D t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[3]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/Q  t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/Q t_op/u_cdr/div1/o_nb_P_reg[0]/QN  t_op/u_cdr/div1/o_nb_P_reg[3]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[3]/QN t_op/u_cdr/div1/o_nb_P_reg[3]/QN  t_op/u_cdr/div1/o_nb_P_reg[3]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[0]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/QN t_op/u_cdr/div1/o_nb_P_reg[3]/QN t_op/u_cdr/div1/o_nb_P_reg[3]/QN t_op/u_cdr/div1/o_nb_P_reg[1]/Q  t_op/u_cdr/div1/o_nb_P_reg[1]/Q  t_op/u_cdr/div1/o_nb_P_reg[1]/Q t_op/u_cdr/div1/o_nb_P_reg[1]/Q t_op/u_cdr/div1/o_nb_P_reg[1]/Q t_op/u_cdr/div1/o_nb_P_reg[1]/Q  t_op/u_cdr/div1/o_nb_P_reg[2]/QN  t_op/u_cdr/div1/o_nb_P_reg[0]/Q  t_op/u_cdr/div1/o_nb_P_reg[2]/QN } -to {t_op/u_decoder/fir_filter/Q_data_add_4_buff_reg[3]/Q t_op/u_cdr/phd1/cnt_phd/cnt_reg[1]/D  t_op/u_cdr/phd1/cnt_phd/cnt_reg[3]/D t_op/u_cdr/phd1/cnt_phd/cnt_reg[0]/D t_op/u_cdr/phd1/cnt_phd/cnt_reg[5]/D t_op/u_cdr/dec/cnt_r_reg[4]/D t_op/u_cdr/phd1/cnt_phd/o_en_m_reg/D  t_op/u_cdr/phd1/cnt_phd/cnt_reg[4]/D t_op/u_cdr/phd1/cnt_phd/cnt_reg[2]/D  t_op/u_cdr/dec/o_flag_reg/D  t_op/u_cdr/div1/cnt_div/cnt_reg[3]/D  t_op/u_cdr/dec/cnt_r_reg[3]/D t_op/u_cdr/div1/cnt_div/cnt_reg[5]/D t_op/u_cdr/div1/cnt_div/cnt_reg[0]/D t_op/u_cdr/div1/cnt_div/cnt_reg[2]/D  t_op/u_cdr/dec/cnt_r_reg[1]/D  t_op/u_cdr/dec/cnt_r_reg[0]/D  t_op/u_cdr/phd1/cnt_phd/o_en_reg/D t_op/u_cdr/div1/cnt_div/cnt_reg[4]/D t_op/u_cdr/div1/cnt_div/cnt_reg[1]/D  t_op/u_cdr/div1/cnt_div/cnt_reg[1]/D t_op/u_cdr/dec/cnt_r_reg[5]/D t_op/u_cdr/dec/cnt_r_reg[2]/D  t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[2]/D t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[0]/D t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[3]/D  t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[4]/D t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[5]/D  t_op/u_cdr/dec/cnt_dec/cnt_clk_reg[1]/D t_op/u_cdr/div1/cnt_div/o_en_freq_synch_reg/D  t_op/u_cdr/phd1/cnt_phd/o_en_f_reg/D t_op/u_cdr/dec/cnt_dec/o_en_reg/D }
-
+# Custom
+#group_path -name reset2cdr -from inReset -to t_op/u_cdr/div1/o_nb_P_reg[3]/D
+#group_path -name reset2cdr -from t_op/u_cdr/div1/o_nb_P_reg[4]/QN -to  t_op/u_cdr/phd1/cnt_phd/cnt_reg[4]/D
 
 # Options for path_groups
 set_interactive_constraint_modes {}
@@ -82,7 +78,6 @@ setPathGroupOptions reg2out 	-effortLevel high -slackAdjustment 0
 setPathGroupOptions in2out 	-effortLevel high -slackAdjustment 0
 setPathGroupOptions reg2gated 	-effortLevel high -slackAdjustment 0
 setPathGroupOptions in2gated 	-effortLevel high -slackAdjustment 0
-setPathGroupOptions my_path 	-effortLevel high -slackAdjustment 0
 
 place_opt_design
 #setPlaceMode -fp false
