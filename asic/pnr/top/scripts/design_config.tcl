@@ -119,14 +119,13 @@ globalNetConnect vdd! -type pgpin -pin vdd! -inst * -module {}
 globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
 
 
-# Match supply pad cells by macro name to avoid instance-name mismatches from loadIoFile
-globalNetConnect vdd! -type pgpin -pin * -inst * -module VDD3ALLP -override
-globalNetConnect gnd! -type pgpin -pin * -inst * -module GND3ALLP -override
+globalNetConnect vdd! -type pgpin -pin A -inst PWR1 -module {}
+globalNetConnect vdd! -type pgpin -pin A -inst PWR2 -module {}
+globalNetConnect vdd! -type pgpin -pin A -inst PWR3 -module {}
+globalNetConnect gnd! -type pgpin -pin A -inst GND1 -module {}
+globalNetConnect gnd! -type pgpin -pin A -inst GND2 -module {}
+globalNetConnect gnd! -type pgpin -pin A -inst GND3 -module {}
 
-# Some IO libraries expose ground pad connection on signal-class pins
-globalNetConnect gnd! -type net -pin A -inst * -module GND3ALLP -override
-globalNetConnect gnd! -type net -pin VSS -inst * -module GND3ALLP -override
-globalNetConnect gnd! -type net -pin VSSIO -inst * -module GND3ALLP -override
 applyGlobalNets
 
 #////////////////////////////////////////////////////
@@ -141,9 +140,6 @@ applyGlobalNets
 setSrouteMode -viaConnectToShape { noshape }
 
 sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -blockPinTarget {nearestRingStripe nearestTarget } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -corePinTarget { firstAfterRowEnd } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -blockPin useLef -targetViaLayerRange { MET1 MET4 }
-
-# Keep a dedicated ground pass in case mixed-net sroute misses GND pad stitches
-sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -blockPinTarget {nearestRingStripe nearestTarget } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -corePinTarget { firstAfterRowEnd } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! } -allowLayerChange 1 -blockPin useLef -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
 
