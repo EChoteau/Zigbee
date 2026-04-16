@@ -174,6 +174,7 @@ globalNetConnect vdd! -type pgpin -pin A -inst PWR2 -module {}
 globalNetConnect vdd! -type pgpin -pin A -inst PWR3 -module {}
 globalNetConnect gnd! -type pgpin -pin A -inst GND1 -module {}
 globalNetConnect gnd! -type pgpin -pin A -inst GND2 -module {}
+globalNetConnect gnd! -type pgpin -pin A -inst GND3 -module {}
 
 #////////////////////////////////////////////////////
 
