@@ -117,11 +117,6 @@ addStripe -nets {gnd! vdd!} -layer $stripe_layer -direction $stripe_direction -w
 clearGlobalNets
 globalNetConnect vdd! -type pgpin -pin vdd! -inst * -module {}
 globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
-globalNetConnect vdd! -type pgpin -pin VDD -inst * -module {}
-globalNetConnect gnd! -type pgpin -pin VSS -inst * -module {}
-globalNetConnect vdd! -type pgpin -pin VPWR -inst * -module {}
-globalNetConnect gnd! -type pgpin -pin VGND -inst * -module {}
-
 
 globalNetConnect vdd! -type pgpin -pin A -inst PWR1 -module {}
 globalNetConnect vdd! -type pgpin -pin A -inst PWR2 -module {}
