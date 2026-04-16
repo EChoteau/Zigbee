@@ -17,6 +17,9 @@ source ../scripts/placement.tcl
 
 saveDesign dbs/prects_enc
 
+# Open GUI for inspection
+win
+
 # Création du clock_tree
 source ../scripts/clock_tree_synthesis.tcl
 saveDesign dbs/postcts_enc
