@@ -68,7 +68,6 @@ proc amsGlobalConnect type {
                ##--- Define global Power nets - make global connections
                clearGlobalNets
                set globalNetsList {{vdd! vdd!} {gnd! gnd!}}
-               set globalNetsList [lappend globalNetsList {vdd3r1! vdd3r1!} {vdd3r2! vdd3r2!} {vdd3o! vdd3o!} {gnd3r! gnd3r!} {gnd3o! gnd3o!}]
              }
      }
      clearGlobalNets

@@ -118,56 +118,6 @@ clearGlobalNets
 globalNetConnect vdd! -type pgpin -pin vdd! -inst * -module {}
 globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
 
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst io_* -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst io_* -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst io_* -module {}
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst io_* -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst io_* -module {}
-
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst CORNER* -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst CORNER* -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst CORNER* -module {}
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst CORNER* -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst CORNER* -module {}
-
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst pfill* -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst pfill* -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst pfill* -module {}
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst pfill* -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst pfill* -module {}
-
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst PWR1 -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst PWR1 -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst PWR1 -module {}
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst PWR1 -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst PWR1 -module {}
-
-
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst GND1 -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst GND1 -module {}
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst GND1 -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst GND1 -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst GND1 -module {}
-
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst PWR2 -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst PWR2 -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst PWR2 -module {}
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst PWR2 -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst PWR2 -module {}
-
-
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst GND2 -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst GND2 -module {}
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst GND2 -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst GND2 -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst GND2 -module {}
-
-globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst PWR3 -module {}
-globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst PWR3 -module {}
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst PWR3 -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst PWR3 -module {}
-globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst PWR3 -module {}
-
 
 globalNetConnect vdd! -type pgpin -pin A -inst PWR1 -module {}
 globalNetConnect vdd! -type pgpin -pin A -inst PWR2 -module {}
