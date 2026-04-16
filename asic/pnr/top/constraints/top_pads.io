@@ -1,66 +1,40 @@
 ######################################################
 #  Encounter CORNER Pad placement file               #
-#      Version: 05-Dec-2013                          #
 ######################################################
 
-
-Pad:	io_inFIFO_inData_3		N
-Pad:	io_inFIFO_inData_2		N
+# Definition des pads North
+Pad:	io_i_clk			N
+Pad:	io_i_rst_n			N
 Pad:	PWR1				N VDD3ALLP
 Pad:	GND1				N GND3ALLP
-Pad:	io_inFIFO_inData_1		N
-Pad:	io_inFIFO_inData_0		N
-Pad:	io_i_clk			N
-Pad:	io_inReset			N
-Pad:	io_DEMUX_inDEMUX17_3		N
-Pad:	io_DEMUX_inDEMUX17_2		N
-Pad:	io_DEMUX_inDEMUX17_1		N
-Pad:	io_DEMUX_inDEMUX17_0		N
 
+# Definition des pads East
+Pad:	io_i_phase_0			E
+Pad:	io_i_phase_1			E
+Pad:	io_i_phase_2			E
+Pad:	io_i_phase_3			E
+Pad:	io_i_phase_4			E
+Pad:	io_i_phase_5			E
+Pad:	io_i_phase_6			E
+Pad:	io_i_phase_7			E
 
-
-Pad:	io_MUX_outMUX9_3		E
-Pad:	io_MUX_inSEL9_0			E
-Pad:	io_MUX_inSEL9_1			E
-Pad:	io_MUX_outMUX10_0		E
-Pad:	io_MUX_outMUX10_1		E
-Pad:	io_MUX_outMUX10_2		E
-Pad:	io_MUX_outMUX10_3		E
-Pad:	io_DEMUX_inDEMUX18_0		E
-Pad:	io_DEMUX_inDEMUX18_1		E
-Pad:	io_DEMUX_inDEMUX18_2		E
-Pad:	io_DEMUX_inDEMUX18_3		E
-Pad:	io_DEMUX_inSEL17		E
-
-
-Pad:	io_DEMUX_inDEMUX2		S
-Pad:	io_DEMUX_inDEMUX1		S
-Pad:	io_MUX_outMUX15			S
-Pad:	GND2				S GND3ALLP
-Pad:	io_MUX_inSEL15_0		S
+# Definition des pads South
 Pad:	PWR2				S VDD3ALLP
-Pad:	io_MUX_inSEL15_1		S
+Pad:	GND2				S GND3ALLP
 Pad:	PWR3				S VDD3ALLP
-Pad:	io_MUX_outMUX16			S
-Pad:	io_MUX_outMUX9_0		S
-Pad:	io_MUX_outMUX9_1		S
-Pad:	io_MUX_outMUX9_2		S 
+Pad:	GND3				S GND3ALLP
 
+# Definition des pads West
+Pad:	io_o_phase_deriv_0		W
+Pad:	io_o_phase_deriv_1		W
+Pad:	io_o_phase_deriv_2		W
+Pad:	io_o_phase_deriv_3		W
+Pad:	io_o_phase_deriv_4		W
+Pad:	io_o_phase_deriv_5		W
+Pad:	io_o_phase_deriv_6		W
+Pad:	io_o_phase_deriv_7		W
 
-Pad:	io_DEMUX_inSEL1_2		W
-Pad:	io_DEMUX_inSEL1_1		W
-Pad:	io_DEMUX_inSEL1_0		W
-Pad:	io_DEMUX_inSEL2_2		W
-Pad:	io_DEMUX_inSEL2_1		W
-Pad:	io_DEMUX_inSEL2_0		W
-Pad:	io_outFIFO_inReadEnable		W
-Pad:	io_MUX_inSEL3			W
-Pad:	io_MUX_inSEL12			W
-Pad:	io_MUX_inSEL11			W
-Pad:	io_MUX_inSEL6_1			W			
-Pad:	io_MUX_inSEL6_0			W			
-
-
+# Definition des pads de Corner
 Pad:	io_CORNER0	NW CORNERP
 Pad:	io_CORNER1	NE CORNERP
 Pad:	io_CORNER2	SE CORNERP
