@@ -12,9 +12,7 @@ wire i_rst_n_P;
 wire [7:0] i_phase_P;
 wire [7:0] o_phase_deriv_P;
 
-derivative #(
-	.WIDTH(8)
-) derivative_inst (
+derivative derivative_inst (
 	.i_clk(i_clk_P),
 	.i_rst_n(i_rst_n_P),
 	.i_phase(i_phase_P),
