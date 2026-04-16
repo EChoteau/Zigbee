@@ -103,34 +103,41 @@ addStripe -nets {gnd! vdd!} -layer $stripe_layer -direction $stripe_direction -w
 #////////////////////////////////////////////////////
 
 clearGlobalNets
-# Standard cells
 globalNetConnect vdd! -type pgpin -pin vdd! -inst * -module {}
 globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
 
-# IO Pad Rings (IO, Corners, Fillers)
-foreach inst {io_* CORNER* pfill*} {
-    globalNetConnect vdd3r1! -type pgpin -pin vdd3r1 -inst $inst -module {}
-    globalNetConnect vdd3r2! -type pgpin -pin vdd3r2 -inst $inst -module {}
-    globalNetConnect vdd3o!  -type pgpin -pin vdd3o  -inst $inst -module {}
-    globalNetConnect gnd3r!  -type pgpin -pin gnd3r  -inst $inst -module {}
-    globalNetConnect gnd3o!  -type pgpin -pin gnd3o  -inst $inst -module {}
-}
+globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst io_* -module {}
+globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst io_* -module {}
+globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst io_* -module {}
+globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst io_* -module {}
+globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst io_* -module {}
 
-# PWR Pads: Connect IO pins to IO nets, and pin A to Core VDD
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1 -inst PWR* -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2 -inst PWR* -module {}
-globalNetConnect vdd3o!  -type pgpin -pin vdd3o  -inst PWR* -module {}
-globalNetConnect gnd3r!  -type pgpin -pin gnd3r  -inst PWR* -module {}
-globalNetConnect gnd3o!  -type pgpin -pin gnd3o  -inst PWR* -module {}
-globalNetConnect vdd!    -type pgpin -pin A      -inst PWR* -module {}
+globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst CORNER* -module {}
+globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst CORNER* -module {}
+globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst CORNER* -module {}
+globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst CORNER* -module {}
+globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst CORNER* -module {}
 
-# GND Pads: Connect IO pins to IO nets, and pin A to Core GND
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1 -inst GND* -module {}
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2 -inst GND* -module {}
-globalNetConnect vdd3o!  -type pgpin -pin vdd3o  -inst GND* -module {}
-globalNetConnect gnd3r!  -type pgpin -pin gnd3r  -inst GND* -module {}
-globalNetConnect gnd3o!  -type pgpin -pin gnd3o  -inst GND* -module {}
-globalNetConnect gnd!    -type pgpin -pin A      -inst GND* -module {}
+globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst pfill* -module {}
+globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst pfill* -module {}
+globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst pfill* -module {}
+globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst pfill* -module {}
+globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst pfill* -module {}
+
+globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst PWR* -module {}
+globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst PWR* -module {}
+globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst PWR* -module {}
+globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst PWR* -module {}
+globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst PWR* -module {}
+
+globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst GND* -module {}
+globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst GND* -module {}
+globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst GND* -module {}
+globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst GND* -module {}
+globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst GND* -module {}
+
+globalNetConnect vdd! -type pgpin -pin A -inst PWR* -module {}
+globalNetConnect gnd! -type pgpin -pin A -inst GND* -module {}
 
 applyGlobalNets
 
@@ -139,19 +146,9 @@ applyGlobalNets
 # Special_route
 #////////////////////////////////////////////////////
 
+#Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
-# Added all power/ground nets to the sroute command
-sroute -connect { padPin padRing corePin floatingStripe } \
-       -layerChangeRange { MET1 MET4 } \
-       -padPinPortConnect { allPort oneGeom } \
-       -padPinTarget { nearestTarget } \
-       -corePinTarget { firstAfterRowEnd } \
-       -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } \
-       -allowJogging 1 \
-       -crossoverViaLayerRange { MET1 MET4 } \
-       -nets { gnd! vdd! vdd3r1! vdd3r2! vdd3o! gnd3r! gnd3o! } \
-       -allowLayerChange 1 \
-       -targetViaLayerRange { MET1 MET4 }
+sroute -connect { padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -corePinTarget { firstAfterRowEnd } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
