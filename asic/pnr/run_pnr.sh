@@ -4,4 +4,4 @@ source config/config_ASIC
 
 cd "asic/pnr/top/work"
 
-innovus -batch -no_gui -files ../scripts/flow.tcl
+innovus -batch -files ../scripts/flow.tcl

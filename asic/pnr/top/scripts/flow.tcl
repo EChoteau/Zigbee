@@ -1,38 +1,34 @@
 #////////////////////////////////////////////////////
 # DEROULEMENT DU FLOW DE CONCEPTION
-# Modified : 20 May 2022
 #////////////////////////////////////////////////////
 
-#Init le design (netlist, lef, alims, etc..)
+# Init le design (netlist, lef, alims, etc..)
 source ../scripts/init.tcl
 init_design
-#Placement des pads + creation de la grille + connexion des pads d'alimentation a la grille
+
+# Placement des pads + creation de la grille + connexion des pads d'alimentation a la grille
 source ../scripts/design_config.tcl
 setAnalysisMode -analysisType onChipVariation
 
 saveDesign dbs/floorplan_enc
 
-#Ouvre l'interface graphique après les premières étapes d'initialisation
-if {[llength [info commands win]] > 0} {
-	catch {win}
-}
-
-#Placement des standard cells
+# Placement des standard cells
 source ../scripts/placement.tcl
 
 saveDesign dbs/prects_enc
-#Création du clock_tree
+
+# Création du clock_tree
 source ../scripts/clock_tree_synthesis.tcl
 saveDesign dbs/postcts_enc
 
-#Ajout des fillers in core and pads
+# Ajout des fillers in core and pads
 source ../scripts/add_fillers.tcl
 saveDesign dbs/addFiller_enc
 
 routeDesign
 
 
-#Useful skew
+# Useful skew
 #setOptMode -usefulSkewPostRoute true
 
 

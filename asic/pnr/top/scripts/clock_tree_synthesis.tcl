@@ -1,10 +1,9 @@
 #////////////////////////////////////////////////////
-#CREATION DE L'ARBRE D'HORLOGE
-#Modified : 20 May 2022
+# CREATION DE L'ARBRE D'HORLOGE
 #////////////////////////////////////////////////////
 
-#Cette commande est obsolete mais fonctionne encore sur cette version pourrie d'Innovus alors on la laisse lol ;)
-#Set les modes nécessaire à la création du clock_tree
+# Cette commande est obsolete mais fonctionne encore sur cette version pourrie d'Innovus alors on la laisse lol ;)
+# Set les modes nécessaire à la création du clock_tree
 
 setEdit -layer_horizontal {MET1}
 setEdit -layer_horizontal {MET3}
@@ -32,7 +31,7 @@ group_path -name path_CTS_CORDIC -from t_op/u_cordic/mycordic/present_ANGLE_tabl
 setCTSMode -engine ccopt
 set_ccopt_property use_inverters auto
 setCCOptMode -cts_opt_type full
-#Useful skew extreme
+# Useful skew extreme
 setOptMode -usefulSkewCCOpt extreme
 create_ccopt_clock_tree_spec -file ccopt.spec
 source ccopt.spec
