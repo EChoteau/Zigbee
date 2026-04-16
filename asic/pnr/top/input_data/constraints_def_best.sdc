@@ -3,6 +3,7 @@ source $vars(data_dir)/constraints_variables.sdc
 #---------------------------------------------------------
 # Input
 #---------------------------------------------------------
+
 set_interactive_constraint_modes [all_constraint_modes -active]
 
 
