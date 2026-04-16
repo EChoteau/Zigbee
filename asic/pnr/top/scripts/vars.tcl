@@ -152,7 +152,7 @@ set vars(generate_tracks) {true}
 set vars(genus_config_tcl) {}
 set vars(globbed) {true}
 set vars(good_corners) {corner_min corner_typ corner_max}
-set vars(ground_nets) {gnd!}
+set vars(ground_nets) {gnd! gnd3r! gnd3o!}
 set vars(hier_flow_type) {1pass}
 set vars(high_timing_effort) {false}
 set vars(hold_analysis_views) {hold_func_min hold_func_typ hold_func_max}
@@ -242,7 +242,7 @@ set vars(postroute_setup_hold) {true}
 set vars(postroute_spread_wires) {false}
 set vars(power_analysis_view) {hold_func_min}
 set vars(power_effort) {low}
-set vars(power_nets) {vdd!}
+set vars(power_nets) {vdd! vdd3r1! vdd3r2! vdd3o!}
 set vars(pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/constraints_def_worst.sdc}
 set vars(pre_cts_tcl) {../plug/INNOVUS/pre_cts.tcl}
 set vars(pre_init_tcl) {../plug/INNOVUS/pre_init.tcl}
