@@ -10,8 +10,8 @@ analyze -library WORK -format sverilog {
     ../../rtl/cordic/Derivate.sv
 }
 
-elaborate test_system_complete -library WORK
-current_design test_system_complete
+elaborate derivative -library WORK
+current_design derivative
 link
 
 # --- 3. Contraintes ---
@@ -20,7 +20,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design test_system_complete
+current_design derivative
 ungroup -all -flatten
 compile_ultra -gate_clock
 # (Optionnel)
