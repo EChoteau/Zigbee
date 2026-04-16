@@ -3,14 +3,14 @@
 module top_io (
 	input i_clk,
 	input i_rst_n,
-	input signed [7:0] i_phase,
-	output signed [7:0] o_phase_deriv
+	input [7:0] i_phase,
+	output [7:0] o_phase_deriv
 );
 
 wire i_clk_P;
 wire i_rst_n_P;
-wire signed [7:0] i_phase_P;
-wire signed [7:0] o_phase_deriv_P;
+wire [7:0] i_phase_P;
+wire [7:0] o_phase_deriv_P;
 
 derivative #(
 	.WIDTH(8)
