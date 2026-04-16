@@ -120,13 +120,8 @@ globalNetConnect gnd! -type pgpin -pin gnd! -inst * -module {}
 
 
 # Match all pad-supply instances from the IO file (PWR*/GND*)
-globalNetConnect vdd! -type pgpin -pin A -inst PWR* -module {}
-globalNetConnect gnd! -type pgpin -pin A -inst GND* -module {}
-
-# Fallback names commonly used by ground pad macros
-globalNetConnect gnd! -type pgpin -pin VSS -inst GND* -module {}
-globalNetConnect gnd! -type pgpin -pin VSSIO -inst GND* -module {}
-globalNetConnect gnd! -type pgpin -pin VSS3ALL -inst GND* -module {}
+globalNetConnect vdd! -type pgpin -pin * -inst PWR* -module {}
+globalNetConnect gnd! -type pgpin -pin * -inst GND* -module {}
 
 #////////////////////////////////////////////////////
 

@@ -2,6 +2,9 @@
 #  Encounter CORNER Pad placement file               #
 ######################################################
 
+# Format
+# Pad:	<pad_name>	<side> [<cell type>]
+
 # Definition des pads North
 Pad:	io_i_clk			N
 Pad:	io_i_rst_n			N
