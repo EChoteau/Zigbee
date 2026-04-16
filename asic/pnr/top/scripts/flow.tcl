@@ -19,6 +19,7 @@ saveDesign dbs/prects_enc
 
 # Open GUI for inspection
 win
+pause
 
 # Création du clock_tree
 source ../scripts/clock_tree_synthesis.tcl
