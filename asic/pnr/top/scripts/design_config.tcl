@@ -129,9 +129,9 @@ globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst PWR* -module {}
 globalNetConnect vdd3o! -type pgpin -pin vdd3o! -inst PWR* -module {}
 globalNetConnect gnd3r! -type pgpin -pin gnd3r! -inst PWR* -module {}
 globalNetConnect gnd3o! -type pgpin -pin gnd3o! -inst PWR* -module {}
-
-globalNetConnect vdd! -type pgpin -pin A -inst PWR* -module {}
-globalNetConnect gnd! -type pgpin -pin A -inst GND* -module {}
+globalNetConnect vdd! -type pgpin -pin vdd3r1! -inst GND* -module {}
+globalNetConnect vdd! -type pgpin -pin vdd3r2! -inst GND* -module {}
+globalNetConnect vdd! -type pgpin -pin vdd3o! -inst GND* -module {}
 
 globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -inst GND* -module {}
 globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -inst GND* -module {}
