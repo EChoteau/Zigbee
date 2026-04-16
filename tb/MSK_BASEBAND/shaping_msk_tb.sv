@@ -1,62 +1,110 @@
- `timescale 1ns/1ps
-    module top_msk_tb();
-    // Signaux du testbench
+`timescale 1ns/1ps
+
+module shaping_msk_tb();
+
+    // -------------------------------------------------------------------------
+    // 1. Signaux internes au Testbench
+    // -------------------------------------------------------------------------
     logic s_clk;
     logic s_rst_n;
     logic s_enable_ech;
-    logic s_flag_enable;
-    logic s_b_in; 
+    logic s_a_I;
+    logic s_a_Q;
     logic signed [5:0] s_I_BB;
     logic signed [5:0] s_Q_BB;
-    // Séquence de bits complexe pour tester l'encodeur et voir de belles courbes
-    logic s_sequence [0:9] = '{1, 0, 1, 1, 0, 0, 1, 0, 1, 1};
-    // Branchement de TON vrai TOP module complet
-    top_msk DUT (
+
+    // -------------------------------------------------------------------------
+    // 2. Instanciation du composant (Le "DUT")
+    // -------------------------------------------------------------------------
+    shaping_msk DUT (
         .i_clk(s_clk),
         .i_rst_n(s_rst_n),
         .i_enable_ech(s_enable_ech),
-        .i_flag_enable(s_flag_enable),
-        .i_b_in(s_b_in), 
+        .i_a_I(s_a_I),
+        .i_a_Q(s_a_Q),
         .o_I_BB(s_I_BB),
         .o_Q_BB(s_Q_BB)
     );
-    // Horloge
+
+    // -------------------------------------------------------------------------
+    // 3. Horloge (50 MHz = 20 ns de période)
+    // -------------------------------------------------------------------------
     always #10 s_clk = ~s_clk;
-    // Scénario
+
+    // -------------------------------------------------------------------------
+    // 4. Scénario de Test Unitaire
+    // -------------------------------------------------------------------------
     initial begin
-        // 1. Reset
-        $display("--- DEBUT DE LA SIMULATION TOP MSK ---");
-        s_clk = 0;
-        s_rst_n = 0;
+        $display("--- DEBUT DE LA SIMULATION SHAPING MSK SEUL ---");
+
+        // Initialisation propre
+        s_clk        = 0;
+        s_rst_n      = 0;
         s_enable_ech = 0;
-        s_flag_enable = 0;
-        s_b_in = 0;
-        
+        s_a_I        = 0;
+        s_a_Q        = 0;
+
+        // On lâche le Reset après 25 ns
         #25 s_rst_n = 1;
         @(posedge s_clk);
-        // 2. Envoi de la séquence de bits brute
-        for (int i = 0; i < 10; i++) begin
-            
-            // --- A. On envoie UN nouveau bit à l'encodeur ---
-            s_b_in = s_sequence[i];
-            s_flag_enable = 1;
-            @(posedge s_clk);
-            s_flag_enable = 0;
-            
-            // --- B. On laisse le Shaping dessiner l'arche pendant Tb ---
-            // Une arche entière (2Tb) = 64 échantillons
-            // Un seul bit (Tb) = 32 échantillons
-            for (int ech = 0; ech < 32; ech++) begin
-                s_enable_ech = 1;
-                @(posedge s_clk);
-                s_enable_ech = 0;
-                
-                // On simule l'attente entre chaque point de la courbe
-                repeat(3) @(posedge s_clk);
-            end
-            
-        end
+
+        // On active l'échantillonnage en continu (1 point par coup d'horloge)
+        s_enable_ech = 1'b1;
+
+        // --- SCÉNARIO 1 : Bosses Positives (I=1, Q=1) ---
+        $display(">> Test 1 : Bosses vers le haut");
+        s_a_I = 1'b1;
+        s_a_Q = 1'b1;
+        // On attend 50 coups d'horloge (le temps d'une arche entière)
+        repeat (50) @(posedge s_clk);
+
+        // --- SCÉNARIO 2 : Bosses Négatives (I=0, Q=0) ---
+        $display(">> Test 2 : Bosses vers le bas");
+        s_a_I = 1'b0;
+        s_a_Q = 1'b0;
+        repeat (50) @(posedge s_clk);
+
+        // --- SCÉNARIO 3 : Mixte (I=1, Q=0) ---
+        $display(">> Test 3 : Croisement (I=1, Q=0)");
+        s_a_I = 1'b1;
+        s_a_Q = 1'b0;
+        // On attend un peu plus longtemps pour bien voir les ondes se croiser
+        repeat (75) @(posedge s_clk);
+
+        // Fin propre
+        s_enable_ech = 1'b0;
+        repeat (5) @(posedge s_clk);
+        
         $display("--- SIMULATION TERMINEE ---");
         $stop;
     end
+
+    // -------------------------------------------------------------------------
+    // 5. ASSERTIONS (Vigiles de sécurité)
+    // -------------------------------------------------------------------------
+
+    // A. Vérification du comportement au Reset
+    property p_check_reset;
+        @(posedge s_clk) (!s_rst_n |=> (s_I_BB == 0 && s_Q_BB == 0));
+    endproperty
+    
+    assert_reset: assert property(p_check_reset)
+        else $error("[ASSERT FAILED] Les sorties I/Q ne sont pas à 0 pendant le Reset !");
+
+    // B. Vérification du non-débordement de la Voie I (Entre -31 et +31)
+    property p_limites_I;
+        @(posedge s_clk) disable iff (!s_rst_n) (s_I_BB >= -6'sd31 && s_I_BB <= 6'sd31);
+    endproperty
+    
+    assert_limite_I: assert property(p_limites_I)
+        else $error("[ASSERT FAILED] Amplitude Voie I hors limites: %d", s_I_BB);
+
+    // C. Vérification du non-débordement de la Voie Q
+    property p_limites_Q;
+        @(posedge s_clk) disable iff (!s_rst_n) (s_Q_BB >= -6'sd31 && s_Q_BB <= 6'sd31);
+    endproperty
+    
+    assert_limite_Q: assert property(p_limites_Q)
+        else $error("[ASSERT FAILED] Amplitude Voie Q hors limites: %d", s_Q_BB);
+
 endmodule
