@@ -22,33 +22,33 @@ module fifo #(
     localparam PTR_WIDTH = ADDR_WIDTH + 1; // Extra bit for round done
 
     //memory array
-    logic [DATA_WIDTH-1:0] mem [DEPTH-1:0];
+    logic [DATA_WIDTH-1:0] s_mem [DEPTH-1:0];
     //write and read pointers
-    logic [PTR_WIDTH-1:0] wr_ptr, rd_ptr;  
+    logic [PTR_WIDTH-1:0] s_wr_ptr, s_rd_ptr;  
 
     always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (!i_rst_n) begin
-            wr_ptr <= 0;
-            rd_ptr <= 0;
+            s_wr_ptr <= 0;
+            s_rd_ptr <= 0;
             o_data <= 0;
             o_rd_valid <= 1'b0;
         end else begin
             o_rd_valid <= 1'b0;
             // Write operation
             if (i_wr_en && !o_full) begin
-                mem[wr_ptr[ADDR_WIDTH-1:0]] <= i_data;
-                wr_ptr <= wr_ptr + 1;
+                s_mem[s_wr_ptr[ADDR_WIDTH-1:0]] <= i_data;
+                s_wr_ptr <= s_wr_ptr + 1;
             end
             // Read operation
             if (i_rd_en && !o_empty) begin
-                o_data <= mem[rd_ptr[ADDR_WIDTH-1:0]];
-                rd_ptr <= rd_ptr + 1;
+                o_data <= s_mem[s_rd_ptr[ADDR_WIDTH-1:0]];
+                s_rd_ptr <= s_rd_ptr + 1;
                 o_rd_valid <= 1'b1;
             end
         end
     end
     
-    assign o_empty = (wr_ptr == rd_ptr);
-    assign o_full = (wr_ptr[ADDR_WIDTH-1:0] == rd_ptr[ADDR_WIDTH-1:0]) && (wr_ptr[PTR_WIDTH-1] != rd_ptr[PTR_WIDTH-1]);
+    assign o_empty = (s_wr_ptr == s_rd_ptr);
+    assign o_full = (s_wr_ptr[ADDR_WIDTH-1:0] == s_rd_ptr[ADDR_WIDTH-1:0]) && (s_wr_ptr[PTR_WIDTH-1] != s_rd_ptr[PTR_WIDTH-1]);
 
 endmodule
