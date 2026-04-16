@@ -1,27 +1,26 @@
 
 
 module cdr_top
-  #(parameter phase_resolution=6) (clk,rst,dphi, data,enable);
-   input wire 		       	clk;
-   input wire 			rst;
-   input  wire [phase_resolution-1:0] 	dphi;
-   output wire 		       	data;
-   output wire 		      	enable;
-   wire recovered_clk;
-   wire 		       	decision;
-   wire			decision_out;
-   wire up;
-   wire down;
-   wire decision_sig;
-   wire signed [15:0] control;
+  #(parameter phase_resolution=6) (i_clk,i_rst_n,i_dphi, o_data,o_enable);
+   input wire 		       	i_clk;
+   input wire 			i_rst_n;
+   input  wire [phase_resolution-1:0] 	i_dphi;
+   output wire 		       	o_data;
+   output wire 		      	o_enable;
+   wire s_recovered_clk;
+   wire 		       	s_decision;
+   wire			s_decision_out;
+   wire s_up;
+   wire s_down;
+   wire s_decision_sig;
+   wire signed [15:0] s_control;
 
    
-    decision_block u_dec (.dphi_in(dphi),.decision_out(decision_sig));
+    decision_block u_dec (.i_dphi_in(i_dphi),.o_decision_out(s_decision_sig));
 
-   phase_detector u_pd(.clk(clk),.sample(
-   recovered_clk),.rst(rst),.decision_in(decision_sig),.decision_out(decision_out),.up(up),.down(down));
-   loop_filter u_lf (.clk(clk),.rst(rst),.up(up),.down(down),.ctrl(control));
-   nco u_nco (.clk(clk),.rst(rst),.ctrl(control),.sample_enable(enable),.recovered_clk(recovered_clk));
-   assign data =decision_out;
+   phase_detector u_pd(.i_clk(i_clk),.i_sample_clk(s_recovered_clk),.i_rst_n(i_rst_n),.i_decision_in(s_decision_sig),.o_decision_out(s_decision_out),.o_up(s_up),.o_down(s_down));
+   loop_filter u_lf (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_up(s_up),.i_down(s_down),.o_ctrl(s_control));
+   nco u_nco (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_ctrl(s_control),.o_sample_enable(o_enable),.o_recovered_clk(s_recovered_clk));
+   assign o_data =s_decision_out;
 
 endmodule

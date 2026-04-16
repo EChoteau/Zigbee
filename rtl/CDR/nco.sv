@@ -7,41 +7,41 @@ module nco #
 )
 
 (
-    input wire clk,
-    input wire rst,
+    input wire i_clk,
+    input wire i_rst_n,
 
-    input wire signed [7:0] ctrl,
+    input wire signed [7:0] i_ctrl,
 
-    output wire recovered_clk,
-    output reg sample_enable
+    output wire o_recovered_clk,
+    output reg o_sample_enable
 );
-reg signed [PHASE_WIDTH-1:0] phase;
-reg signed [PHASE_WIDTH-1:0] phase_next;
-reg signed [PHASE_WIDTH-1:0] ctrl_normalised;
+reg signed [PHASE_WIDTH-1:0] s_phase;
+reg signed [PHASE_WIDTH-1:0] s_phase_next;
+reg signed [PHASE_WIDTH-1:0] s_ctrl_normalised;
 
-always @(posedge clk or negedge rst) begin
+always @(posedge i_clk or negedge i_rst_n) begin
 
-    if (~rst) begin
+    if (~i_rst_n) begin
 
-        phase <= 0;
-        sample_enable <= 0;
+        s_phase <= 0;
+        o_sample_enable <= 0;
 
     end
     else begin
-        if (ctrl<0) ctrl_normalised = -{9'd0,ctrl[6:0]};
-        else ctrl_normalised = {9'd0,ctrl[6:0]};
-        phase_next = phase + K_NOMINAL + ctrl_normalised;
+        if (i_ctrl<0) s_ctrl_normalised = -{9'd0,i_ctrl[6:0]};
+        else s_ctrl_normalised = {9'd0,i_ctrl[6:0]};
+        s_phase_next = s_phase + K_NOMINAL + s_ctrl_normalised;
 
-        sample_enable <= 0;
-        if (phase_next[15] ==1'b0 && phase [15] ==1'b1) begin
-            sample_enable <= 1;
+        o_sample_enable <= 0;
+        if (s_phase_next[15] ==1'b0 && s_phase [15] ==1'b1) begin
+            o_sample_enable <= 1;
             //recovered_clk <= ~recovered_clk;
         end
 
-        phase <= phase_next;
+        s_phase <= s_phase_next;
 
     end
 
 end
-assign recovered_clk = phase[15];
+assign o_recovered_clk = s_phase[15];
 endmodule

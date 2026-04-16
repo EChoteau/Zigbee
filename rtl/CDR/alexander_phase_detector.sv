@@ -1,29 +1,29 @@
-    module phase_detector(clk,rst,sample,decision_in,decision_out, up,down);
+    module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
-         input wire  clk;
-         input wire rst;
-         input wire  decision_in;
-         output wire decision_out;
-         output wire up;
-         output wire down;
-         input wire sample;
+         input wire  i_clk;
+         input wire i_rst_n;
+         input wire  i_decision_in;
+         output wire o_decision_out;
+         output wire o_up;
+         output wire o_down;
+         input wire i_sample_clk;
          
-         logic a;
-         logic b;
-         logic c;
-         //logic d;
+         logic s_a;
+         logic s_b;
+         logic s_c;
+         //logic s_d;
          
          
-         bascule b1(.ck(clk),.en(sample),.rst(rst),.D(decision_in), .Q(a));
-         bascule b2(.ck(clk),.en(~sample),.rst(rst),.D(decision_in), .Q(b));
-         bascule b3(.ck(clk),.en(sample),.rst(rst),.D(a), .Q(c));
-         //bascule b4(.ck(clk),.en(sample),.rst(rst),.D(b), .Q(d));
+         bascule b1(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(i_decision_in), .o_Q(s_a));
+         bascule b2(.i_ck(i_clk),.i_en(~i_sample_clk),.i_rst(i_rst_n),.i_D(i_decision_in), .o_Q(s_b));
+         bascule b3(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(s_a), .o_Q(s_c));
+         //bascule b4(.ck(i_clk),.i_en(sample),.rst(rst),.D(b), .Q(d));
          
-         /*bascule b1(.ck(clk),.rst(rst),.D(decision_in), .Q(a));
-         bascule b2(.ck(~clk),.rst(rst),.D(decision_in), .Q(b));
-         bascule b3(.ck(clk),.rst(rst),.D(a), .Q(c));
-         bascule b4(.ck(clk),.rst(rst),.D(b), .Q(d));*/
-         assign decision_out = b;
-         assign up      = (c ^ a) && ~(b ^ c);
-         assign down    = (b ^ c) && ~(c ^ a);
+         /*bascule b1(.ck(i_clk),.rst(rst),.D(decision_in), .Q(a));
+         bascule b2(.ck(~i_clk),.rst(rst),.D(decision_in), .Q(b));
+         bascule b3(.ck(i_clk),.rst(rst),.D(a), .Q(c));
+         bascule b4(.ck(i_clk),.rst(rst),.D(b), .Q(d));*/
+         assign o_decision_out = s_b;
+         assign up      = (s_c ^ s_a) && ~(s_b ^ s_c);
+         assign down    = (s_b ^ s_c) && ~(s_c ^ s_a);
        endmodule

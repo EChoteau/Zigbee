@@ -5,34 +5,34 @@ module loop_filter #
 )
 
 (
-    input wire clk,
-    input wire rst,
+    input wire i_clk,
+    input wire i_rst_n,
 
-    input wire up,
-    input wire down,
+    input wire i_up,
+    input wire i_down,
 
-    output reg signed [7:0] ctrl
+    output reg signed [7:0] o_ctrl
 );
-logic up_l,down_l;
-always @(posedge clk or negedge rst) begin
+logic s_up_l,s_down_l;
+always @(posedge i_clk or negedge i_rst_n) begin
 
-    if (~rst)
+    if (~i_rst_n)
     begin
-        ctrl <= 0;
+        o_ctrl <= 0;
     end
     else begin
         //count<=count+1;
         //if(count==5'h18)
         //begin 
         //    count<=0;
-            up_l <= up;
-            down_l <= down;
-            if (up & ~up_l)
-                ctrl <= 109;
+            s_up_l <= i_up;
+            s_down_l <= i_down;
+            if (i_up & ~s_up_l)
+                o_ctrl <= o_ctrl + 32;
 
-            else if (down & down_l)
-                ctrl <= -101;
-            else ctrl <= ctrl;
+            else if (i_down & s_down_l)
+                o_ctrl <= o_ctrl - 32;
+            else o_ctrl <= o_ctrl;
        // end
         
 
