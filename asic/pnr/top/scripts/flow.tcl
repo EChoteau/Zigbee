@@ -12,6 +12,11 @@ setAnalysisMode -analysisType onChipVariation
 
 saveDesign dbs/floorplan_enc
 
+#Ouvre l'interface graphique après les premières étapes d'initialisation
+if {[llength [info commands win]] > 0} {
+	catch {win}
+}
+
 #Placement des standard cells
 source ../scripts/placement.tcl
 
