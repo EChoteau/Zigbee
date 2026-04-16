@@ -17,10 +17,6 @@ source ../scripts/placement.tcl
 
 saveDesign dbs/prects_enc
 
-# Open GUI for inspection
-win
-pause
-
 # Création du clock_tree
 source ../scripts/clock_tree_synthesis.tcl
 saveDesign dbs/postcts_enc
@@ -31,6 +27,9 @@ saveDesign dbs/addFiller_enc
 
 routeDesign
 
+# Open GUI for inspection
+win
+pause
 
 # Useful skew
 #setOptMode -usefulSkewPostRoute true
