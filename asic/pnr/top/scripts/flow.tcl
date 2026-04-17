@@ -27,6 +27,10 @@ saveDesign dbs/addFiller_enc
 
 routeDesign
 
+# Vérifications physiques finales après routage
+verifyGeometry
+verifyConnectivity
+
 # Vérification DRC finale après routage
 verify_drc
 
