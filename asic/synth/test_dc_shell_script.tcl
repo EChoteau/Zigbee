@@ -6,12 +6,18 @@ remove_design -all
 #sh rm -rf WORK
 
 # --- 2. Lecture ---
-analyze -library WORK -format sverilog {
-    ../../rtl/cordic/Derivate.sv
+analyze -library WORK -format sverilog { \
+    ../../rtl/cordic/Boxcar_filter.sv \
+    ../../rtl/cordic/Cordic_init.sv \
+    ../../rtl/cordic/Cordic_step.sv \
+    ../../rtl/cordic/Cordic_system_complete.sv \
+    ../../rtl/cordic/Cordic_top.sv \
+    ../../rtl/cordic/Cordic_top_pipeline.sv \
+    ../../rtl/cordic/Derivate.sv \
 }
 
-elaborate derivative -library WORK
-current_design derivative
+elaborate cordic_system_complete -library WORK
+current_design cordic_system_complete
 link
 
 # --- 3. Contraintes ---
@@ -20,7 +26,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design derivative
+current_design cordic_system_complete
 ungroup -all -flatten
 compile_ultra -gate_clock
 # (Optionnel)
