@@ -23,7 +23,7 @@ always @(posedge i_clk or negedge i_rst_n) begin
 
     if (~i_rst_n) begin
 
-        s_phase <= 0;
+        s_phase <= 16'h0000;
         o_sample_enable <= 0;
 
     end
