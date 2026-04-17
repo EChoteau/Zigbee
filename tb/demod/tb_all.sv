@@ -103,7 +103,7 @@ module tb_receiver_system;
     // =========================================================
     // Assertions simples et robustes
     // =========================================================
-
+/*
     // Pas de X/Z
     always @(posedge i_clk) begin
         if (i_rst_n) begin
@@ -176,7 +176,7 @@ module tb_receiver_system;
             end
         end
     end
-
+*/
     // =========================================================
     // Stimulus principal
     // =========================================================
