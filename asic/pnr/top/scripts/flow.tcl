@@ -2,6 +2,8 @@
 # DEROULEMENT DU FLOW DE CONCEPTION
 #////////////////////////////////////////////////////
 
+setMultiCpuUsage -localCpu 16
+
 # Init le design (netlist, lef, alims, etc..)
 source ../scripts/init.tcl
 init_design
