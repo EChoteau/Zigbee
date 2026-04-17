@@ -29,10 +29,18 @@ routeDesign
 
 # Vérifications physiques finales après routage
 verifyGeometry
-#verifyConnectivity
+verifyConnectivity
 
 # Vérification DRC finale après routage
-#verify_drc
+verify_drc
+
+# Vérification LVS finale
+verify_lvs
+
+# Exports post-route pour simulation back-annotée
+file mkdir ../output_data
+saveNetlist ../output_data/${init_top_cell}_postroute.v
+write_sdf ../output_data/${init_top_cell}_postroute.sdf
 
 # Open GUI for inspection
 win
