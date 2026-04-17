@@ -14,12 +14,24 @@ Pad:	io_i_phase_4			N
 Pad:	io_i_phase_5			N
 Pad:	io_i_phase_6			N
 Pad:	io_i_phase_7			N
+Pad:	unused			        N
+Pad:	unused			        N
+Pad:	unused			        N
+Pad:	unused			        N
 
 # Definition des pads East
 Pad:	io_i_clk			E
 Pad:	io_i_rst_n			E
 Pad:	PWR1				E VDD3ALLP
 Pad:	GND1				E GND3ALLP
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
+Pad:	unused			    E
 
 # Definition des pads South
 Pad:	io_o_phase_deriv_0		S
@@ -30,12 +42,24 @@ Pad:	io_o_phase_deriv_4		S
 Pad:	io_o_phase_deriv_5		S
 Pad:	io_o_phase_deriv_6		S
 Pad:	io_o_phase_deriv_7		S
+Pad:	unused			    S
+Pad:	PWR3				S VDD3ALLP
+Pad:	GND3				S GND3ALLP
+Pad:	unused			    S
 
 # Definition des pads West
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
 Pad:	PWR2				W VDD3ALLP
 Pad:	GND2				W GND3ALLP
-Pad:	PWR3				W VDD3ALLP
-Pad:	GND3				W GND3ALLP
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
+Pad:	unused			    W
 
 # Definition des pads de Corner
 Pad:	io_CORNER0	NW CORNERP
