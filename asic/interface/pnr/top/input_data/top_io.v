@@ -4,7 +4,7 @@
 //  Top-level module for IO PAD
 /////////////////////////////
 
-module top_io #(
+module top_io(
 	parameter APB_ADDR_WIDTH = 8,
 	parameter APB_DATA_WIDTH = 32,
 	parameter DATA_WIDTH     = 8
