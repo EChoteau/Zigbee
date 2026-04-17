@@ -3,9 +3,9 @@
 module tb_phase_detector;
 
 reg clk;
-reg rst;
-reg decision;
-reg enable;
+reg rst_n;
+reg decision_in;
+reg sample_clk;
 wire decision_out;
 wire up;
 wire down;
@@ -15,13 +15,13 @@ wire down;
 //////////////////////////////////////////
 
 phase_detector dut (
-    .clk(clk),
-    .rst(rst),
-    .sample(enable),
-    .decision_in(decision),
-    .decision_out(decision_out),
-    .up(up),
-    .down(down)
+    .i_clk(clk),
+    .i_rst_n(rst_n),
+    .i_sample_clk(sample_clk),
+    .i_decision_in(decision_in),
+    .o_decision_out(decision_out),
+    .o_up(up),
+    .o_down(down)
 );
 
 //////////////////////////////////////////
@@ -31,10 +31,10 @@ phase_detector dut (
 initial begin 
 clk = 0;
 
-enable=0;
+sample_clk=0;
 end
 always #10 clk = ~clk;   // 20ns period
-always #250 enable = ~enable; // 0.5 us period
+always #250 sample_clk = ~sample_clk; // 0.5 us period
 
 //////////////////////////////////////////
 // Stimulus
@@ -42,30 +42,30 @@ always #250 enable = ~enable; // 0.5 us period
 
 initial begin
 
-    rst = 0;
-    decision = 0;
+    rst_n = 0;
+    decision_in = 0;
 
     #100;
-    rst = 1;
+    rst_n = 1;
 
     //////////////////////////////////////
     // Sequence de bits
     //////////////////////////////////////
 
-    #500 decision = 1;
-    #500 decision = 0;
-    #500 decision = 1;
-    #500 decision = 1;
-    #500 decision = 0;
-    #500 decision = 0;
-    #500 decision = 1;
+    #500 decision_in = 1;
+    #500 decision_in = 0;
+    #500 decision_in = 1;
+    #500 decision_in = 1;
+    #500 decision_in = 0;
+    #500 decision_in = 0;
+    #500 decision_in = 1;
 
     //////////////////////////////////////
     // Random data
     //////////////////////////////////////
 
     repeat(20) begin
-        #500 decision = $random;
+        #500 decision_in = $random;
     end
 
     #1000 $stop;
@@ -79,23 +79,23 @@ end
 initial begin
     $display("time decision decision_out up down");
     $monitor("%t   %b        %b          %b   %b",
-             $time, decision, decision_out, up, down);
+             $time, decision_in, decision_out, up, down);
 end
 
 /// assert 
-always @(posedge enable) begin
-    if(!rst) begin
+always @(posedge sample_clk) begin
+    if(!rst_n) begin
         assert(!(up && down))
         else $error("error : UP et DOWN actif en meme temps");
     end
 end
 
 reg decision_prev;
-always @(posedge enable) 
+always @(posedge sample_clk) 
 begin 
-    decision_prev <= decision;
-    if(!rst) begin
-        if (decision_prev==0 && decision==1) 
+    decision_prev <= decision_in;
+    if(!rst_n) begin
+        if (decision_prev==0 && decision_in==1) 
         begin 
             assert (up==1)
             else $error("error : transition 0 1 sans up");
@@ -103,11 +103,11 @@ begin
     end
 end
 
-always @(posedge enable) 
+always @(posedge sample_clk) 
 begin 
-    decision_prev <= decision;
-    if(!rst) begin
-        if (decision_prev==1 && decision==0) 
+    decision_prev <= decision_in;
+    if(!rst_n) begin
+        if (decision_prev==1 && decision_in==0) 
         begin 
             assert (down==1)
             else $error("error : transition 1 0");

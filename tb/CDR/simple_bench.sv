@@ -11,7 +11,7 @@ module tb_cdr;
     //---------------------------------
     // Reset
     //---------------------------------
-    reg rst;
+    reg rst_n;
     
     //---------------------------------
     // Inputs to CDR
@@ -28,11 +28,11 @@ module tb_cdr;
     // Instantiate DUT
     //---------------------------------
     cdr_top dut (
-        .clk(clk),
-        .rst(rst),
-        .dphi(dphi),
-        .data(decision_out),
-        .enable(clk_rec)
+        .i_clk(clk),
+        .i_rst_n(rst_n),
+        .i_dphi(dphi),
+        .o_data(decision_out),
+        .o_enable(clk_rec)
     );
 
     //---------------------------------
@@ -42,6 +42,7 @@ module tb_cdr;
     integer cnt;
 
     initial begin
+        dphi = '0;
         data_bit = 0;
         cnt = 0;
     end
@@ -71,9 +72,9 @@ module tb_cdr;
     // Reset sequence
     //---------------------------------
     initial begin
-        rst = 0;
+        rst_n = 0;
         #200;
-        rst = 1;
+        rst_n = 1;
     end
 
     //---------------------------------
