@@ -24,6 +24,6 @@
          bascule b3(.ck(i_clk),.rst(rst),.D(a), .Q(c));
          bascule b4(.ck(i_clk),.rst(rst),.D(b), .Q(d));*/
          assign o_decision_out = s_b;
-         assign o_up   = (s_c ^ s_a) && ~(s_b ^ s_c);
-         assign o_down = (s_b ^ s_c) && ~(s_c ^ s_a);
+         assign o_up      = (s_c ^ s_a) && ~(s_b ^ s_c);
+         assign o_down    = (s_b ^ s_c) && ~(s_c ^ s_a);
        endmodule
