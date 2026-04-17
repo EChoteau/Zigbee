@@ -2,257 +2,300 @@
 
 module tb_receiver_system;
 
+    timeunit      1ns;
+    timeprecision 1ps;
+
     // =========================================================
-    // Paramètres
+    // PARAMETRES
     // =========================================================
     localparam int CLK_PERIOD_NS = 20;   // 50 MHz
-    localparam int SAMPLE_DIV    = 5;    // 10 MHz
-    localparam int N_BURST       = 120;
-
-    localparam int ADC_MID = 8;
-    localparam int AMP     = 5;
+    localparam int EOC_DIV       = 5;    // 1 pulse toutes 5 periodes => 10 MHz
+    localparam int FIR_SETTLE    = 20;
 
     // =========================================================
-    // Signaux TB
+    // SIGNAUX TB
     // =========================================================
-    logic              i_clk;
+    logic              i_clk = 1'b0;
     logic              i_rst_n;
     logic              i_adc_eoc;
-    logic [3:0]        i_I_in, i_Q_in;
-    logic signed [7:0] o_I_filtered, o_Q_filtered;
+    logic              adc_eoc;
+    logic [3:0]        i_I_in;
+    logic [3:0]        i_Q_in;
+    logic signed [7:0] o_I_BB;
+    logic signed [7:0] o_Q_BB;
+    logic              o_iq_eod;
+
+    logic [2:0] eoc_counter;
+
+    integer iq_eod_pulse_count;
+    integer xz_error_count;
 
     // =========================================================
     // DUT
     // =========================================================
     receiver_system dut (
-        .i_clk       (i_clk),
-        .i_rst_n     (i_rst_n),
-        .i_adc_eoc   (i_adc_eoc),
-        .i_I_in      (i_I_in),
-        .i_Q_in      (i_Q_in),
-        .o_I_filtered(o_I_filtered),
-        .o_Q_filtered(o_Q_filtered)
+        .i_clk     (i_clk),
+        .i_rst_n   (i_rst_n),
+        .i_adc_eoc (i_adc_eoc),
+        .i_I_in    (i_I_in),
+        .i_Q_in    (i_Q_in),
+        .o_I_BB    (o_I_BB),
+        .o_Q_BB    (o_Q_BB),
+        .o_iq_eod  (o_iq_eod)
     );
 
-    // Signaux internes observés
-    wire signed [7:0] s_I_demod = dut.s_I_demod;
-    wire signed [7:0] s_Q_demod = dut.s_Q_demod;
-
     // =========================================================
-    // Horloge
+    // CLOCK
     // =========================================================
-    initial i_clk = 0;
     always #(CLK_PERIOD_NS/2) i_clk = ~i_clk;
 
     // =========================================================
-    // Variables de test
-    // =========================================================
-    integer error_count;
-    integer activity_count;
-    integer quiet_count;
-    integer k;
-    integer noise_i, noise_q;
-    integer sample_i, sample_q;
-
-    // =========================================================
-    // Fonctions utiles
-    // =========================================================
-    function automatic [3:0] sat4(input int v);
-        if (v < 0)       sat4 = 4'd0;
-        else if (v > 15) sat4 = 4'd15;
-        else             sat4 = v[3:0];
-    endfunction
-
-    task automatic wait_clocks(input int n);
-        int i;
-        begin
-            for (i = 0; i < n; i = i + 1)
-                @(posedge i_clk);
-        end
-    endtask
-
-    task automatic send_sample(input [3:0] i_i_s, input [3:0] i_q_s);
-        begin
-            repeat (SAMPLE_DIV-1) begin
-                @(negedge i_clk);
-                i_adc_eoc <= 0;
-            end
-
-            @(negedge i_clk);
-            i_I_in    <= i_i_s;
-            i_Q_in    <= i_q_s;
-            i_adc_eoc <= 1;
-
-            @(negedge i_clk);
-            i_adc_eoc <= 0;
-        end
-    endtask
-
-    // =========================================================
-    // Compteur de silence
+    // EOC : 10 MHz depuis clk = 50 MHz
     // =========================================================
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n)
-            quiet_count <= 0;
-        else if ((i_I_in == 4'd8) && (i_Q_in == 4'd8))
-            quiet_count <= quiet_count + 1;
-        else
-            quiet_count <= 0;
-    end
-
-    // =========================================================
-    // Assertions simples et robustes
-    // =========================================================
-/*
-    // Pas de X/Z
-    always @(posedge i_clk) begin
-        if (i_rst_n) begin
-            if ($isunknown(s_I_demod)) begin
-                error_count++;
-                $error("s_I_demod X/Z à t=%0t", $time);
-            end
-
-            if ($isunknown(s_Q_demod)) begin
-                error_count++;
-                $error("s_Q_demod X/Z à t=%0t", $time);
-            end
-
-            if ($isunknown(o_I_filtered)) begin
-                error_count++;
-                $error("o_I_filtered X/Z à t=%0t", $time);
-            end
-
-            if ($isunknown(o_Q_filtered)) begin
-                error_count++;
-                $error("o_Q_filtered X/Z à t=%0t", $time);
-            end
-        end
-    end
-
-    // Reset correct
-    always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            if (s_I_demod !== 0) begin
-                error_count++;
-                $error("s_I_demod != 0 pendant reset");
+            eoc_counter <= '0;
+            adc_eoc   <= 1'b0;
+        end
+        else begin
+            if (eoc_counter == EOC_DIV-1) begin
+		
+                eoc_counter <= '0;
+                adc_eoc   <= 1'b1;
             end
-            if (s_Q_demod !== 0) begin
-                error_count++;
-                $error("s_Q_demod != 0 pendant reset");
-            end
-            if (o_I_filtered !== 0) begin
-                error_count++;
-                $error("o_I_filtered != 0 pendant reset");
-            end
-            if (o_Q_filtered !== 0) begin
-                error_count++;
-                $error("o_Q_filtered != 0 pendant reset");
+            else begin
+                eoc_counter <= eoc_counter + 3'd1;
+		adc_eoc <= 1'b0;
             end
         end
     end
 
-    // Valeurs bornées
-    always @(posedge i_clk) begin
-        if (i_rst_n) begin
-            if (($signed(o_I_filtered) < -127) || ($signed(o_I_filtered) > 127)) begin
-                error_count++;
-                $error("o_I_filtered overflow");
-            end
-            if (($signed(o_Q_filtered) < -127) || ($signed(o_Q_filtered) > 127)) begin
-                error_count++;
-                $error("o_Q_filtered overflow");
-            end
-        end
-    end
+    assign #1 i_adc_eoc = adc_eoc;
 
-    // Retour au silence (moins strict)
-    always @(negedge i_clk) begin
-        if (i_rst_n && quiet_count > 50) begin
-            if (!(($signed(o_I_filtered) > -25 && $signed(o_I_filtered) < 25) &&
-                  ($signed(o_Q_filtered) > -25 && $signed(o_Q_filtered) < 25))) begin
-                error_count++;
-                $error("Pas retour au silence correct : I=%0d Q=%0d",
-                       $signed(o_I_filtered), $signed(o_Q_filtered));
-            end
-        end
-    end
-*/
     // =========================================================
-    // Stimulus principal
+    // RESET
     // =========================================================
     initial begin
-        error_count    = 0;
-        activity_count = 0;
-        k              = 0;
+        i_rst_n = 1'b0;
+        i_I_in  = 4'd8;
+        i_Q_in  = 4'd8;
 
-        i_rst_n   = 0;
-        i_adc_eoc = 0;
-        i_I_in    = 4'd8;
-        i_Q_in    = 4'd8;
+        iq_eod_pulse_count = 0;
+        xz_error_count     = 0;
 
-        wait_clocks(5);
-        @(negedge i_clk);
-        i_rst_n <= 1;
+        #(4*CLK_PERIOD_NS);
+        i_rst_n = 1'b1;
+    end
 
-        wait_clocks(3);
+    // =========================================================
+    // COMPTE iq_eod
+    // =========================================================
+    always @(posedge i_clk) begin
+        if (i_rst_n && o_iq_eod)
+            iq_eod_pulse_count = iq_eod_pulse_count + 1;
+    end
 
-        // ------------------------------
-        // Test 1 : silence
-        // ------------------------------
-        $display("---- Test 1 : Silence ----");
-        repeat (20) send_sample(4'd8, 4'd8);
+    // =========================================================
+    // CHECK X/Z
+    // =========================================================
+    always @(posedge i_clk) begin
+        if (i_rst_n) begin
+            if ($isunknown(i_I_in)) begin
+                $display("ERROR @%t : i_I_in contains X/Z = %b", $time, i_I_in);
+                xz_error_count = xz_error_count + 1;
+            end
 
-        // ------------------------------
-        // Test 2 : burst IQ
-        // ------------------------------
-        $display("---- Test 2 : Burst IQ ----");
+            if ($isunknown(i_Q_in)) begin
+                $display("ERROR @%t : i_Q_in contains X/Z = %b", $time, i_Q_in);
+                xz_error_count = xz_error_count + 1;
+            end
 
-        repeat (N_BURST) begin
-            noise_i = $urandom_range(-1, 1);
-            noise_q = $urandom_range(-1, 1);
+            if ($isunknown(o_I_BB)) begin
+                $display("ERROR @%t : o_I_BB contains X/Z = %b", $time, o_I_BB);
+                xz_error_count = xz_error_count + 1;
+            end
 
-            case (k)
-                0: begin sample_i = ADC_MID + AMP + noise_i; sample_q = ADC_MID       + noise_q; end
-                1: begin sample_i = ADC_MID       + noise_i; sample_q = ADC_MID + AMP + noise_q; end
-                2: begin sample_i = ADC_MID - AMP + noise_i; sample_q = ADC_MID       + noise_q; end
-                3: begin sample_i = ADC_MID       + noise_i; sample_q = ADC_MID - AMP + noise_q; end
-            endcase
+            if ($isunknown(o_Q_BB)) begin
+                $display("ERROR @%t : o_Q_BB contains X/Z = %b", $time, o_Q_BB);
+                xz_error_count = xz_error_count + 1;
+            end
 
-            send_sample(sat4(sample_i), sat4(sample_q));
-            k = (k + 1) % 4;
-
-            if ((o_I_filtered != 0) || (o_Q_filtered != 0))
-                activity_count++;
+            if ($isunknown(o_iq_eod)) begin
+                $display("ERROR @%t : o_iq_eod contains X/Z = %b", $time, o_iq_eod);
+                xz_error_count = xz_error_count + 1;
+            end
         end
+    end
 
-        if (activity_count < 20) begin
-            error_count++;
-            $error("Pas assez d'activité pendant burst");
+    // =========================================================
+    // TACHES
+    // =========================================================
+    task automatic wait_eoc(input int n);
+        int m;
+        begin
+            for (m = 0; m < n; m = m + 1)
+                @(posedge i_adc_eoc);
         end
+    endtask
 
-        // ------------------------------
-        // Test 3 : retour au silence
-        // ------------------------------
-        $display("---- Test 3 : Retour silence ----");
-
-        repeat (40) send_sample(4'd8, 4'd8);
-        wait_clocks(30);
-
-        if (!(($signed(o_I_filtered) > -25 && $signed(o_I_filtered) < 25) &&
-              ($signed(o_Q_filtered) > -25 && $signed(o_Q_filtered) < 25))) begin
-            error_count++;
-            $error("Sortie finale pas proche de 0");
+    task automatic apply_sample(input logic [3:0] Ival, input logic [3:0] Qval);
+        begin
+            @(posedge i_adc_eoc);
+            i_I_in <= Ival;
+            i_Q_in <= Qval;
         end
+    endtask
 
-        // ------------------------------
-        // Résultat final
-        // ------------------------------
-        if (error_count == 0)
-            $display("TB receiver_system : PASS");
+    task automatic report_case(input [8*40-1:0] name);
+        begin
+            $display(" ");
+            $display("============================================================");
+            $display("CASE : %0s", name);
+            $display("============================================================");
+        end
+    endtask
+
+    task automatic show_outputs(input [8*40-1:0] name);
+        begin
+            $display("[%0s] time=%0t  I_in=%0d  Q_in=%0d  -->  I_BB=%0d  Q_BB=%0d  iq_eod=%0b",
+                     name, $time, i_I_in, i_Q_in, o_I_BB, o_Q_BB, o_iq_eod);
+        end
+    endtask
+
+    // =========================================================
+    // MONITOR
+    // =========================================================
+    initial begin
+        $timeformat(-9, 1, " ns", 12);
+        $display("--------------------------------------------------------------------------------");
+        $display(" time      rst eoc | I_in Q_in | I_BB Q_BB | iq_eod");
+        $display("--------------------------------------------------------------------------------");
+        forever begin
+            @(posedge i_clk);
+            $display("%t   %0b   %0b | %2d   %2d | %4d %4d |   %0b",
+                     $time, i_rst_n, i_adc_eoc, i_I_in, i_Q_in, o_I_BB, o_Q_BB, o_iq_eod);
+        end
+    end
+
+    // =========================================================
+    // STIMULI PRINCIPAUX
+    // =========================================================
+    initial begin : STIMULUS_MAIN
+        wait(i_rst_n == 1'b1);
+        wait(i_adc_eoc == 1'b0);
+
+        // -----------------------------------------------------
+        // 1) REPOS
+        // -----------------------------------------------------
+        report_case("REPOS : I=8, Q=8");
+        repeat (12) apply_sample(4'd8, 4'd8);
+        wait_eoc(FIR_SETTLE);
+        show_outputs("REPOS");
+
+        // -----------------------------------------------------
+        // 2) I seul positif
+        // attendu : I_BB reagit plus que Q_BB
+        // -----------------------------------------------------
+        report_case("I SEUL POSITIF : I=12, Q=8");
+        repeat (16) apply_sample(4'd12, 4'd8);
+        wait_eoc(FIR_SETTLE);
+        show_outputs("I SEUL POSITIF");
+
+        // -----------------------------------------------------
+        // 3) I seul negatif
+        // -----------------------------------------------------
+        report_case("I SEUL NEGATIF : I=4, Q=8");
+        repeat (16) apply_sample(4'd4, 4'd8);
+        wait_eoc(FIR_SETTLE);
+        show_outputs("I SEUL NEGATIF");
+
+        // -----------------------------------------------------
+        // 4) Q seul positif
+        // attendu : Q_BB reagit plus que I_BB
+        // -----------------------------------------------------
+        report_case("Q SEUL POSITIF : I=8, Q=12");
+        repeat (16) apply_sample(4'd8, 4'd12);
+        wait_eoc(FIR_SETTLE);
+        show_outputs("Q SEUL POSITIF");
+
+        // -----------------------------------------------------
+        // 5) Q seul negatif
+        // -----------------------------------------------------
+        report_case("Q SEUL NEGATIF : I=8, Q=4");
+        repeat (16) apply_sample(4'd8, 4'd4);
+        wait_eoc(FIR_SETTLE);
+        show_outputs("Q SEUL NEGATIF");
+
+        // -----------------------------------------------------
+        // 6) Sequence IF 4 points
+        // -----------------------------------------------------
+        report_case("SEQUENCE IF 4 POINTS");
+        apply_sample(4'd15, 4'd8 );
+        apply_sample(4'd8 , 4'd15);
+        apply_sample(4'd0 , 4'd8 );
+        apply_sample(4'd8 , 4'd0 );
+
+        apply_sample(4'd15, 4'd8 );
+        apply_sample(4'd8 , 4'd15);
+        apply_sample(4'd0 , 4'd8 );
+        apply_sample(4'd8 , 4'd0 );
+
+        wait_eoc(FIR_SETTLE);
+        show_outputs("SEQUENCE IF");
+
+        // -----------------------------------------------------
+        // 7) Test croise
+        // -----------------------------------------------------
+        report_case("TEST CROISE");
+        apply_sample(4'd12, 4'd12);
+        apply_sample(4'd4 , 4'd12);
+        apply_sample(4'd4 , 4'd4 );
+        apply_sample(4'd12, 4'd4 );
+        wait_eoc(FIR_SETTLE);
+        show_outputs("TEST CROISE");
+
+        // -----------------------------------------------------
+        // FIN
+        // -----------------------------------------------------
+        $display(" ");
+        $display("============================================================");
+        $display("FIN DE SIMULATION");
+        $display("Nombre de pulses iq_eod observes = %0d", iq_eod_pulse_count);
+        $display("Nombre d'erreurs X/Z observees   = %0d", xz_error_count);
+        $display("============================================================");
+
+        if (xz_error_count == 0)
+            $display("RESULTAT : PAS DE X/Z DETECTE");
         else
-            $display("TB receiver_system : FAIL (%0d erreurs)", error_count);
+            $display("RESULTAT : ATTENTION, X/Z DETECTE");
 
-        $stop;
+        $finish;
+    end
+
+    // =========================================================
+    // CHECKS SIMPLES
+    // =========================================================
+    always @(posedge i_adc_eoc) begin
+        if (i_rst_n) begin
+            if ((i_I_in == 4'd12) && (i_Q_in == 4'd8)) begin
+                if ((o_I_BB == 0) && (o_Q_BB == 0))
+                    $display("WARNING @%t : test I seul positif mais sorties nulles", $time);
+            end
+
+            if ((i_I_in == 4'd8) && (i_Q_in == 4'd12)) begin
+                if ((o_I_BB == 0) && (o_Q_BB == 0))
+                    $display("WARNING @%t : test Q seul positif mais sorties nulles", $time);
+            end
+        end
+    end
+
+    // =========================================================
+    // TIMEOUT
+    // =========================================================
+    initial begin
+        #(CLK_PERIOD_NS*30000);
+        $display("TIMEOUT");
+        $finish;
     end
 
 endmodule
