@@ -12,10 +12,8 @@ module zigbee_chip_top #(
     // 4 dedicated configuration pins (outside the configurable IO bank).
     input  logic [3:0]   i_cfg_mode_pins,
 
-    // 38 configurable physical digital pins.
-    input  logic [37:0]  i_io_in,
-    output logic [37:0]  o_io_out,
-    output logic [37:0]  o_io_oe
+    // 38 configurable bidirectional physical digital pins.
+    inout  wire  [37:0]  io_pad
 );
 
     import zigbee_top_cfg_pkg::*;
@@ -25,6 +23,18 @@ module zigbee_chip_top #(
     // ---------------------------------------------------------------------
     logic [1:0] w_cfg_mode;
     assign w_cfg_mode = i_cfg_mode_pins[1:0];
+
+    logic [37:0] i_io_in;
+    logic [37:0] o_io_out;
+    logic [37:0] o_io_oe;
+
+    genvar pad_i;
+    generate
+        for (pad_i = 0; pad_i < 38; pad_i = pad_i + 1) begin : gen_io_pad
+            assign io_pad[pad_i] = o_io_oe[pad_i] ? o_io_out[pad_i] : 1'bz;
+            assign i_io_in[pad_i] = io_pad[pad_i];
+        end
+    endgenerate
 
     // ---------------------------------------------------------------------
     // Internal logical variables (block-facing signals)
