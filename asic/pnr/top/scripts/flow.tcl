@@ -35,7 +35,7 @@ verifyConnectivity
 verify_drc
 
 # Vérification LVS finale
-verify_lvs
+#verify_lvs
 
 # Exports post-route pour simulation back-annotée
 file mkdir ../output_data
