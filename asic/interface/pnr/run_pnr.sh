@@ -2,6 +2,6 @@
 
 source config/config_ASIC
 
-cd "asic/pnr/top/work"
+cd "asic/interface/pnr/top/work"
 
 innovus -batch -files ../scripts/flow.tcl
