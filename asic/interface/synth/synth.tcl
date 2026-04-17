@@ -19,6 +19,6 @@ set_leakage_optimization true
 #set_max_dynamic_power 0
 #set_max_leakage_power 0
 compile_ultra -gate_clock
-write -hierarchy -format verilog -output /tp/xph2app/xph2app112/Zigbee/Zigbee/tb/interface/synth/interfacefifo4.v
-write_sdf interfacefifo4
+write -hierarchy -format verilog -output /tp/xph2app/xph2app112/Zigbee/Zigbee/asic/interface/synth/interfacefif8.v
+write_sdf interfacefifo8
 report_clock_gating > report_cg_summaryfifo8.txt
