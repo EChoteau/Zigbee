@@ -19,18 +19,7 @@
 set module_name top
 loadIoFile ../constraints/${module_name}_pads.io
 #floorPlan -site standard -r 1 0.7 80 80 80 80
-floorPlan -site standard -d {2400.8 2400.8 80 80 80 80} -noSnapToGrid -coreMarginsBy io
-
-
-#deleteTrack
-
-#add_tracks -offsets {M4 horiz 420.4 M4 vert 420.4 M3 horiz 420.4 M3 vert 420.4 M2 horiz 420.4 M2 vert 420.4 M1 horiz 0 M1 vert 0.7} -pitches {M4 horiz 1.6 M4 vert 1.6 M3 horiz 1.6 M3 vert 1.6 M2 horiz 1.6 M2 vert 1.6 M1 horiz 1.3 M1 vert 1.4}
-#add_tracks -offsets {M4 horiz 420.4 M4 vert 420.4 M3 horiz 420.4 M3 vert 420.4 M2 horiz 420.4 M2 vert 420.4 M1 horiz 420.4 M1 vert 420.4} -pitches {M4 horiz 1.6 M4 vert 1.6 M3 horiz 1.6 M3 vert 1.6 M2 horiz 1.6 M2 vert 1.6 M1 horiz 1.1 M1 vert 1.8}
-#add_tracks -offsets {M4 horiz 420.4 M4 vert 420.4 M3 horiz 420.4 M3 vert 420.4 M2 horiz 420.4 M2 vert 420.4 M1 horiz 420.4 M1 vert 420.4} -pitches {M4 horiz 1.6 M4 vert 1.6 M3 horiz 1.6 M3 vert 1.6 M2 horiz 1.6 M2 vert 1.6 M1 horiz 1.1 M1 vert 1.8}
-
-#add_tracks -offsets {M4 horiz 420.4 M4 vert 420.4 M3 horiz 420.4 M3 vert 420.4 M2 horiz 420.4 M2 vert 420.4 M1 horiz 420.4 M1 vert 420.4} -pitches {M4 horiz 2.8 M4 vert 2.6 M3 horiz 2.8 M3 vert 2.6 M2 horiz 2.8 M2 vert 2.6}
-
-#add_tracks -offsets {M4 horiz 0 M4 vert 0 M3 horiz 0 M3 vert 0 M2 horiz 0 M2 vert 0 M1 horiz 0 M1 vert 0} -pitches {M4 horiz 2.8 M4 vert 2.6 M3 horiz 2.8 M3 vert 2.6 M2 horiz 2.8 M2 vert 2.6 M1 horiz 1.3 M1 vert 1.4}
+floorPlan -site standard -d {2000.8 2000.8 80 80 80 80} -noSnapToGrid -coreMarginsBy io
 
 
 setEdit -layer_horizontal {MET1}
@@ -54,18 +43,9 @@ setMetalFill -gapSpacing 0.6	-layer MET3
 setMetalFill -gapSpacing 0.6	-layer MET4
 
 
-#add_ndr -name rule_of_toto -width "M1 0.5 M2 0.6 M3 0.6 M4 0.6" -spacing "M1 0.45 M2 0.5 M3 0.6 M4 0.6"
-#setViaGenMode -optimize_cross_via true
-#setAttribute -net * -non_default_rule rule_of_toto
-
-#add_ndr -name testwidth -width {M1 0.8} 
-#editChangeWidth -width_horizontal 0.8
-
-
 #////////////////////////////////////////////////////
 # Creation de la grille d'alimentation
 #////////////////////////////////////////////////////
-
 
 #Set les modes de création de la grille
 setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer MET4 -stacked_via_bottom_layer MET1 -via_using_exact_crossover_size 1 -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }

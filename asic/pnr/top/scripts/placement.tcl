@@ -66,10 +66,6 @@ group_path -name in2gated 	-from $input_ports 	-to $gated_all
 # RAMs
 # Pas de rams dans notre circuit
 
-# Custom
-#group_path -name reset2cdr -from inReset -to t_op/u_cdr/div1/o_nb_P_reg[3]/D
-#group_path -name reset2cdr -from t_op/u_cdr/div1/o_nb_P_reg[4]/QN -to  t_op/u_cdr/phd1/cnt_phd/cnt_reg[4]/D
-
 # Options for path_groups
 set_interactive_constraint_modes {}
 setPathGroupOptions reg2reg 	-effortLevel high -slackAdjustment 0
@@ -80,17 +76,8 @@ setPathGroupOptions reg2gated 	-effortLevel high -slackAdjustment 0
 setPathGroupOptions in2gated 	-effortLevel high -slackAdjustment 0
 
 place_opt_design
-#setPlaceMode -fp false
-#placeDesign -noPrePlaceOpt
-
 
 
 setOptMode -fixDRC true
 setOptMode -fixCap true -fixTran  true -fixFanoutLoad false
 optDesign -preCTS	
-
-
-#routeDesign -globalDetail
-
-#setAnalysisMode -analysisType onChipVariation -cppr both
-#setOptMode -fixCap true -fixTran true -fixFanoutLoad false
