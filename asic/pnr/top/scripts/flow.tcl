@@ -27,6 +27,9 @@ saveDesign dbs/addFiller_enc
 
 routeDesign
 
+# Vérification DRC finale après routage
+verify_drc
+
 # Open GUI for inspection
 win
 suspend
