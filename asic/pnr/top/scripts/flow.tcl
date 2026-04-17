@@ -21,12 +21,12 @@ saveDesign dbs/prects_enc
 source ../scripts/clock_tree_synthesis.tcl
 saveDesign dbs/postcts_enc
 
-# Open GUI for inspection
-win
-suspend
-
 # Ajout des fillers in core and pads
 source ../scripts/add_fillers.tcl
 saveDesign dbs/addFiller_enc
 
 routeDesign
+
+# Open GUI for inspection
+win
+suspend
