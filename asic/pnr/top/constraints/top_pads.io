@@ -24,10 +24,9 @@ Pad:	io_i_phase_7			E
 # Definition des pads South
 Pad:	PWR2				S VDD3ALLP
 Pad:	GND2				S GND3ALLP
-Pad:	PWR3				S VDD3ALLP
-Pad:	GND3				S GND3ALLP
 
 # Definition des pads West
+Pad:	PWR3				W VDD3ALLP
 Pad:	io_o_phase_deriv_0		W
 Pad:	io_o_phase_deriv_1		W
 Pad:	io_o_phase_deriv_2		W
@@ -36,6 +35,7 @@ Pad:	io_o_phase_deriv_4		W
 Pad:	io_o_phase_deriv_5		W
 Pad:	io_o_phase_deriv_6		W
 Pad:	io_o_phase_deriv_7		W
+Pad:	GND3				W GND3ALLP
 
 # Definition des pads de Corner
 Pad:	io_CORNER0	NW CORNERP
