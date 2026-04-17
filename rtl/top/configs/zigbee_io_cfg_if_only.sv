@@ -24,24 +24,26 @@ module zigbee_io_cfg_if_only #(
 );
 
     always_comb begin
+        // Inputs on pads [20:0]
         o_if_psel             = i_io_in[0];
         o_if_penable          = i_io_in[1];
         o_if_pwrite           = i_io_in[2];
         o_if_paddr            = i_io_in[10:3];
         o_if_pwdata           = '0;
-        o_if_pwdata[23:0]     = i_io_in[37:14];
-        o_if_serial_rx        = i_io_in[11];
-        o_if_cdr_sample_valid = i_io_in[12];
+        o_if_pwdata[7:0]      = i_io_in[18:11];
+        o_if_serial_rx        = i_io_in[19];
+        o_if_cdr_sample_valid = i_io_in[20];
 
         o_io_out              = '0;
         o_io_oe               = '0;
-        o_io_out[0]           = i_if_serial_tx;
-        o_io_out[1]           = i_if_tx_valid;
-        o_io_out[2]           = i_if_tx_sample_tick;
-        o_io_out[10:3]        = i_if_prdata[7:0];
-        o_io_out[11]          = i_if_pready;
-        o_io_out[12]          = i_if_pslverr;
-        o_io_oe[12:0]         = '1;
+        // Outputs on pads [33:21], disjoint from inputs.
+        o_io_out[21]          = i_if_serial_tx;
+        o_io_out[22]          = i_if_tx_valid;
+        o_io_out[23]          = i_if_tx_sample_tick;
+        o_io_out[31:24]       = i_if_prdata[7:0];
+        o_io_out[32]          = i_if_pready;
+        o_io_out[33]          = i_if_pslverr;
+        o_io_oe[33:21]        = '1;
     end
 
 endmodule
