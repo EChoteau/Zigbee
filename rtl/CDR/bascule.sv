@@ -4,14 +4,13 @@ module bascule(i_ck,i_en,i_rst,i_D,o_Q);
     reg s_en_d;
     `ifdef non_behaviour_model
     
-        bascule_temp(.ck(i_ck),.clear(i_rst),.D(i_D),.Q(i_Q));
+        bascule_temp(.ck(i_ck),.clear(i_rst),.D(i_D),.Q(o_Q));
      `else
         always @(posedge i_ck or negedge i_rst)
             begin
             if (~i_rst)
                 begin
                     o_Q <=1'b0;
-                    s_en_d <= 1'b0;
                 end
             else
                 begin

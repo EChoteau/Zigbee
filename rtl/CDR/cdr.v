@@ -13,7 +13,7 @@ module cdr_top
    wire s_up;
    wire s_down;
    wire s_decision_sig;
-  wire signed [7:0] s_control;
+   wire signed [7:0] s_control;
 
    
     decision_block u_dec (.i_dphi_in(i_dphi),.o_decision_out(s_decision_sig));

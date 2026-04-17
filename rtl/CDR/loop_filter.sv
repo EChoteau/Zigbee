@@ -28,10 +28,10 @@ always @(posedge i_clk or negedge i_rst_n) begin
             s_up_l <= i_up;
             s_down_l <= i_down;
             if (i_up & ~s_up_l)
-                o_ctrl <= o_ctrl + 32;
+                o_ctrl <= 32;
 
             else if (i_down & s_down_l)
-                o_ctrl <= o_ctrl - 32;
+                o_ctrl <= - 32;
             else o_ctrl <= o_ctrl;
        // end
         
