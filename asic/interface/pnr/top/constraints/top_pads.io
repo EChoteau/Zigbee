@@ -13,8 +13,22 @@ Pad:	GND1				N GND3ALLP
 Pad:	io_i_psel		    E
 Pad:	io_i_penable		E
 Pad:	io_i_pwrite			E
-Pad:	io_i_paddr			E   #Dynamique
-Pad:	io_i_pwdata			E   #Dynamique
+Pad:	io_i_paddr_0		E
+Pad:	io_i_paddr_1		E
+Pad:	io_i_paddr_2		E
+Pad:	io_i_paddr_3		E
+Pad:	io_i_paddr_4		E
+Pad:	io_i_paddr_5		E
+Pad:	io_i_paddr_6		E
+Pad:	io_i_paddr_7		E
+Pad:	io_i_pwdata_0		E
+Pad:	io_i_pwdata_1		E
+Pad:	io_i_pwdata_2		E
+Pad:	io_i_pwdata_3		E
+Pad:	io_i_pwdata_4		E
+Pad:	io_i_pwdata_5		E
+Pad:	io_i_pwdata_6		E
+Pad:	io_i_pwdata_7		E
 
 
 #### Definition des pads South ####
@@ -24,7 +38,14 @@ Pad:	GND2				S GND3ALLP
 Pad:	io_o_pready			S
 Pad:	io_o_pslverr		S
 Pad:	io_o_tx_valid		S
-Pad:	io_o_prdata			S
+Pad:	io_o_prdata_0		S
+Pad:	io_o_prdata_1		S
+Pad:	io_o_prdata_2		S
+Pad:	io_o_prdata_3		S
+Pad:	io_o_prdata_4		S
+Pad:	io_o_prdata_5		S
+Pad:	io_o_prdata_6		S
+Pad:	io_o_prdata_7		S
 
 #### Definition des pads West ####
 ## Serial interface input (from CDR)
