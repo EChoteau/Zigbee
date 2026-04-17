@@ -11,7 +11,7 @@ module loop_filter #
     input wire i_up,
     input wire i_down,
 
-    output reg signed [7:0] o_ctrl
+    output reg signed [WIDTH-1:0] o_ctrl
 );
 logic s_up_l,s_down_l;
 always @(posedge i_clk or negedge i_rst_n) begin
