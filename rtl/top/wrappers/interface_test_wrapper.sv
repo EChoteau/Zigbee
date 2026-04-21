@@ -3,14 +3,16 @@ module interface_test_wrapper #(
     parameter int APB_DATA_WIDTH = 32,
     parameter int DATA_WIDTH     = 8,
     parameter int FIFO_DEPTH     = 8,
-    parameter int DIV_WIDTH      = 8
+    parameter int DIV_WIDTH      = 8,
+    parameter int N_TEST_IN  = 24,
+    parameter int N_TEST_OUT = 12,
+    parameter int CFG_WIDTH  = 3
 )(
     input  logic              i_clk,
     input  logic              i_rst_n,
-    input  logic [2:0]        i_cfg_local,
-    input  logic [23:0]       i_test_in,
-    output logic [11:0]       o_test_out,
-    output logic [11:0]       o_test_oe
+    input  logic [CFG_WIDTH-1:0] i_cfg_local,
+    input  logic [N_TEST_IN-1:0] i_test_in,
+    output logic [N_TEST_OUT-1:0] o_test_out
 );
 
     localparam logic [2:0] CFG_CLASSIC   = 3'b000;
@@ -73,7 +75,6 @@ module interface_test_wrapper #(
         s_if_cdr_sample_valid = 1'b0;
 
         o_test_out            = '0;
-        o_test_oe             = '0;
 
         unique case (i_cfg_local)
             CFG_CLASSIC: begin
@@ -90,7 +91,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_if_tx_valid;
                 o_test_out[10]        = s_if_tx_sample_tick;
                 o_test_out[11]        = 1'b0;
-                o_test_oe             = '1;
             end
 
             CFG_TX_ONLY: begin
@@ -112,7 +112,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_tx_und_err;
                 o_test_out[10]        = s_dbg_tx_path_en;
                 o_test_out[11]        = s_dbg_global_en;
-                o_test_oe             = '1;
             end
 
             CFG_RX_ONLY: begin
@@ -129,7 +128,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_rx_fifo_pop;
                 o_test_out[10]        = s_dbg_rx_fifo_full;
                 o_test_out[11]        = s_dbg_rx_fifo_empty;
-                o_test_oe             = '1;
             end
 
             CFG_LOOPBACK: begin
@@ -146,7 +144,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_tx_fifo_push;
                 o_test_out[10]        = s_dbg_rx_fifo_push;
                 o_test_out[11]        = s_dbg_rx_ovf_err;
-                o_test_oe             = '1;
             end
 
             CFG_FIFO_TX: begin
@@ -161,7 +158,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_tx_fifo_pop;
                 o_test_out[10]        = s_dbg_tx_fifo_full;
                 o_test_out[11]        = s_dbg_tx_fifo_empty;
-                o_test_oe             = '1;
             end
 
             CFG_FIFO_RX: begin
@@ -178,7 +174,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_rx_fifo_pop;
                 o_test_out[10]        = s_dbg_rx_fifo_full;
                 o_test_out[11]        = s_dbg_rx_fifo_empty;
-                o_test_oe             = '1;
             end
 
             CFG_SERDES: begin
@@ -202,7 +197,6 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_global_en;
                 o_test_out[10]        = s_dbg_tx_start;
                 o_test_out[11]        = s_dbg_tx_und_err;
-                o_test_oe             = '1;
             end
 
             CFG_BAUD: begin
@@ -217,12 +211,10 @@ module interface_test_wrapper #(
                 o_test_out[9]         = s_dbg_tx_busy;
                 o_test_out[10]        = s_if_tx_sample_tick;
                 o_test_out[11]        = s_dbg_global_en;
-                o_test_oe             = '1;
             end
 
             default: begin
                 o_test_out = '0;
-                o_test_oe  = '0;
             end
         endcase
     end
