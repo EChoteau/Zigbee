@@ -1,16 +1,9 @@
-source config/config_ASIC
+# Run the top synthesis
+./asic/synth/top/script.sh
 
-cd asic/synth/
-
-cd cordic && #dc_shell -f cordic_system_complete.tcl | tee log_synthese.log
-dc_shell -f test_dc_shell_script.tcl | tee log_synthese.log
-#design_vision
-
-cd ../..
-
+# Copy the generated netlist and SDF to the PNR input directory
 cp asic/synth/netlist/test_system.v asic/pnr/top/input_data/TOP_netlist.v
 cp asic/synth/netlist/test_system.sdf asic/pnr/top/input_data/TOP_netlist.sdf
 
-#./asic/pnr/top/scripts/generate_IO.sh asic/pnr/top/input_data/TOP_netlist.v
-
+# Run the PNR script
 ./asic/pnr/run_pnr.sh
