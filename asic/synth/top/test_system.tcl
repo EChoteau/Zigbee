@@ -7,13 +7,13 @@ remove_design -all
 
 # --- 2. Lecture ---
 analyze -library WORK -format sverilog { \
-    ../../rtl/cordic/Boxcar_filter.sv \
-    ../../rtl/cordic/Cordic_init.sv \
-    ../../rtl/cordic/Cordic_step.sv \
-    ../../rtl/cordic/Cordic_system_complete.sv \
-    ../../rtl/cordic/Cordic_top.sv \
-    ../../rtl/cordic/Cordic_top_pipeline.sv \
-    ../../rtl/cordic/Derivate.sv \
+    ../../../rtl/cordic/Boxcar_filter.sv \
+    ../../../rtl/cordic/Cordic_init.sv \
+    ../../../rtl/cordic/Cordic_step.sv \
+    ../../../rtl/cordic/Cordic_system_complete.sv \
+    ../../../rtl/cordic/Cordic_top.sv \
+    ../../../rtl/cordic/Cordic_top_pipeline.sv \
+    ../../../rtl/cordic/Derivate.sv \
 }
 
 elaborate cordic_system_complete -library WORK
