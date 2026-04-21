@@ -7,11 +7,13 @@ remove_design -all
 
 # --- 2. Lecture ---
 analyze -library WORK -format sverilog { \
-    ../../rtl/demod/FIR/fir_core.v \
-    ../../rtl/demod/FIR/fir_top.v \
-    ../../rtl/demod/WAVE/demod.sv \
-    ../../rtl/demod/WAVE/wave_generator.sv \
-    ../../rtl/demod/top_level_all.sv \
+    ../../../rtl/demod/FIR/coeff_rom.v \
+    ../../../rtl/demod/FIR/delay_line.v \
+    ../../../rtl/demod/FIR/fir_core.v \
+    ../../../rtl/demod/FIR/fir_top.v \
+    ../../../rtl/demod/WAVE/demod.sv \
+    ../../../rtl/demod/WAVE/wave_generator.sv \
+    ../../../rtl/demod/top_level_all.sv \
 }
 
 elaborate receiver_system -library WORK
