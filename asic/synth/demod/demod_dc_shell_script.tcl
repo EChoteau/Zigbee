@@ -7,28 +7,27 @@ remove_design -all
 
 # --- 2. Lecture ---
 analyze -library WORK -format sverilog { \
-    ../../../rtl/cordic/Boxcar_filter.sv \
-    ../../../rtl/cordic/Cordic_init.sv \
-    ../../../rtl/cordic/Cordic_step.sv \
-    ../../../rtl/cordic/Cordic_system_complete.sv \
-    ../../../rtl/cordic/Cordic_top.sv \
-    ../../../rtl/cordic/Cordic_top_pipeline.sv \
-    ../../../rtl/cordic/Derivate.sv \
+    ../../../rtl/demod/FIR/fir_core.v \
+    ../../../rtl/demod/FIR/fir_top.v \
+    ../../../rtl/demod/WAVE/demod.sv \
+    ../../../rtl/demod/WAVE/wave_generator.sv \
+    ../../../rtl/demod/top_level_all.sv \
 }
 
-elaborate cordic_system_complete -library WORK
-current_design cordic_system_complete
+elaborate receiver_system -library WORK
+current_design receiver_system
 link
 
 # --- 3. Contraintes ---
-create_clock -name i_clk -period 100 {i_clk}
+create_clock -name "i_clk" -period 100 i_clk
 set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design cordic_system_complete
+current_design receiver_system
 ungroup -all -flatten
 compile_ultra -gate_clock
+#compile_ultra -gate_clock
 # (Optionnel)
 # compile_ultra -incremental
 
@@ -44,9 +43,7 @@ report_constraint -all_violators > reports/violations.rpt
 
 # --- 6. Export Files for Simulation ---
 # Write the Gate-Level Netlist
-write -format verilog -hierarchy -output netlist/cordic_system_complete.v
+write -format verilog -hierarchy -output netlist/demod_system_complete.v
 
 # Write the SDF timing file
-write_sdf netlist/cordic_system_complete.sdf
-
-exit
+write_sdf netlist/demod_system_complete.sdf
