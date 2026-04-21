@@ -21,7 +21,35 @@ module interface_top #(
 	input  logic                       i_cdr_sample_valid,
 	output logic                       o_serial_tx,
 	output logic                       o_tx_valid,
-	output logic                       o_tx_sample_tick
+	output logic                       o_tx_sample_tick,
+
+	// Debug outputs for test wrapper configurations.
+	output logic [DATA_WIDTH-1:0]      o_dbg_tx_fifo_data,
+	output logic                       o_dbg_tx_fifo_push,
+	output logic                       o_dbg_tx_fifo_full,
+	output logic                       o_dbg_tx_fifo_pop,
+	output logic [DATA_WIDTH-1:0]      o_dbg_tx_fifo_q,
+	output logic                       o_dbg_tx_fifo_rd_valid,
+	output logic                       o_dbg_tx_fifo_empty,
+
+	output logic [DATA_WIDTH-1:0]      o_dbg_rx_fifo_data,
+	output logic                       o_dbg_rx_fifo_push,
+	output logic                       o_dbg_rx_fifo_full,
+	output logic                       o_dbg_rx_fifo_pop,
+	output logic [DATA_WIDTH-1:0]      o_dbg_rx_fifo_q,
+	output logic                       o_dbg_rx_fifo_empty,
+	output logic                       o_dbg_rx_ovf_pulse,
+
+	output logic                       o_dbg_tx_tick,
+	output logic                       o_dbg_tx_busy,
+	output logic                       o_dbg_tx_path_en,
+	output logic                       o_dbg_rx_path_en,
+	output logic                       o_dbg_global_en,
+	output logic                       o_dbg_tx_start,
+	output logic                       o_dbg_rx_enable,
+	output logic [DIV_WIDTH-1:0]       o_dbg_div_val,
+	output logic                       o_dbg_tx_und_err,
+	output logic                       o_dbg_rx_ovf_err
 );
 
 	logic [DATA_WIDTH-1:0] w_tx_fifo_data;
@@ -194,5 +222,32 @@ module interface_top #(
 	);
 
 	assign o_tx_valid = w_tx_busy;
+
+	assign o_dbg_tx_fifo_data = w_tx_fifo_data;
+	assign o_dbg_tx_fifo_push = w_tx_fifo_push;
+	assign o_dbg_tx_fifo_full = w_tx_fifo_full;
+	assign o_dbg_tx_fifo_pop = w_tx_fifo_pop;
+	assign o_dbg_tx_fifo_q = w_tx_fifo_q;
+	assign o_dbg_tx_fifo_rd_valid = w_tx_fifo_rd_valid;
+	assign o_dbg_tx_fifo_empty = w_tx_fifo_empty;
+
+	assign o_dbg_rx_fifo_data = w_rx_fifo_data;
+	assign o_dbg_rx_fifo_push = w_rx_fifo_push;
+	assign o_dbg_rx_fifo_full = w_rx_fifo_full;
+	assign o_dbg_rx_fifo_pop = w_rx_fifo_pop;
+	assign o_dbg_rx_fifo_q = w_rx_fifo_q;
+	assign o_dbg_rx_fifo_empty = w_rx_fifo_empty;
+	assign o_dbg_rx_ovf_pulse = w_rx_ovf_pulse;
+
+	assign o_dbg_tx_tick = w_tx_tick;
+	assign o_dbg_tx_busy = w_tx_busy;
+	assign o_dbg_tx_path_en = w_tx_path_en;
+	assign o_dbg_rx_path_en = w_rx_path_en;
+	assign o_dbg_global_en = w_global_en;
+	assign o_dbg_tx_start = w_tx_start;
+	assign o_dbg_rx_enable = w_rx_enable;
+	assign o_dbg_div_val = w_div_val;
+	assign o_dbg_tx_und_err = s_tx_und_err;
+	assign o_dbg_rx_ovf_err = s_rx_ovf_err;
 
 endmodule
