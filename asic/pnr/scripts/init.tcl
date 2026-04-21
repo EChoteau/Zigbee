@@ -4,7 +4,7 @@ source ../scripts/tool_box.tcl
 set init_layout_view ""
 set init_abstract_name ""
 
-set init_verilog "../input_data/TOP_netlist.v ../input_data/top_io.v"
+set init_verilog "../input_data/${module_name}.v ../input_data/top_io.v"
 
 set init_mmmc_file "../scripts/view_definition.tcl"
 

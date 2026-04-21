@@ -16,7 +16,9 @@
 #////////////////////////////////////////////////////
 # Creation et placement des PADs
 #////////////////////////////////////////////////////
-set module_name top
+if {![info exists module_name] || $module_name eq ""} {
+	set module_name top
+}
 loadIoFile ../constraints/${module_name}_pads.io
 #floorPlan -site standard -r 1 0.7 80 80 80 80
 floorPlan -site standard -d {2400.8 2400.8 80 80 80 80} -noSnapToGrid -coreMarginsBy io

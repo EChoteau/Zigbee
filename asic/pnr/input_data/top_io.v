@@ -1,4 +1,4 @@
-`include "../input_data/TOP_netlist.v"
+`include "../input_data/top.v"
 
 module top_io (
 	input i_clk,

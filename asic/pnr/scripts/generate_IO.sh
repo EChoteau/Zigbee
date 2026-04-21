@@ -2,7 +2,7 @@
 
 #Files name statement
 netlist_file_name="$1"
-io_file_name="asic/pnr/top/input_data/top_io.v"
+io_file_name="asic/pnr/input_data/top_io.v"
 
 echo -n "\`include \"" > $io_file_name
 echo -n "$netlist_file_name" >> $io_file_name
