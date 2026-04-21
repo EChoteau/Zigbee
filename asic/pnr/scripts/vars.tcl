@@ -11,7 +11,7 @@ if {![info exists vars]} {
 }
 global env
 
-set name_netlist ${module_name}.v
+set name_netlist ${module_name}_synth.v
 
 set env(VPATH) make
 set vars(ff_exe_dir) "../"
