@@ -1,4 +1,4 @@
-`include "../input_data/top.v"
+`include "../input_data/top_synth.v"
 
 module top_io (
 	input i_clk,
