@@ -160,8 +160,8 @@ set vars(hold_func_max,constraint_mode) {hold_func_mode}
 set vars(hold_func_max,delay_corner) {corner_max}
 set vars(hold_func_min,constraint_mode) {hold_func_mode}
 set vars(hold_func_min,delay_corner) {corner_min}
-set vars(hold_func_mode,post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/constraints_def_best.sdc}
-set vars(hold_func_mode,pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/constraints_def_best.sdc}
+set vars(hold_func_mode,post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/${module_name}/constraints_def_best.sdc}
+set vars(hold_func_mode,pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/${module_name}/constraints_def_best.sdc}
 set vars(hold_func_typ,constraint_mode) {hold_func_mode}
 set vars(hold_func_typ,delay_corner) {corner_typ}
 set vars(hosts) {1}
@@ -225,7 +225,7 @@ set vars(placement_based_ptn) {0}
 set vars(plugins) {pre_init_tcl always_source_tcl post_init_tcl}
 set vars(plugins_defined) {always_source_tcl pre_init_tcl post_init_tcl pre_place_tcl post_place_tcl pre_cts_tcl post_cts_tcl pre_prects_tcl post_prects_tcl pre_postcts_tcl post_postcts_tcl pre_postcts_hold_tcl post_postcts_hold_tcl pre_route_tcl post_route_tcl pre_postroute_tcl post_postroute_tcl pre_postroute_hold_tcl post_postroute_hold_tcl pre_signoff_tcl post_signoff_tcl}
 set vars(plugins_found) {always_source_tcl pre_init_tcl post_init_tcl pre_place_tcl post_place_tcl pre_cts_tcl post_cts_tcl pre_prects_tcl post_prects_tcl pre_postcts_tcl post_postcts_tcl pre_postcts_hold_tcl post_postcts_hold_tcl pre_route_tcl post_route_tcl pre_postroute_tcl post_postroute_tcl pre_postroute_hold_tcl post_postroute_hold_tcl pre_signoff_tcl post_signoff_tcl}
-set vars(post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/constraints_def_worst.sdc}
+set vars(post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/${module_name}/constraints_def_worst.sdc}
 set vars(post_cts_tcl) {../plug/INNOVUS/post_cts.tcl}
 set vars(post_init_tcl) {../plug/INNOVUS/post_init.tcl}
 set vars(post_place_tcl) {../plug/INNOVUS/post_place.tcl}
@@ -243,7 +243,7 @@ set vars(postroute_spread_wires) {false}
 set vars(power_analysis_view) {hold_func_min}
 set vars(power_effort) {low}
 set vars(power_nets) {vdd! vdd3r1! vdd3r2! vdd3o!}
-set vars(pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/constraints_def_worst.sdc}
+set vars(pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/${module_name}/constraints_def_worst.sdc}
 set vars(pre_cts_tcl) {../plug/INNOVUS/pre_cts.tcl}
 set vars(pre_init_tcl) {../plug/INNOVUS/pre_init.tcl}
 set vars(pre_place_tcl) {../plug/INNOVUS/pre_place.tcl}
@@ -321,8 +321,8 @@ set vars(setup_func_max,constraint_mode) {setup_func_mode}
 set vars(setup_func_max,delay_corner) {corner_max}
 set vars(setup_func_min,constraint_mode) {setup_func_mode}
 set vars(setup_func_min,delay_corner) {corner_min}
-set vars(setup_func_mode,post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/constraints_def_worst.sdc}
-set vars(setup_func_mode,pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/constraints_def_worst.sdc}
+set vars(setup_func_mode,post_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_postcts.sdc ../input_data/${module_name}/constraints_def_worst.sdc}
+set vars(setup_func_mode,pre_cts_sdc) {../input_data/clock_def.sdc ../input_data/clock_uncertainty_prects.sdc ../input_data/${module_name}/constraints_def_worst.sdc}
 set vars(setup_func_typ,constraint_mode) {setup_func_mode}
 set vars(setup_func_typ,delay_corner) {corner_typ}
 set vars(setup_path) {..}
