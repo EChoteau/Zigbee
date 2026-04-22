@@ -49,7 +49,6 @@ set rams [get_cells -quiet -hierarchical * -filter "is_memory_cell==true"]
 
 set gated_all [filter_collection [all_registers] "is_integrated_clock_gating_cell == true"]
 set gated_rtl [get_cells -quiet -hierarchical * -filter "hierarchical_name =~ *GATED"]
-set gated_synth [remove_from_collection $gated_all $gated_rtl]
 
 set seqs [all_registers]
 set tmp1 [remove_from_collection $seqs $gated_all]
