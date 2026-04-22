@@ -12,4 +12,5 @@ vsim -c -do tb/cordic/cordic_init_tb.do
 #vsim -do tb/cordic/derive_tb.do
 vsim -c -do tb/cordic/complete_tb.do
 
-vsim -do tb/cordic/complete_post.do
+#vsim -do tb/cordic/complete_postsynth.do
+vsim -do tb/cordic/complete_postroute.do
