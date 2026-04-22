@@ -11,7 +11,7 @@ module tb_cdr;
     //---------------------------------
     // Reset
     //---------------------------------
-    reg rst_n;
+    reg rst;
     
     //---------------------------------
     // Inputs to CDR
@@ -29,7 +29,7 @@ module tb_cdr;
     //---------------------------------
     cdr_top dut (
         .i_clk(clk),
-        .i_rst_n(rst_n),
+        .i_rst_n(rst),
         .i_dphi(dphi),
         .o_data(decision_out),
         .o_enable(clk_rec)
@@ -42,39 +42,75 @@ module tb_cdr;
     integer cnt;
 
     initial begin
-        dphi = '0;
         data_bit = 0;
         cnt = 0;
     end
-
+    reg data_bit_p;
+    reg data_bit_i;
+    int nb_data_t=0;
+   reg [2:0] same_count = 0;
+    reg new_data;
     always @(posedge clk) begin
-        if (cnt == 25) begin   // 50MHz / 2MHz = 25 cycles //24 pour vrai valeur
-            cnt <= 0;
-            data_bit <= $random;
+    if (cnt == 12) begin
+
+        new_data = $random; // génère une nouvelle valeur aléatoire
+
+        if (new_data == data_bit) begin
+            same_count <= same_count + 1;
+        end else begin
+            same_count <= 0;
         end
-        else
-            cnt <= cnt + 1;
+
+        // Si data_bit est resté identique 7 cycles, force changement
+        if (same_count >= 7) begin
+            data_bit <= ~data_bit; // ou data_bit <= $random; pour random
+            same_count <= 0;
+        end else begin
+            data_bit <= new_data;
+        end
+
+        nb_data_t <= nb_data_t + 1;
+        
+    end 
+    if ( cnt==24 )begin
+    
+    cnt <= 0;
+    data_bit_p <= data_bit;
     end
+    else  begin
+        cnt <= cnt + 1;
+    end
+end
+
 
     //---------------------------------
     // Generate derivative phase model
     // Simple model:
     // If clock not aligned → produce +/- 8
     //---------------------------------
+    
     always @(posedge clk) begin
         if (data_bit)
             dphi <= 6'sd8;     // positive slope
         else
             dphi <= -6'sd8;    // negative slope
     end
-
+    int nb_data = 0;
+    int nb_err = 0;
+    always @(posedge clk_rec)
+    begin
+        nb_data = nb_data+1;
+     assert(decision_out==data_bit_p);
+     if (decision_out!=data_bit_p) nb_err =nb_err+1;
+     
+     end
     //---------------------------------
     // Reset sequence
     //---------------------------------
     initial begin
-        rst_n = 0;
+        rst = 0;
         #200;
-        rst_n = 1;
+        rst = 1;
     end
 
     //---------------------------------
@@ -82,6 +118,8 @@ module tb_cdr;
     //---------------------------------
     initial begin
         #20000000;
+        
+        $display("nombre de data transmis = %0d, recu =%0d  erreur = %0d TEB = %0f",nb_data_t,nb_data,nb_err,nb_err/nb_data);
         $stop;
     end
 
