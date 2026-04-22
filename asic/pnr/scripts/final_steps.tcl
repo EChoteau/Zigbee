@@ -17,7 +17,7 @@ report_timing > "$reports_dir/timing.rpt"
 report_area > "$reports_dir/area.rpt"
 report_power > "$reports_dir/power.rpt"
 report_constraint -all_violators > "$reports_dir/violations.rpt"
-report_qor > "$reports_dir/qor.rpt"
+report_qor -file "$reports_dir/qor.rpt"
 
 # Fabrication handoff files
 streamOut "$fab_dir/${module_name}.gds" -mapFile $gds_map_file
