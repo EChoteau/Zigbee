@@ -1,10 +1,3 @@
-# ############################################################################ #
-# Foundation Flow Codegen Vars Record
-# Executed on 07:02:29 PM(Feb06) by user: louahdi
-# Copyright 2008-2012, Cadence Design Systems, Inc.
-# All Rights Reserved
-# ############################################################################ #
-
 # This file contains all default (seeded) variables and user-defined variables that were resolved during code generation.
 if {![info exists vars]} {
    global vars
