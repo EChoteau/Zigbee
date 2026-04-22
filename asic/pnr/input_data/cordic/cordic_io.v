@@ -1,6 +1,6 @@
-`include "../input_data/top_synth.v"
+`include "../input_data/cordic/cordic_synth.v"
 
-module top_io (
+module cordic_io (
 	input i_clk,
 	input i_rst_n,
 	input [7:0] i_i,

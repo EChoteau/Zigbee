@@ -37,9 +37,9 @@ verifyConnectivity
 verify_drc
 
 # Exports post-route pour simulation back-annotée
-file mkdir ../output_data
-saveNetlist ../output_data/${module_name}_postroute.v
-write_sdf ../output_data/${module_name}_postroute.sdf
+file mkdir ../output_data/${module_name}
+saveNetlist ../output_data/${module_name}/${module_name}_postroute.v
+write_sdf ../output_data/${module_name}/${module_name}_postroute.sdf
 
 # Open GUI for inspection
 win
