@@ -1,34 +1,46 @@
 `ifdef hogge_pd
-    module phase_detector(clk,rst,data_in,data_out, up,down);
+    module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
-         input wire  clk;
-         input wire  data_in;
-         //output wire data_out;
-         output wire up_down;
-         //output wire late;
+         input wire  i_clk;
+         input wire i_rst_n,i_sample_clk;
+         input wire  i_decision_in;
+         output wire o_decision_out;
+         output wire o_up,o_down;
          
-         logic a;
-         logic b;
-         always @(edge clk or negedge rst)
+         logic s_a;
+         logic s_b;
+         logic s_sample_p;
+         
+         bascule b1(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(i_decision_in), .o_Q(s_a));
+         bascule b1(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(s_a), .o_Q(s_b));
+         /*
+         always @(edge i_clk or negedge i_rst_n)
              begin 
-                 if (rst== 1b'0)
+                 if (i_rst_n== 1'b0)
                  begin
-                    a<=1b'0;
-                    b<=1b'0;
+                    s_a<=1'b0;
+                    s_b<=1'b0;
                  end
                  else begin
-                    if clk ==1b'1;
+                    s_sample_p <= i_sample_clk;
+                    if ( s_sample_p==1'b0 && i_sample_clk ==1'b1 ) 
                     begin 
-                     a <= data_in;
+                         s_a <= i_decision_in;
                      end
-                    else
+                    else if( s_sample_p==1'b1 && i_sample_clk ==1'b0 )
                     begin
-                     b <= a;
+                        s_b <= s_a;
+                     end
+                     else
+                     begin 
+                        s_a<=s_a;
+                        s_b<=s_b;
                      end
                  end
              end
-        assign data_out     =a;
-        assign up           =data ^ a;
-        assign down         = a ^ b;
+             */
+        assign o_decision_out     =s_a;
+        assign o_up           =(i_decision_in ^ s_a ) && ~(s_a ^ s_b);
+        assign o_down         = (s_a ^ s_b) && ~(i_decision_in ^ s_a );
        endmodule
  `endif

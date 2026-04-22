@@ -31,7 +31,7 @@ always @(posedge i_clk or negedge i_rst_n) begin
                 o_ctrl <= 32;
 
             else if (i_down & s_down_l)
-                o_ctrl <= - 32;
+                o_ctrl <=  - 32;
             else o_ctrl <= o_ctrl;
        // end
         

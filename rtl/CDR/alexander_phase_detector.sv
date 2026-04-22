@@ -1,3 +1,4 @@
+   `ifdef alexander_pd
     module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
          input wire  i_clk;
@@ -27,3 +28,4 @@
          assign o_up      = (s_c ^ s_a) && ~(s_b ^ s_c);
          assign o_down    = (s_b ^ s_c) && ~(s_c ^ s_a);
        endmodule
+       `endif

@@ -19,7 +19,7 @@ module cdr_top
     decision_block u_dec (.i_dphi_in(i_dphi),.o_decision_out(s_decision_sig));
 
    phase_detector u_pd(.i_clk(i_clk),.i_sample_clk(s_recovered_clk),.i_rst_n(i_rst_n),.i_decision_in(s_decision_sig),.o_decision_out(s_decision_out),.o_up(s_up),.o_down(s_down));
-  loop_filter #(.WIDTH(8)) u_lf (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_up(s_up),.i_down(s_down),.o_ctrl(s_control));
+    loop_filter #(.WIDTH(8)) u_lf (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_up(s_up),.i_down(s_down),.o_ctrl(s_control));
    nco u_nco (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_ctrl(s_control),.o_sample_enable(o_enable),.o_recovered_clk(s_recovered_clk));
    assign o_data =s_decision_out;
 
