@@ -22,9 +22,9 @@ Pad:	GND2				N GND3ALLP
 # Definition des pads East
 Pad:	PWR3				E VDD3ALLP
 Pad:	GND3				E GND3ALLP
-Pad:	PWR4				E VDD3ALLP
-Pad:	GND4				E GND3ALLP
-Pad:	PWR5				E VDD3ALLP
+Pad:	io_o_phase_10			E
+Pad:	io_o_phase_11			E
+Pad:	io_o_phase_12			E
 Pad:	GND5				E GND3ALLP
 Pad:	PWR6				E VDD3ALLP
 Pad:	GND6				E GND3ALLP

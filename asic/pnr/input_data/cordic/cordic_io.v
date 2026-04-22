@@ -1,18 +1,16 @@
-`include "../input_data/cordic/cordic_synth.v"
-
 module cordic_io (
 	input i_clk,
 	input i_rst_n,
 	input [7:0] i_i,
 	input [7:0] i_q,
-	output [9:0] o_phase
+	output [12:0] o_phase
 );
 
 wire i_clk_P;
 wire i_rst_n_P;
 wire [7:0] i_i_P;
 wire [7:0] i_q_P;
-wire [9:0] o_phase_P;
+wire [12:0] o_phase_P;
 
 cordic_system_complete cordic_system_complete_inst (
 	.i_clk(i_clk_P),
@@ -53,5 +51,8 @@ BU12SP io_o_phase_6 ( .A(o_phase_P[6]), .PAD(o_phase[6]) );
 BU12SP io_o_phase_7 ( .A(o_phase_P[7]), .PAD(o_phase[7]) );
 BU12SP io_o_phase_8 ( .A(o_phase_P[8]), .PAD(o_phase[8]) );
 BU12SP io_o_phase_9 ( .A(o_phase_P[9]), .PAD(o_phase[9]) );
+BU12SP io_o_phase_10 ( .A(o_phase_P[10]), .PAD(o_phase[10]) );
+BU12SP io_o_phase_11 ( .A(o_phase_P[11]), .PAD(o_phase[11]) );
+BU12SP io_o_phase_12 ( .A(o_phase_P[12]), .PAD(o_phase[12]) );
 
 endmodule
