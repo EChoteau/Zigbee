@@ -1,5 +1,5 @@
 module derivative #(
-    parameter WIDTH = 16
+    parameter WIDTH = 8
 )(
     input  logic i_clk,
     input  logic i_rst_n,
