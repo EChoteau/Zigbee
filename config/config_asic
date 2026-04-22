@@ -33,17 +33,32 @@ source /softslin/configCAO/Synopsys/config_DesignVision
 source /softslin/configCAO/Cadence/licence_cadence
 source /softslin/configCAO/Cadence/config_Virtuoso
 #source /softslin/configCAO/Cadence/config_EDISystem10_10
-source /softslin/configCAO/Cadence/config_Innovus_17
-source /softslin/configCAO/Cadence/config_QRC
-source /softslin/configCAO/AMS/config_AMS_ISR
+source /softslin/configCAO/Cadence/config_Innovus
+source /softslin/configCAO/Cadence/config_QRC_15
 source /softslin/configCAO/MentorGraphics/config_Calibre
-#source /softslin/configCAO/MentorGraphics/config_calibre2015_1_38_27
+source /softslin/configCAO/AMS/config_AMS_ISR
 source /softslin/configCAO/MentorGraphics/licence_mentor_graphics
 	# ATTENTION à l'ordre : en interne modelsim.ini utilise des variables définies dans
 	# config_ISE et dans config_AMS
-source /softslin/configCAO/Xilinx/config_ISE
-source /softslin/configCAO/MentorGraphics/config_Questa107c
-#source /softslin/configCAO/MentorGraphics/config_modelsim10_4
-#source /softslin/configCAO/MentorGraphics/config_ModelSim
+#source /softslin/configCAO/Xilinx/config_ISE
+source /softslin/configCAO/MentorGraphics/config_questasim107c
 export MODELSIM="${TP_PATH}/config/modelsim.ini"
+##############################################################
+# Copyright (c) 1986-2025 Xilinx, Inc.  All rights reserved. #
+##############################################################
+
+source /softslin/vivado_24.2/DocNav/.settings64-DocNav.sh
+source /softslin/vivado_24.2/Vivado/2024.2/.settings64-Vivado.sh
+source /softslin/vivado_24.2/Vitis/2024.2/.settings64-Vitis.sh
+source /softslin/vivado_24.2/Model_Composer/2024.2/.settings64-Model_Composer.sh
+source /softslin/vivado_24.2/Vitis_HLS/2024.2/.settings64-Vitis_HLS.sh
+
+# export XILINXD_LICENSE_FILE=${LM_LICENSE_FILE}
+
+if [ -n "${LM_LICENSE_FILE}" ] ; then
+	    export LM_LICENSE_FILE="${LM_LICENSE_FILE}:2110@cimekey1"
+    else
+	        export LM_LICENSE_FILE="2110@cimekey1"
+fi
+
 

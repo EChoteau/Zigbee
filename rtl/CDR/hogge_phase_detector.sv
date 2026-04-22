@@ -42,5 +42,6 @@
         assign o_decision_out     =s_a;
         assign o_up           =(i_decision_in ^ s_a ) && ~(s_a ^ s_b);
         assign o_down         = (s_a ^ s_b) && ~(i_decision_in ^ s_a );
+
        endmodule
  `endif

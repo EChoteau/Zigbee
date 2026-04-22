@@ -1,3 +1,4 @@
+
    `ifdef alexander_pd
     module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
