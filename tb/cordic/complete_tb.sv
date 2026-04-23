@@ -40,8 +40,8 @@ module complete_tb();
         i_rst_n = 0;
         i_i <= SCALE;
         i_q <= 0;
-        @(posedge i_clk);
-        @(posedge i_clk);
+        @(negedge i_clk);
+        @(negedge i_clk);
         #2 i_rst_n <= 1; #2;
         
         for (int i = 0; i < 5; i = i + 1) begin
@@ -53,7 +53,7 @@ module complete_tb();
             // Assign to registered inputs
             i_i <= $rtoi(s_i_val * SCALE);
             i_q <= $rtoi(s_q_val * SCALE);
-            @(posedge i_clk); #1;
+            @(negedge i_clk); #1;
         end
         for (int i = 0; i < 5; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -64,7 +64,7 @@ module complete_tb();
             // Assign to registered inputs
             i_i <= $rtoi(s_i_val * SCALE);
             i_q <= $rtoi(s_q_val * SCALE);
-            @(posedge i_clk); #1;
+            @(negedge i_clk); #1;
         end
         // Generate a full rotation
         for (int i = 0; i < 20; i = i + 1) begin
@@ -76,7 +76,7 @@ module complete_tb();
             // Assign to registered inputs
             i_i <= $rtoi(s_i_val * SCALE);
             i_q <= $rtoi(s_q_val * SCALE);
-            @(posedge i_clk); #1;
+            @(negedge i_clk); #1;
         end
         for (int i = 0; i < 20; i = i + 1) begin
             // Calculate cos/sin in simulation
@@ -87,7 +87,7 @@ module complete_tb();
             // Assign to registered inputs
             i_i <= $rtoi(s_i_val * SCALE);
             i_q <= $rtoi(s_q_val * SCALE);
-            @(posedge i_clk); #1;
+            @(negedge i_clk); #1;
         end
         #100;
         $finish;
