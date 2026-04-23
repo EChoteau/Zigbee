@@ -1,11 +1,11 @@
 module msk_io (
-    input  logic              i_clk,        
-    input  logic              i_rst_n,      
-    input  logic              i_flag_enable,
-    input  logic              i_enable_ech, 
-    input  logic              i_b_in,       
-    output logic signed [5:0] o_I_BB,       
-    output logic signed [5:0] o_Q_BB        
+    input        i_clk,
+    input        i_rst_n,
+    input        i_flag_enable,
+    input        i_enable_ech,
+    input        i_b_in,
+    output [5:0] o_I_BB,
+    output [5:0] o_Q_BB
 );
 
 wire i_clk_P;
