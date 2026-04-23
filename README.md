@@ -28,7 +28,7 @@ Ce depot contient:
 	- generation de tick de debit (`baud_rate_gen.sv`).
 
 ### Chaine MSK baseband
-- Dossier: `rtl/MSK_BASEBAND/`
+- Dossier: `rtl/msk/`
 - Bloc principal: `top_msk.sv`
 - Pipeline fonctionnel:
 	- encodage differentiel (`encodeur_diff.sv`),
