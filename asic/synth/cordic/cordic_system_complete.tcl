@@ -13,6 +13,7 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/cordic/Cordic_system_complete.sv \
     ../../../rtl/cordic/Cordic_top.sv \
     ../../../rtl/cordic/Cordic_top_pipeline.sv \
+    ../../../rtl/cordic/Cordic_top_hybride.sv \
     ../../../rtl/cordic/Derivate.sv \
 }
 
