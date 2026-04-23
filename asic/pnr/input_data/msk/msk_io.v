@@ -13,8 +13,8 @@ wire i_rst_n_P;
 wire i_flag_enable_P;
 wire i_enable_ech_P;
 wire i_b_in_P;
-wire signed [5:0] o_I_BB_P;
-wire signed [5:0] o_Q_BB_P;
+wire  [5:0] o_I_BB_P;
+wire  [5:0] o_Q_BB_P;
 
 top_msk top_msk_inst (
 	.i_clk(i_clk_P),
