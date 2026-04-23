@@ -11,8 +11,8 @@
          logic s_b;
          logic s_sample_p;
          
-         bascule b1(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(i_decision_in), .o_Q(s_a));
-         bascule b1(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(s_a), .o_Q(s_b));
+         bascule b0(.i_ck(i_clk),.i_en(i_sample_clk),.i_rst(i_rst_n),.i_D(i_decision_in), .o_Q(s_a));
+         bascule b1(.i_ck(i_clk),.i_en(~i_sample_clk),.i_rst(i_rst_n),.i_D(s_a), .o_Q(s_b));
          /*
          always @(edge i_clk or negedge i_rst_n)
              begin 
@@ -39,9 +39,9 @@
                  end
              end
              */
-        assign o_decision_out     =s_a;
-        assign o_up           =(i_decision_in ^ s_a ) && ~(s_a ^ s_b);
-        assign o_down         = (s_a ^ s_b) && ~(i_decision_in ^ s_a );
+        assign o_decision_out     =s_b;
+        assign o_up           =(i_decision_in ^ s_a );
+        assign o_down         = (s_a ^ s_b);
 
        endmodule
  `endif

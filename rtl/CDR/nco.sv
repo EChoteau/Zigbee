@@ -1,47 +1,53 @@
-module nco #
-
-(
+module nco #(
     parameter PHASE_WIDTH = 16,
-    parameter  K_NOMINAL = 16'd2621
-    //parameter K_NOMINAL = 16'd5242
-)
-
-(
-    input wire i_clk,
-    input wire i_rst_n,
-
-    input wire signed [7:0] i_ctrl,
-
-    output wire o_recovered_clk,
-    output reg o_sample_enable
+    parameter K_NOMINAL   = 10,    // nombre de cycles i_clk par bit
+    parameter CTRL_W      = 8
+)(
+    input  wire                   i_clk,
+    input  wire                   i_rst_n,
+    input  wire signed [CTRL_W-1:0] i_ctrl,
+    output wire                   o_recovered_clk,
+    output reg                    o_sample_enable,
+    output reg o_ctrl_ack
 );
-reg signed [PHASE_WIDTH-1:0] s_phase;
-reg signed [PHASE_WIDTH-1:0] s_phase_next;
-reg signed [PHASE_WIDTH-1:0] s_ctrl_normalised;
 
-always @(posedge i_clk or negedge i_rst_n) begin
+// Période ajustée : bornée entre 23 et 27
+reg [5:0] s_period;
+reg [5:0] s_cnt;
 
+// Calcul de la période avec saturation
+wire [5:0] s_period_next = (i_ctrl > 0) ? 
+                            (s_period < 12 ? s_period + 1 : 12) :
+                           (i_ctrl < 0) ? 
+                            (s_period > 8 ? s_period - 1 : 8) :
+                            s_period;
+
+always @(posedge i_clk or negedge i_rst_n or negedge i_clk) begin  // ← posedge
     if (~i_rst_n) begin
-
-        s_phase <= 16'h0000;
+        s_cnt           <= 0;
+        s_period        <= K_NOMINAL;
         o_sample_enable <= 0;
-
+        o_ctrl_ack      <= 0;
     end
     else begin
-        if (i_ctrl<0) s_ctrl_normalised = -{9'd0,i_ctrl[6:0]};
-        else s_ctrl_normalised = {9'd0,i_ctrl[6:0]};
-        s_phase_next = s_phase + K_NOMINAL + s_ctrl_normalised;
-
         o_sample_enable <= 0;
-        if (s_phase_next[15] ==1'b0 && s_phase [15] ==1'b1) begin
+        o_ctrl_ack      <= 0;
+
+        if (s_cnt == s_period - 1) begin
+            s_cnt           <= 0;
             o_sample_enable <= 1;
-            //recovered_clk <= ~recovered_clk;
+            o_ctrl_ack      <= 1;  // ← ack mis à 1
+
+            if      (i_ctrl > 0 && s_period < 11) s_period <= s_period + 1;  // ← bornes cohérentes
+            else if (i_ctrl < 0 && s_period > 9)  s_period <= s_period - 1;
+            else s_period <= K_NOMINAL;
         end
-
-        s_phase <= s_phase_next;
-
+        else begin
+            s_cnt <= s_cnt + 1;
+        end
     end
-
 end
-assign o_recovered_clk = s_phase[15];
+// horloge récupérée = MSB du compteur (50% duty cycle)
+assign o_recovered_clk = s_cnt < (s_period >> 1);
+
 endmodule

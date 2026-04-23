@@ -6,7 +6,7 @@ module tb_cdr;
     // Clock 50 MHz
     //---------------------------------
     reg clk = 0;
-    always #10 clk = ~clk;   // 20ns period → 50 MHz
+    always #50 clk = ~clk;   // 20ns period → 50 MHz
 
     //---------------------------------
     // Reset
@@ -51,7 +51,7 @@ module tb_cdr;
    reg [2:0] same_count = 0;
     reg new_data;
     always @(posedge clk) begin
-    if (cnt == 12) begin
+    if (cnt == 2) begin
 
         new_data = $random; // génère une nouvelle valeur aléatoire
 
@@ -68,14 +68,15 @@ module tb_cdr;
         end else begin
             data_bit <= new_data;
         end
-
+        data_bit_p <= data_bit;
         nb_data_t <= nb_data_t + 1;
-        
+        //data_bit_i <= data_bit;
+    
     end 
-    if ( cnt==24 )begin
+    if ( cnt==4 )begin
     
     cnt <= 0;
-    data_bit_p <= data_bit;
+    
     end
     else  begin
         cnt <= cnt + 1;
@@ -109,7 +110,7 @@ end
     //---------------------------------
     initial begin
         rst = 0;
-        #200;
+        #500;
         rst = 1;
     end
 
