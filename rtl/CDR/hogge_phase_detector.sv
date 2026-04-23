@@ -1,4 +1,3 @@
-`ifdef hogge_pd
     module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
          input wire  i_clk;
@@ -44,4 +43,3 @@
         assign o_down         = (s_a ^ s_b);
 
        endmodule
- `endif

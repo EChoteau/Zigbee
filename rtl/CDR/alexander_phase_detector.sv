@@ -21,7 +21,6 @@
         bascule b3(.i_ck(i_clk),.i_en( i_sample_clk),.i_rst(i_rst_n),.i_D(s_a),          .o_Q(s_c)); // transition précédente
 
 assign o_decision_out = s_b;
-assign o_up           = (s_a ^ s_b) & ~(s_b ^ s_c);  // ✅
-assign o_down         = (s_b ^ s_c) & ~(s_a ^ s_b);  // ✅
-       endmodule
+assign o_up           = (s_a ^ s_b) & ~(s_b ^ s_c);  
+assign o_down         = (s_b ^ s_c) & ~(s_a ^ s_b); 
        `endif
