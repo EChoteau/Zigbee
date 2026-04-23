@@ -2,8 +2,8 @@ module cordic_top_hybride #(
     parameter int WIDTH_IN = 6,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
-    parameter int NUM_STEPS = 10,
-    parameter int N_COMB_STEPS = 2,
+    parameter int NUM_STEPS = WIDTH_IN + 2,
+    parameter int N_COMB_STEPS = 4,
     parameter int M_PIPE_STAGES = NUM_STEPS / N_COMB_STEPS
 )(
     input  logic i_clk,

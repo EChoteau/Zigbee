@@ -1,7 +1,7 @@
 module cordic_top_tb();
     parameter WIDTH = 6;
     parameter WIDTH_PHASE = WIDTH + 2;
-    parameter NUM_STEPS = 8;
+    parameter NUM_STEPS = WIDTH + 2;
     parameter SCALE = 2**(WIDTH_PHASE-1)-1; // For fixed-point scaling
     
     logic signed [WIDTH-1:0] i_i, i_q;

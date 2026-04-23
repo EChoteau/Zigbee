@@ -5,7 +5,7 @@ module cordic_top_sine_tb;
     // Parameters
     parameter WIDTH = 6;
     parameter WIDTH_PHASE = WIDTH + 2;
-    parameter NUM_STEPS = 8;
+    parameter NUM_STEPS = WIDTH + 2;
     parameter real PI = 3.14159265359;
 
     // Clock
