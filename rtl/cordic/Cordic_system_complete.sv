@@ -20,7 +20,7 @@ module cordic_system_complete #(
     always_ff @(posedge i_clk or negedge i_rst_n) begin
 	if (!i_rst_n) begin
 	    s_q_buf <= '0;
-	    s_i_buf <= '1; // Avoid zero vector at reset
+        s_i_buf <= 'd1;
 	end else begin
 	    s_q_buf <= i_q;
 	    s_i_buf <= i_i;
