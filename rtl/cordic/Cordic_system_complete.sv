@@ -1,6 +1,6 @@
 module cordic_system_complete #(
-    parameter int WIDTH_IN = 8,
-    parameter FILTER_N = 8,
+    parameter int WIDTH_IN = 6,
+    parameter FILTER_N = 5,
     int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int OUT_WIDTH = WIDTH_PHASE + $clog2(FILTER_N)
     

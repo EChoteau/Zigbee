@@ -14,8 +14,8 @@ Pad:	io_i_i_2			N
 Pad:	io_i_i_3			N
 Pad:	io_i_i_4			N
 Pad:	io_i_i_5			N
-Pad:	io_i_i_6			N
-Pad:	io_i_i_7			N
+Pad:	PWR4				N VDD3ALLP
+Pad:	GND4				N GND3ALLP
 Pad:	PWR2				N VDD3ALLP
 Pad:	GND2				N GND3ALLP
 
@@ -23,13 +23,13 @@ Pad:	GND2				N GND3ALLP
 Pad:	PWR3				E VDD3ALLP
 Pad:	GND3				E GND3ALLP
 Pad:	io_o_phase_10			E
-Pad:	io_o_phase_11			E
-Pad:	io_o_phase_12			E
 Pad:	GND5				E GND3ALLP
 Pad:	PWR6				E VDD3ALLP
 Pad:	GND6				E GND3ALLP
 Pad:	io_i_clk			E
 Pad:	io_i_rst_n			E
+Pad:	PWR5				E VDD3ALLP
+Pad:	GND8				E GND3ALLP
 Pad:	PWR7				E VDD3ALLP
 Pad:	GND7				E GND3ALLP
 
@@ -56,8 +56,8 @@ Pad:	io_i_q_2			W
 Pad:	io_i_q_3			W
 Pad:	io_i_q_4			W
 Pad:	io_i_q_5			W
-Pad:	io_i_q_6			W
-Pad:	io_i_q_7			W
+Pad:	PWR9				W VDD3ALLP
+Pad:	GND12				W GND3ALLP
 Pad:	PWR11				W VDD3ALLP
 Pad:	GND11				W GND3ALLP
 

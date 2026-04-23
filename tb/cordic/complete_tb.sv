@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module complete_tb();
-    parameter WIDTH = 8;
-    parameter FILTER_N = 8;
+    parameter WIDTH = 6;
+    parameter FILTER_N = 5;
     parameter real PI = 3.14159265359;
     parameter int OUT_WIDTH = WIDTH + $clog2(FILTER_N)+2;
 

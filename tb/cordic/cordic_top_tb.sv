@@ -1,5 +1,5 @@
 module cordic_top_tb();
-    parameter WIDTH = 8;
+    parameter WIDTH = 6;
     parameter WIDTH_PHASE = WIDTH + 2;
     parameter NUM_STEPS = 8;
     parameter SCALE = 2**(WIDTH_PHASE-1)-1; // For fixed-point scaling
@@ -49,19 +49,19 @@ module cordic_top_tb();
         $display("--- Starting Full CORDIC Phase Test ---");
         
         // Test 0 degrees (I=max, Q=0) -> Expected Phase: 0
-        check_phase("0   Deg", 8'h40, 8'h00, 1);
+        check_phase("0   Deg", 6'h10, 6'h00, 1);
         
         // Test 90 degrees (I=0, Q=max) -> Expected Phase: 0x4000 (your 0.5 scale)
-        check_phase("90  Deg", 8'h00, 8'h40, SCALE/2);
+        check_phase("90  Deg", 6'h00, 6'h10, SCALE/2);
         
         // Test -90 degrees (I=0, Q=-max) -> Expected Phase: 0xC000 (signed -0.5)
-        check_phase("-90 Deg", 8'h00, -8'h40, -SCALE/2);
+        check_phase("-90 Deg", 6'h00, -6'h10, -SCALE/2);
         
         // Test 45 degrees (I=Q) -> Expected Phase: 0x2000 (0.25 scale)
-        check_phase("45  Deg", 8'h20, 8'h20, SCALE/4);
+        check_phase("45  Deg", 6'h10, 6'h10, SCALE/4);
         
         // Test 180 degrees (I=-max, Q=0) -> Should rotate via Q2/Q3 logic
-        check_phase("180 Deg", -8'h40, 8'h00, SCALE);
+        check_phase("180 Deg", -6'h10, 6'h00, SCALE);
 
         $display("---------------------------------------");
         $finish;

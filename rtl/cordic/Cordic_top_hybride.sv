@@ -1,5 +1,5 @@
 module cordic_top_hybride #(
-    parameter int WIDTH_IN = 8,
+    parameter int WIDTH_IN = 6,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
     parameter int NUM_STEPS = 10,
@@ -13,22 +13,19 @@ module cordic_top_hybride #(
     output logic signed [WIDTH_PHASE-1:0] o_phase
 );
 
-    localparam int TABLE_STEPS = 10;
+    localparam int TABLE_STEPS = 8;
     localparam int TOTAL_HYBRID_STEPS = N_COMB_STEPS * M_PIPE_STAGES;
 
     // --- 1. Angle Table Generation from python cordic-table.py ---
-    // CORDIC Atan Table for WIDTH_PHASE=10, NUM_STEPS=10
-    localparam logic signed [10-1:0] ATAN_TABLE [0:9] = '{
-        10'sh80, // step 0: 45.0000 deg
-        10'sh4c, // step 1: 26.5651 deg
-        10'sh28, // step 2: 14.0362 deg
-        10'sh14, // step 3: 7.1250 deg
-        10'sh0a, // step 4: 3.5763 deg
-        10'sh05, // step 5: 1.7899 deg
-        10'sh03, // step 6: 0.8952 deg
-        10'sh01, // step 7: 0.4476 deg
-        10'sh01, // step 8: 0.2238 deg
-        10'sh00 // step 9: 0.1119 deg
+    localparam logic signed [8-1:0] ATAN_TABLE [0:7] = '{
+        8'sh20, // step 0: 45.0000 deg
+        8'sh13, // step 1: 26.5651 deg
+        8'sh0a, // step 2: 14.0362 deg
+        8'sh05, // step 3: 7.1250 deg
+        8'sh03, // step 4: 3.5763 deg
+        8'sh01, // step 5: 1.7899 deg
+        8'sh01, // step 6: 0.8952 deg
+        8'sh00 // step 7: 0.4476 deg
     };
 
     // Elaboration checks for hybrid partitioning and table coverage.
@@ -45,8 +42,8 @@ module cordic_top_hybride #(
         if (NUM_STEPS > TABLE_STEPS) begin
             $error("NUM_STEPS (%0d) exceeds ATAN_TABLE size (%0d)", NUM_STEPS, TABLE_STEPS);
         end
-        if (WIDTH_PHASE != 10) begin
-            $error("WIDTH_PHASE (%0d) must be 10 to match ATAN_TABLE width (10)", WIDTH_PHASE);
+        if (WIDTH_PHASE != 8) begin
+            $error("WIDTH_PHASE (%0d) must be 8 to match ATAN_TABLE width (8)", WIDTH_PHASE);
         end
     end
 
