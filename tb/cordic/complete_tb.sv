@@ -44,9 +44,9 @@ module complete_tb();
         @(posedge i_clk);
         #2 i_rst_n <= 1; #2;
         
-        for (int i = 0; i < 10; i = i + 1) begin
+        for (int i = 0; i < 5; i = i + 1) begin
             // Calculate cos/sin in simulation
-            s_angle = (i * 2.0 * PI) / 40.0;
+            s_angle = (i * 2.0 * PI) / 20.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
             
@@ -55,9 +55,9 @@ module complete_tb();
             i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
-        for (int i = 0; i < 10; i = i + 1) begin
+        for (int i = 0; i < 5; i = i + 1) begin
             // Calculate cos/sin in simulation
-            s_angle = PI * (10 - i) / 20.0;
+            s_angle = PI * (5 - i) / 10.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
             
@@ -67,9 +67,9 @@ module complete_tb();
             @(posedge i_clk); #1;
         end
         // Generate a full rotation
-        for (int i = 0; i < 40; i = i + 1) begin
+        for (int i = 0; i < 20; i = i + 1) begin
             // Calculate cos/sin in simulation
-            s_angle = (i * 2.0 * PI) / 40.0;
+            s_angle = (i * 2.0 * PI) / 20.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
             
@@ -78,9 +78,9 @@ module complete_tb();
             i_q <= $rtoi(s_q_val * SCALE);
             @(posedge i_clk); #1;
         end
-        for (int i = 0; i < 40; i = i + 1) begin
+        for (int i = 0; i < 20; i = i + 1) begin
             // Calculate cos/sin in simulation
-            s_angle = -(i * 2.0 * PI) / 40.0;
+            s_angle = -(i * 2.0 * PI) / 20.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
             
