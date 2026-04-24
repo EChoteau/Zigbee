@@ -111,7 +111,7 @@ module zigbee_chip_top #(
         .o_tx_sample_tick(v_if_tx_sample_tick)
     );
 
-    top_msk u_top_msk (
+    msk_system u_top_msk (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_flag_enable(v_msk_flag_enable),

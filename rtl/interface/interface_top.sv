@@ -1,6 +1,6 @@
 module interface_top #(
 	parameter APB_ADDR_WIDTH = 8,
-	parameter APB_DATA_WIDTH = 32,
+	parameter APB_DATA_WIDTH = 8,
 	parameter DATA_WIDTH     = 8,
 	parameter FIFO_DEPTH     = 8,
 	parameter DIV_WIDTH      = 8
@@ -19,6 +19,11 @@ module interface_top #(
 
 	input  logic                       i_serial_rx,
 	input  logic                       i_cdr_sample_valid,
+	input  logic                       i_dbg_ser_override_en,
+	input  logic [DATA_WIDTH-1:0]      i_dbg_ser_tx_data,
+	input  logic                       i_dbg_ser_tx_data_valid,
+	input  logic                       i_dbg_ser_tx_fifo_empty,
+	input  logic                       i_dbg_ser_baud_tick,
 	output logic                       o_serial_tx,
 	output logic                       o_tx_valid,
 	output logic                       o_tx_sample_tick,
@@ -41,7 +46,6 @@ module interface_top #(
 	output logic                       o_dbg_rx_ovf_pulse,
 
 	output logic                       o_dbg_tx_tick,
-	output logic                       o_dbg_tx_busy,
 	output logic                       o_dbg_tx_path_en,
 	output logic                       o_dbg_rx_path_en,
 	output logic                       o_dbg_global_en,
@@ -49,7 +53,18 @@ module interface_top #(
 	output logic                       o_dbg_rx_enable,
 	output logic [DIV_WIDTH-1:0]       o_dbg_div_val,
 	output logic                       o_dbg_tx_und_err,
-	output logic                       o_dbg_rx_ovf_err
+	output logic                       o_dbg_rx_ovf_err,
+
+	// Serializer chain visibility (for wrapper probing/patching)
+	output logic [DATA_WIDTH-1:0]      o_dbg_ser_i_tx_data,
+	output logic                       o_dbg_ser_i_tx_data_valid,
+	output logic                       o_dbg_ser_i_tx_fifo_empty,
+	output logic                       o_dbg_ser_i_baud_tick,
+	output logic                       o_dbg_ser_i_path_en,
+	output logic                       o_dbg_ser_o_tx_fifo_pop,
+	output logic                       o_dbg_ser_o_tx_busy,
+	output logic                       o_dbg_ser_o_serial_data,
+	output logic                       o_dbg_ser_o_tx_sample_tick
 );
 
 	logic [DATA_WIDTH-1:0] w_tx_fifo_data;
@@ -84,9 +99,19 @@ module interface_top #(
 
 	logic                  w_tx_path_en;
 	logic                  w_rx_path_en;
+	logic                  w_ser_tx_fifo_empty;
+	logic [DATA_WIDTH-1:0] w_ser_tx_data_in;
+	logic                  w_ser_tx_data_valid_in;
+	logic                  w_ser_tx_fifo_empty_in;
+	logic                  w_ser_baud_tick_in;
 
 	assign w_tx_path_en = w_global_en & s_tx_run;
 	assign w_rx_path_en = w_global_en & w_rx_enable;
+	assign w_ser_tx_fifo_empty = w_tx_fifo_empty | ~w_tx_path_en;
+	assign w_ser_tx_data_in = i_dbg_ser_override_en ? i_dbg_ser_tx_data : w_tx_fifo_q;
+	assign w_ser_tx_data_valid_in = i_dbg_ser_override_en ? i_dbg_ser_tx_data_valid : w_tx_fifo_rd_valid;
+	assign w_ser_tx_fifo_empty_in = i_dbg_ser_override_en ? i_dbg_ser_tx_fifo_empty : w_ser_tx_fifo_empty;
+	assign w_ser_baud_tick_in = i_dbg_ser_override_en ? i_dbg_ser_baud_tick : w_tx_tick;
 
 	always_ff @(posedge i_clk or negedge i_rst_n) begin
 		if (!i_rst_n) begin
@@ -187,10 +212,10 @@ module interface_top #(
 	) u_serializer (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n),
-		.i_baud_tick(w_tx_tick),
-		.i_tx_data(w_tx_fifo_q),
-		.i_tx_fifo_empty(w_tx_fifo_empty | ~w_tx_path_en),
-		.i_tx_data_valid(w_tx_fifo_rd_valid),
+		.i_baud_tick(w_ser_baud_tick_in),
+		.i_tx_data(w_ser_tx_data_in),
+		.i_tx_fifo_empty(w_ser_tx_fifo_empty_in),
+		.i_tx_data_valid(w_ser_tx_data_valid_in),
 		.o_tx_fifo_pop(w_tx_fifo_pop),
 		.o_serial_data(o_serial_tx),
 		.o_tx_busy(w_tx_busy),
@@ -240,7 +265,6 @@ module interface_top #(
 	assign o_dbg_rx_ovf_pulse = w_rx_ovf_pulse;
 
 	assign o_dbg_tx_tick = w_tx_tick;
-	assign o_dbg_tx_busy = w_tx_busy;
 	assign o_dbg_tx_path_en = w_tx_path_en;
 	assign o_dbg_rx_path_en = w_rx_path_en;
 	assign o_dbg_global_en = w_global_en;
@@ -249,5 +273,15 @@ module interface_top #(
 	assign o_dbg_div_val = w_div_val;
 	assign o_dbg_tx_und_err = s_tx_und_err;
 	assign o_dbg_rx_ovf_err = s_rx_ovf_err;
+
+	assign o_dbg_ser_i_tx_data = w_ser_tx_data_in;
+	assign o_dbg_ser_i_tx_data_valid = w_ser_tx_data_valid_in;
+	assign o_dbg_ser_i_tx_fifo_empty = w_ser_tx_fifo_empty_in;
+	assign o_dbg_ser_i_baud_tick = w_ser_baud_tick_in;
+	assign o_dbg_ser_i_path_en = w_tx_path_en;
+	assign o_dbg_ser_o_tx_fifo_pop = w_tx_fifo_pop;
+	assign o_dbg_ser_o_tx_busy = w_tx_busy;
+	assign o_dbg_ser_o_serial_data = o_serial_tx;
+	assign o_dbg_ser_o_tx_sample_tick = o_tx_sample_tick;
 
 endmodule

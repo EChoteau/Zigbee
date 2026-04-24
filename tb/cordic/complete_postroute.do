@@ -7,11 +7,11 @@ if ![file isdirectory lib_SYNTH] {
     vmap lib_SYNTH lib_SYNTH
 }
 
-vlog -incr -sv -work lib_SYNTH +acc asic/pnr/output_data/cordic/cordic_postroute.v
+vlog -incr -sv -work lib_SYNTH +acc asic/pnr/output_data/cordic_system/cordic_system_postroute.v
 vlog -incr -sv -work lib_SYNTH +acc tb/cordic/complete_tb.sv
 
 vsim -voptargs=+acc lib_SYNTH.complete_tb \
-     -sdfmax /complete_tb/dut=asic/pnr/output_data/cordic/cordic_postroute.sdf \
+     -sdfmax /complete_tb/dut=asic/pnr/output_data/cordic_system/cordic_system_postroute.sdf \
      -sdfnoerror -sdfnowarn \
      -L c35_CORELIB
 

@@ -8,8 +8,8 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/msk/top_msk.sv \
 }
 
-elaborate top_msk -library WORK
-current_design top_msk
+elaborate msk_system -library WORK
+current_design msk_system
 link
 
 # --- 3. Contraintes ---
@@ -18,7 +18,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design top_msk
+current_design msk_system
 ungroup -all -flatten
 compile_ultra -gate_clock
 # (Optionnel)
@@ -36,9 +36,9 @@ report_constraint -all_violators > reports/violations.rpt
 
 # --- 6. Export Files for Simulation ---
 # Write the Gate-Level Netlist
-write -format verilog -hierarchy -output netlist/msk_synth.v
+write -format verilog -hierarchy -output netlist/msk_system_synth.v
 
 # Write the SDF timing file
-write_sdf netlist/msk_synth.sdf
+write_sdf netlist/msk_system_synth.sdf
 
 exit

@@ -72,6 +72,11 @@ module interface_top_tb;
         .o_pslverr(o_pslverr),
         .i_serial_rx(i_serial_rx),
         .i_cdr_sample_valid(i_cdr_sample_valid),
+        .i_dbg_ser_override_en(1'b0),
+        .i_dbg_ser_tx_data('0),
+        .i_dbg_ser_tx_data_valid(1'b0),
+        .i_dbg_ser_tx_fifo_empty(1'b0),
+        .i_dbg_ser_baud_tick(1'b0),
         .o_serial_tx(o_serial_tx),
         .o_tx_valid(o_tx_valid),
         .o_tx_sample_tick(o_tx_sample_tick)

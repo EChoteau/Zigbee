@@ -23,5 +23,5 @@ report_constraint -all_violators > reports/violations.rpt
 file mkdir netlist
 write -format verilog -hierarchy -output netlist/CDR_synth.v
 
-write_sdf netlist/CDR.sdf
+write_sdf netlist/CDR_synth.sdf
 exit

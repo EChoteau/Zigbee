@@ -1,7 +1,6 @@
 module IQ_DEMOD (
     input  logic              i_clk,
     input  logic              i_rst_n,
-    input  logic              i_adc_eoc,
     input  logic [3:0]        i_I_in,
     input  logic [3:0]        i_Q_in,
     output logic signed [7:0] o_I_out,
@@ -22,7 +21,7 @@ module IQ_DEMOD (
             s_I_tmpin <= 4'sd0;
             s_Q_tmpin <= 4'sd0;
         end
-        else if (i_adc_eoc) begin
+        else begin
             o_I_out   <= s_I_tmp;
             o_Q_out   <= s_Q_tmp;
 
@@ -38,14 +37,12 @@ module IQ_DEMOD (
     wave_generator #(0) u_cos_signal (
         .i_clk      (i_clk),
         .i_rst_n    (i_rst_n),
-        .i_adc_eoc  (i_adc_eoc),
         .o_data_out (s_IF_I)
     );
 
     wave_generator #(1) u_sin_signal (
         .i_clk      (i_clk),
         .i_rst_n    (i_rst_n),
-        .i_adc_eoc  (i_adc_eoc),
         .o_data_out (s_IF_Q)
     );
 
