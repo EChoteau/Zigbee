@@ -48,7 +48,7 @@ Ce depot contient:
 	- estimation de phase CORDIC (`Cordic_top.sv` / version pipeline),
 	- derivee de phase (`Derivate.sv`),
 	- filtrage boxcar (`Boxcar_filter.sv`),
-	- integration de la chaine (`Cordic_system_complete.sv`).
+	- integration de la chaine (`Cordic_system.sv`).
 
 
 ### Chaine CDR
