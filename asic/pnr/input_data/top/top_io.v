@@ -1,4 +1,4 @@
-module cordic_io (
+module top_io (
 	input i_clk,
 	input i_rst_n,
 	input [5:0] i_i,
