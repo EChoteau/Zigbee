@@ -16,7 +16,6 @@ reg [5:0] s_period;
 reg [5:0] s_cnt;
 
 // Calcul de la période avec saturation
-                            s_period;
 
 always @(posedge i_clk or negedge i_rst_n) begin  // ← posedge
     if (~i_rst_n) begin
