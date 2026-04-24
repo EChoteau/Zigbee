@@ -1,6 +1,6 @@
-module cordic_system_complete #(
-    parameter int WIDTH_IN = 8,
-    parameter FILTER_N = 8,
+module cordic_system #(
+    parameter int WIDTH_IN = 6,
+    parameter FILTER_N = 5,
     int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int OUT_WIDTH = WIDTH_PHASE + $clog2(FILTER_N)
     
@@ -20,7 +20,7 @@ module cordic_system_complete #(
     always_ff @(posedge i_clk or negedge i_rst_n) begin
 	if (!i_rst_n) begin
 	    s_q_buf <= '0;
-	    s_i_buf <= '0;
+        s_i_buf <= 'd1;
 	end else begin
 	    s_q_buf <= i_q;
 	    s_i_buf <= i_i;

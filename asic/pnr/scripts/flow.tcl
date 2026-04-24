@@ -29,17 +29,8 @@ saveDesign dbs/addFiller_enc
 
 routeDesign
 
-# Vérifications physiques finales après routage
-verifyGeometry
-verifyConnectivity
-
-# Vérification DRC finale après routage
-verify_drc
-
-# Exports post-route pour simulation back-annotée
-file mkdir ../output_data/${module_name}
-saveNetlist ../output_data/${module_name}/${module_name}_postroute.v
-write_sdf ../output_data/${module_name}/${module_name}_postroute.sdf
+# Final checks, reports, and fabrication outputs
+source ../scripts/final_steps.tcl
 
 # Open GUI for inspection
 win

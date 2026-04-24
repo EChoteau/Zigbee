@@ -23,4 +23,4 @@ def generate_cordic_table(width, num_steps):
     print("};")
 
 if __name__ == "__main__":
-    generate_cordic_table(width=10, num_steps=8)
+    generate_cordic_table(width=8, num_steps=8)
