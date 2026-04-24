@@ -1,6 +1,6 @@
 module interface_test_wrapper #(
     parameter int APB_ADDR_WIDTH = 8,
-    parameter int APB_DATA_WIDTH = 32,
+    parameter int APB_DATA_WIDTH = 8,
     parameter int DATA_WIDTH     = 8,
     parameter int FIFO_DEPTH     = 8,
     parameter int DIV_WIDTH      = 8,
@@ -34,6 +34,11 @@ module interface_test_wrapper #(
     logic                       s_if_pslverr;
     logic                       s_if_serial_rx;
     logic                       s_if_cdr_sample_valid;
+    logic                       s_if_ser_override_en;
+    logic [DATA_WIDTH-1:0]      s_if_ser_tx_data;
+    logic                       s_if_ser_tx_data_valid;
+    logic                       s_if_ser_tx_fifo_empty;
+    logic                       s_if_ser_baud_tick;
     logic                       s_if_serial_tx;
     logic                       s_if_tx_valid;
     logic                       s_if_tx_sample_tick;
@@ -55,7 +60,6 @@ module interface_test_wrapper #(
     logic                       s_dbg_rx_ovf_pulse;
 
     logic                       s_dbg_tx_tick;
-    logic                       s_dbg_tx_busy;
     logic                       s_dbg_tx_path_en;
     logic                       s_dbg_rx_path_en;
     logic                       s_dbg_global_en;
@@ -65,6 +69,16 @@ module interface_test_wrapper #(
     logic                       s_dbg_tx_und_err;
     logic                       s_dbg_rx_ovf_err;
 
+    logic [DATA_WIDTH-1:0]      s_dbg_ser_i_tx_data;
+    logic                       s_dbg_ser_i_tx_data_valid;
+    logic                       s_dbg_ser_i_tx_fifo_empty;
+    logic                       s_dbg_ser_i_baud_tick;
+    logic                       s_dbg_ser_i_path_en;
+    logic                       s_dbg_ser_o_tx_fifo_pop;
+    logic                       s_dbg_ser_o_tx_busy;
+    logic                       s_dbg_ser_o_serial_data;
+    logic                       s_dbg_ser_o_tx_sample_tick;
+
     always_comb begin
         s_if_psel             = 1'b0;
         s_if_penable          = 1'b0;
@@ -73,6 +87,11 @@ module interface_test_wrapper #(
         s_if_pwdata           = '0;
         s_if_serial_rx        = 1'b0;
         s_if_cdr_sample_valid = 1'b0;
+        s_if_ser_override_en  = 1'b0;
+        s_if_ser_tx_data      = '0;
+        s_if_ser_tx_data_valid = 1'b0;
+        s_if_ser_tx_fifo_empty = 1'b0;
+        s_if_ser_baud_tick    = 1'b0;
 
         o_test_out            = '0;
 
@@ -107,7 +126,7 @@ module interface_test_wrapper #(
                 o_test_out[4]         = s_dbg_tx_fifo_pop;
                 o_test_out[5]         = s_dbg_tx_fifo_full;
                 o_test_out[6]         = s_dbg_tx_fifo_empty;
-                o_test_out[7]         = s_dbg_tx_busy;
+                o_test_out[7]         = s_if_tx_valid;
                 o_test_out[8]         = s_dbg_tx_tick;
                 o_test_out[9]         = s_dbg_tx_und_err;
                 o_test_out[10]        = s_dbg_tx_path_en;
@@ -184,19 +203,25 @@ module interface_test_wrapper #(
                 s_if_pwdata[7:0]      = i_test_in[18:11];
                 s_if_serial_rx        = i_test_in[19];
                 s_if_cdr_sample_valid = i_test_in[20];
+                s_if_ser_override_en  = 1'b1;
+                s_if_ser_tx_data      = i_test_in[18:11];
+                s_if_ser_tx_data_valid = i_test_in[21];
+                s_if_ser_tx_fifo_empty = i_test_in[22];
+                s_if_ser_baud_tick    = i_test_in[23];
 
-                o_test_out[0]         = s_if_serial_tx;
-                o_test_out[1]         = s_dbg_tx_busy;
-                o_test_out[2]         = s_if_tx_sample_tick;
-                o_test_out[3]         = s_dbg_rx_fifo_push;
-                o_test_out[4]         = s_dbg_rx_ovf_pulse;
-                o_test_out[5]         = s_dbg_tx_path_en;
-                o_test_out[6]         = s_dbg_rx_path_en;
-                o_test_out[7]         = s_dbg_tx_fifo_pop;
-                o_test_out[8]         = s_dbg_rx_enable;
-                o_test_out[9]         = s_dbg_global_en;
-                o_test_out[10]        = s_dbg_tx_start;
-                o_test_out[11]        = s_dbg_tx_und_err;
+                // Dedicated serializer/deserializer observability map.
+                o_test_out[0]         = s_dbg_ser_o_serial_data;
+                o_test_out[1]         = s_dbg_ser_i_tx_data_valid;
+                o_test_out[2]         = s_dbg_ser_i_tx_fifo_empty;
+                o_test_out[3]         = s_dbg_ser_i_baud_tick;
+                o_test_out[4]         = s_dbg_ser_o_tx_fifo_pop;
+                o_test_out[5]         = s_dbg_ser_o_tx_busy;
+                o_test_out[6]         = s_dbg_ser_o_tx_sample_tick;
+                o_test_out[7]         = s_dbg_rx_fifo_push;
+                o_test_out[8]         = s_dbg_rx_ovf_pulse;
+                o_test_out[9]         = s_dbg_rx_path_en;
+                o_test_out[10]        = s_dbg_ser_i_path_en;
+                o_test_out[11]        = s_dbg_global_en;
             end
 
             CFG_BAUD: begin
@@ -208,7 +233,7 @@ module interface_test_wrapper #(
 
                 o_test_out[0]         = s_dbg_tx_tick;
                 o_test_out[8:1]       = s_dbg_div_val[7:0];
-                o_test_out[9]         = s_dbg_tx_busy;
+                o_test_out[9]         = s_if_tx_valid;
                 o_test_out[10]        = s_if_tx_sample_tick;
                 o_test_out[11]        = s_dbg_global_en;
             end
@@ -238,6 +263,11 @@ module interface_test_wrapper #(
         .o_pslverr(s_if_pslverr),
         .i_serial_rx(s_if_serial_rx),
         .i_cdr_sample_valid(s_if_cdr_sample_valid),
+        .i_dbg_ser_override_en(s_if_ser_override_en),
+        .i_dbg_ser_tx_data(s_if_ser_tx_data),
+        .i_dbg_ser_tx_data_valid(s_if_ser_tx_data_valid),
+        .i_dbg_ser_tx_fifo_empty(s_if_ser_tx_fifo_empty),
+        .i_dbg_ser_baud_tick(s_if_ser_baud_tick),
         .o_serial_tx(s_if_serial_tx),
         .o_tx_valid(s_if_tx_valid),
         .o_tx_sample_tick(s_if_tx_sample_tick),
@@ -259,7 +289,6 @@ module interface_test_wrapper #(
         .o_dbg_rx_ovf_pulse(s_dbg_rx_ovf_pulse),
 
         .o_dbg_tx_tick(s_dbg_tx_tick),
-        .o_dbg_tx_busy(s_dbg_tx_busy),
         .o_dbg_tx_path_en(s_dbg_tx_path_en),
         .o_dbg_rx_path_en(s_dbg_rx_path_en),
         .o_dbg_global_en(s_dbg_global_en),
@@ -267,7 +296,17 @@ module interface_test_wrapper #(
         .o_dbg_rx_enable(s_dbg_rx_enable),
         .o_dbg_div_val(s_dbg_div_val),
         .o_dbg_tx_und_err(s_dbg_tx_und_err),
-        .o_dbg_rx_ovf_err(s_dbg_rx_ovf_err)
+        .o_dbg_rx_ovf_err(s_dbg_rx_ovf_err),
+
+        .o_dbg_ser_i_tx_data(s_dbg_ser_i_tx_data),
+        .o_dbg_ser_i_tx_data_valid(s_dbg_ser_i_tx_data_valid),
+        .o_dbg_ser_i_tx_fifo_empty(s_dbg_ser_i_tx_fifo_empty),
+        .o_dbg_ser_i_baud_tick(s_dbg_ser_i_baud_tick),
+        .o_dbg_ser_i_path_en(s_dbg_ser_i_path_en),
+        .o_dbg_ser_o_tx_fifo_pop(s_dbg_ser_o_tx_fifo_pop),
+        .o_dbg_ser_o_tx_busy(s_dbg_ser_o_tx_busy),
+        .o_dbg_ser_o_serial_data(s_dbg_ser_o_serial_data),
+        .o_dbg_ser_o_tx_sample_tick(s_dbg_ser_o_tx_sample_tick)
     );
 
 endmodule
