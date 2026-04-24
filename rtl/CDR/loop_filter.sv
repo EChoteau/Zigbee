@@ -22,8 +22,8 @@ always @(posedge i_clk or negedge i_rst_n) begin
         s_down_d <= i_down;
 
         if      (i_up   & ~s_up_d)   o_ctrl <=  1;
-else if (i_down & ~s_down_d) o_ctrl <= -1;
-else if (i_ctrl_ack)          o_ctrl <=  0;  // reset après consommation
+        else if (i_down & ~s_down_d) o_ctrl <= -1;
+        else if (i_ctrl_ack)          o_ctrl <=  0;  // reset après consommation
     end
 end
 
