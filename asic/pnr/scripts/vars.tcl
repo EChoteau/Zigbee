@@ -102,7 +102,7 @@ set vars(debug) {0}
 set vars(default_hold_view) {hold_func_typ}
 set vars(default_setup_view) {setup_func_typ}
 set vars(delay_corners) {corner_min corner_typ corner_max}
-set vars(design) {top_io}
+set vars(design) {interface}
 set vars(design_dir) {..}
 set vars(dont_use_list) {BUF15 INV15}
 set vars(dynamic_power_effort) {high}
