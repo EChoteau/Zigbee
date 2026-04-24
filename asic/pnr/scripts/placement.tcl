@@ -13,17 +13,18 @@ addEndCap -prefix ENDCAP
 setViaGenMode -optimize_cross_via true -optimize_via_on_routing_track true
 
 ################# Blockages arround stripes
-createPlaceBlockage -type hard -box { { 499.8   420.4 511.5   1980.4 } } 
-createPlaceBlockage -type hard -box { { 636.75  420.4 648.45  1980.4 } } 
-createPlaceBlockage -type hard -box { { 773.7   420.4 785.4   1980.4 } } 
-createPlaceBlockage -type hard -box { { 910.65  420.4 922.35  1980.4 } } 
-createPlaceBlockage -type hard -box { { 1047.6  420.4 1059.4  1980.4 } } 
-createPlaceBlockage -type hard -box { { 1184.55 420.4 1196.25 1980.4 } } 
-createPlaceBlockage -type hard -box { { 1321.5  420.4 1333.2  1980.4 } } 
-createPlaceBlockage -type hard -box { { 1458.45 420.4 1470.15 1980.4 } } 
-createPlaceBlockage -type hard -box { { 1595.4  420.4 1607.1  1980.4 } } 
-createPlaceBlockage -type hard -box { { 1732.35 420.4 1744.05 1980.4 } } 
-createPlaceBlockage -type hard -box { { 1869.3  420.4 1881    1980.4 } } 
+# TODO Replace them after the fact
+#createPlaceBlockage -type hard -box { { 499.8   420.4 511.5   1980.4 } } 
+#createPlaceBlockage -type hard -box { { 636.75  420.4 648.45  1980.4 } } 
+#createPlaceBlockage -type hard -box { { 773.7   420.4 785.4   1980.4 } } 
+#createPlaceBlockage -type hard -box { { 910.65  420.4 922.35  1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1047.6  420.4 1059.4  1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1184.55 420.4 1196.25 1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1321.5  420.4 1333.2  1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1458.45 420.4 1470.15 1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1595.4  420.4 1607.1  1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1732.35 420.4 1744.05 1980.4 } } 
+#createPlaceBlockage -type hard -box { { 1869.3  420.4 1881    1980.4 } } 
 
 
 # Placement automatique des standard cells
