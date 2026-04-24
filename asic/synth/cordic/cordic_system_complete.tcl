@@ -17,8 +17,8 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/cordic/Derivate.sv \
 }
 
-elaborate cordic_system_complete -library WORK
-current_design cordic_system_complete
+elaborate cordic_system -library WORK
+current_design cordic_system
 link
 
 # --- 3. Contraintes ---
@@ -27,7 +27,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design cordic_system_complete
+current_design cordic_system
 ungroup -all -flatten
 compile_ultra -gate_clock
 # (Optionnel)
@@ -45,9 +45,9 @@ report_constraint -all_violators > reports/violations.rpt
 
 # --- 6. Export Files for Simulation ---
 # Write the Gate-Level Netlist
-write -format verilog -hierarchy -output netlist/cordic_synth.v
+write -format verilog -hierarchy -output netlist/cordic_system_synth.v
 
 # Write the SDF timing file
-write_sdf netlist/cordic_synth.sdf
+write_sdf netlist/cordic_system_synth.sdf
 
 exit

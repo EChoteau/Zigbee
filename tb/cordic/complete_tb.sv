@@ -13,7 +13,7 @@ module complete_tb();
     logic signed [OUT_WIDTH-1:0] o_phase;
     
 
-    cordic_system_complete dut (
+    cordic_system dut (
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(i_i), .i_q(i_q),
         .o_phase(o_phase)
