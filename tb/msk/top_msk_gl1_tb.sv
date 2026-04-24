@@ -20,7 +20,7 @@ module top_msk_tb();
     // -------------------------------------------------------------------------
     // INSTANCIATION DU DUT (Version Gate-Level fixe)
     // -------------------------------------------------------------------------
-    top_msk DUT (
+    msk_system DUT (
         .i_clk(s_clk),
         .i_rst_n(s_rst_n),
         .i_enable_ech(s_enable_ech),

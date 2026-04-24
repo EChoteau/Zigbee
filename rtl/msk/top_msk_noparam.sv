@@ -1,10 +1,10 @@
 // ==============================================================================
-// Module      : top_msk
+// Module      : msk_system
 // Description : Top-level du modulateur MSK (Baseband)
 //               Relie l'encodeur différentiel, le démultiplexeur et le shaping
 // ==============================================================================
 
-module top_msk (
+module msk_system (
     input  logic              i_clk,         // Horloge système rapide (ex: 50 MHz)
     input  logic              i_rst_n,       // Reset asynchrone ACTIF BAS
     input  logic              i_flag_enable, // Tick au rythme des bits entrants (Tb)
