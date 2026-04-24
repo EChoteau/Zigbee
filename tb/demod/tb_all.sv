@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_demod_system_complete;
+module tb_demod_system;
     timeunit      1ns;
     timeprecision 1ps;
 
@@ -25,7 +25,7 @@ module tb_demod_system_complete;
     // =========================================================
     // DUT
     // =========================================================
-    demod_system_complete dut (
+    demod_system dut (
         .i_clk     (i_clk),
         .i_rst_n   (i_rst_n),
         .i_i       (i_I_in),

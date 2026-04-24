@@ -14,7 +14,7 @@ wire [3:0] i_q_P;
 wire [5:0] o_i_bb_P;
 wire [5:0] o_q_bb_P;
 
-demod_system_complete demod_system_complete_inst (
+demod_system demod_system_inst (
         .i_clk     (i_clk_P),
         .i_rst_n   (i_rst_n_P),
         .i_i       (i_i_P),

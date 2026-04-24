@@ -14,8 +14,8 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/demod/top_level_all.sv \
 }
 
-elaborate demod_system_complete -library WORK
-current_design demod_system_complete
+elaborate demod_system -library WORK
+current_design demod_system
 link
 
 # --- 3. Contraintes ---
@@ -24,7 +24,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design demod_system_complete
+current_design demod_system
 ungroup -all -flatten
 compile_ultra -gate_clock
 #compile_ultra -gate_clock
@@ -43,9 +43,9 @@ report_constraint -all_violators > reports/violations.rpt
 
 # --- 6. Export Files for Simulation ---
 # Write the Gate-Level Netlist
-write -format verilog -hierarchy -output netlist/demod_synth.v
+write -format verilog -hierarchy -output netlist/demod_system_synth.v
 
 # Write the SDF timing file
-write_sdf netlist/demod_synth.sdf
+write_sdf netlist/demod_system_synth.sdf
 
 exit

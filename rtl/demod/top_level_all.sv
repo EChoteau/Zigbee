@@ -1,4 +1,4 @@
-module demod_system_complete (
+module demod_system (
     input  logic              i_clk,
     input  logic              i_rst_n,
     input  logic [3:0]        i_i,
