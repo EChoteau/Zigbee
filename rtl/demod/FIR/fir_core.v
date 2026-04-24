@@ -1,6 +1,149 @@
 module FIR_filter (
     input  logic              i_clk,
     input  logic              i_rst_n,
+    input  logic signed [7:0] i_inputData,
+    output logic signed [5:0] o_outputData
+);
+
+    // Coefficients 
+    localparam logic signed [7:0] C0 = 8'sd14;
+    localparam logic signed [7:0] C1 = 8'sd34;
+    localparam logic signed [7:0] C2 = 8'sd43;
+
+    logic signed [7:0] s_delay_buffer [0:4];
+
+    logic signed [8:0]  s_sum0;
+    logic signed [8:0]  s_sum1;
+
+    logic signed [16:0] s_prod0;
+    logic signed [16:0] s_prod1;
+    logic signed [15:0] s_prod2;
+
+    logic signed [18:0] s_filterOut;
+
+    // Delay line
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n) begin
+            s_delay_buffer[0] <= '0;
+            s_delay_buffer[1] <= '0;
+            s_delay_buffer[2] <= '0;
+            s_delay_buffer[3] <= '0;
+            s_delay_buffer[4] <= '0;
+        end else begin
+            s_delay_buffer[0] <= i_inputData;
+            s_delay_buffer[1] <= s_delay_buffer[0];
+            s_delay_buffer[2] <= s_delay_buffer[1];
+            s_delay_buffer[3] <= s_delay_buffer[2];
+            s_delay_buffer[4] <= s_delay_buffer[3];
+        end
+    end
+
+    // Sommes symétriques élargies
+    always_comb begin
+        s_sum0 = $signed({s_delay_buffer[0][7], s_delay_buffer[0]})
+               + $signed({s_delay_buffer[4][7], s_delay_buffer[4]});
+
+        s_sum1 = $signed({s_delay_buffer[1][7], s_delay_buffer[1]})
+               + $signed({s_delay_buffer[3][7], s_delay_buffer[3]});
+    end
+
+    // Multiplications
+    always_comb begin
+        s_prod0 = C0 * s_sum0;
+        s_prod1 = C1 * s_sum1;
+        s_prod2 = C2 * s_delay_buffer[2];
+    end
+
+    // Somme finale
+    always_comb begin
+        s_filterOut = s_prod0 + s_prod1 + s_prod2;
+    end
+
+    // output
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n)
+            o_outputData <= '0;
+        else
+            o_outputData <= s_filterOut[12:7]; // division par 128
+    end
+
+endmodule
+
+/*module FIR_filter (
+    input  logic              i_clk,
+    input  logic              i_rst_n,
+    input  logic              i_adc_eoc,
+    input  logic signed [7:0] i_inputData,
+    output logic signed [7:0] o_outputData
+);
+
+    localparam logic signed [7:0] C0 = 8'shF2; // -14
+    localparam logic signed [7:0] C1 = 8'sh0C; //  12
+    localparam logic signed [7:0] C2 = 8'sh3E; //  62
+
+    logic signed [7:0] s_delay_buffer [0:4];
+
+    logic signed [8:0]  s_sum0;
+    logic signed [8:0]  s_sum1;
+
+    logic signed [16:0] s_prod0;
+    logic signed [16:0] s_prod1;
+    logic signed [16:0] s_prod2;
+
+    logic signed [18:0] s_filterOut;
+
+    // Delay line
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n) begin
+            s_delay_buffer[0] <= '0;
+            s_delay_buffer[1] <= '0;
+            s_delay_buffer[2] <= '0;
+            s_delay_buffer[3] <= '0;
+            s_delay_buffer[4] <= '0;
+        end else begin
+            s_delay_buffer[0] <= i_inputData;
+            s_delay_buffer[1] <= s_delay_buffer[0];
+            s_delay_buffer[2] <= s_delay_buffer[1];
+            s_delay_buffer[3] <= s_delay_buffer[2];
+            s_delay_buffer[4] <= s_delay_buffer[3];
+        end
+    end
+
+    // Widened symmetric sums
+    always_comb begin
+        s_sum0 = $signed({s_delay_buffer[0][7], s_delay_buffer[0]})
+               + $signed({s_delay_buffer[4][7], s_delay_buffer[4]});
+
+        s_sum1 = $signed({s_delay_buffer[1][7], s_delay_buffer[1]})
+               + $signed({s_delay_buffer[3][7], s_delay_buffer[3]});
+    end
+
+    // Products
+    always_comb begin
+        s_prod0 = C0 * s_sum0;
+        s_prod1 = C1 * s_sum1;
+        s_prod2 = C2 * s_delay_buffer[2];
+    end
+
+    // Final sum
+    always_comb begin
+        s_filterOut = s_prod0 + s_prod1 + s_prod2;
+    end
+
+    // Output scaling
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+        if (!i_rst_n)
+            o_outputData <= '0;
+        else
+            o_outputData <= s_filterOut[13:6];   // meilleur choix que [18:11]
+    end
+
+endmodule
+*/
+
+/*module FIR_filter (
+    input  logic              i_clk,
+    input  logic              i_rst_n,
     input  logic              i_adc_eoc,
     input  logic signed [7:0] i_inputData,
     output logic signed [7:0] o_outputData
@@ -164,7 +307,7 @@ module FIR_filter (
         if (!i_rst_n)
             o_outputData <= '0;
         else if (i_adc_eoc)
-            o_outputData <= s_filterOut_ff[15:8];
+            o_outputData <= s_filterOut_ff[18:13];
     end
 
-endmodule
+endmodule */

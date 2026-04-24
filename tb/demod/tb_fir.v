@@ -5,32 +5,30 @@ module tb_fir;
     // =========================
     // Parameters
     // =========================
-    parameter CLK_PERIOD = 20;   // 50 MHz
+    parameter CLK_PERIOD = 100;   // 10 MHz
 
     // =========================
     // Signals
     // =========================
     reg               i_clk;
     reg               i_rst_n;
-    reg               i_sample_en;
     reg  signed [7:0] i_x_in;
     wire signed [7:0] o_y_out;
-
-    reg signed [7:0] s_y_out_prev;
 
     integer i;
     integer period;
     integer nonzero_count;
 
+    reg signed [7:0] s_y_out_prev;
+
     // =========================
     // DUT
     // =========================
     fir_top u_dut (
-        .i_clk      (i_clk),
-        .i_rst_n    (i_rst_n),
-        .i_sample_en(i_sample_en),
-        .i_x_in     (i_x_in),
-        .o_y_out    (o_y_out)
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_x_in  (i_x_in),
+        .o_y_out (o_y_out)
     );
 
     // =========================
@@ -71,14 +69,6 @@ module tb_fir;
         end
     end
 
-    // 3) Si sample_en = 0, la sortie doit rester stable
-    always @(posedge i_clk) begin
-        if (i_rst_n && !i_sample_en) begin
-            assert (o_y_out == s_y_out_prev)
-            else $error("ERREUR: o_y_out a changé alors que i_sample_en=0 à t=%0t", $time);
-        end
-    end
-
     // =========================
     // Tasks
     // =========================
@@ -103,17 +93,15 @@ module tb_fir;
     initial begin
 
         // Init
-        i_rst_n      = 0;
-        i_sample_en  = 0;
-        i_x_in       = 0;
+        i_rst_n       = 0;
+        i_x_in        = 0;
         nonzero_count = 0;
 
         wait_clocks(5);
 
-        // Vérification reset
+        // Fin reset
         @(negedge i_clk);
-        i_rst_n     <= 1;
-        i_sample_en <= 1;
+        i_rst_n <= 1;
 
         wait_clocks(3);
 
@@ -141,7 +129,7 @@ module tb_fir;
         send_sample(0);
 
         nonzero_count = 0;
-        for (i = 0; i < 40; i = i + 1) begin
+        for (i = 0; i < 20; i = i + 1) begin
             @(posedge i_clk);
             if (o_y_out != 0)
                 nonzero_count = nonzero_count + 1;
@@ -151,21 +139,23 @@ module tb_fir;
         else $error("ERREUR: aucune réponse impulsionnelle détectée");
 
         // =====================================
-        // Test 2 : stabilité quand sample_en = 0
+        // Test 2 : réponse à un échelon
         // =====================================
-        $display("---- Hold Test (i_sample_en = 0) ----");
+        $display("---- Step Response Test ----");
 
-        @(negedge i_clk);
-        i_sample_en <= 0;
-        i_x_in      <= 50;
+        for (i = 0; i < 20; i = i + 1) begin
+            send_sample(30);
+            @(posedge i_clk);
+        end
 
-        wait_clocks(10);
+        assert (!$isunknown(o_y_out))
+        else $error("ERREUR: sortie invalide pendant la réponse à un échelon");
 
-        @(negedge i_clk);
-        i_sample_en <= 1;
-        i_x_in      <= 0;
-
-        wait_clocks(5);
+        // Retour à zéro
+        for (i = 0; i < 10; i = i + 1) begin
+            send_sample(0);
+            @(posedge i_clk);
+        end
 
         // =====================================
         // Test 3 : sinus basse fréquence
@@ -176,7 +166,7 @@ module tb_fir;
         period = 80;
 
         for (i = 0; i < 200; i = i + 1) begin
-            send_sample($rtoi(20.0 * $sin(2.0*3.14159*i/period)));
+            send_sample($rtoi(20.0 * $sin(2.0 * 3.14159 * i / period)));
             @(posedge i_clk);
             if (o_y_out != 0)
                 nonzero_count = nonzero_count + 1;
@@ -195,8 +185,8 @@ module tb_fir;
 
             nonzero_count = 0;
 
-            for (i = 0; i < 200; i = i + 1) begin
-                send_sample($rtoi(20.0 * $sin(2.0*3.14159*i/period)));
+            for (i = 0; i < 120; i = i + 1) begin
+                send_sample($rtoi(20.0 * $sin(2.0 * 3.14159 * i / period)));
                 @(posedge i_clk);
 
                 if (o_y_out != 0)

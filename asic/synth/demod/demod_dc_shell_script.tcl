@@ -14,8 +14,8 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/demod/top_level_all.sv \
 }
 
-elaborate receiver_system -library WORK
-current_design receiver_system
+elaborate demod_system_complete -library WORK
+current_design demod_system_complete
 link
 
 # --- 3. Contraintes ---
@@ -24,7 +24,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design receiver_system
+current_design demod_system_complete
 ungroup -all -flatten
 compile_ultra -gate_clock
 #compile_ultra -gate_clock
@@ -47,3 +47,5 @@ write -format verilog -hierarchy -output netlist/demod_synth.v
 
 # Write the SDF timing file
 write_sdf netlist/demod_synth.sdf
+
+exit

@@ -4,7 +4,6 @@
 module wave_generator #(parameter bit phase = 0) (
     input  logic              i_clk,
     input  logic              i_rst_n,
-    input  logic              i_adc_eoc,   // pulse  Fs = 10 MHz
     output logic signed [3:0] o_data_out
 );
 
@@ -20,7 +19,7 @@ module wave_generator #(parameter bit phase = 0) (
             o_data_out     <= 4'sd0;
             s_prev_counter <= 2'd0;
         end
-        else if (i_adc_eoc) begin
+        else begin
             o_data_out     <= s_wave;
             s_prev_counter <= s_next_counter;
         end
