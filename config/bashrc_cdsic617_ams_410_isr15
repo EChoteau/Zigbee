@@ -1,0 +1,93 @@
+#!/bin/bash
+
+#
+# CADENCE CDS IC 6.1.7 823  / IUS version 15.20.035
+#
+
+unset CDS_INST_DIR
+
+
+export CDS_INST_DIR=/softslin/cdsic617_823
+export CDSDIR=${CDS_INST_DIR}
+
+
+export LDVDIR=/softslin/cdsincisiv15_20_035
+export IUSDIR=${LDVDIR}
+
+export QRC_HOME=/softslin/cdsext18_21_000
+
+export ASSURAHOME=/softl1/cdsassura4_1_617
+
+export INNOVUS=/softslin/cdsinnovus19_18_000_isr8
+export PVS_INST_DIR=/softslin/cdspvs16_13_000
+export PVSHOME=${PVS_INST_DIR}
+
+export MMSIMHOME=/softslin/cdsspectre19_10_454
+export SPECTRE_ROOT=${MMSIMHOME}
+export CDS_AUTO_64BIT=ALL
+
+export LANG=C
+export LC_COLLATE=C
+export LC_CTYPE=C
+export LC_MESSAGES=C
+export LC_MONETARY=C
+export LC_NUMERIC=C
+export LC_TIME=C
+
+
+export PATH="$LDVDIR/tools/bin:$MMSIMHOME/tools/bin:${CDSDIR}/tools/dfII/bin:${CDSDIR}/tools/bin:$INNOVUS/bin:$INNOVUS/tools/bin:$QRC_HOME/bin:$ASSURAHOME/tools/bin:$ASSURAHOME/tools/assura/bin:${PATH}"
+
+
+export LM_LICENSE_FILE=5287@cimeldap:5280@cimekey1
+export CDS_LIC_FILE="${LM_LICENSE_FILE}"
+
+##########################################################
+# Synopsys Hspice path.
+##########################################################
+export HSP_HOME=/softslin/hspicevK2015_06_sp2_2/hspice
+export PATH="${PATH}:${HSP_HOME}/bin"
+##########################################################
+# Synopsys Design Compiler path.
+##########################################################
+export SYNOPSYS=/softslin/synthesisvJ2014_09_sp2_64b
+export PATH="${PATH}:${SYNOPSYS}/bin"
+##########################################################
+# Synopsys License.
+##########################################################
+export LM_LICENSE_FILE=${LM_LICENSE_FILE}:1721@cimekey1
+
+
+######## Environnement pour Calibre ############
+export MGC_HOME=/softslin/calibre2015_1_38_27/ixl_cal_2015.1_38.27
+export PATH="${PATH}:${MGC_HOME}/bin"
+
+export LM_LICENSE_FILE=${LM_LICENSE_FILE}:1718@cimekey1
+export USE_CALIBRE_VCO=ixl
+###### End Environnement pour Calibre ###########
+
+#
+# AMS 4.10 isr15 environment for CADENCE 6.1.6
+#
+
+export AMS_DIR=/softslin/AMS_410_ISR15
+
+export PATH="${PATH}:${AMS_DIR}/programs/bin:${AMS_DIR}/cds/bin"
+
+
+export  DD_DONT_DO_OS_LOCKS=set
+
+#  (0.35 um 4LM) 0,35 cmos
+alias amsc35b4='ams_cds -tech c35b4 -mode fb & '
+
+#  (0.35 um 3LM) 0,35 cmos
+alias amsc35b3='ams_cds -tech c35b3 -mode fb & '
+
+#  (0.35 um BiCMOS 4LM) 0,35 SiGe
+alias amss35d4='ams_cds -tech s35d4 -mode fb & '
+
+#  (0.35 um 4LM) 0,35 cmos
+alias c35b4m3='ams_cds -tech s35d4 -mode fb &'
+
+alias rmtran='find . -name "tran.tran" -exec /bin/rm {} \; '
+alias rmlck='find . -name "*lck*" -exec /bin/rm {} \; '
+

@@ -10,14 +10,11 @@ fi
 
 MODULE="${1:-top}"
 
-source config/config_ASIC
+source config/.bashrc_cdsic617_ams_410_isr15
 
-cd asic/pnr/output_data/$MODULE
+cd asic/pnr/work_virtuoso
 
 # Launch Virtuoso with mask verification script
 export MODULE_NAME=$MODULE
-virtuoso -batch -nowin -execute "source ../../../scripts/mask_verification.il" &
-
-sleep 2
-echo "Virtuoso is running mask verification for module: $MODULE"
-echo "Check output_data/$MODULE/verification/ for DRC and LVS reports"
+amsc35b4
+#virtuoso -batch -nowin -execute "source ../scripts/mask_verification.il" &

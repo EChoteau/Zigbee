@@ -12,6 +12,6 @@ MODULE="${1:-top}"
 
 source config/config_ASIC
 
-cd asic/pnr/work
+cd asic/pnr/work_virtuoso
 
 innovus -batch -execute "set module_name $MODULE" -files ../scripts/flow.tcl
