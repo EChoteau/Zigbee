@@ -330,6 +330,7 @@ module interface_test_wrapper #(
             end
 
             default: begin
+                i_cfg_local = CFG_CLASSIC;
                 o_test_out = '0;
             end
         endcase
