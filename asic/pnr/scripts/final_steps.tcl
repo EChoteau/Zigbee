@@ -11,14 +11,11 @@ file mkdir $output_root
 file mkdir $reports_dir
 file mkdir $fab_dir
 
-puts "=== Verification: Geometry ==="
 verifyGeometry
 
-puts "=== Verification: Connectivity ==="
 verifyConnectivity
 
-puts "=== Verification: DRC ==="
-verifyDRC
+verify_drc
 
 puts "=== Extract RC parasitics ==="
 extractRC
