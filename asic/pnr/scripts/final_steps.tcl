@@ -12,7 +12,7 @@ file mkdir $reports_dir
 file mkdir $fab_dir
 
 puts "=== Verification: Geometry ==="
-verifyGeometry -offRoutingGrid false -offManufacturingGrid true
+verifyGeometry
 
 puts "=== Verification: Connectivity ==="
 verifyConnectivity
