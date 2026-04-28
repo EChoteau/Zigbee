@@ -16,5 +16,5 @@ source ../../../config/bashrc_cdsic617_ams_410_isr15
 
 # Launch Virtuoso with mask verification script
 export MODULE_NAME=$MODULE
-amsc35b4
+ams_cds -tech c35b4 -mode fb &
 #virtuoso -batch -nowin -execute "source ../scripts/mask_verification.il" &
