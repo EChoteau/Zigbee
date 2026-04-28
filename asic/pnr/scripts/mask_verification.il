@@ -9,66 +9,13 @@ let((outputRoot moduleName reportDir)
   moduleName = getShellEnvVar("MODULE_NAME") || "top"
   outputRoot = sprintf("../output_data/%s" moduleName)
   reportDir = sprintf("%s/verification" outputRoot)
+  libName = sprintf("%s_lib" moduleName)
   
   ; Create output directory
   system(sprintf("mkdir -p %s" reportDir))
   
-  printf("=== Opening GDSII file for mask verification ===\n")
-  
-  ; Open the GDSII file
-  dbOpenCellViewByType(
-    sprintf("%s/%s" outputRoot moduleName) 
-    "layout" 
-    "maskLayoutOut"
-    "gds"
-    "r"
-  )
-  
-  ; Get the active cell view
-  let((cv))
-    cv = geGetEditCellView()
-    
-    if(cv then
-      (
-        printf("=== Running DRC (Design Rule Check) ===\n")
-        
-        ; Run DRC verification
-        drcRunCheck(
-          cv
-          list(
-            list("drcWindow" nil)
-            list("resultsWindow" nil)
-          )
-        )
-        
-        printf("=== Running LVS (Layout vs Schematic) ===\n")
-        
-        ; Run LVS verification
-        lvsRun(
-          cv
-          list(
-            list("lvsMaskDBFileView" "layout")
-          )
-        )
-        
-        printf("=== Generating DRC Report ===\n")
-        drcGenerateReport(
-          cv
-          sprintf("%s/%s_drc.rpt" reportDir moduleName)
-        )
-        
-        printf("=== Generating LVS Report ===\n")
-        lvsGenerateReport(
-          cv
-          sprintf("%s/%s_lvs.rpt" reportDir moduleName)
-        )
-        
-        printf("=== Mask verification completed ===\n")
-        printf("Reports saved to: %s\n" reportDir)
-      )
-      (
-        printf("ERROR: Could not open cell view for verification\n")
-      )
-    )
-  )
+  DEFINE SFCLIB_C35B4C0 $AMS_DIR/cds/HK_C35/SFCLIB_C35B4C0
+  defin -def \"/tp/xph2app/xph2app110/Zigbee/asic/pnr/output_data/cordic_system/fab/cordic_system.def\" -lib libName -libPath /tp/xph2app/xph2app110/Zigbee/asic/pnr/work_virtuoso/libName -tech TECH_C35B4
+
+
 )
