@@ -1,5 +1,3 @@
-
-
 module bascule(i_ck, i_en, i_rst, i_D, o_Q);
     input wire i_ck, i_en, i_rst, i_D;
     output wire o_Q;
@@ -16,10 +14,10 @@ module bascule(i_ck, i_en, i_rst, i_D, o_Q);
 
     `ifdef non_behaviour_model
         // FF1 : mémorise i_en
-        bascule_temp ff1 (.ck(i_ck), .clear(i_rst), .D(i_en),   .Q(s_en_d));
+        DFC1 u_ff1 (.C(i_ck), .RN(i_rst), .D(i_en),   .Q(s_en_d));
 
         // FF2 : capture i_D quand enable, maintien sinon
-        bascule_temp ff2 (.ck(i_ck), .clear(i_rst), .D(s_D_mux), .Q(o_Q));
+        DFC1 u_ff2 (.C(i_ck), .RN(i_rst), .D(s_D_mux), .Q(o_Q));
     `else
         // modèle comportemental équivalent
         reg s_en_d_r, o_Q_r;

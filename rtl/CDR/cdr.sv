@@ -25,7 +25,7 @@ module CDR
     else if (s_recovered_clk)
         s_decision_out <= s_decision_sig;
     end
-    decision_block#(.resolution_in(phase_resolution)) u_dec (.i_dphi_in(i_dphi),.o_decision_out(s_decision_sig));
+    decision_block#(.resolution_in(phase_resolution)) u_dec (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_dphi_in(i_dphi),.o_decision_out(s_decision_sig));
 
    phase_detector u_pd(.i_clk(i_clk),.i_sample_clk(s_recovered_clk),.i_rst_n(i_rst_n),.i_decision_in(s_decision_sig),.o_up(s_up),.o_down(s_down));
     loop_filter #(.WIDTH(ctrl_width)) u_lf (.i_clk(i_clk),.i_rst_n(i_rst_n),.i_up(s_up),.i_down(s_down),.o_ctrl(s_control),.i_ctrl_ack(s_ack));
