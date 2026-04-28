@@ -25,20 +25,21 @@ module interface_test_wrapper #(
     localparam logic [2:0] CFG_LOOPBACK  = 3'b011;  // Serializer output looped to deserializer input
     localparam logic [2:0] CFG_FIFO_TX   = 3'b100;  // Direct TX FIFO control
     localparam logic [2:0] CFG_FIFO_RX   = 3'b101;  // Direct RX FIFO control
-    localparam logic [2:0] CFG_SERDES    = 3'b110;  // Serializer/deserializer chain + FIFO observability
+    localparam logic [2:0] CFG_SERDES    = 3'b110;  // Serializer/deserializer chain testing
     localparam logic [2:0] CFG_BAUD      = 3'b111;  // Baud rate generator control
 
     // ==========================================================================
-    // APB CONTROL SIGNALS (from wrapper to interface_top)
+    // SHARED CONTROL SIGNALS (used across all configs)
     // ==========================================================================
     logic                       s_if_psel;
     logic                       s_if_penable;
     logic                       s_if_pwrite;
     logic [APB_ADDR_WIDTH-1:0]  s_if_paddr;
     logic [APB_DATA_WIDTH-1:0]  s_if_pwdata;
-    // ==========================================================================
-    // SERIAL/CDR SIGNALS (interconnect between CDR and deserializer)
-    // ==========================================================================
+    logic [APB_DATA_WIDTH-1:0]  s_if_prdata;
+    logic                       s_if_pready;
+    logic                       s_if_pslverr;
+    
     logic                       s_if_serial_rx;
     logic                       s_if_cdr_sample_valid;
     logic                       s_if_serial_tx;
@@ -46,112 +47,73 @@ module interface_test_wrapper #(
     logic                       s_if_tx_sample_tick;
 
     // ==========================================================================
-    // SERIALIZER OVERRIDE & OBSERVABILITY SIGNALS
+    // CFG_TX_ONLY, CFG_RX_ONLY, CFG_LOOPBACK, CFG_FIFO_TX, CFG_FIFO_RX
+    // Debug outputs: TX & RX FIFO observability + Control status
+    // ==========================================================================
+    logic [DATA_WIDTH-1:0]      s_dbg_tx_fifo_q;
+    logic                       s_dbg_tx_fifo_push;
+    logic                       s_dbg_tx_fifo_pop;
+    logic                       s_dbg_tx_fifo_full;
+    logic                       s_dbg_tx_fifo_empty;
+    logic                       s_dbg_tx_fifo_rd_valid;
+
+    logic [DATA_WIDTH-1:0]      s_dbg_rx_fifo_q;
+    logic                       s_dbg_rx_fifo_push;
+    logic                       s_dbg_rx_fifo_pop;
+    logic                       s_dbg_rx_fifo_full;
+    logic                       s_dbg_rx_fifo_empty;
+    logic                       s_dbg_rx_ovf_pulse;
+
+    logic                       s_dbg_tx_tick;
+    logic                       s_dbg_tx_path_en;
+    logic                       s_dbg_global_en;
+    logic                       s_dbg_tx_und_err;
+    logic                       s_dbg_rx_ovf_err;
+
+    // ==========================================================================
+    // CFG_SERDES: Serializer/Deserializer chain testing
+    // Override controls + chain outputs
     // ==========================================================================
     logic                       s_if_ser_override_en;
     logic [DATA_WIDTH-1:0]      s_if_ser_tx_data;
     logic                       s_if_ser_tx_data_valid;
     logic                       s_if_ser_tx_fifo_empty;
     logic                       s_if_ser_baud_tick;
-    // Observability: serializer inputs and outputs
-    logic [DATA_WIDTH-1:0]      s_dbg_ser_i_tx_data;
-    logic                       s_dbg_ser_i_tx_data_valid;
-    logic                       s_dbg_ser_i_tx_fifo_empty;
-    logic                       s_dbg_ser_i_baud_tick;
-    logic                       s_dbg_ser_i_path_en;
-    logic                       s_dbg_ser_o_tx_fifo_pop;
     logic                       s_dbg_ser_o_tx_busy;
-    logic                       s_dbg_ser_o_serial_data;
-    logic                       s_dbg_ser_o_tx_sample_tick;
+
+    logic [DATA_WIDTH-1:0]      s_dbg_des_o_para_data;
+    logic                       s_dbg_des_o_push;
+    logic                       s_dbg_des_o_ovf_pulse;
 
     // ==========================================================================
-    // TX & RX FIFO OBSERVABILITY SIGNALS
+    // CFG_BAUD: Baud rate generator control
+    // Override enable + divisor value
     // ==========================================================================
-    logic [DATA_WIDTH-1:0]      s_dbg_tx_fifo_data;
-    logic                       s_dbg_tx_fifo_push;
-    logic                       s_dbg_tx_fifo_full;
-    logic                       s_dbg_tx_fifo_pop;
-    logic [DATA_WIDTH-1:0]      s_dbg_tx_fifo_q;
-    logic                       s_dbg_tx_fifo_rd_valid;
-    logic                       s_dbg_tx_fifo_empty;
-
-    logic [DATA_WIDTH-1:0]      s_dbg_rx_fifo_data;
-    logic                       s_dbg_rx_fifo_push;
-    logic                       s_dbg_rx_fifo_full;
-    logic                       s_dbg_rx_fifo_pop;
-    logic [DATA_WIDTH-1:0]      s_dbg_rx_fifo_q;
-    logic                       s_dbg_rx_fifo_empty;
-    logic                       s_dbg_rx_ovf_pulse;
+    logic                       s_if_baud_override_en;
+    logic                       s_if_baud_enable;
+    logic [DIV_WIDTH-1:0]       s_if_baud_div_val;
 
     // ==========================================================================
-    // APB CONTROL & STATUS OBSERVABILITY SIGNALS
-    // ==========================================================================
-    logic                       s_dbg_tx_tick;
-    logic                       s_dbg_tx_path_en;
-    logic                       s_dbg_rx_path_en;
-    logic                       s_dbg_global_en;
-    logic                       s_dbg_tx_start;
-    logic                       s_dbg_rx_enable;
-    logic [DIV_WIDTH-1:0]       s_dbg_div_val;
-    logic                       s_dbg_tx_und_err;
-    logic                       s_dbg_rx_ovf_err;
-
-    // ==========================================================================
-    // DESERIALIZER OVERRIDE & OBSERVABILITY SIGNALS
+    // DESERIALIZER, FIFO_TX, FIFO_RX override inputs (tied to 0 in non-debug)
     // ==========================================================================
     logic                       s_if_des_override_en;
     logic                       s_if_des_serial_data;
     logic                       s_if_des_sample_valid;
     logic                       s_if_des_enable;
     logic                       s_if_des_fifo_full;
-    logic                       s_dbg_des_i_serial_data;
-    logic                       s_dbg_des_i_sample_valid;
-    logic                       s_dbg_des_i_enable;
-    logic                       s_dbg_des_i_fifo_full;
-    logic [DATA_WIDTH-1:0]      s_dbg_des_o_para_data;
-    logic                       s_dbg_des_o_push;
-    logic                       s_dbg_des_o_ovf_pulse;
-
-    // ==========================================================================
-    // FIFO TX OVERRIDE & OBSERVABILITY SIGNALS
-    // ==========================================================================
+    
     logic                       s_if_fifo_tx_override_en;
     logic                       s_if_fifo_tx_wr_en;
     logic [DATA_WIDTH-1:0]      s_if_fifo_tx_data;
     logic                       s_if_fifo_tx_rd_en;
-    logic                       s_dbg_fifo_tx_i_wr_en;
-    logic [DATA_WIDTH-1:0]      s_dbg_fifo_tx_i_data;
-    logic                       s_dbg_fifo_tx_i_rd_en;
-    logic                       s_dbg_fifo_tx_o_full;
-    logic [DATA_WIDTH-1:0]      s_dbg_fifo_tx_o_data;
-    logic                       s_dbg_fifo_tx_o_rd_valid;
-    logic                       s_dbg_fifo_tx_o_empty;
-
-    // ==========================================================================
-    // FIFO RX OVERRIDE & OBSERVABILITY SIGNALS
-    // ==========================================================================
+    
     logic                       s_if_fifo_rx_override_en;
     logic                       s_if_fifo_rx_wr_en;
     logic [DATA_WIDTH-1:0]      s_if_fifo_rx_data;
     logic                       s_if_fifo_rx_rd_en;
-    logic                       s_dbg_fifo_rx_i_wr_en;
-    logic [DATA_WIDTH-1:0]      s_dbg_fifo_rx_i_data;
-    logic                       s_dbg_fifo_rx_i_rd_en;
-    logic                       s_dbg_fifo_rx_o_full;
-    logic [DATA_WIDTH-1:0]      s_dbg_fifo_rx_o_data;
-    logic                       s_dbg_fifo_rx_o_empty;
-
-    // ==========================================================================
-    // BAUD RATE GENERATOR OVERRIDE & OBSERVABILITY SIGNALS
-    // ==========================================================================
-    logic                       s_if_baud_override_en;
-    logic                       s_if_baud_enable;
-    logic [DIV_WIDTH-1:0]       s_if_baud_div_val;
-    logic                       s_dbg_baud_i_enable;
-    logic [DIV_WIDTH-1:0]       s_dbg_baud_i_div_val;
-    logic                       s_dbg_baud_o_tick;
 
     always_comb begin
+        // Default: tie all controls to safe state
         s_if_psel             = 1'b0;
         s_if_penable          = 1'b0;
         s_if_pwrite           = 1'b0;
@@ -164,30 +126,30 @@ module interface_test_wrapper #(
         s_if_ser_tx_data_valid = 1'b0;
         s_if_ser_tx_fifo_empty = 1'b0;
         s_if_ser_baud_tick    = 1'b0;
-        
         s_if_des_override_en  = 1'b0;
         s_if_des_serial_data  = 1'b0;
         s_if_des_sample_valid = 1'b0;
         s_if_des_enable       = 1'b0;
         s_if_des_fifo_full    = 1'b0;
-        
         s_if_fifo_tx_override_en = 1'b0;
         s_if_fifo_tx_wr_en    = 1'b0;
         s_if_fifo_tx_data     = '0;
         s_if_fifo_tx_rd_en    = 1'b0;
-        
         s_if_fifo_rx_override_en = 1'b0;
         s_if_fifo_rx_wr_en    = 1'b0;
         s_if_fifo_rx_data     = '0;
         s_if_fifo_rx_rd_en    = 1'b0;
-        
         s_if_baud_override_en = 1'b0;
         s_if_baud_enable      = 1'b0;
         s_if_baud_div_val     = '0;
-
         o_test_out            = '0;
 
         unique case (i_cfg_local)
+            // ====================================================================
+            // CFG_CLASSIC (0x0): APB + serial loopback
+            // Test: APB register writes, serial TX via CDR, loopback to RX
+            // Outputs: APB readback data + serial signals
+            // ====================================================================
             CFG_CLASSIC: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -204,6 +166,12 @@ module interface_test_wrapper #(
                 o_test_out[11]        = 1'b0;
             end
 
+            // ====================================================================
+            // CFG_TX_ONLY (0x1): TX path testing
+            // Test: APB to TX FIFO to Serializer
+            // Inputs: APB controls + no CDR
+            // Outputs: Serial TX + FIFO status + timing
+            // ====================================================================
             CFG_TX_ONLY: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -225,6 +193,12 @@ module interface_test_wrapper #(
                 o_test_out[11]        = s_dbg_global_en;
             end
 
+            // ====================================================================
+            // CFG_RX_ONLY (0x2): RX path testing
+            // Test: CDR to Deserializer to RX FIFO to APB
+            // Inputs: CDR signals + APB controls
+            // Outputs: FIFO status
+            // ====================================================================
             CFG_RX_ONLY: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -241,6 +215,12 @@ module interface_test_wrapper #(
                 o_test_out[11]        = s_dbg_rx_fifo_empty;
             end
 
+            // ====================================================================
+            // CFG_LOOPBACK (0x3): Serial loopback testing
+            // Test: TX serial output looped back to RX deserializer
+            // Validates serializer -> CDR -> deserializer chain
+            // Outputs: APB readback + FIFO push signals
+            // ====================================================================
             CFG_LOOPBACK: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -248,7 +228,7 @@ module interface_test_wrapper #(
                 s_if_paddr[7:0]       = i_test_in[10:3];
                 s_if_pwdata[7:0]      = i_test_in[18:11];
                 s_if_cdr_sample_valid = i_test_in[20];
-                s_if_serial_rx        = s_if_serial_tx;
+                s_if_serial_rx        = s_if_serial_tx;  // Loopback
 
                 o_test_out[7:0]       = s_if_prdata[7:0];
                 o_test_out[8]         = s_if_serial_tx;
@@ -257,6 +237,12 @@ module interface_test_wrapper #(
                 o_test_out[11]        = s_dbg_rx_ovf_err;
             end
 
+            // ====================================================================
+            // CFG_FIFO_TX (0x4): TX FIFO direct control
+            // Test: Direct write to TX FIFO bypassing APB
+            // Inputs: FIFO write signals
+            // Outputs: FIFO status (full, empty, data)
+            // ====================================================================
             CFG_FIFO_TX: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -271,6 +257,12 @@ module interface_test_wrapper #(
                 o_test_out[11]        = s_dbg_tx_fifo_empty;
             end
 
+            // ====================================================================
+            // CFG_FIFO_RX (0x5): RX FIFO direct control
+            // Test: Direct read from RX FIFO bypassing APB
+            // Inputs: FIFO read signals + CDR
+            // Outputs: FIFO data & status
+            // ====================================================================
             CFG_FIFO_RX: begin
                 s_if_psel             = i_test_in[0];
                 s_if_penable          = i_test_in[1];
@@ -287,9 +279,14 @@ module interface_test_wrapper #(
                 o_test_out[11]        = s_dbg_rx_fifo_empty;
             end
 
+            // ====================================================================
+            // CFG_SERDES (0x6): Serializer/Deserializer chain testing
+            // Test: Direct control of serializer inputs + deserializer outputs
+            // No APB bus, pure serializer->deserializer chain
+            // Validates all serial protocol transitions
+            // ====================================================================
             CFG_SERDES: begin
-                // Test serializer and deserializer directly - no APB bus needed
-                // SERIALIZER INPUTS (control the serializer TX path)
+                // SERIALIZER INPUTS (override mode - direct injection)
                 s_if_ser_override_en  = 1'b1;
                 s_if_ser_tx_data      = i_test_in[7:0];
                 s_if_ser_tx_data_valid = i_test_in[8];
@@ -300,32 +297,36 @@ module interface_test_wrapper #(
                 s_if_serial_rx        = i_test_in[11];
                 s_if_cdr_sample_valid = i_test_in[12];
 
-                // SERIALIZER OUTPUTS (what serializer outputs)
-                o_test_out[0]         = s_dbg_ser_o_serial_data;      // TX serial bit
-                o_test_out[1]         = s_dbg_ser_o_tx_busy;          // Serializer busy
-                o_test_out[2]         = s_dbg_ser_o_tx_fifo_pop;      // FIFO read control
-                o_test_out[3]         = s_dbg_ser_o_tx_sample_tick;   // Sample timing
+                // SERIALIZER OUTPUTS (what serializer produces)
+                o_test_out[0]         = s_if_serial_tx;            // TX serial bit
+                o_test_out[1]         = s_dbg_ser_o_tx_busy;       // Serializer busy
+                o_test_out[2]         = s_dbg_tx_fifo_pop;         // FIFO read control
+                o_test_out[3]         = s_if_tx_sample_tick;       // Sample timing
 
-                // DESERIALIZER OUTPUTS (what deserializer outputs)
-                o_test_out[7:4]       = s_dbg_des_o_para_data[3:0];  // Parallel data (4 LSBs)
-                o_test_out[8]         = s_dbg_des_o_push;             // FIFO push valid
-                o_test_out[9]         = s_dbg_des_o_ovf_pulse;        // Overflow indicator
-                o_test_out[10]        = s_dbg_global_en;              // Global enable status
-                o_test_out[11]        = 1'b0;                         // Unused
+                // DESERIALIZER OUTPUTS (what deserializer produces)
+                o_test_out[7:4]       = s_dbg_des_o_para_data[3:0]; // Parallel data (4 LSBs)
+                o_test_out[8]         = s_dbg_des_o_push;          // FIFO push valid
+                o_test_out[9]         = s_dbg_des_o_ovf_pulse;     // Overflow indicator
+                o_test_out[10]        = s_dbg_global_en;           // Global enable status
+                o_test_out[11]        = 1'b0;                      // Unused
             end
 
+            // ====================================================================
+            // CFG_BAUD (0x7): Baud rate generator control
+            // Test: Divisor configuration and tick generation
+            // Inputs: Enable signal + divisor value
+            // Outputs: Generated tick + timing info
+            // ====================================================================
             CFG_BAUD: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
+                s_if_baud_override_en = 1'b1;
+                s_if_baud_enable      = i_test_in[0];
+                s_if_baud_div_val     = i_test_in[8:1];
 
                 o_test_out[0]         = s_dbg_tx_tick;
-                o_test_out[8:1]       = s_dbg_div_val[7:0];
-                o_test_out[9]         = s_if_tx_valid;
-                o_test_out[10]        = s_if_tx_sample_tick;
-                o_test_out[11]        = s_dbg_global_en;
+                o_test_out[1]         = s_if_tx_valid;
+                o_test_out[2]         = s_if_tx_sample_tick;
+                o_test_out[3]         = s_dbg_global_en;
+                o_test_out[11:4]      = 8'b0;  // Unused
             end
 
             default: begin
@@ -378,68 +379,31 @@ module interface_test_wrapper #(
         .o_tx_valid(s_if_tx_valid),
         .o_tx_sample_tick(s_if_tx_sample_tick),
 
-        .o_dbg_tx_fifo_data(s_dbg_tx_fifo_data),
-        .o_dbg_tx_fifo_push(s_dbg_tx_fifo_push),
-        .o_dbg_tx_fifo_full(s_dbg_tx_fifo_full),
-        .o_dbg_tx_fifo_pop(s_dbg_tx_fifo_pop),
         .o_dbg_tx_fifo_q(s_dbg_tx_fifo_q),
-        .o_dbg_tx_fifo_rd_valid(s_dbg_tx_fifo_rd_valid),
+        .o_dbg_tx_fifo_push(s_dbg_tx_fifo_push),
+        .o_dbg_tx_fifo_pop(s_dbg_tx_fifo_pop),
+        .o_dbg_tx_fifo_full(s_dbg_tx_fifo_full),
         .o_dbg_tx_fifo_empty(s_dbg_tx_fifo_empty),
+        .o_dbg_tx_fifo_rd_valid(s_dbg_tx_fifo_rd_valid),
 
-        .o_dbg_rx_fifo_data(s_dbg_rx_fifo_data),
-        .o_dbg_rx_fifo_push(s_dbg_rx_fifo_push),
-        .o_dbg_rx_fifo_full(s_dbg_rx_fifo_full),
-        .o_dbg_rx_fifo_pop(s_dbg_rx_fifo_pop),
         .o_dbg_rx_fifo_q(s_dbg_rx_fifo_q),
+        .o_dbg_rx_fifo_push(s_dbg_rx_fifo_push),
+        .o_dbg_rx_fifo_pop(s_dbg_rx_fifo_pop),
+        .o_dbg_rx_fifo_full(s_dbg_rx_fifo_full),
         .o_dbg_rx_fifo_empty(s_dbg_rx_fifo_empty),
         .o_dbg_rx_ovf_pulse(s_dbg_rx_ovf_pulse),
 
         .o_dbg_tx_tick(s_dbg_tx_tick),
         .o_dbg_tx_path_en(s_dbg_tx_path_en),
-        .o_dbg_rx_path_en(s_dbg_rx_path_en),
         .o_dbg_global_en(s_dbg_global_en),
-        .o_dbg_tx_start(s_dbg_tx_start),
-        .o_dbg_rx_enable(s_dbg_rx_enable),
-        .o_dbg_div_val(s_dbg_div_val),
         .o_dbg_tx_und_err(s_dbg_tx_und_err),
         .o_dbg_rx_ovf_err(s_dbg_rx_ovf_err),
 
-        .o_dbg_ser_i_tx_data(s_dbg_ser_i_tx_data),
-        .o_dbg_ser_i_tx_data_valid(s_dbg_ser_i_tx_data_valid),
-        .o_dbg_ser_i_tx_fifo_empty(s_dbg_ser_i_tx_fifo_empty),
-        .o_dbg_ser_i_baud_tick(s_dbg_ser_i_baud_tick),
-        .o_dbg_ser_i_path_en(s_dbg_ser_i_path_en),
-        .o_dbg_ser_o_tx_fifo_pop(s_dbg_ser_o_tx_fifo_pop),
         .o_dbg_ser_o_tx_busy(s_dbg_ser_o_tx_busy),
-        .o_dbg_ser_o_serial_data(s_dbg_ser_o_serial_data),
-        .o_dbg_ser_o_tx_sample_tick(s_dbg_ser_o_tx_sample_tick),
         
-        .o_dbg_des_i_serial_data(s_dbg_des_i_serial_data),
-        .o_dbg_des_i_sample_valid(s_dbg_des_i_sample_valid),
-        .o_dbg_des_i_enable(s_dbg_des_i_enable),
-        .o_dbg_des_i_fifo_full(s_dbg_des_i_fifo_full),
         .o_dbg_des_o_para_data(s_dbg_des_o_para_data),
         .o_dbg_des_o_push(s_dbg_des_o_push),
-        .o_dbg_des_o_ovf_pulse(s_dbg_des_o_ovf_pulse),
-        
-        .o_dbg_fifo_tx_i_wr_en(s_dbg_fifo_tx_i_wr_en),
-        .o_dbg_fifo_tx_i_data(s_dbg_fifo_tx_i_data),
-        .o_dbg_fifo_tx_i_rd_en(s_dbg_fifo_tx_i_rd_en),
-        .o_dbg_fifo_tx_o_full(s_dbg_fifo_tx_o_full),
-        .o_dbg_fifo_tx_o_data(s_dbg_fifo_tx_o_data),
-        .o_dbg_fifo_tx_o_rd_valid(s_dbg_fifo_tx_o_rd_valid),
-        .o_dbg_fifo_tx_o_empty(s_dbg_fifo_tx_o_empty),
-        
-        .o_dbg_fifo_rx_i_wr_en(s_dbg_fifo_rx_i_wr_en),
-        .o_dbg_fifo_rx_i_data(s_dbg_fifo_rx_i_data),
-        .o_dbg_fifo_rx_i_rd_en(s_dbg_fifo_rx_i_rd_en),
-        .o_dbg_fifo_rx_o_full(s_dbg_fifo_rx_o_full),
-        .o_dbg_fifo_rx_o_data(s_dbg_fifo_rx_o_data),
-        .o_dbg_fifo_rx_o_empty(s_dbg_fifo_rx_o_empty),
-        
-        .o_dbg_baud_i_enable(s_dbg_baud_i_enable),
-        .o_dbg_baud_i_div_val(s_dbg_baud_i_div_val),
-        .o_dbg_baud_o_tick(s_dbg_baud_o_tick)
+        .o_dbg_des_o_ovf_pulse(s_dbg_des_o_ovf_pulse)
     );
 
 endmodule
