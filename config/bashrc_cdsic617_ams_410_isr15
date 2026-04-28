@@ -91,3 +91,4 @@ alias c35b4m3='ams_cds -tech s35d4 -mode fb &'
 alias rmtran='find . -name "tran.tran" -exec /bin/rm {} \; '
 alias rmlck='find . -name "*lck*" -exec /bin/rm {} \; '
 
+printf "Environment for CADENCE CDS IC 6.1.7 823 / IUS version 15.20.035 with AMS 4.10 ISR15 loaded.\n"
