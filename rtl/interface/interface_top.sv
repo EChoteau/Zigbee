@@ -24,6 +24,27 @@ module interface_top #(
 	input  logic                       i_dbg_ser_tx_data_valid,
 	input  logic                       i_dbg_ser_tx_fifo_empty,
 	input  logic                       i_dbg_ser_baud_tick,
+	
+	input  logic                       i_dbg_des_override_en,
+	input  logic                       i_dbg_des_serial_data,
+	input  logic                       i_dbg_des_sample_valid,
+	input  logic                       i_dbg_des_enable,
+	input  logic                       i_dbg_des_fifo_full,
+	
+	input  logic                       i_dbg_fifo_tx_override_en,
+	input  logic                       i_dbg_fifo_tx_wr_en,
+	input  logic [DATA_WIDTH-1:0]      i_dbg_fifo_tx_data,
+	input  logic                       i_dbg_fifo_tx_rd_en,
+	
+	input  logic                       i_dbg_fifo_rx_override_en,
+	input  logic                       i_dbg_fifo_rx_wr_en,
+	input  logic [DATA_WIDTH-1:0]      i_dbg_fifo_rx_data,
+	input  logic                       i_dbg_fifo_rx_rd_en,
+	
+	input  logic                       i_dbg_baud_override_en,
+	input  logic                       i_dbg_baud_enable,
+	input  logic [DIV_WIDTH-1:0]       i_dbg_baud_div_val,
+	
 	output logic                       o_serial_tx,
 	output logic                       o_tx_valid,
 	output logic                       o_tx_sample_tick,
@@ -55,7 +76,7 @@ module interface_top #(
 	output logic                       o_dbg_tx_und_err,
 	output logic                       o_dbg_rx_ovf_err,
 
-	// Serializer chain visibility (for wrapper probing/patching)
+	// Serializer chain visibility
 	output logic [DATA_WIDTH-1:0]      o_dbg_ser_i_tx_data,
 	output logic                       o_dbg_ser_i_tx_data_valid,
 	output logic                       o_dbg_ser_i_tx_fifo_empty,
@@ -64,7 +85,38 @@ module interface_top #(
 	output logic                       o_dbg_ser_o_tx_fifo_pop,
 	output logic                       o_dbg_ser_o_tx_busy,
 	output logic                       o_dbg_ser_o_serial_data,
-	output logic                       o_dbg_ser_o_tx_sample_tick
+	output logic                       o_dbg_ser_o_tx_sample_tick,
+	
+	// Deserializer chain visibility
+	output logic                       o_dbg_des_i_serial_data,
+	output logic                       o_dbg_des_i_sample_valid,
+	output logic                       o_dbg_des_i_enable,
+	output logic                       o_dbg_des_i_fifo_full,
+	output logic [DATA_WIDTH-1:0]      o_dbg_des_o_para_data,
+	output logic                       o_dbg_des_o_push,
+	output logic                       o_dbg_des_o_ovf_pulse,
+	
+	// FIFO TX visibility
+	output logic                       o_dbg_fifo_tx_i_wr_en,
+	output logic [DATA_WIDTH-1:0]      o_dbg_fifo_tx_i_data,
+	output logic                       o_dbg_fifo_tx_i_rd_en,
+	output logic                       o_dbg_fifo_tx_o_full,
+	output logic [DATA_WIDTH-1:0]      o_dbg_fifo_tx_o_data,
+	output logic                       o_dbg_fifo_tx_o_rd_valid,
+	output logic                       o_dbg_fifo_tx_o_empty,
+	
+	// FIFO RX visibility
+	output logic                       o_dbg_fifo_rx_i_wr_en,
+	output logic [DATA_WIDTH-1:0]      o_dbg_fifo_rx_i_data,
+	output logic                       o_dbg_fifo_rx_i_rd_en,
+	output logic                       o_dbg_fifo_rx_o_full,
+	output logic [DATA_WIDTH-1:0]      o_dbg_fifo_rx_o_data,
+	output logic                       o_dbg_fifo_rx_o_empty,
+	
+	// Baud rate gen visibility
+	output logic                       o_dbg_baud_i_enable,
+	output logic [DIV_WIDTH-1:0]       o_dbg_baud_i_div_val,
+	output logic                       o_dbg_baud_o_tick
 );
 
 	logic [DATA_WIDTH-1:0] w_tx_fifo_data;
@@ -104,14 +156,76 @@ module interface_top #(
 	logic                  w_ser_tx_data_valid_in;
 	logic                  w_ser_tx_fifo_empty_in;
 	logic                  w_ser_baud_tick_in;
+	
+	// Deserializer mux inputs
+	logic                  w_des_serial_data_in;
+	logic                  w_des_sample_valid_in;
+	logic                  w_des_enable_in;
+	logic                  w_des_fifo_full_in;
+	
+	// FIFO TX mux inputs
+	logic                  w_fifo_tx_wr_en_in;
+	logic [DATA_WIDTH-1:0] w_fifo_tx_data_in;
+	logic                  w_fifo_tx_rd_en_in;
+	
+	// FIFO RX mux inputs
+	logic                  w_fifo_rx_wr_en_in;
+	logic [DATA_WIDTH-1:0] w_fifo_rx_data_in;
+	logic                  w_fifo_rx_rd_en_in;
+	
+	// Baud rate gen mux inputs
+	logic                  w_baud_enable_in;
+	logic [DIV_WIDTH-1:0]  w_baud_div_val_in;
 
 	assign w_tx_path_en = w_global_en & s_tx_run;
 	assign w_rx_path_en = w_global_en & w_rx_enable;
 	assign w_ser_tx_fifo_empty = w_tx_fifo_empty | ~w_tx_path_en;
+	
+	// ==========================================================================
+	// SERIALIZER OVERRIDE & MUX LOGIC
+	// ==========================================================================
+	// When i_dbg_ser_override_en=1: use test inputs
+	// When i_dbg_ser_override_en=0: use normal datapath (APB -> FIFO -> serializer)
 	assign w_ser_tx_data_in = i_dbg_ser_override_en ? i_dbg_ser_tx_data : w_tx_fifo_q;
 	assign w_ser_tx_data_valid_in = i_dbg_ser_override_en ? i_dbg_ser_tx_data_valid : w_tx_fifo_rd_valid;
 	assign w_ser_tx_fifo_empty_in = i_dbg_ser_override_en ? i_dbg_ser_tx_fifo_empty : w_ser_tx_fifo_empty;
 	assign w_ser_baud_tick_in = i_dbg_ser_override_en ? i_dbg_ser_baud_tick : w_tx_tick;
+	
+	// ==========================================================================
+	// DESERIALIZER OVERRIDE & MUX LOGIC
+	// ==========================================================================
+	// When i_dbg_des_override_en=1: use test inputs
+	// When i_dbg_des_override_en=0: use normal datapath (CDR -> deserializer -> FIFO)
+	assign w_des_serial_data_in = i_dbg_des_override_en ? i_dbg_des_serial_data : i_serial_rx;
+	assign w_des_sample_valid_in = i_dbg_des_override_en ? i_dbg_des_sample_valid : i_cdr_sample_valid;
+	assign w_des_enable_in = i_dbg_des_override_en ? i_dbg_des_enable : w_rx_path_en;
+	assign w_des_fifo_full_in = i_dbg_des_override_en ? i_dbg_des_fifo_full : w_rx_fifo_full;
+	
+	// ==========================================================================
+	// FIFO TX OVERRIDE & MUX LOGIC
+	// ==========================================================================
+	// When i_dbg_fifo_tx_override_en=1: use test write/read controls
+	// When i_dbg_fifo_tx_override_en=0: use normal APB <-> serializer datapath
+	assign w_fifo_tx_wr_en_in = i_dbg_fifo_tx_override_en ? i_dbg_fifo_tx_wr_en : w_tx_fifo_push;
+	assign w_fifo_tx_data_in = i_dbg_fifo_tx_override_en ? i_dbg_fifo_tx_data : w_tx_fifo_data;
+	assign w_fifo_tx_rd_en_in = i_dbg_fifo_tx_override_en ? i_dbg_fifo_tx_rd_en : w_tx_fifo_pop;
+	
+	// ==========================================================================
+	// FIFO RX OVERRIDE & MUX LOGIC
+	// ==========================================================================
+	// When i_dbg_fifo_rx_override_en=1: use test write/read controls
+	// When i_dbg_fifo_rx_override_en=0: use normal deserializer <-> APB datapath
+	assign w_fifo_rx_wr_en_in = i_dbg_fifo_rx_override_en ? i_dbg_fifo_rx_wr_en : w_rx_fifo_push;
+	assign w_fifo_rx_data_in = i_dbg_fifo_rx_override_en ? i_dbg_fifo_rx_data : w_rx_fifo_data;
+	assign w_fifo_rx_rd_en_in = i_dbg_fifo_rx_override_en ? i_dbg_fifo_rx_rd_en : w_rx_fifo_pop;
+	
+	// ==========================================================================
+	// BAUD RATE GENERATOR OVERRIDE & MUX LOGIC
+	// ==========================================================================
+	// When i_dbg_baud_override_en=1: use test enable and divisor values
+	// When i_dbg_baud_override_en=0: use normal APB-controlled configuration
+	assign w_baud_enable_in = i_dbg_baud_override_en ? i_dbg_baud_enable : (w_global_en & w_tx_busy);
+	assign w_baud_div_val_in = i_dbg_baud_override_en ? i_dbg_baud_div_val : w_div_val;
 
 	always_ff @(posedge i_clk or negedge i_rst_n) begin
 		if (!i_rst_n) begin
@@ -183,10 +297,10 @@ module interface_top #(
 	) u_fifo_tx (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n),
-		.i_wr_en(w_tx_fifo_push),
-		.i_data(w_tx_fifo_data),
+		.i_wr_en(w_fifo_tx_wr_en_in),
+		.i_data(w_fifo_tx_data_in),
 		.o_full(w_tx_fifo_full),
-		.i_rd_en(w_tx_fifo_pop),
+		.i_rd_en(w_fifo_tx_rd_en_in),
 		.o_data(w_tx_fifo_q),
 		.o_rd_valid(w_tx_fifo_rd_valid),
 		.o_empty(w_tx_fifo_empty)
@@ -198,10 +312,10 @@ module interface_top #(
 	) u_fifo_rx (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n),
-		.i_wr_en(w_rx_fifo_push),
-		.i_data(w_rx_fifo_data),
+		.i_wr_en(w_fifo_rx_wr_en_in),
+		.i_data(w_fifo_rx_data_in),
 		.o_full(w_rx_fifo_full),
-		.i_rd_en(w_rx_fifo_pop),
+		.i_rd_en(w_fifo_rx_rd_en_in),
 		.o_data(w_rx_fifo_q),
 		.o_rd_valid(),
 		.o_empty(w_rx_fifo_empty)
@@ -227,10 +341,10 @@ module interface_top #(
 	) u_deserializer (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n),
-		.i_serial_data(i_serial_rx),
-		.i_sample_valid(i_cdr_sample_valid),
-		.i_enable(w_rx_path_en),
-		.i_fifo_full(w_rx_fifo_full),
+		.i_serial_data(w_des_serial_data_in),
+		.i_sample_valid(w_des_sample_valid_in),
+		.i_enable(w_des_enable_in),
+		.i_fifo_full(w_des_fifo_full_in),
 		.o_para_data(w_rx_fifo_data),
 		.o_push(w_rx_fifo_push),
 		.o_ovf_pulse(w_rx_ovf_pulse)
@@ -241,13 +355,16 @@ module interface_top #(
 	) u_tx_baud_rate_gen (
 		.i_clk(i_clk),
 		.i_rst_n(i_rst_n),
-		.i_enable(w_global_en & w_tx_busy),
-		.i_div_val(w_div_val),
+		.i_enable(w_baud_enable_in),
+		.i_div_val(w_baud_div_val_in),
 		.o_tick(w_tx_tick)
 	);
 
 	assign o_tx_valid = w_tx_busy;
 
+	// ==========================================================================
+	// TX FIFO OBSERVABILITY OUTPUTS
+	// ==========================================================================
 	assign o_dbg_tx_fifo_data = w_tx_fifo_data;
 	assign o_dbg_tx_fifo_push = w_tx_fifo_push;
 	assign o_dbg_tx_fifo_full = w_tx_fifo_full;
@@ -256,6 +373,9 @@ module interface_top #(
 	assign o_dbg_tx_fifo_rd_valid = w_tx_fifo_rd_valid;
 	assign o_dbg_tx_fifo_empty = w_tx_fifo_empty;
 
+	// ==========================================================================
+	// RX FIFO OBSERVABILITY OUTPUTS
+	// ==========================================================================
 	assign o_dbg_rx_fifo_data = w_rx_fifo_data;
 	assign o_dbg_rx_fifo_push = w_rx_fifo_push;
 	assign o_dbg_rx_fifo_full = w_rx_fifo_full;
@@ -264,6 +384,9 @@ module interface_top #(
 	assign o_dbg_rx_fifo_empty = w_rx_fifo_empty;
 	assign o_dbg_rx_ovf_pulse = w_rx_ovf_pulse;
 
+	// ==========================================================================
+	// APB CONTROL & STATUS OBSERVABILITY OUTPUTS
+	// ==========================================================================
 	assign o_dbg_tx_tick = w_tx_tick;
 	assign o_dbg_tx_path_en = w_tx_path_en;
 	assign o_dbg_rx_path_en = w_rx_path_en;
@@ -274,14 +397,66 @@ module interface_top #(
 	assign o_dbg_tx_und_err = s_tx_und_err;
 	assign o_dbg_rx_ovf_err = s_rx_ovf_err;
 
+	// ==========================================================================
+	// SERIALIZER CHAIN OBSERVABILITY OUTPUTS
+	// ==========================================================================
+	// Inputs to serializer (after override mux)
 	assign o_dbg_ser_i_tx_data = w_ser_tx_data_in;
 	assign o_dbg_ser_i_tx_data_valid = w_ser_tx_data_valid_in;
 	assign o_dbg_ser_i_tx_fifo_empty = w_ser_tx_fifo_empty_in;
 	assign o_dbg_ser_i_baud_tick = w_ser_baud_tick_in;
 	assign o_dbg_ser_i_path_en = w_tx_path_en;
+	// Outputs from serializer
 	assign o_dbg_ser_o_tx_fifo_pop = w_tx_fifo_pop;
 	assign o_dbg_ser_o_tx_busy = w_tx_busy;
 	assign o_dbg_ser_o_serial_data = o_serial_tx;
 	assign o_dbg_ser_o_tx_sample_tick = o_tx_sample_tick;
+	
+	// ==========================================================================
+	// DESERIALIZER CHAIN OBSERVABILITY OUTPUTS
+	// ==========================================================================
+	// Inputs to deserializer (after override mux)
+	assign o_dbg_des_i_serial_data = w_des_serial_data_in;
+	assign o_dbg_des_i_sample_valid = w_des_sample_valid_in;
+	assign o_dbg_des_i_enable = w_des_enable_in;
+	assign o_dbg_des_i_fifo_full = w_des_fifo_full_in;
+	// Outputs from deserializer
+	assign o_dbg_des_o_para_data = w_rx_fifo_data;
+	assign o_dbg_des_o_push = w_rx_fifo_push;
+	assign o_dbg_des_o_ovf_pulse = w_rx_ovf_pulse;
+	
+	// ==========================================================================
+	// FIFO TX OBSERVABILITY OUTPUTS
+	// ==========================================================================
+	// Inputs to FIFO TX (after override mux)
+	assign o_dbg_fifo_tx_i_wr_en = w_fifo_tx_wr_en_in;
+	assign o_dbg_fifo_tx_i_data = w_fifo_tx_data_in;
+	assign o_dbg_fifo_tx_i_rd_en = w_fifo_tx_rd_en_in;
+	// Outputs from FIFO TX
+	assign o_dbg_fifo_tx_o_full = w_tx_fifo_full;
+	assign o_dbg_fifo_tx_o_data = w_tx_fifo_q;
+	assign o_dbg_fifo_tx_o_rd_valid = w_tx_fifo_rd_valid;
+	assign o_dbg_fifo_tx_o_empty = w_tx_fifo_empty;
+	
+	// ==========================================================================
+	// FIFO RX OBSERVABILITY OUTPUTS
+	// ==========================================================================
+	// Inputs to FIFO RX (after override mux)
+	assign o_dbg_fifo_rx_i_wr_en = w_fifo_rx_wr_en_in;
+	assign o_dbg_fifo_rx_i_data = w_fifo_rx_data_in;
+	assign o_dbg_fifo_rx_i_rd_en = w_fifo_rx_rd_en_in;
+	// Outputs from FIFO RX
+	assign o_dbg_fifo_rx_o_full = w_rx_fifo_full;
+	assign o_dbg_fifo_rx_o_data = w_rx_fifo_q;
+	assign o_dbg_fifo_rx_o_empty = w_rx_fifo_empty;
+	
+	// ==========================================================================
+	// BAUD RATE GENERATOR OBSERVABILITY OUTPUTS
+	// ==========================================================================
+	// Inputs to baud rate gen (after override mux)
+	assign o_dbg_baud_i_enable = w_baud_enable_in;
+	assign o_dbg_baud_i_div_val = w_baud_div_val_in;
+	// Output from baud rate gen
+	assign o_dbg_baud_o_tick = w_tx_tick;
 
 endmodule
