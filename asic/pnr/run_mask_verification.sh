@@ -10,7 +10,7 @@ fi
 
 MODULE="${1:-top}"
 
-source config/.bashrc_cdsic617_ams_410_isr15
+source config/bashrc_cdsic617_ams_410_isr15
 
 cd asic/pnr/work_virtuoso
 
