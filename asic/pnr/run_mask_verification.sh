@@ -10,9 +10,9 @@ fi
 
 MODULE="${1:-top}"
 
-source config/bashrc_cdsic617_ams_410_isr15
-
 cd asic/pnr/work_virtuoso
+
+source ../../../config/bashrc_cdsic617_ams_410_isr15
 
 # Launch Virtuoso with mask verification script
 export MODULE_NAME=$MODULE
