@@ -12,8 +12,8 @@ module nco #(
 );
 
 // Période ajustée : bornée entre 23 et 27
-reg [5:0] s_period;
-reg [5:0] s_cnt;
+reg [3:0] s_period;
+reg [3:0] s_cnt;
 
 // Calcul de la période avec saturation
 
