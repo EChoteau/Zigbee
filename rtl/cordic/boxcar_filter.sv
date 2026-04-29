@@ -1,6 +1,6 @@
 module boxcar_filter #(
     parameter int WIDTH = 16,
-    parameter int N     = 8,      // Filter length
+    parameter int N     = 8      // Filter length
 )(
     input  logic i_clk,
     input  logic i_rst_n,
