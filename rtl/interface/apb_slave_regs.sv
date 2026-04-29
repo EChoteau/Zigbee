@@ -6,7 +6,7 @@
 
 module apb_slave_regs #(
     parameter ADDR_WIDTH = 8,
-    parameter DATA_WIDTH = 32
+    parameter DATA_WIDTH = 8
 )(
     // --- 1. Horloge et Reset ---
     input  logic                    i_clk,

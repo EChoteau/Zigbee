@@ -72,9 +72,37 @@ module interface_top_tb;
         .o_pslverr(o_pslverr),
         .i_serial_rx(i_serial_rx),
         .i_cdr_sample_valid(i_cdr_sample_valid),
+        // Serializer override inputs (all tied to default - no test override)
+        .i_dbg_ser_override_en(1'b0),
+        .i_dbg_ser_tx_data('0),
+        .i_dbg_ser_tx_data_valid(1'b0),
+        .i_dbg_ser_tx_fifo_empty(1'b0),
+        .i_dbg_ser_baud_tick(1'b0),
+        // Deserializer override inputs (all tied to default)
+        .i_dbg_des_override_en(1'b0),
+        .i_dbg_des_serial_data(1'b0),
+        .i_dbg_des_sample_valid(1'b0),
+        .i_dbg_des_enable(1'b0),
+        .i_dbg_des_fifo_full(1'b0),
+        // FIFO TX override inputs (all tied to default)
+        .i_dbg_fifo_tx_override_en(1'b0),
+        .i_dbg_fifo_tx_wr_en(1'b0),
+        .i_dbg_fifo_tx_data('0),
+        .i_dbg_fifo_tx_rd_en(1'b0),
+        // FIFO RX override inputs (all tied to default)
+        .i_dbg_fifo_rx_override_en(1'b0),
+        .i_dbg_fifo_rx_wr_en(1'b0),
+        .i_dbg_fifo_rx_data('0),
+        .i_dbg_fifo_rx_rd_en(1'b0),
+        // Baud rate generator override inputs (all tied to default)
+        .i_dbg_baud_override_en(1'b0),
+        .i_dbg_baud_enable(1'b0),
+        .i_dbg_baud_div_val('0),
+        // Output ports - don't need to be connected for basic tests
         .o_serial_tx(o_serial_tx),
         .o_tx_valid(o_tx_valid),
         .o_tx_sample_tick(o_tx_sample_tick)
+        // Debug outputs omitted - can be added when needed for detailed observability
     );
 
     baud_rate_gen #(
