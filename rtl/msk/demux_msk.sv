@@ -7,7 +7,7 @@
 // ==============================================================================
 
 module demux_msk (
-    input  logic i_clk,         //  (50 MHz)
+    input  logic i_clk,         // 
     input  logic i_rst_n,       // Reset asynchrone ACTIF BAS
     input  logic i_flag_enable, // Autorisation d'aiguiller (rythme des bits)
     input  logic i_b_enc,       // Le bit qui sort de l'encodeur (b'k)

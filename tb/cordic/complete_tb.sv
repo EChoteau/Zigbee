@@ -4,7 +4,7 @@ module complete_tb();
     parameter WIDTH = 6;
     parameter FILTER_N = 5;
     parameter real PI = 3.14159265359;
-    parameter int OUT_WIDTH = WIDTH + $clog2(FILTER_N)+2;
+    parameter int OUT_WIDTH = WIDTH + 2; // matches cordic_system WIDTH_PHASE
 
     logic i_clk;
     logic i_rst_n;

@@ -4,7 +4,9 @@ module demod_system (
     input  logic [3:0]        i_i,
     input  logic [3:0]        i_q,
     output logic signed [5:0] o_i_bb,
-    output logic signed [5:0] o_q_bb
+    output logic signed [5:0] o_q_bb,
+    output logic signed [3:0] o_cos_test,
+    output logic signed [3:0] o_sin_test
 );
 
     logic signed [7:0] s_demod_out_i;
@@ -16,7 +18,10 @@ module demod_system (
         .i_I_in    (i_i),
         .i_Q_in    (i_q),
         .o_I_out   (s_demod_out_i),
-        .o_Q_out   (s_demod_out_q)
+        .o_Q_out   (s_demod_out_q),
+	.o_cos_test (o_cos_test),
+	.o_sin_test (o_sin_test)
+
     );
 
     fir_top u_fir_i (

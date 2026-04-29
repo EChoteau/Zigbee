@@ -64,7 +64,8 @@ module FIR_filter (
         if (!i_rst_n)
             o_outputData <= '0;
         else
-            o_outputData <= s_filterOut[12:7]; // division par 128
+            o_outputData <= $signed( (s_filterOut >>> 9) );
+//s_filterOut[12:7]; // division par 128
     end
 
 endmodule

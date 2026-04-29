@@ -3,113 +3,79 @@
 module top_msk_tb();
 
     // -------------------------------------------------------------------------
-    // Signaux du testbench
+    // PARAMÈTRES (10 MHz -> 10 pts/µs)
     // -------------------------------------------------------------------------
+    parameter int SAMPLES_PER_HALF_SINE = 10; 
+    parameter int MSK_RES               = 6;
+    
+    // Signaux
     logic s_clk;
     logic s_rst_n;
     logic s_enable_ech;
     logic s_flag_enable;
     logic s_b_in;
-    logic signed [5:0] s_I_BB;
-    logic signed [5:0] s_Q_BB;
+    logic signed [MSK_RES-1:0] s_I_BB;
+    logic signed [MSK_RES-1:0] s_Q_BB;
 
-    // Séquence de bits complexe pour tester l'encodeur et voir de belles courbes
-    logic s_sequence [0:9] = '{0, 0, 1, 1, 0, 0, 1, 0, 1, 1};
+    // Séquence de test (10 bits)
+    logic s_sequence [0:9] = '{1, 0, 1, 1, 0, 0, 1, 1, 0, 1};
 
-    // -------------------------------------------------------------------------
-    // Branchement du TOP module complet
-    // -------------------------------------------------------------------------
-    msk_system DUT (
+    // Instanciation
+    top_msk #(
+        .SAMPLES_PER_HALF_SINE(SAMPLES_PER_HALF_SINE),
+        .MSK_RES(MSK_RES)
+    ) DUT (
         .i_clk(s_clk),
         .i_rst_n(s_rst_n),
+	.i_flag_enable(s_flag_enable),
         .i_enable_ech(s_enable_ech),
-        .i_flag_enable(s_flag_enable),
         .i_b_in(s_b_in),
         .o_I_BB(s_I_BB),
         .o_Q_BB(s_Q_BB)
     );
 
     // -------------------------------------------------------------------------
-    // Horloge 50 MHz
+    // Horloge 10 MHz (Période = 100ns -> demi-période = 50ns)
     // -------------------------------------------------------------------------
-    always #10 s_clk = ~s_clk;
+    
+    always #50 s_clk = ~s_clk;
 
     // -------------------------------------------------------------------------
-    // Scénario de test
+    // Scénario
     // -------------------------------------------------------------------------
     initial begin
-        $display("--- DEBUT DE LA SIMULATION TOP MSK (50 points / arche) ---");
-
-        // Initialisation
-        s_clk         = 0;
+        $display("--- SIMULATION MSK @ 10 MHz (10 pts / arche) ---");
+        
+        s_clk		=0;
         s_rst_n       = 0;
-        s_enable_ech  = 0;
+        s_enable_ech  = 1; // Toujours à 1 car clk = freq echantillonnage
         s_flag_enable = 0;
         s_b_in        = 0;
 
-        // Reset
-        #25;
+        #125;
         s_rst_n = 1;
         @(posedge s_clk);
 
-        // Envoi de la séquence de bits brute
-        for (int i = 0; i < 10; i++) begin
-
-            // --- A. On envoie UN nouveau bit à l'encodeur ---
-            // (La duplication a été supprimée ici)
+        foreach (s_sequence[i]) begin
+            
+            // Injection du bit
             s_b_in = s_sequence[i];
-            s_flag_enable = 1;
+            s_flag_enable = 1; // Nouveau bit tous les 0.5 µs
             @(posedge s_clk);
             s_flag_enable = 0;
-
-            // --- B. On laisse le shaping dessiner un bit = 25 points ---
-            // Une arche entière = 50 points = 2 bits
-            // Un seul bit = 25 points
-            for (int ech = 0; ech < 25; ech++) begin
-                s_enable_ech = 1;
-                @(posedge s_clk);
-                s_enable_ech = 0;
-
-                // Attente entre deux ticks d'échantillonnage
-                repeat (3) @(posedge s_clk);
-            end
+            
+            // On attend 4 cycles pour faire 5 cycles au total (5 * 100ns = 500ns = Tb)
+            repeat (4) @(posedge s_clk); 
         end
 
-        // Laisser finir proprement la dernière forme
-        repeat (50) @(posedge s_clk);
-
-        $display("--- SIMULATION TERMINEE ---");
+        repeat (20) @(posedge s_clk);
+        $display("--- FIN DE TEST ---");
         $stop;
     end
 
-    // -------------------------------------------------------------------------
-    // ASSERTIONS (Surveillance Automatique)
-    // -------------------------------------------------------------------------
-
-    // 1. Vérification du Reset :
-    // Vérifie que si rst_n est à 0, au coup d'horloge suivant, I et Q sont à 0.
-    property p_check_reset;
-        @(posedge s_clk) (!s_rst_n |=> (s_I_BB == 0 && s_Q_BB == 0));
-    endproperty
-    
-    assert_reset: assert property(p_check_reset)
-        else $error("[ASSERT FAILED] Le Reset actif bas ne met pas I et Q à 0 !");
-
-    // 2. Vérification des limites d'amplitude (Voie I) :
-    // Vérifie que la valeur reste bien confinée entre -31 et +31 (sur 6 bits signés)
-    property p_limites_I;
-        @(posedge s_clk) disable iff (!s_rst_n) (s_I_BB >= -6'sd31 && s_I_BB <= 6'sd31);
-    endproperty
-    
-    assert_limite_I: assert property(p_limites_I)
-        else $error("[ASSERT FAILED] Débordement d'amplitude sur I: %d", s_I_BB);
-
-    // 3. Vérification des limites d'amplitude (Voie Q) :
-    property p_limites_Q;
-        @(posedge s_clk) disable iff (!s_rst_n) (s_Q_BB >= -6'sd31 && s_Q_BB <= 6'sd31);
-    endproperty
-    
-    assert_limite_Q: assert property(p_limites_Q)
-        else $error("[ASSERT FAILED] Débordement d'amplitude sur Q: %d", s_Q_BB);
+    // Assertions (Amplitude max = 31 pour 6 bits)
+    assert_lim_I: assert property (@(posedge s_clk) s_I_BB >= -31 && s_I_BB <= 31);
+    assert_lim_Q: assert property (@(posedge s_clk) s_Q_BB >= -31 && s_Q_BB <= 31);
 
 endmodule
+

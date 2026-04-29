@@ -1,5 +1,0 @@
-vlog ./../../../projet_Numerique/asic/synth/netlist/modulateur_synth_10Mhz.v
-
-vlog ./../tb/msk/top_msk_gl1_tb.sv
-
-vsim -voptargs="+acc" -L c35_CORELIB -sdftyp /top_msk_tb/DUT=./../../../projet_Numerique/asic/synth/netlist/modulateur_synth_10Mhz.sdf work.top_msk_tb

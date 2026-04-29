@@ -4,7 +4,11 @@ module IQ_DEMOD (
     input  logic [3:0]        i_I_in,
     input  logic [3:0]        i_Q_in,
     output logic signed [7:0] o_I_out,
-    output logic signed [7:0] o_Q_out
+    output logic signed [7:0] o_Q_out,
+    output logic signed [3:0] o_cos_test,
+    output logic signed [3:0] o_sin_test
+
+
 );
 
     logic signed [7:0] s_II, s_IQ, s_QI, s_QQ;
@@ -45,6 +49,11 @@ module IQ_DEMOD (
         .i_rst_n    (i_rst_n),
         .o_data_out (s_IF_Q)
     );
+    // =========================================
+    // Sorties de test
+    // =========================================
+    assign o_cos_test = s_IF_I;
+    assign o_sin_test = s_IF_Q;
 
     // =========================================
     // Calcul combinatoire
@@ -60,3 +69,4 @@ module IQ_DEMOD (
     end
 
 endmodule
+
