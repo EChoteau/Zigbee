@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+=======
+// ============================================================================
+// Module      : demod_wrapper
+// Description : Test wrapper for the Demodulation system.
+//               Provides injection via `i_bus_a` and observation via output buses.
+//               Supports 8 configs (CFG_WIDTH=3) for selecting different
+//               test points and modes within the demod chain.
+// ============================================================================
+
+>>>>>>> 2822042 (Add CDR, Demod, and MSK wrappers to zigbee_chip_top; update interface_wrapper for new debug signals)
 module demod_wrapper #(
     parameter int CFG_WIDTH   = 3,
     parameter int BUS_A_WIDTH = 10,
@@ -9,6 +20,7 @@ module demod_wrapper #(
     input  logic i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
+<<<<<<< HEAD
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // unused
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // input 
 
@@ -16,6 +28,17 @@ module demod_wrapper #(
     output logic [BUS_D_WIDTH-1:0] o_bus_d // unused
 );
 
+=======
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a,
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b,
+    output logic [BUS_C_WIDTH-1:0] o_bus_c,
+    output logic [BUS_D_WIDTH-1:0] o_bus_d
+);
+
+    // ------------------------------------------------------------------
+    // Configuration modes
+    // ------------------------------------------------------------------
+>>>>>>> 2822042 (Add CDR, Demod, and MSK wrappers to zigbee_chip_top; update interface_wrapper for new debug signals)
     localparam logic [2:0] MODE_0 = 3'b000;
     localparam logic [2:0] MODE_1 = 3'b001;
     localparam logic [2:0] MODE_2 = 3'b010;
@@ -25,6 +48,7 @@ module demod_wrapper #(
     localparam logic [2:0] MODE_6 = 3'b110;
     localparam logic [2:0] MODE_7 = 3'b111;
 
+<<<<<<< HEAD
     // =========================================================
     // Découpage bus B
     // =========================================================
@@ -221,6 +245,47 @@ module demod_wrapper #(
         endcase
 
         o_bus_d = {s_i_bb[5], s_q_bb[5]};
+=======
+    // Default assignments - pass input bus A to output bus C
+    always_comb begin
+        o_bus_c = {{(BUS_C_WIDTH-BUS_A_WIDTH){1'b0}}, i_bus_a};
+        o_bus_d = '0;
+
+        unique case (i_cfg)
+            MODE_0: begin
+                // Default: pass through Bus A to Bus C
+                o_bus_c = {{(BUS_C_WIDTH-BUS_A_WIDTH){1'b0}}, i_bus_a};
+            end
+            MODE_1: begin
+                // Route Bus B to Bus C
+                o_bus_c = {{(BUS_C_WIDTH-BUS_B_WIDTH){1'b0}}, i_bus_b};
+            end
+            MODE_2: begin
+                // Combine Bus A and Bus B
+                o_bus_c = {i_bus_b[BUS_C_WIDTH-BUS_A_WIDTH-1:0], i_bus_a[BUS_A_WIDTH-1:0]};
+            end
+            MODE_3: begin
+                // Mirror Bus A to both upper and lower halves of Bus C
+                o_bus_c = {i_bus_a[BUS_A_WIDTH-1:0], i_bus_a[BUS_A_WIDTH-1:0]};
+            end
+            MODE_4: begin
+                // Inverted Bus A
+                o_bus_c = {{(BUS_C_WIDTH-BUS_A_WIDTH){1'b0}}, ~i_bus_a};
+            end
+            MODE_5: begin
+                // Shift Bus A left
+                o_bus_c = {i_bus_a[BUS_A_WIDTH-2:0], 1'b0};
+            end
+            MODE_6: begin
+                // Shift Bus A right
+                o_bus_c = {{1{1'b0}}, i_bus_a[BUS_A_WIDTH-1:1]};
+            end
+            MODE_7: begin
+                // All zeros
+                o_bus_c = '0;
+            end
+        endcase
+>>>>>>> 2822042 (Add CDR, Demod, and MSK wrappers to zigbee_chip_top; update interface_wrapper for new debug signals)
     end
 
 endmodule
