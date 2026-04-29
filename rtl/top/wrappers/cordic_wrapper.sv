@@ -36,7 +36,7 @@ module cordic_wrapper #(
     logic signed [WIDTH_PHASE-1:0] w_phase_cordic;
     logic signed [WIDTH_PHASE-1:0] w_phase_deriv;
     logic signed [WIDTH_PHASE-1:0] w_phase_filter_in;
-    logic signed [OUT_WIDTH-1:0]   w_phase_filter_out;
+    logic signed [WIDTH_PHASE-1:0]   w_phase_filter_out;
     logic signed [WIDTH_IN-1:0]    w_cordic_i, w_cordic_q;
 
     // Muxed sources

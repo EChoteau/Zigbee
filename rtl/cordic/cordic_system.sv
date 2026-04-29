@@ -1,15 +1,14 @@
 module cordic_system #(
     parameter int WIDTH_IN = 6,
-    parameter FILTER_N = 5,
-    int WIDTH_PHASE = WIDTH_IN + 2,
-    parameter int OUT_WIDTH = WIDTH_PHASE + $clog2(FILTER_N)
+    parameter int FILTER_N = 5,
+    parameter int WIDTH_PHASE = WIDTH_IN + 2
     
 )(
     input  logic i_clk,
     input  logic i_rst_n,
     input  logic signed [WIDTH_IN-1:0] i_i,
     input  logic signed [WIDTH_IN-1:0] i_q,
-    output logic signed [OUT_WIDTH-1:0] o_phase
+    output logic signed [WIDTH_PHASE-1:0] o_phase
 );
 
     logic signed [WIDTH_PHASE-1:0] w_phase_cordic;

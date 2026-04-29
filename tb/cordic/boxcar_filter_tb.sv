@@ -5,7 +5,7 @@ module boxcar_filter_tb();
     logic i_clk = 0;
     logic i_rst_n = 0;
     logic signed [W-1:0] i_data;
-    logic signed [W+$clog2(N)-1:0] o_data;
+    logic signed [W-1:0] o_data;
     int failures = 0;
 
     boxcar_filter #(
@@ -20,7 +20,7 @@ module boxcar_filter_tb();
 
     task automatic check_output(
         input string tc_name,
-        input logic signed [W+$clog2(N)-1:0] expected
+        input logic signed [W-1:0] expected
     );
         assert (o_data === expected)
         else begin
