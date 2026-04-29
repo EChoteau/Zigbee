@@ -1,4 +1,4 @@
-module interface_test_wrapper #(
+module interface_wrapper #(
     parameter int APB_ADDR_WIDTH = 8,
     parameter int APB_DATA_WIDTH = 8,
     parameter int DATA_WIDTH     = 8,
