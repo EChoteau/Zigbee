@@ -81,7 +81,7 @@ module interface_wrapper #(
     logic                       s_if_ser_tx_data_valid;
     logic                       s_if_ser_tx_fifo_empty;
     logic                       s_if_ser_baud_tick;
-    logic                       s_dbg_ser_o_tx_busy;
+    logic                       s_tx_valid;
 
     logic [DATA_WIDTH-1:0]      s_dbg_des_o_para_data;
     logic                       s_dbg_des_o_push;
@@ -355,7 +355,7 @@ module interface_wrapper #(
                 o_bus_c[8]            = s_dbg_des_o_push;
                 o_bus_c[9]            = s_dbg_des_o_ovf_pulse;
                 o_bus_c[10]           = s_if_serial_tx;
-                o_bus_c[11]           = s_dbg_ser_o_tx_busy;
+                o_bus_c[11]           = s_tx_valid;
 
                 // Pack ser/des status to Bus D
                 o_bus_d[0]            = s_dbg_tx_fifo_pop;
@@ -427,7 +427,7 @@ module interface_wrapper #(
         .i_dbg_baud_enable(s_if_baud_enable),
         .i_dbg_baud_div_val(s_if_baud_div_val),
         .o_serial_tx(s_if_serial_tx),
-        .o_tx_valid(s_if_tx_valid),
+        .o_tx_valid(s_tx_valid),
         .o_tx_sample_tick(s_if_tx_sample_tick),
 
         .o_dbg_tx_fifo_q(s_dbg_tx_fifo_q),
@@ -447,8 +447,6 @@ module interface_wrapper #(
         .o_dbg_global_en(s_dbg_global_en),
         .o_dbg_tx_und_err(s_dbg_tx_und_err),
         .o_dbg_rx_ovf_err(s_dbg_rx_ovf_err),
-
-        .o_dbg_ser_o_tx_busy(s_dbg_ser_o_tx_busy),
         
         .o_dbg_des_o_para_data(s_dbg_des_o_para_data),
         .o_dbg_des_o_push(s_dbg_des_o_push),

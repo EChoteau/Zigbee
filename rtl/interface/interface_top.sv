@@ -68,9 +68,6 @@ module interface_top #(
 	output logic                       o_dbg_tx_und_err,
 	output logic                       o_dbg_rx_ovf_err,
 
-	// Serializer chain outputs only
-	output logic                       o_dbg_ser_o_tx_busy,
-	
 	// Deserializer chain outputs only
 	output logic [DATA_WIDTH-1:0]      o_dbg_des_o_para_data,
 	output logic                       o_dbg_des_o_push,
@@ -404,11 +401,6 @@ module interface_top #(
 	assign o_dbg_tx_und_err = s_tx_und_err;
 	assign o_dbg_rx_ovf_err = s_rx_ovf_err;
 
-	// ==========================================================================
-	// SERIALIZER CHAIN OBSERVABILITY OUTPUTS
-	// ==========================================================================
-	assign o_dbg_ser_o_tx_busy = w_tx_busy;
-	
 	// ==========================================================================
 	// DESERIALIZER CHAIN OBSERVABILITY OUTPUTS
 	// ==========================================================================
