@@ -10,7 +10,6 @@ module cordic_wrapper #(
     parameter int WIDTH_IN   = 6,
     parameter int FILTER_N   = 5,
     parameter int WIDTH_PHASE= WIDTH_IN + 2,
-    parameter int OUT_WIDTH  = WIDTH_PHASE + $clog2(FILTER_N),
     parameter int CFG_WIDTH  = 3,
     parameter int BUS_A_WIDTH = 12,
     parameter int BUS_B_WIDTH = 10,
@@ -36,7 +35,7 @@ module cordic_wrapper #(
     logic signed [WIDTH_PHASE-1:0] w_phase_cordic;
     logic signed [WIDTH_PHASE-1:0] w_phase_deriv;
     logic signed [WIDTH_PHASE-1:0] w_phase_filter_in;
-    logic signed [OUT_WIDTH-1:0]   w_phase_filter_out;
+    logic signed [WIDTH_PHASE-1:0]   w_phase_filter_out;
     logic signed [WIDTH_IN-1:0]    w_cordic_i, w_cordic_q;
 
     // Muxed sources
