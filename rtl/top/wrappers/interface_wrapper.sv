@@ -66,7 +66,6 @@ module interface_wrapper #(
     logic                       s_dbg_rx_fifo_pop;
     logic                       s_dbg_rx_fifo_full;
     logic                       s_dbg_rx_fifo_empty;
-    logic                       s_dbg_rx_ovf_pulse;
 
     logic                       s_dbg_tx_tick;
     logic                       s_dbg_tx_path_en;
@@ -444,7 +443,6 @@ module interface_wrapper #(
         .o_dbg_rx_fifo_pop(s_dbg_rx_fifo_pop),
         .o_dbg_rx_fifo_full(s_dbg_rx_fifo_full),
         .o_dbg_rx_fifo_empty(s_dbg_rx_fifo_empty),
-        .o_dbg_rx_ovf_pulse(s_dbg_rx_ovf_pulse),
 
         .o_dbg_tx_tick(s_dbg_tx_tick),
         .o_dbg_tx_path_en(s_dbg_tx_path_en),

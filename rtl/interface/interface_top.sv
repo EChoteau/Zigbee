@@ -62,7 +62,6 @@ module interface_top #(
 	output logic                       o_dbg_rx_fifo_pop,
 	output logic                       o_dbg_rx_fifo_full,
 	output logic                       o_dbg_rx_fifo_empty,
-	output logic                       o_dbg_rx_ovf_pulse,
 
 	output logic                       o_dbg_tx_tick,
 	output logic                       o_dbg_tx_path_en,
@@ -397,7 +396,6 @@ module interface_top #(
 	assign o_dbg_rx_fifo_pop = w_rx_fifo_pop;
 	assign o_dbg_rx_fifo_full = w_rx_fifo_full;
 	assign o_dbg_rx_fifo_empty = w_rx_fifo_empty;
-	assign o_dbg_rx_ovf_pulse = w_rx_ovf_pulse;
 
 	// ==========================================================================
 	// CONTROL & STATUS OBSERVABILITY OUTPUTS
