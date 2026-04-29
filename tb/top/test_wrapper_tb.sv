@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
-// interface_test_wrapper_tb.sv
+// test_wrapper_tb.sv
 // ============================================================================
-// Comprehensive testbench for interface_test_wrapper with all 8 configurations
+// Comprehensive testbench for test_wrapper with all 8 configurations
 //
 // Test Coverage:
 //   CFG_CLASSIC (0x0)   - APB + serial loopback
@@ -18,7 +18,7 @@
 
 import tb_pkg::*;
 
-module interface_test_wrapper_tb;
+module test_wrapper_tb;
 
     // ==========================================================================
     // PARAMETERS
@@ -69,7 +69,7 @@ module interface_test_wrapper_tb;
     // ==========================================================================
     // CLOCK GENERATION
     // ==========================================================================
-    always #10 i_clk = ~i_clk;
+    always #50 i_clk = ~i_clk;
 
     // ==========================================================================
     // HELPER TASKS

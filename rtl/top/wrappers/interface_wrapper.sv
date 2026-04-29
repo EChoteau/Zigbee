@@ -4,15 +4,19 @@ module interface_test_wrapper #(
     parameter int DATA_WIDTH     = 8,
     parameter int FIFO_DEPTH     = 8,
     parameter int DIV_WIDTH      = 8,
-    parameter int N_TEST_IN  = 24,
-    parameter int N_TEST_OUT = 12,
-    parameter int CFG_WIDTH  = 3
+    parameter int BUS_A_WIDTH = 10,
+    parameter int BUS_B_WIDTH = 12,
+    parameter int BUS_C_WIDTH = 12,
+    parameter int BUS_D_WIDTH = 2,
+    parameter int CFG_WIDTH  = 3      // Configuration selector width
 )(
     input  logic              i_clk,
     input  logic              i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg_local,
-    input  logic [N_TEST_IN-1:0] i_test_in,
-    output logic [N_TEST_OUT-1:0] o_test_out
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a,
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b,
+    output logic [BUS_C_WIDTH-1:0] o_bus_c,
+    output logic [BUS_D_WIDTH-1:0] o_bus_d
 );
 
     // ==========================================================================
@@ -112,6 +116,36 @@ module interface_test_wrapper #(
     logic [DATA_WIDTH-1:0]      s_if_fifo_rx_data;
     logic                       s_if_fifo_rx_rd_en;
 
+    // ==========================================================================
+    // INPUT BUS DECODING
+    // ==========================================================================
+    // Bus A (input): APB control signals
+    // [0]: psel
+    // [1]: penable
+    // [2]: pwrite
+    // [9:3]: paddr[6:0]
+    
+    // Bus B (input): APB data + serial signals
+    // [7:0]: pwdata[7:0]
+    // [8]: paddr[7]
+    // [9]: serial_rx
+    // [10]: cdr_sample_valid
+    // [11]: reserved
+    
+    // ==========================================================================
+    // OUTPUT BUS PACKING
+    // ==========================================================================
+    // Bus C (output): APB readback + FIFO status
+    // [7:0]: prdata[7:0]
+    // [8]: tx_fifo_full
+    // [9]: tx_fifo_empty
+    // [10]: tx_fifo_push
+    // [11]: tx_fifo_pop
+    
+    // Bus D (output, 2 bits): Serial signals (config-dependent)
+    // [0]: serial_tx / des_o_push / tx_fifo_pop / tx_tick (depends on config)
+    // [1]: tx_valid / des_o_ovf_pulse / tx_sample_tick / tx_valid (depends on config)
+
     always_comb begin
         // Default: tie all controls to safe state
         s_if_psel             = 1'b0;
@@ -142,191 +176,209 @@ module interface_test_wrapper #(
         s_if_baud_override_en = 1'b0;
         s_if_baud_enable      = 1'b0;
         s_if_baud_div_val     = '0;
-        o_test_out            = '0;
 
         unique case (i_cfg_local)
             // ====================================================================
             // CFG_CLASSIC (0x0): APB + serial loopback
             // Test: APB register writes, serial TX via CDR, loopback to RX
-            // Outputs: APB readback data + serial signals
+            // Inputs: Bus A (APB control) + Bus B (APB data + serial)
+            // Outputs: Bus C (APB readback + FIFO) + Bus D (serial + debug)
             // ====================================================================
             CFG_CLASSIC: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
-                s_if_serial_rx        = i_test_in[19];
-                s_if_cdr_sample_valid = i_test_in[20];
+                // Decode inputs from buses
+                s_if_psel             = i_bus_a[0];
+                s_if_penable          = i_bus_a[1];
+                s_if_pwrite           = i_bus_a[2];
+                s_if_paddr[6:0]       = i_bus_a[9:3];
+                s_if_paddr[7]         = i_bus_b[8];
+                s_if_pwdata[7:0]      = i_bus_b[7:0];
+                s_if_serial_rx        = i_bus_b[9];
+                s_if_cdr_sample_valid = i_bus_b[10];
 
-                o_test_out[7:0]       = s_if_prdata[7:0];
-                o_test_out[8]         = s_if_serial_tx;
-                o_test_out[9]         = s_if_tx_valid;
-                o_test_out[10]        = s_if_tx_sample_tick;
-                o_test_out[11]        = 1'b0;
+                // Pack outputs to buses
+                o_bus_c[7:0]          = s_if_prdata[7:0];
+                o_bus_c[8]            = s_dbg_tx_fifo_full;
+                o_bus_c[9]            = s_dbg_tx_fifo_empty;
+                o_bus_c[10]           = s_dbg_tx_fifo_push;
+                o_bus_c[11]           = s_dbg_tx_fifo_pop;
+
+                o_bus_d[0]            = s_if_serial_tx;
+                o_bus_d[1]            = s_if_tx_valid;
             end
 
             // ====================================================================
             // CFG_TX_ONLY (0x1): TX path testing
             // Test: APB to TX FIFO to Serializer
-            // Inputs: APB controls + no CDR
-            // Outputs: Serial TX + FIFO status + timing
+            // Inputs: Bus A (APB control) + Bus B (APB data)
+            // Outputs: Bus C (FIFO status) + Bus D (serial output)
             // ====================================================================
             CFG_TX_ONLY: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
+                // Decode APB from buses
+                s_if_psel             = i_bus_a[0];
+                s_if_penable          = i_bus_a[1];
+                s_if_pwrite           = i_bus_a[2];
+                s_if_paddr[6:0]       = i_bus_a[9:3];
+                s_if_paddr[7]         = i_bus_b[8];
+                s_if_pwdata[7:0]      = i_bus_b[7:0];
 
-                o_test_out[0]         = s_if_serial_tx;
-                o_test_out[1]         = s_if_tx_valid;
-                o_test_out[2]         = s_if_tx_sample_tick;
-                o_test_out[3]         = s_dbg_tx_fifo_push;
-                o_test_out[4]         = s_dbg_tx_fifo_pop;
-                o_test_out[5]         = s_dbg_tx_fifo_full;
-                o_test_out[6]         = s_dbg_tx_fifo_empty;
-                o_test_out[7]         = s_if_tx_valid;
-                o_test_out[8]         = s_dbg_tx_tick;
-                o_test_out[9]         = s_dbg_tx_und_err;
-                o_test_out[10]        = s_dbg_tx_path_en;
-                o_test_out[11]        = s_dbg_global_en;
+                // Pack FIFO status to Bus C
+                o_bus_c[7:0]          = s_dbg_tx_fifo_q;
+                o_bus_c[8]            = s_dbg_tx_fifo_full;
+                o_bus_c[9]            = s_dbg_tx_fifo_empty;
+                o_bus_c[10]           = s_dbg_tx_fifo_push;
+                o_bus_c[11]           = s_dbg_tx_fifo_pop;
+
+                // Pack serial output to Bus D
+                o_bus_d[0]            = s_if_serial_tx;
+                o_bus_d[1]            = s_if_tx_valid;
             end
 
             // ====================================================================
             // CFG_RX_ONLY (0x2): RX path testing
             // Test: CDR to Deserializer to RX FIFO to APB
-            // Inputs: CDR signals + APB controls
-            // Outputs: FIFO status
+            // Inputs: Bus A (APB control) + Bus B (APB data + serial RX)
+            // Outputs: Bus C (APB readback + RX FIFO)
             // ====================================================================
             CFG_RX_ONLY: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
-                s_if_serial_rx        = i_test_in[19];
-                s_if_cdr_sample_valid = i_test_in[20];
+                // Decode APB and serial from buses
+                s_if_psel             = i_bus_a[0];
+                s_if_penable          = i_bus_a[1];
+                s_if_pwrite           = i_bus_a[2];
+                s_if_paddr[6:0]       = i_bus_a[9:3];
+                s_if_paddr[7]         = i_bus_b[8];
+                s_if_pwdata[7:0]      = i_bus_b[7:0];
+                s_if_serial_rx        = i_bus_b[9];
+                s_if_cdr_sample_valid = i_bus_b[10];
 
-                o_test_out[7:0]       = s_if_prdata[7:0];
-                o_test_out[8]         = s_dbg_rx_fifo_push;
-                o_test_out[9]         = s_dbg_rx_fifo_pop;
-                o_test_out[10]        = s_dbg_rx_fifo_full;
-                o_test_out[11]        = s_dbg_rx_fifo_empty;
+                // Pack RX FIFO status to Bus C
+                o_bus_c[7:0]          = s_if_prdata[7:0];
+                o_bus_c[8]            = s_dbg_rx_fifo_full;
+                o_bus_c[9]            = s_dbg_rx_fifo_empty;
+                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[11]           = s_dbg_rx_fifo_pop;
+
+                o_bus_d[1:0]          = '0;  // Not used in RX_ONLY
             end
 
             // ====================================================================
             // CFG_LOOPBACK (0x3): Serial loopback testing
             // Test: TX serial output looped back to RX deserializer
             // Validates serializer -> CDR -> deserializer chain
-            // Outputs: APB readback + FIFO push signals
             // ====================================================================
             CFG_LOOPBACK: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
-                s_if_cdr_sample_valid = i_test_in[20];
-                s_if_serial_rx        = s_if_serial_tx;  // Loopback
+                // Decode APB from Bus A
+                s_if_psel             = i_bus_a[0];
+                s_if_penable          = i_bus_a[1];
+                s_if_pwrite           = i_bus_a[2];
+                s_if_paddr[6:0]       = i_bus_a[9:3];
+                s_if_paddr[7]         = i_bus_b[8];
+                s_if_pwdata[7:0]      = i_bus_b[7:0];
+                s_if_cdr_sample_valid = i_bus_b[10];
+                s_if_serial_rx        = s_if_serial_tx;  // Loopback TX to RX
 
-                o_test_out[7:0]       = s_if_prdata[7:0];
-                o_test_out[8]         = s_if_serial_tx;
-                o_test_out[9]         = s_dbg_tx_fifo_push;
-                o_test_out[10]        = s_dbg_rx_fifo_push;
-                o_test_out[11]        = s_dbg_rx_ovf_err;
+                // Pack APB readback and FIFO to Bus C
+                o_bus_c[7:0]          = s_if_prdata[7:0];
+                o_bus_c[8]            = s_if_serial_tx;
+                o_bus_c[9]            = s_dbg_tx_fifo_push;
+                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[11]           = s_dbg_rx_ovf_err;
+
+                // Pack debug to Bus D
+                o_bus_d[0]            = s_dbg_des_o_push;
+                o_bus_d[1]            = s_dbg_des_o_ovf_pulse;
             end
 
             // ====================================================================
             // CFG_FIFO_TX (0x4): TX FIFO direct control
             // Test: Direct write to TX FIFO bypassing APB
-            // Inputs: FIFO write signals
-            // Outputs: FIFO status (full, empty, data)
+            // Inputs: Bus B (FIFO write data + controls)
+            // Outputs: Bus C (FIFO status) + Bus D (serial output)
             // ====================================================================
             CFG_FIFO_TX: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
+                // FIFO TX data and control from Bus B
+                s_if_fifo_tx_override_en = 1'b1;
+                s_if_fifo_tx_data[7:0]  = i_bus_b[7:0];
 
-                o_test_out[7:0]       = s_dbg_tx_fifo_q;
-                o_test_out[8]         = s_dbg_tx_fifo_push;
-                o_test_out[9]         = s_dbg_tx_fifo_pop;
-                o_test_out[10]        = s_dbg_tx_fifo_full;
-                o_test_out[11]        = s_dbg_tx_fifo_empty;
+                // Pack FIFO status to Bus C
+                o_bus_c[7:0]          = s_dbg_tx_fifo_q;
+                o_bus_c[8]            = s_dbg_tx_fifo_full;
+                o_bus_c[9]            = s_dbg_tx_fifo_empty;
+                o_bus_c[10]           = s_dbg_tx_fifo_push;
+                o_bus_c[11]           = s_dbg_tx_fifo_pop;
+
+                // Pack serial output to Bus D
+                o_bus_d[0]            = s_if_serial_tx;
+                o_bus_d[1]            = s_if_tx_valid;
             end
 
             // ====================================================================
             // CFG_FIFO_RX (0x5): RX FIFO direct control
             // Test: Direct read from RX FIFO bypassing APB
-            // Inputs: FIFO read signals + CDR
-            // Outputs: FIFO data & status
+            // Inputs: Bus B (CDR serial signals)
+            // Outputs: Bus C (RX FIFO data) + Bus D (RX status)
             // ====================================================================
             CFG_FIFO_RX: begin
-                s_if_psel             = i_test_in[0];
-                s_if_penable          = i_test_in[1];
-                s_if_pwrite           = i_test_in[2];
-                s_if_paddr[7:0]       = i_test_in[10:3];
-                s_if_pwdata[7:0]      = i_test_in[18:11];
-                s_if_serial_rx        = i_test_in[19];
-                s_if_cdr_sample_valid = i_test_in[20];
+                // Serial RX from Bus B
+                s_if_serial_rx        = i_bus_b[9];
+                s_if_cdr_sample_valid = i_bus_b[10];
 
-                o_test_out[7:0]       = s_dbg_rx_fifo_q;
-                o_test_out[8]         = s_dbg_rx_fifo_push;
-                o_test_out[9]         = s_dbg_rx_fifo_pop;
-                o_test_out[10]        = s_dbg_rx_fifo_full;
-                o_test_out[11]        = s_dbg_rx_fifo_empty;
+                // Pack RX FIFO data to Bus C
+                o_bus_c[7:0]          = s_dbg_rx_fifo_q;
+                o_bus_c[8]            = s_dbg_rx_fifo_full;
+                o_bus_c[9]            = s_dbg_rx_fifo_empty;
+                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[11]           = s_dbg_rx_fifo_pop;
+
+                // Pack RX status to Bus D
+                o_bus_d[0]            = s_dbg_des_o_push;
+                o_bus_d[1]            = s_dbg_des_o_ovf_pulse;
             end
 
             // ====================================================================
             // CFG_SERDES (0x6): Serializer/Deserializer chain testing
             // Test: Direct control of serializer inputs + deserializer outputs
-            // No APB bus, pure serializer->deserializer chain
-            // Validates all serial protocol transitions
+            // Inputs: Bus A (serializer data) + Bus B (deserializer serial)
+            // Outputs: Bus C (deserializer para data) + Bus D (ser/des status)
             // ====================================================================
             CFG_SERDES: begin
-                // SERIALIZER INPUTS (override mode - direct injection)
-                s_if_ser_override_en  = 1'b1;
-                s_if_ser_tx_data      = i_test_in[7:0];
-                s_if_ser_tx_data_valid = i_test_in[8];
-                s_if_ser_tx_fifo_empty = i_test_in[9];
-                s_if_ser_baud_tick    = i_test_in[10];
+                // Serializer override from Bus A
+                s_if_ser_override_en   = 1'b1;
+                s_if_ser_tx_data[7:0] = i_bus_a[7:0];
+                s_if_ser_tx_data_valid = i_bus_a[8];
+                s_if_ser_tx_fifo_empty = i_bus_a[9];
 
-                // DESERIALIZER INPUTS (inject serial data into RX path)
-                s_if_serial_rx        = i_test_in[11];
-                s_if_cdr_sample_valid = i_test_in[12];
+                // Deserializer override from Bus B
+                s_if_des_override_en   = 1'b1;
+                s_if_serial_rx         = i_bus_b[9];
+                s_if_cdr_sample_valid  = i_bus_b[10];
 
-                // SERIALIZER OUTPUTS (what serializer produces)
-                o_test_out[0]         = s_if_serial_tx;            // TX serial bit
-                o_test_out[1]         = s_dbg_ser_o_tx_busy;       // Serializer busy
-                o_test_out[2]         = s_dbg_tx_fifo_pop;         // FIFO read control
-                o_test_out[3]         = s_if_tx_sample_tick;       // Sample timing
+                // Pack deserializer output to Bus C
+                o_bus_c[7:0]          = s_dbg_des_o_para_data[7:0];
+                o_bus_c[8]            = s_dbg_des_o_push;
+                o_bus_c[9]            = s_dbg_des_o_ovf_pulse;
+                o_bus_c[10]           = s_if_serial_tx;
+                o_bus_c[11]           = s_dbg_ser_o_tx_busy;
 
-                // DESERIALIZER OUTPUTS (what deserializer produces)
-                o_test_out[7:4]       = s_dbg_des_o_para_data[3:0]; // Parallel data (4 LSBs)
-                o_test_out[8]         = s_dbg_des_o_push;          // FIFO push valid
-                o_test_out[9]         = s_dbg_des_o_ovf_pulse;     // Overflow indicator
-                o_test_out[10]        = s_dbg_global_en;           // Global enable status
-                o_test_out[11]        = 1'b0;                      // Unused
+                // Pack ser/des status to Bus D
+                o_bus_d[0]            = s_dbg_tx_fifo_pop;
+                o_bus_d[1]            = s_if_tx_sample_tick;
             end
 
             // ====================================================================
             // CFG_BAUD (0x7): Baud rate generator control
             // Test: Divisor configuration and tick generation
-            // Inputs: Enable signal + divisor value
-            // Outputs: Generated tick + timing info
+            // Inputs: Bus A (baud divisor control)
+            // Outputs: Bus D (baud tick and status)
             // ====================================================================
             CFG_BAUD: begin
                 s_if_baud_override_en = 1'b1;
-                s_if_baud_enable      = i_test_in[0];
-                s_if_baud_div_val     = i_test_in[8:1];
+                s_if_baud_enable      = i_bus_a[0];
+                s_if_baud_div_val     = i_bus_a[8:1];
 
-                o_test_out[0]         = s_dbg_tx_tick;
-                o_test_out[1]         = s_if_tx_valid;
-                o_test_out[2]         = s_if_tx_sample_tick;
-                o_test_out[3]         = s_dbg_global_en;
-                o_test_out[11:4]      = 8'b0;  // Unused
+                o_bus_c[11:0]         = '0;  // Not used in BAUD
+
+                o_bus_d[0]            = s_dbg_tx_tick;
+                o_bus_d[1]            = s_if_tx_valid;
             end
 
             default: begin

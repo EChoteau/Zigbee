@@ -17,7 +17,7 @@ module custom_wrapper_example #(
     parameter int BUS_A_WIDTH = 10,
     parameter int BUS_B_WIDTH = 12,
     parameter int BUS_C_WIDTH = 12,
-    parameter int BUS_D_WIDTH = 8,
+    parameter int BUS_D_WIDTH = 2,
     parameter int CFG_WIDTH  = 3      // Configuration selector width
 )(
     input  logic              i_clk,
@@ -27,12 +27,12 @@ module custom_wrapper_example #(
     // ========================================================================
     // BUS A: inout (bidirectional)
     // ========================================================================
-    inout  logic [BUS_A_WIDTH-1:0] io_bus_a,
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a,
     
     // ========================================================================
     // BUS B: inout (bidirectional)
     // ========================================================================
-    inout  logic [BUS_B_WIDTH-1:0] io_bus_b,
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b,
     
     // ========================================================================
     // BUS C: output only
@@ -71,10 +71,10 @@ module custom_wrapper_example #(
             // CFG_CLASSIC (0x0): All nominal operation
             // ====================================================================
             CFG_CLASSIC: begin
-                io_bus_a[0]= w_a;
-                io_bus_b[0] = w_b;
-                w_c  = o_bus_c[0];
-                w_d  = o_bus_d[0];
+                w_a = i_bus_a[0];
+                w_b = i_bus_b[0];
+                o_bus_c[0] = w_c;
+                o_bus_d[0] = w_d;
             end
             default: begin
 
