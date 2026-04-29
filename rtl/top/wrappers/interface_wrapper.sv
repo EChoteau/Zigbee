@@ -324,7 +324,7 @@ module interface_wrapper #(
                 o_bus_c[7:0]          = s_dbg_rx_fifo_q;
                 o_bus_c[8]            = s_dbg_rx_fifo_full;
                 o_bus_c[9]            = s_dbg_rx_fifo_empty;
-                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[10]           = s_dbg_des_o_push;
                 o_bus_c[11]           = s_dbg_rx_fifo_pop;
 
                 // Pack RX status to Bus D
