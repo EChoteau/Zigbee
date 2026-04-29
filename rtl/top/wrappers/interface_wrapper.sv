@@ -62,7 +62,6 @@ module interface_wrapper #(
     logic                       s_dbg_tx_fifo_rd_valid;
 
     logic [DATA_WIDTH-1:0]      s_dbg_rx_fifo_q;
-    logic                       s_dbg_rx_fifo_push;
     logic                       s_dbg_rx_fifo_pop;
     logic                       s_dbg_rx_fifo_full;
     logic                       s_dbg_rx_fifo_empty;
@@ -439,7 +438,6 @@ module interface_wrapper #(
         .o_dbg_tx_fifo_rd_valid(s_dbg_tx_fifo_rd_valid),
 
         .o_dbg_rx_fifo_q(s_dbg_rx_fifo_q),
-        .o_dbg_rx_fifo_push(s_dbg_rx_fifo_push),
         .o_dbg_rx_fifo_pop(s_dbg_rx_fifo_pop),
         .o_dbg_rx_fifo_full(s_dbg_rx_fifo_full),
         .o_dbg_rx_fifo_empty(s_dbg_rx_fifo_empty),

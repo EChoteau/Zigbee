@@ -58,7 +58,6 @@ module interface_top #(
 	output logic                       o_dbg_tx_fifo_rd_valid,
 
 	output logic [DATA_WIDTH-1:0]      o_dbg_rx_fifo_q,
-	output logic                       o_dbg_rx_fifo_push,
 	output logic                       o_dbg_rx_fifo_pop,
 	output logic                       o_dbg_rx_fifo_full,
 	output logic                       o_dbg_rx_fifo_empty,
@@ -392,7 +391,6 @@ module interface_top #(
 	// RX FIFO OBSERVABILITY OUTPUTS
 	// ==========================================================================
 	assign o_dbg_rx_fifo_q = w_rx_fifo_q;
-	assign o_dbg_rx_fifo_push = w_rx_fifo_push;
 	assign o_dbg_rx_fifo_pop = w_rx_fifo_pop;
 	assign o_dbg_rx_fifo_full = w_rx_fifo_full;
 	assign o_dbg_rx_fifo_empty = w_rx_fifo_empty;
