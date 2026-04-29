@@ -37,9 +37,9 @@ module cordic_wrapper #(
     logic signed [WIDTH_PHASE-1:0] w_phase_deriv;
     logic signed [WIDTH_PHASE-1:0] w_phase_filter_in;
     logic signed [OUT_WIDTH-1:0]   w_phase_filter_out;
+    logic signed [WIDTH_IN-1:0]    w_cordic_i, w_cordic_q;
 
     // Muxed sources
-    logic signed [WIDTH_IN-1:0]    mux_cordic_i, mux_cordic_q;
     logic signed [WIDTH_PHASE-1:0] mux_deriv_in;
     logic signed [WIDTH_PHASE-1:0] mux_filter_in;
 
@@ -58,18 +58,18 @@ module cordic_wrapper #(
     // Default assignments
     always_comb begin
         // Use LSBs of bus A for all inputs by default
-        mux_cordic_i   = i_bus_a[WIDTH_IN-1:0];
-        mux_cordic_q   = i_bus_a[2*WIDTH_IN-1:WIDTH_IN];
-        mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
-        mux_filter_in  = i_bus_a[WIDTH_PHASE-1:0];
+        w_cordic_i   = i_bus_a[WIDTH_IN-1:0];
+        w_cordic_q   = i_bus_a[2*WIDTH_IN-1:WIDTH_IN];
+        mux_deriv_in   = w_phase_cordic; // default to cordic output
+        mux_filter_in  = w_phase_deriv;  // default to derivative output
 
-        o_bus_c = '0; // default output
+        o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0]; // default output
         o_bus_d = '0; // unused
 
         unique case (i_cfg)
             // Conf 0: 000 -> Input=Cordic, Output=Filter
             MODE_0: begin
-                o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
+                // Already set by default, no overrides needed
             end
 
             // MODE_1: 001 -> Input=Cordic, Output=Cordic
@@ -79,11 +79,13 @@ module cordic_wrapper #(
 
             // MODE_2: 010 -> Input=Derivate, Output=Derivate
             MODE_2: begin
+                mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
                 o_bus_c = w_phase_deriv[BUS_C_WIDTH-1:0];
             end
 
             // MODE_3: 011 -> Input=Filter, Output=Filter
             MODE_3: begin
+                mux_filter_in  = i_bus_a[WIDTH_PHASE-1:0];
                 o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
             end
 
@@ -94,16 +96,18 @@ module cordic_wrapper #(
 
             // MODE_5: 101 -> Input=Cordic, Output=Filter
             MODE_5: begin
-                o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
+                // Already set by default, no overrides needed
             end
 
             // MODE_6: 110 -> Input=Derivate, Output=Filter
             MODE_6: begin
+                mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
                 o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
             end
 
             // MODE_7: 111 -> Input=Filter, Output=Filter
             MODE_7: begin
+                mux_filter_in  = i_bus_a[WIDTH_PHASE-1:0];
                 o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
             end
 
@@ -119,8 +123,8 @@ module cordic_wrapper #(
         .WIDTH_PHASE(WIDTH_PHASE)
     ) cordic_top_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n),
-        .i_i(mux_cordic_i),
-        .i_q(mux_cordic_q),
+        .i_i(w_cordic_i),
+        .i_q(w_cordic_q),
         .o_phase(w_phase_cordic)
     );
 
