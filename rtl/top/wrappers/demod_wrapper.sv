@@ -1,3 +1,13 @@
+
+// ============================================================================
+// Module      : demod_wrapper
+// Description : Test wrapper for the Demodulation system.
+//               Provides injection via `i_bus_a` and observation via output buses.
+//               Supports 8 configs (CFG_WIDTH=3) for selecting different
+//               test points and modes within the demod chain.
+// ============================================================================
+
+
 module demod_wrapper #(
     parameter int CFG_WIDTH   = 3,
     parameter int BUS_A_WIDTH = 10,
@@ -9,12 +19,14 @@ module demod_wrapper #(
     input  logic i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
+
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // unused
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // input 
 
     output logic [BUS_C_WIDTH-1:0] o_bus_c, //  output 
     output logic [BUS_D_WIDTH-1:0] o_bus_d // unused
 );
+
 
     localparam logic [2:0] MODE_0 = 3'b000;
     localparam logic [2:0] MODE_1 = 3'b001;
@@ -24,6 +36,7 @@ module demod_wrapper #(
     localparam logic [2:0] MODE_5 = 3'b101;
     localparam logic [2:0] MODE_6 = 3'b110;
     localparam logic [2:0] MODE_7 = 3'b111;
+
 
     // =========================================================
     // Découpage bus B
@@ -221,6 +234,7 @@ module demod_wrapper #(
         endcase
 
         o_bus_d = {s_i_bb[5], s_q_bb[5]};
+
     end
 
 endmodule
