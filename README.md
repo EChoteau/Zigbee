@@ -11,7 +11,7 @@ Ce depot contient:
 
 ### Top-level d'integration
 - `rtl/top/zigbee_chip_top.sv`
-- Rassemble les sous-blocs `interface_top`, `top_msk` et `cordic_top`.
+- Rassemble les sous-blocs `interface_top`, `msk_system` et `cordic_top`.
 - Gere un banc de 48 pads via des wrappers de configuration IO.
 - Selectionne le mode de fonctionnement via `i_cfg_mode_pins`:
 	- mode interface seule,
@@ -29,7 +29,7 @@ Ce depot contient:
 
 ### Chaine MSK baseband
 - Dossier: `rtl/msk/`
-- Bloc principal: `top_msk.sv`
+- Bloc principal: `msk_system.sv`
 - Pipeline fonctionnel:
 	- encodage differentiel (`encodeur_diff.sv`),
 	- demultiplexage I/Q (`demux_msk.sv`),
