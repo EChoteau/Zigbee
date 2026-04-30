@@ -9,9 +9,9 @@ module CDR_wrapper #(
     input  logic                    i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
-    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // LSB used
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // MSB used
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
-    output logic [BUS_C_WIDTH-1:0] o_bus_c,  // LSB used
+    output logic [BUS_C_WIDTH-1:0] o_bus_c,  // MSB used
     output logic [BUS_D_WIDTH-1:0] o_bus_d   // unused
 );
 
@@ -148,19 +148,19 @@ module CDR_wrapper #(
         unique case (i_cfg)
 
             CFG0: // Mode normal CDR : data + enable
-                o_bus_c = {{BUS_C_WIDTH-3{1'b0}}, s_decision_out, s_sample_enable};
+                o_bus_c = {{BUS_C_WIDTH-2{1'b0}}, s_decision_out, s_sample_enable};
 
             CFG1: // Debug décodeur : décision combinatoire
-                o_bus_c = {{BUS_C_WIDTH-2{1'b0}}, s_decision_sig};
+                o_bus_c = {{BUS_C_WIDTH-1{1'b0}}, s_decision_sig};
 
             CFG2: // Test phase_detector isolé : up / down
-                o_bus_c = {{BUS_C_WIDTH-3{1'b0}}, s_up, s_down};
+                o_bus_c = {{BUS_C_WIDTH-2{1'b0}}, s_up, s_down};
 
             CFG3: // Test loop_filter isolé : bus de contrôle
-                o_bus_c = {{BUS_C_WIDTH-CTRL_WIDTH-1{1'b0}}, s_control};
+                o_bus_c = {{BUS_C_WIDTH-CTRL_WIDTH{1'b0}}, s_control};
 
             CFG4: // Test NCO isolé : data + enable + ack
-                o_bus_c = {{BUS_C_WIDTH-4{1'b0}}, s_decision_out, s_sample_enable, s_ack};
+                o_bus_c = {{BUS_C_WIDTH-3{1'b0}}, s_decision_out, s_sample_enable, s_ack};
 
             default:
                 o_test_out = '0;
