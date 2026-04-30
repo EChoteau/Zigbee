@@ -1,7 +1,7 @@
 module demod_wrapper #(
     parameter int CFG_WIDTH   = 3,
-    parameter int BUS_A_WIDTH = 10,
-    parameter int BUS_B_WIDTH = 12,
+    parameter int BUS_A_WIDTH = 12,
+    parameter int BUS_B_WIDTH = 10,
     parameter int BUS_C_WIDTH = 12,
     parameter int BUS_D_WIDTH = 2
 )(
