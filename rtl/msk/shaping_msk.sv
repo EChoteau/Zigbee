@@ -7,8 +7,7 @@
 
 module shaping_msk #(
     parameter int SAMPLES_PER_HALF_SINE = 10, // Nb points pour 1µs (bosse)
-    parameter int MSK_RES               = 6,  // Résolution (ex: 6 bits signés)
-   // parameter real PI = 3.14159265358979323846
+    parameter int MSK_RES               = 6   // Résolution (ex: 6 bits signés)
 )(
     input  logic                 i_clk,
     input  logic                 i_rst_n,
@@ -29,22 +28,18 @@ module shaping_msk #(
     localparam int MAX_VAL      = (1 << (MSK_RES-1)) - 1;    // Amplitude max (ex: 31)
 
     // --------------------------------------------------------------------------
-    // 2. GÉNÉRATION DE LA ROM (AUTOMATISÉE)
+    // 2. ROM PRÉCALCULÉE (Synthétisable)
     // --------------------------------------------------------------------------
+    // Valeurs pour SAMPLES_PER_HALF_SINE=10 et MSK_RES=6 (0 à 4)
     logic signed [MSK_RES-1:0] rom_quarter [0:QUARTER_SINE-1];
-    always_comb begin 
-	rom_quarter[0] = 6'sd0;
-	rom_quarter[1] = 6'sd10;
-	rom_quarter[2] = 6'sd18;
-	rom_quarter[3] = 6'sd25;
-	rom_quarter[4] = 6'sd29;
-    end 
-    //initial begin
-    //   for (int i = 0; i < QUARTER_SINE; i++) begin
-            // Calcul du sinus casté en entier : sin(i * pi/2 / Nb_points_montée) * Amplitude
-    //        rom_quarter[i] = $rtoi($sin((real'(i) * (PI/2.0)) / real'(QUARTER_SINE)) * real'(MAX_VAL));
-    //    end
-    //end
+
+    always_comb begin
+        rom_quarter[0] = 6'sd0;
+        rom_quarter[1] = 6'sd10;
+        rom_quarter[2] = 6'sd18;
+        rom_quarter[3] = 6'sd25;
+        rom_quarter[4] = 6'sd29;
+    end
 
     // --------------------------------------------------------------------------
     // 3. SIGNAUX INTERNES
