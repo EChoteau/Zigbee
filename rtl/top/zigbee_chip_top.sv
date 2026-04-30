@@ -4,26 +4,44 @@ module zigbee_chip_top #(
     parameter int IF_DATA_WIDTH   = 8,
     parameter int IF_FIFO_DEPTH   = 8,
     parameter int IF_DIV_WIDTH    = 8,
-    parameter int CORDIC_WIDTH_IN = 8
+    parameter int CORDIC_WIDTH_IN = 8,
+    // Wrapper bus widths
+    parameter int BUS_A_WIDTH     = 12,
+    parameter int BUS_B_WIDTH     = 12,
+    parameter int BUS_C_WIDTH     = 12,
+    parameter int BUS_D_WIDTH     = 2,
+    parameter int CFG_WIDTH       = 3
 )(
     input  logic         i_clk,
     input  logic         i_rst_n,
 
-    // 4 dedicated configuration pins (outside the configurable IO bank).
-    input  logic [3:0]   i_cfg_mode_pins,
+    // 6 dedicated configuration pins:
+    // [2:0]  : Wrapper selector (0=IF, 1=CDR, 2=Cordic, 3=Demod, 4=MSK)
+    // [5:3]  : Internal test config for selected wrapper
+    input  logic [5:0]   i_cfg_pins,
+
+    // Test bus ports (external interface)
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a,  // Test input bus A
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b,  // Test input bus B
+    output logic [BUS_C_WIDTH-1:0] o_bus_c,  // Test output bus C
+    output logic [BUS_D_WIDTH-1:0] o_bus_d,  // Test output bus D
 
     // 38 configurable bidirectional physical digital pins.
     inout  wire  [37:0]  io_pad
 );
 
-    import zigbee_top_cfg_pkg::*;
+    // =========================================================================
+    // Configuration decoder
+    // =========================================================================
+    logic [CFG_WIDTH-1:0] w_wrapper_select;
+    logic [CFG_WIDTH-1:0] w_cfg_internal;
+    
+    assign w_wrapper_select = i_cfg_pins[CFG_WIDTH-1:0];
+    assign w_cfg_internal   = i_cfg_pins[5:3];
 
-    // ---------------------------------------------------------------------
-    // Mode decode
-    // ---------------------------------------------------------------------
-    logic [1:0] w_cfg_mode;
-    assign w_cfg_mode = i_cfg_mode_pins[1:0];
-
+    // =========================================================================
+    // Pad mapping
+    // =========================================================================
     logic [37:0] i_io_in;
     logic [37:0] o_io_out;
     logic [37:0] o_io_oe;
@@ -36,237 +54,215 @@ module zigbee_chip_top #(
         end
     endgenerate
 
-    // ---------------------------------------------------------------------
-    // Internal logical variables (block-facing signals)
-    // ---------------------------------------------------------------------
-    logic                        v_if_psel;
-    logic                        v_if_penable;
-    logic                        v_if_pwrite;
-    logic [APB_ADDR_WIDTH-1:0]   v_if_paddr;
-    logic [APB_DATA_WIDTH-1:0]   v_if_pwdata;
-    logic [APB_DATA_WIDTH-1:0]   v_if_prdata;
-    logic                        v_if_pready;
-    logic                        v_if_pslverr;
-    logic                        v_if_serial_rx;
-    logic                        v_if_cdr_sample_valid;
-    logic                        v_if_serial_tx;
-    logic                        v_if_tx_valid;
-    logic                        v_if_tx_sample_tick;
+    // =========================================================================
+    // Wrapper instance signals
+    // =========================================================================
+    // Interface wrapper
+    logic [BUS_A_WIDTH-1:0] if_wr_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] if_wr_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] if_wr_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] if_wr_o_bus_d;
 
-    logic                        v_msk_enable_ech;
-    logic                        v_msk_b_in;
-    logic                        v_msk_flag_enable;
-    logic signed [5:0]           w_msk_i_bb;
-    logic signed [5:0]           w_msk_q_bb;
+    // CDR wrapper
+    logic [BUS_A_WIDTH-1:0] cdr_wr_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] cdr_wr_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] cdr_wr_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] cdr_wr_o_bus_d;
 
-    logic signed [CORDIC_WIDTH_IN-1:0] v_cordic_i;
-    logic signed [CORDIC_WIDTH_IN-1:0] v_cordic_q;
-    logic signed [CORDIC_WIDTH_IN+1:0] w_cordic_phase;
+    // Cordic wrapper
+    logic [BUS_A_WIDTH-1:0] cordic_wr_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] cordic_wr_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] cordic_wr_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] cordic_wr_o_bus_d;
 
-    logic                      if_only_if_psel;
-    logic                      if_only_if_penable;
-    logic                      if_only_if_pwrite;
-    logic [APB_ADDR_WIDTH-1:0] if_only_if_paddr;
-    logic [APB_DATA_WIDTH-1:0] if_only_if_pwdata;
-    logic                      if_only_if_serial_rx;
-    logic                      if_only_if_cdr_sample_valid;
-    logic [37:0]               if_only_io_out;
-    logic [37:0]               if_only_io_oe;
+    // Demod wrapper
+    logic [BUS_A_WIDTH-1:0] demod_wr_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] demod_wr_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] demod_wr_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] demod_wr_o_bus_d;
 
-    logic                      msk_only_msk_b_in;
-    logic                      msk_only_msk_flag_enable;
-    logic                      msk_only_msk_enable_ech;
-    logic [37:0]               msk_only_io_out;
-    logic [37:0]               msk_only_io_oe;
+    // MSK wrapper
+    logic [BUS_A_WIDTH-1:0] msk_wr_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] msk_wr_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] msk_wr_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] msk_wr_o_bus_d;
 
-    logic signed [CORDIC_WIDTH_IN-1:0] cordic_only_i;
-    logic signed [CORDIC_WIDTH_IN-1:0] cordic_only_q;
-    logic [37:0]                         cordic_only_io_out;
-    logic [37:0]                         cordic_only_io_oe;
+    // Mux outputs
+    logic [BUS_A_WIDTH-1:0] mux_i_bus_a;
+    logic [BUS_B_WIDTH-1:0] mux_i_bus_b;
+    logic [BUS_C_WIDTH-1:0] mux_o_bus_c;
+    logic [BUS_D_WIDTH-1:0] mux_o_bus_d;
 
-    // ---------------------------------------------------------------------
-    // Block instances
-    // ---------------------------------------------------------------------
-    interface_top #(
+    // =========================================================================
+    // Wrapper instantiations
+    // =========================================================================
+
+    // Interface Wrapper
+    interface_wrapper #(
         .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
         .APB_DATA_WIDTH(APB_DATA_WIDTH),
         .DATA_WIDTH(IF_DATA_WIDTH),
         .FIFO_DEPTH(IF_FIFO_DEPTH),
-        .DIV_WIDTH(IF_DIV_WIDTH)
-    ) u_interface_top (
+        .DIV_WIDTH(IF_DIV_WIDTH),
+        .BUS_A_WIDTH(BUS_A_WIDTH),
+        .BUS_B_WIDTH(BUS_B_WIDTH),
+        .BUS_C_WIDTH(BUS_C_WIDTH),
+        .BUS_D_WIDTH(BUS_D_WIDTH),
+        .CFG_WIDTH(CFG_WIDTH)
+    ) u_if_wrapper (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_psel(v_if_psel),
-        .i_penable(v_if_penable),
-        .i_pwrite(v_if_pwrite),
-        .i_paddr(v_if_paddr),
-        .i_pwdata(v_if_pwdata),
-        .o_prdata(v_if_prdata),
-        .o_pready(v_if_pready),
-        .o_pslverr(v_if_pslverr),
-        .i_serial_rx(v_if_serial_rx),
-        .i_cdr_sample_valid(v_if_cdr_sample_valid),
-        .o_serial_tx(v_if_serial_tx),
-        .o_tx_valid(v_if_tx_valid),
-        .o_tx_sample_tick(v_if_tx_sample_tick)
+        .i_cfg_local(w_cfg_internal),
+        .i_bus_a(if_wr_i_bus_a),
+        .i_bus_b(if_wr_i_bus_b),
+        .o_bus_c(if_wr_o_bus_c),
+        .o_bus_d(if_wr_o_bus_d)
     );
 
-    msk_system u_top_msk (
+    // CDR Wrapper
+    cdr_wrapper #(
+        .CFG_WIDTH(CFG_WIDTH),
+        .BUS_A_WIDTH(BUS_A_WIDTH),
+        .BUS_B_WIDTH(BUS_B_WIDTH),
+        .BUS_C_WIDTH(BUS_C_WIDTH),
+        .BUS_D_WIDTH(BUS_D_WIDTH)
+    ) u_cdr_wrapper (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_flag_enable(v_msk_flag_enable),
-        .i_enable_ech(v_msk_enable_ech),
-        .i_b_in(v_msk_b_in),
-        .o_I_BB(w_msk_i_bb),
-        .o_Q_BB(w_msk_q_bb)
+        .i_cfg(w_cfg_internal),
+        .i_bus_a(cdr_wr_i_bus_a),
+        .i_bus_b(cdr_wr_i_bus_b),
+        .o_bus_c(cdr_wr_o_bus_c),
+        .o_bus_d(cdr_wr_o_bus_d)
     );
 
-    // Kept instantiated but not connected to the integration chain yet.
-    cordic_top #(
-        .WIDTH_IN(CORDIC_WIDTH_IN)
-    ) u_cordic_top (
+    // Cordic Wrapper
+    cordic_wrapper #(
+        .WIDTH_IN(CORDIC_WIDTH_IN),
+        .CFG_WIDTH(CFG_WIDTH),
+        .BUS_A_WIDTH(BUS_A_WIDTH),
+        .BUS_B_WIDTH(BUS_B_WIDTH),
+        .BUS_C_WIDTH(BUS_C_WIDTH),
+        .BUS_D_WIDTH(BUS_D_WIDTH)
+    ) u_cordic_wrapper (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_i(v_cordic_i),
-        .i_q(v_cordic_q),
-        .o_phase(w_cordic_phase)
+        .i_cfg(w_cfg_internal),
+        .i_bus_a(cordic_wr_i_bus_a),
+        .i_bus_b(cordic_wr_i_bus_b),
+        .o_bus_c(cordic_wr_o_bus_c),
+        .o_bus_d(cordic_wr_o_bus_d)
     );
 
-    // ---------------------------------------------------------------------
-    // Per-configuration I/O mapping modules
-    // ---------------------------------------------------------------------
-    zigbee_io_cfg_if_only #(
-        .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
-        .APB_DATA_WIDTH(APB_DATA_WIDTH)
-    ) u_cfg_if_only (
-        .i_io_in(i_io_in),
-        .i_if_serial_tx(v_if_serial_tx),
-        .i_if_tx_valid(v_if_tx_valid),
-        .i_if_tx_sample_tick(v_if_tx_sample_tick),
-        .i_if_prdata(v_if_prdata),
-        .i_if_pready(v_if_pready),
-        .i_if_pslverr(v_if_pslverr),
-        .o_if_psel(if_only_if_psel),
-        .o_if_penable(if_only_if_penable),
-        .o_if_pwrite(if_only_if_pwrite),
-        .o_if_paddr(if_only_if_paddr),
-        .o_if_pwdata(if_only_if_pwdata),
-        .o_if_serial_rx(if_only_if_serial_rx),
-        .o_if_cdr_sample_valid(if_only_if_cdr_sample_valid),
-        .o_io_out(if_only_io_out),
-        .o_io_oe(if_only_io_oe)
+    // Demod Wrapper
+    demod_wrapper #(
+        .CFG_WIDTH(CFG_WIDTH),
+        .BUS_A_WIDTH(BUS_A_WIDTH),
+        .BUS_B_WIDTH(BUS_B_WIDTH),
+        .BUS_C_WIDTH(BUS_C_WIDTH),
+        .BUS_D_WIDTH(BUS_D_WIDTH)
+    ) u_demod_wrapper (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_cfg(w_cfg_internal),
+        .i_bus_a(demod_wr_i_bus_a),
+        .i_bus_b(demod_wr_i_bus_b),
+        .o_bus_c(demod_wr_o_bus_c),
+        .o_bus_d(demod_wr_o_bus_d)
     );
 
-    zigbee_io_cfg_msk_only u_cfg_msk_only (
-        .i_io_in(i_io_in),
-        .i_msk_i_bb(w_msk_i_bb),
-        .i_msk_q_bb(w_msk_q_bb),
-        .o_msk_b_in(msk_only_msk_b_in),
-        .o_msk_flag_enable(msk_only_msk_flag_enable),
-        .o_msk_enable_ech(msk_only_msk_enable_ech),
-        .o_io_out(msk_only_io_out),
-        .o_io_oe(msk_only_io_oe)
+    // MSK Wrapper
+    msk_test_wrapper #(
+        .SAMPLES_PER_HALF_SINE(10),
+        .MSK_RES(6),
+        .CFG_WIDTH(CFG_WIDTH),
+        .BUS_A_WIDTH(BUS_A_WIDTH),
+        .BUS_B_WIDTH(BUS_B_WIDTH),
+        .BUS_C_WIDTH(BUS_C_WIDTH),
+        .BUS_D_WIDTH(BUS_D_WIDTH)
+    ) u_msk_wrapper (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_cfg(w_cfg_internal),
+        .i_flag_enable(1'b0),  // TODO: connect from pads if needed
+        .i_enable_ech(1'b0),   // TODO: connect from pads if needed
+        .i_b_in(1'b0),         // TODO: connect from pads if needed
+        .o_I_BB(),             // Not used in test mode
+        .o_Q_BB(),             // Not used in test mode
+        .io_bus_a(msk_wr_i_bus_a[BUS_A_WIDTH-1:0]),
+        .o_bus_b(msk_wr_i_bus_b[BUS_B_WIDTH-1:0]),
+        .o_bus_c(msk_wr_o_bus_c),
+        .o_bus_d(msk_wr_o_bus_d)
     );
 
-    zigbee_io_cfg_cordic_only #(
-        .CORDIC_WIDTH_IN(CORDIC_WIDTH_IN)
-    ) u_cfg_cordic_only (
-        .i_io_in(i_io_in),
-        .i_cordic_phase(w_cordic_phase),
-        .o_cordic_i(cordic_only_i),
-        .o_cordic_q(cordic_only_q),
-        .o_io_out(cordic_only_io_out),
-        .o_io_oe(cordic_only_io_oe)
-    );
+    // =========================================================================
+    // Input bus routing (from external ports and pads)
+    // =========================================================================
+    // Buses can come from either external test ports or from io_pads
+    // For test mode, we use the external ports; for normal operation, we can use pads
+    
+    assign mux_i_bus_a = i_bus_a;
+    assign mux_i_bus_b = i_bus_b;
 
-    // ---------------------------------------------------------------------
-    // Runtime selector for active configuration
+    // Route to all wrappers (they always get the same input)
+    assign if_wr_i_bus_a      = mux_i_bus_a;
+    assign if_wr_i_bus_b      = mux_i_bus_b;
+    assign cdr_wr_i_bus_a     = mux_i_bus_a;
+    assign cdr_wr_i_bus_b     = mux_i_bus_b;
+    assign cordic_wr_i_bus_a  = mux_i_bus_a;
+    assign cordic_wr_i_bus_b  = mux_i_bus_b;
+    assign demod_wr_i_bus_a   = mux_i_bus_a;
+    assign demod_wr_i_bus_b   = mux_i_bus_b;
+    assign msk_wr_i_bus_a     = mux_i_bus_a;
+    assign msk_wr_i_bus_b     = mux_i_bus_b;
+
+    // =========================================================================
+    // Output bus multiplexer (selects which wrapper output to route to pads)
+    // =========================================================================
     always_comb begin
-        v_if_psel             = if_only_if_psel;
-        v_if_penable          = if_only_if_penable;
-        v_if_pwrite           = if_only_if_pwrite;
-        v_if_paddr            = if_only_if_paddr;
-        v_if_pwdata           = if_only_if_pwdata;
-        v_if_serial_rx        = if_only_if_serial_rx;
-        v_if_cdr_sample_valid = if_only_if_cdr_sample_valid;
-        v_msk_b_in            = 1'b0;
-        v_msk_flag_enable     = 1'b0;
-        v_msk_enable_ech      = 1'b0;
-        v_cordic_i            = '0;
-        v_cordic_q            = '0;
+        mux_o_bus_c = '0;
+        mux_o_bus_d = '0;
 
-        o_io_out              = if_only_io_out;
-        o_io_oe               = if_only_io_oe;
-
-        unique case (zigbee_cfg_mode_e'(w_cfg_mode))
-            CFG_IF_ONLY: begin
-                v_if_psel             = if_only_if_psel;
-                v_if_penable          = if_only_if_penable;
-                v_if_pwrite           = if_only_if_pwrite;
-                v_if_paddr            = if_only_if_paddr;
-                v_if_pwdata           = if_only_if_pwdata;
-                v_if_serial_rx        = if_only_if_serial_rx;
-                v_if_cdr_sample_valid = if_only_if_cdr_sample_valid;
-                v_msk_b_in            = 1'b0;
-                v_msk_flag_enable     = 1'b0;
-                v_msk_enable_ech      = 1'b0;
-                v_cordic_i            = '0;
-                v_cordic_q            = '0;
-                o_io_out              = if_only_io_out;
-                o_io_oe               = if_only_io_oe;
+        unique case (w_wrapper_select)
+            3'b000: begin  // Interface Wrapper
+                mux_o_bus_c = if_wr_o_bus_c;
+                mux_o_bus_d = if_wr_o_bus_d;
             end
-
-            CFG_MSK_ONLY: begin
-                v_if_psel             = 1'b0;
-                v_if_penable          = 1'b0;
-                v_if_pwrite           = 1'b0;
-                v_if_paddr            = '0;
-                v_if_pwdata           = '0;
-                v_if_serial_rx        = 1'b0;
-                v_if_cdr_sample_valid = 1'b0;
-                v_msk_b_in            = msk_only_msk_b_in;
-                v_msk_flag_enable     = msk_only_msk_flag_enable;
-                v_msk_enable_ech      = msk_only_msk_enable_ech;
-                v_cordic_i            = '0;
-                v_cordic_q            = '0;
-                o_io_out              = msk_only_io_out;
-                o_io_oe               = msk_only_io_oe;
+            3'b001: begin  // CDR Wrapper
+                mux_o_bus_c = cdr_wr_o_bus_c;
+                mux_o_bus_d = cdr_wr_o_bus_d;
             end
-
-            CFG_CORDIC_ONLY: begin
-                v_if_psel             = 1'b0;
-                v_if_penable          = 1'b0;
-                v_if_pwrite           = 1'b0;
-                v_if_paddr            = '0;
-                v_if_pwdata           = '0;
-                v_if_serial_rx        = 1'b0;
-                v_if_cdr_sample_valid = 1'b0;
-                v_msk_b_in            = 1'b0;
-                v_msk_flag_enable     = 1'b0;
-                v_msk_enable_ech      = 1'b0;
-                v_cordic_i            = cordic_only_i;
-                v_cordic_q            = cordic_only_q;
-                o_io_out              = cordic_only_io_out;
-                o_io_oe               = cordic_only_io_oe;
+            3'b010: begin  // Cordic Wrapper
+                mux_o_bus_c = cordic_wr_o_bus_c;
+                mux_o_bus_d = cordic_wr_o_bus_d;
             end
-
+            3'b011: begin  // Demod Wrapper
+                mux_o_bus_c = demod_wr_o_bus_c;
+                mux_o_bus_d = demod_wr_o_bus_d;
+            end
+            3'b100: begin  // MSK Wrapper
+                mux_o_bus_c = msk_wr_o_bus_c;
+                mux_o_bus_d = msk_wr_o_bus_d;
+            end
             default: begin
-                v_if_psel             = if_only_if_psel;
-                v_if_penable          = if_only_if_penable;
-                v_if_pwrite           = if_only_if_pwrite;
-                v_if_paddr            = if_only_if_paddr;
-                v_if_pwdata           = if_only_if_pwdata;
-                v_if_serial_rx        = if_only_if_serial_rx;
-                v_if_cdr_sample_valid = if_only_if_cdr_sample_valid;
-                v_msk_b_in            = 1'b0;
-                v_msk_flag_enable     = 1'b0;
-                v_msk_enable_ech      = 1'b0;
-                v_cordic_i            = '0;
-                v_cordic_q            = '0;
-                o_io_out              = if_only_io_out;
-                o_io_oe               = if_only_io_oe;
+                mux_o_bus_c = '0;
+                mux_o_bus_d = '0;
             end
         endcase
     end
+
+    // =========================================================================
+    // Output bus routing (external ports)
+    // =========================================================================
+    // Route selected wrapper outputs to external test bus ports
+    assign o_bus_c = mux_o_bus_c;
+    assign o_bus_d = mux_o_bus_d;
+
+    // Also route to pads for direct physical access
+    assign o_io_out[35:24] = mux_o_bus_c;
+    assign o_io_out[37:36] = mux_o_bus_d;
+    assign o_io_out[23:0]  = '0;  // Lower pads are inputs only
+    
+    assign o_io_oe = '0;  // All pads are in high-impedance (tristate)
 
 endmodule

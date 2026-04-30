@@ -17,7 +17,8 @@ analyze -library WORK -format sverilog { \
 }
 
 elaborate demod_system -library WORK
-current_design demod_system
+#current_design demod_system
+current_design demod_wrapper
 link
 
 # --- 3. Contraintes ---
@@ -26,7 +27,8 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design demod_system
+#current_design demod_system
+current_design demod_wrapper
 ungroup -all -flatten
 compile_ultra -gate_clock
 #compile_ultra -gate_clock
