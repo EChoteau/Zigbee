@@ -17,8 +17,8 @@ begin
     
     // Test pattern 1: APB write
     $display("  [CLASSIC] Sending APB write command...");
-    set_bus_a({7'h08, 1'b1, 1'b1, 1'b1});  // paddr=0x08, pwrite=1, penable=1, psel=1
-    set_bus_b({2'b11, 1'b0, 8'hA5});        // serial_rx=1, cdr_sample_valid=1, pwdata=0xA5
+    set_bus_a({1'b1, 1'b0, 7'h08, 1'b1, 1'b1, 1'b1});  // cdr_sample_valid=1, paddr[7]=0, paddr[6:0]=0x08, pwrite=1, penable=1, psel=1
+    set_bus_b({1'b0, 1'b1, 8'hA5});        // reserved=0, serial_rx=1, pwdata=0xA5
     repeat(3) @(posedge i_clk);
     
     // Assert: Config is correctly set
@@ -35,8 +35,8 @@ begin
     
     // Test pattern 2: APB read
     $display("  [CLASSIC] Sending APB read command...");
-    set_bus_a({7'h10, 1'b0, 1'b1, 1'b1});  // paddr=0x10, pwrite=0, penable=1, psel=1
-    set_bus_b({2'b00, 1'b1, 8'h00});
+    set_bus_a({1'b0, 1'b1, 7'h10, 1'b0, 1'b1, 1'b1});  // cdr_sample_valid=0, paddr[7]=1, paddr[6:0]=0x10, pwrite=0, penable=1, psel=1
+    set_bus_b({1'b0, 1'b0, 8'h00});
     repeat(3) @(posedge i_clk);
     
     // Assert: Write bit is 0 for read

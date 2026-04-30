@@ -24,7 +24,7 @@ begin
     
     // Test pattern 1: Push first byte to TX FIFO
     $display("  [FIFO_TX] Pushing first byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h11});        // First data pattern
+    set_bus_b({2'b00, 8'h11});        // First data pattern
     repeat(3) @(posedge i_clk);
     
     // Assert: First byte loaded
@@ -35,7 +35,7 @@ begin
     
     // Test pattern 2: Push second byte
     $display("  [FIFO_TX] Pushing second byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h22});        // Second data pattern
+    set_bus_b({2'b00, 8'h22});        // Second data pattern
     repeat(3) @(posedge i_clk);
     
     // Assert: Second byte loaded
@@ -46,7 +46,7 @@ begin
     
     // Test pattern 3: Push third byte
     $display("  [FIFO_TX] Pushing third byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h33});        // Third data pattern
+    set_bus_b({2'b00, 8'h33});        // Third data pattern
     repeat(3) @(posedge i_clk);
     
     // Assert: Third byte loaded

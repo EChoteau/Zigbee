@@ -24,8 +24,10 @@ begin
     
     // Test pattern 1: Load TX FIFO and enable loopback
     $display("  [LOOPBACK] Enabling serial loopback chain...");
-    set_bus_a({7'h00, 1'b1, 1'b1, 1'b1});  // paddr=0x00, pwrite=1, penable=1, psel=1
-    set_bus_b({2'b01, 1'b0, 8'h5A});        // cdr_sample_valid=1, pwdata=0x5A
+    // 12 bits: cdr_sample_valid=0, paddr[7]=0, paddr=0x00, pwrite=1, penable=1, psel=1
+    set_bus_a({1'b0, 1'b0, 7'h00, 1'b1, 1'b1, 1'b1});  
+    // 10 bits: reserved=0, serial_rx=1, pwdata=0x5A  (wait, original had cdr_sample_valid=1? Wait, in original `{2'b01, 1'b0, 8'h5A}` means `i_bus_b[10]` (cdr_sample_valid) = 0, `i_bus_b[9]` (serial_rx) = 1, `i_bus_b[8]` (paddr[7]) = 0. So cdr_sample_valid=0, serial_rx=1)
+    set_bus_b({1'b0, 1'b1, 8'h5A});  // reserved=0, serial_rx=1, pwdata=0x5A
     repeat(5) @(posedge i_clk);
     
     // Assert: Loopback data loaded
@@ -40,7 +42,7 @@ begin
     
     // Test pattern 3: Second data pattern
     $display("  [LOOPBACK] Sending second pattern through loopback...");
-    set_bus_b({2'b01, 1'b0, 8'hA5});        // pwdata=0xA5
+    set_bus_b({1'b0, 1'b1, 8'hA5});        // pwdata=0xA5
     repeat(5) @(posedge i_clk);
     
     // Assert: Second pattern loaded

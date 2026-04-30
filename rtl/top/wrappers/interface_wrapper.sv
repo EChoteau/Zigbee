@@ -4,8 +4,8 @@ module interface_wrapper #(
     parameter int DATA_WIDTH     = 8,
     parameter int FIFO_DEPTH     = 8,
     parameter int DIV_WIDTH      = 8,
-    parameter int BUS_A_WIDTH = 10,
-    parameter int BUS_B_WIDTH = 12,
+    parameter int BUS_A_WIDTH = 12,
+    parameter int BUS_B_WIDTH = 10,
     parameter int BUS_C_WIDTH = 12,
     parameter int BUS_D_WIDTH = 2,
     parameter int CFG_WIDTH  = 3      // Configuration selector width
@@ -117,18 +117,18 @@ module interface_wrapper #(
     // ==========================================================================
     // INPUT BUS DECODING
     // ==========================================================================
-    // Bus A (input): APB control signals
+    // Bus A (input): APB control signals + extra control
     // [0]: psel
     // [1]: penable
     // [2]: pwrite
     // [9:3]: paddr[6:0]
+    // [10]: paddr[7]
+    // [11]: cdr_sample_valid
     
     // Bus B (input): APB data + serial signals
     // [7:0]: pwdata[7:0]
-    // [8]: paddr[7]
-    // [9]: serial_rx
-    // [10]: cdr_sample_valid
-    // [11]: reserved
+    // [8]: serial_rx
+    // [9]: reserved
     
     // ==========================================================================
     // OUTPUT BUS PACKING
@@ -188,10 +188,10 @@ module interface_wrapper #(
                 s_if_penable          = i_bus_a[1];
                 s_if_pwrite           = i_bus_a[2];
                 s_if_paddr[6:0]       = i_bus_a[9:3];
-                s_if_paddr[7]         = i_bus_b[8];
+                s_if_paddr[7]         = i_bus_a[10];
+                s_if_cdr_sample_valid = i_bus_a[11];
                 s_if_pwdata[7:0]      = i_bus_b[7:0];
-                s_if_serial_rx        = i_bus_b[9];
-                s_if_cdr_sample_valid = i_bus_b[10];
+                s_if_serial_rx        = i_bus_b[8];
 
                 // Pack outputs to buses
                 o_bus_c[7:0]          = s_if_prdata[7:0];
@@ -216,7 +216,7 @@ module interface_wrapper #(
                 s_if_penable          = i_bus_a[1];
                 s_if_pwrite           = i_bus_a[2];
                 s_if_paddr[6:0]       = i_bus_a[9:3];
-                s_if_paddr[7]         = i_bus_b[8];
+                s_if_paddr[7]         = i_bus_a[10];
                 s_if_pwdata[7:0]      = i_bus_b[7:0];
 
                 // Pack FIFO status to Bus C
@@ -243,10 +243,10 @@ module interface_wrapper #(
                 s_if_penable          = i_bus_a[1];
                 s_if_pwrite           = i_bus_a[2];
                 s_if_paddr[6:0]       = i_bus_a[9:3];
-                s_if_paddr[7]         = i_bus_b[8];
+                s_if_paddr[7]         = i_bus_a[10];
+                s_if_cdr_sample_valid = i_bus_a[11];
                 s_if_pwdata[7:0]      = i_bus_b[7:0];
-                s_if_serial_rx        = i_bus_b[9];
-                s_if_cdr_sample_valid = i_bus_b[10];
+                s_if_serial_rx        = i_bus_b[8];
 
                 // Pack RX FIFO status to Bus C
                 o_bus_c[7:0]          = s_if_prdata[7:0];
@@ -269,9 +269,9 @@ module interface_wrapper #(
                 s_if_penable          = i_bus_a[1];
                 s_if_pwrite           = i_bus_a[2];
                 s_if_paddr[6:0]       = i_bus_a[9:3];
-                s_if_paddr[7]         = i_bus_b[8];
+                s_if_paddr[7]         = i_bus_a[10];
+                s_if_cdr_sample_valid = i_bus_a[11];
                 s_if_pwdata[7:0]      = i_bus_b[7:0];
-                s_if_cdr_sample_valid = i_bus_b[10];
                 s_if_serial_rx        = s_if_serial_tx;  // Loopback TX to RX
 
                 // Pack APB readback and FIFO to Bus C
@@ -317,8 +317,8 @@ module interface_wrapper #(
             // ====================================================================
             CFG_FIFO_RX: begin
                 // Serial RX from Bus B
-                s_if_serial_rx        = i_bus_b[9];
-                s_if_cdr_sample_valid = i_bus_b[10];
+                s_if_serial_rx        = i_bus_b[8];
+                s_if_cdr_sample_valid = i_bus_a[11];
 
                 // Pack RX FIFO data to Bus C
                 o_bus_c[7:0]          = s_dbg_rx_fifo_q;
@@ -347,8 +347,8 @@ module interface_wrapper #(
 
                 // Deserializer override from Bus B
                 s_if_des_override_en   = 1'b1;
-                s_if_serial_rx         = i_bus_b[9];
-                s_if_cdr_sample_valid  = i_bus_b[10];
+                s_if_serial_rx         = i_bus_b[8];
+                s_if_cdr_sample_valid  = i_bus_a[11];
 
                 // Pack deserializer output to Bus C
                 o_bus_c[7:0]          = s_dbg_des_o_para_data[7:0];
