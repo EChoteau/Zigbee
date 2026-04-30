@@ -166,7 +166,7 @@ module top #(
     // Output bus multiplexer (selects which wrapper output to route to pads)
     // =========================================================================
     always_comb begin
-        unique case (w_wrapper_select)
+        unique case (i_top_cfg)
             3'b000: begin  // Interface Wrapper
                 o_bus_c = if_wr_o_bus_c;
                 o_bus_d = if_wr_o_bus_d;
