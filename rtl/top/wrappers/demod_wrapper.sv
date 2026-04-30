@@ -123,7 +123,7 @@ module demod_wrapper #(
         unique case (i_cfg)
 
             // Test FIR uniquement côté I
-            MODE_4: beginsim:/tb_demod_wrapper/o_bus_c
+            MODE_4: begin
 
                 s_fir_i_in = s_test_fir_in;
                 s_fir_q_in = 8'sd0;
