@@ -2,46 +2,31 @@
 
 module tb_demod_wrapper;
 
-    // =========================================================
-    // PARAMETRES
-    // =========================================================
     localparam int CLK_PERIOD = 100;
 
-    // =========================================================
-    // SIGNAUX
-    // =========================================================
     logic i_clk = 0;
     logic i_rst_n;
 
-    logic [3:0] i_i;
-    logic [3:0] i_q;
+    logic [2:0]  i_cfg;
+    logic [9:0]  i_bus_a;
+    logic [11:0] i_bus_b;
 
-    logic [9:0] i_Bus_B_10;
-    logic [2:0] i_cfg;
-
-    logic signed [5:0] o_i_bb;
-    logic signed [5:0] o_q_bb;
-
-    logic signed [3:0] o_cos_test;
-    logic signed [3:0] o_sin_test;
-
-    logic [11:0] o_Bus_B_12;
+    logic [11:0] o_bus_c;
+    logic [1:0]  o_bus_d;
 
     // =========================================================
     // DUT
     // =========================================================
     demod_wrapper dut (
-        .i_clk(i_clk),
-        .i_rst_n(i_rst_n),
-        .i_i(i_i),
-        .i_q(i_q),
-        .i_Bus_B_10(i_Bus_B_10),
-        .i_cfg(i_cfg),
-        .o_i_bb(o_i_bb),
-        .o_q_bb(o_q_bb),
-        .o_cos_test(o_cos_test),
-        .o_sin_test(o_sin_test),
-        .o_Bus_B_12(o_Bus_B_12)
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_cfg   (i_cfg),
+
+        .i_bus_a (i_bus_a),
+        .i_bus_b (i_bus_b),
+
+        .o_bus_c (o_bus_c),
+        .o_bus_d (o_bus_d)
     );
 
     // =========================================================
@@ -54,10 +39,9 @@ module tb_demod_wrapper;
     // =========================================================
     initial begin
         i_rst_n = 0;
-        i_i = 4'd8;
-        i_q = 4'd8;
-        i_Bus_B_10 = 10'd0;
-        i_cfg = 3'b000;
+        i_cfg   = 3'b000;
+        i_bus_a = 10'd0;
+        i_bus_b = 12'd0;
 
         #(5*CLK_PERIOD);
         @(negedge i_clk);
@@ -65,14 +49,26 @@ module tb_demod_wrapper;
     end
 
     // =========================================================
-    // APPLY SAMPLE (REALISTIC TIMING)
+    // APPLY INPUT ON BUS B
+    // bus_b[7:4] = I
+    // bus_b[3:0] = Q
+    // bus_b[7:0] = FIR test input
     // =========================================================
-    task apply_sample(input [3:0] I, input [3:0] Q);
-    begin
-        @(negedge i_clk);
-        i_i = I;
-        i_q = Q;
-    end
+    task automatic apply_bus_b_sample(input logic [3:0] I, input logic [3:0] Q);
+        begin
+            @(negedge i_clk);
+            i_bus_b[7:4] = I;
+            i_bus_b[3:0] = Q;
+            i_bus_b[11:8] = 4'd0;
+        end
+    endtask
+
+    task automatic apply_fir_sample(input logic signed [7:0] x);
+        begin
+            @(negedge i_clk);
+            i_bus_b[7:0]  = x;
+            i_bus_b[11:8] = 4'd0;
+        end
     endtask
 
     // =========================================================
@@ -81,13 +77,19 @@ module tb_demod_wrapper;
     initial begin
         $timeformat(-9, 1, " ns", 12);
 
-        $display("time | cfg | I Q | I_BB Q_BB | Bus12");
+        $display("time | cfg | bus_b[7:4]=I bus_b[3:0]=Q | o_bus_c | o_bus_d");
 
         forever begin
             @(posedge i_clk);
             #5;
-            $display("%t | %b | %2d %2d | %4d %4d | %b",
-                $time, i_cfg, i_i, i_q, o_i_bb, o_q_bb, o_Bus_B_12);
+            $display("%t | %b | I=%2d Q=%2d | %b | %b",
+                $time,
+                i_cfg,
+                i_bus_b[7:4],
+                i_bus_b[3:0],
+                o_bus_c,
+                o_bus_d
+            );
         end
     end
 
@@ -97,11 +99,7 @@ module tb_demod_wrapper;
     initial begin
         wait(i_rst_n);
 
-        // =============================================
-        // LOOP OVER ALL CONFIGS
-        // =============================================
         for (int cfg = 0; cfg < 8; cfg++) begin
-
             @(negedge i_clk);
             i_cfg = cfg[2:0];
 
@@ -109,24 +107,26 @@ module tb_demod_wrapper;
             $display("TEST CFG = %0d", cfg);
             $display("==============================");
 
-            // =========================================
-            // Inject some realistic patterns
-            // =========================================
-
-            repeat (4) begin
-                apply_sample(4'd15, 4'd8);
-                apply_sample(4'd8 , 4'd15);
-                apply_sample(4'd0 , 4'd8);
-                apply_sample(4'd8 , 4'd0);
+            if ((cfg == 4) || (cfg == 5)) begin
+                // FIR-only modes: inject signed 8-bit values on bus_b[7:0]
+                repeat (4) begin
+                    apply_fir_sample(8'sd20);
+                    apply_fir_sample(8'sd0);
+                    apply_fir_sample(-8'sd20);
+                    apply_fir_sample(8'sd0);
+                end
+            end
+            else begin
+                // Demod / full-chain modes: inject I/Q offset-binary samples
+                repeat (4) begin
+                    apply_bus_b_sample(4'd15, 4'd8);
+                    apply_bus_b_sample(4'd8 , 4'd15);
+                    apply_bus_b_sample(4'd0 , 4'd8);
+                    apply_bus_b_sample(4'd8 , 4'd0);
+                end
             end
 
-            // =========================================
-            // Bus test values
-            // =========================================
-            @(negedge i_clk);
-            i_Bus_B_10 = {4'd12, 2'b00, 4'd4};
-
-            repeat (8) @(posedge i_clk);
+            repeat (20) @(posedge i_clk);
         end
 
         $display("\nFIN TEST WRAPPER");

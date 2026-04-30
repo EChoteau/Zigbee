@@ -58,11 +58,9 @@ module interface_top #(
 	output logic                       o_dbg_tx_fifo_rd_valid,
 
 	output logic [DATA_WIDTH-1:0]      o_dbg_rx_fifo_q,
-	output logic                       o_dbg_rx_fifo_push,
 	output logic                       o_dbg_rx_fifo_pop,
 	output logic                       o_dbg_rx_fifo_full,
 	output logic                       o_dbg_rx_fifo_empty,
-	output logic                       o_dbg_rx_ovf_pulse,
 
 	output logic                       o_dbg_tx_tick,
 	output logic                       o_dbg_tx_path_en,
@@ -70,9 +68,6 @@ module interface_top #(
 	output logic                       o_dbg_tx_und_err,
 	output logic                       o_dbg_rx_ovf_err,
 
-	// Serializer chain outputs only
-	output logic                       o_dbg_ser_o_tx_busy,
-	
 	// Deserializer chain outputs only
 	output logic [DATA_WIDTH-1:0]      o_dbg_des_o_para_data,
 	output logic                       o_dbg_des_o_push,
@@ -393,11 +388,9 @@ module interface_top #(
 	// RX FIFO OBSERVABILITY OUTPUTS
 	// ==========================================================================
 	assign o_dbg_rx_fifo_q = w_rx_fifo_q;
-	assign o_dbg_rx_fifo_push = w_rx_fifo_push;
 	assign o_dbg_rx_fifo_pop = w_rx_fifo_pop;
 	assign o_dbg_rx_fifo_full = w_rx_fifo_full;
 	assign o_dbg_rx_fifo_empty = w_rx_fifo_empty;
-	assign o_dbg_rx_ovf_pulse = w_rx_ovf_pulse;
 
 	// ==========================================================================
 	// CONTROL & STATUS OBSERVABILITY OUTPUTS
@@ -408,11 +401,6 @@ module interface_top #(
 	assign o_dbg_tx_und_err = s_tx_und_err;
 	assign o_dbg_rx_ovf_err = s_rx_ovf_err;
 
-	// ==========================================================================
-	// SERIALIZER CHAIN OBSERVABILITY OUTPUTS
-	// ==========================================================================
-	assign o_dbg_ser_o_tx_busy = w_tx_busy;
-	
 	// ==========================================================================
 	// DESERIALIZER CHAIN OBSERVABILITY OUTPUTS
 	// ==========================================================================
