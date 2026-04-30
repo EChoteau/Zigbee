@@ -13,7 +13,7 @@ logic s_up_d, s_down_d;
 
 always @(posedge i_clk or negedge i_rst_n) begin
     if (~i_rst_n) begin
-        o_ctrl   <= (WIDTH-1)'0;
+        o_ctrl   <= 0;
         s_up_d   <= 0;
         s_down_d <= 0;
     end

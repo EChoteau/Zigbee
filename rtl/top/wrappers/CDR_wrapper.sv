@@ -9,8 +9,8 @@ module CDR_wrapper #(
     input  logic                    i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
-    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // MSB used
-    input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a,// unused 
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b, // MSB used
     output logic [BUS_C_WIDTH-1:0] o_bus_c,  // MSB used
     output logic [BUS_D_WIDTH-1:0] o_bus_d   // unused
 );
@@ -22,8 +22,8 @@ module CDR_wrapper #(
     localparam logic [CFG_WIDTH-1:0] CFG4 = 'd4;
 
     // Largeur du bus de contrôle NCO / loop_filter
-    localparam int CTRL_WIDTH = 2;
-
+    localparam int CTRL_WIDTH = 4;
+    localparam int D_PHI_W = 8;
     // -----------------------------------------------------------------------
     // Signaux internes des sous-blocs
     // -----------------------------------------------------------------------
@@ -58,8 +58,8 @@ module CDR_wrapper #(
         // --- phase_detector ---
         // CFG2 : on injecte les stimuli de test directement
         if (i_cfg == CFG2) begin
-            s_pd_decision_in = i_test_in[BUS_B_WIDTH-1];
-            s_pd_sample_clk  = i_test_in[BUS_B_WIDTH-2];
+            s_pd_decision_in = i_bus_b[1];
+            s_pd_sample_clk  = i_bus_b[0];
         end else begin
             // Chemin normal : sortie du décodeur + horloge récupérée du NCO
             s_pd_decision_in = s_decision_sig;
@@ -69,9 +69,9 @@ module CDR_wrapper #(
         // --- loop_filter ---
         // CFG3 : on injecte les stimuli de test directement
         if (i_cfg == CFG3) begin
-            s_lf_up       = i_test_in[BUS_B_WIDTH-1];
-            s_lf_down     = i_test_in[BUS_B_WIDTH-2];
-            s_lf_ctrl_ack = i_test_in[BUS_B_WIDTH-3];
+            s_lf_up       = i_bus_b[2];
+            s_lf_down     = i_bus_b[1];
+            s_lf_ctrl_ack = i_bus_b[0];
         end else begin
             // Chemin normal : sorties du phase_detector + ack du NCO
             s_lf_up       = s_up;
@@ -82,7 +82,7 @@ module CDR_wrapper #(
         // --- NCO ---
         // CFG4 : on injecte la commande de contrôle directement
         if (i_cfg == CFG4)
-            s_nco_ctrl = signed'(i_test_in[CTRL_WIDTH-1:0]);
+            s_nco_ctrl = signed'(i_bus_b[CTRL_WIDTH-1:0]);
         else
             s_nco_ctrl = s_control;
 
@@ -93,11 +93,11 @@ module CDR_wrapper #(
     // -----------------------------------------------------------------------
 
     decision_block #(
-        .resolution_in (N_TEST_IN)
+        .resolution_in (D_PHI_W)
     ) u_dec (
         .i_clk          (i_clk),
         .i_rst_n        (i_rst_n),
-        .i_dphi_in      (i_test_in),      // toujours piloté par i_test_in
+        .i_dphi_in      (i_bus_b[D_PHI_W-1:0]),      // toujours piloté par i_test_in
         .o_decision_out (s_decision_sig)
     );
 
@@ -144,26 +144,26 @@ module CDR_wrapper #(
     // Mux de sortie
     // -----------------------------------------------------------------------
     always_comb begin
-        o_test_out = '0;
+        o_bus_c = '0;
         unique case (i_cfg)
 
             CFG0: // Mode normal CDR : data + enable
-                o_bus_c = {{BUS_C_WIDTH-2{1'b0}}, s_decision_out, s_sample_enable};
+                o_bus_c = {10'h0, s_decision_out, s_sample_enable};
 
             CFG1: // Debug décodeur : décision combinatoire
-                o_bus_c = {{BUS_C_WIDTH-1{1'b0}}, s_decision_sig};
+                o_bus_c = {11'h0, s_decision_sig};
 
             CFG2: // Test phase_detector isolé : up / down
-                o_bus_c = {{BUS_C_WIDTH-2{1'b0}}, s_up, s_down};
+                o_bus_c = {10'h0, s_up, s_down};
 
             CFG3: // Test loop_filter isolé : bus de contrôle
-                o_bus_c = {{BUS_C_WIDTH-CTRL_WIDTH{1'b0}}, s_control};
+                o_bus_c = {11'h0, s_control};
 
             CFG4: // Test NCO isolé : data + enable + ack
-                o_bus_c = {{BUS_C_WIDTH-3{1'b0}}, s_decision_out, s_sample_enable, s_ack};
+                o_bus_c = {9'h0, s_decision_out, s_sample_enable, s_ack};
 
             default:
-                o_test_out = '0;
+                o_bus_c = 12'h0;
 
         endcase
     end
