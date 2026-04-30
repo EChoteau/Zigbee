@@ -5,15 +5,15 @@ remove_design -all
 analyze -library WORK -format sverilog { \
 
 	../../../rtl/msk/encodeur_diff.sv \
-    ../../../rtl/msk/demux_msk.sv \
-    ../../../rtl/msk/shaping_msk_25.sv \
-    ../../../rtl/msk/top_msk.sv \
+	../../../rtl/msk/demux_msk.sv \
+	../../../rtl/msk/shaping_msk.sv \
+	../../../rtl/msk/top_msk.sv \
 
 	../../../rtl/demod/FIR/fir_core.v \
-    ../../../rtl/demod/FIR/fir_top.v \
-    ../../../rtl/demod/WAVE/demod.sv \
-    ../../../rtl/demod/WAVE/wave_generator.sv \
-    ../../../rtl/demod/top_level_all.sv \
+	../../../rtl/demod/FIR/fir_top.v \
+	../../../rtl/demod/WAVE/demod.sv \
+	../../../rtl/demod/WAVE/wave_generator.sv \
+	../../../rtl/demod/top_level_all.sv \
 
 	../../../rtl/CDR/cdr.sv \
 	../../../rtl/CDR/hogge_phase_detector.sv \
@@ -23,13 +23,13 @@ analyze -library WORK -format sverilog { \
 	../../../rtl/CDR/bascule.sv \
 
 	../../../rtl/cordic/boxcar_filter.sv \
-    ../../../rtl/cordic/cordic_init.sv \
-    ../../../rtl/cordic/cordic_step.sv \
-    ../../../rtl/cordic/cordic_system.sv \
-    ../../../rtl/cordic/cordic_top.sv \
-    ../../../rtl/cordic/cordic_top_pipeline.sv \
-    ../../../rtl/cordic/cordic_top_hybride.sv \
-    ../../../rtl/cordic/derivate.sv \
+	../../../rtl/cordic/cordic_init.sv \
+	../../../rtl/cordic/cordic_step.sv \
+	../../../rtl/cordic/cordic_system.sv \
+	../../../rtl/cordic/cordic_top.sv \
+	../../../rtl/cordic/cordic_top_pipeline.sv \
+	../../../rtl/cordic/cordic_top_hybride.sv \
+	../../../rtl/cordic/derivate.sv \
 
 	../../../rtl/interface/serializer.sv \
 	../../../rtl/interface/interface_top.sv \
