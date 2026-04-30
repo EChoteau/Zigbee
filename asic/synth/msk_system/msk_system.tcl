@@ -5,7 +5,7 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/msk/encodeur_diff.sv \
     ../../../rtl/msk/demux_msk.sv \
     ../../../rtl/msk/shaping_msk.sv \
-    ../../../rtl/msk/top_msk.sv \
+    ../../../rtl/msk/msk_system.sv \
 }
 
 elaborate msk_system -library WORK
