@@ -38,11 +38,11 @@ analyze -library WORK -format sverilog { \
 	../../../rtl/interface/baud_rate_gen.sv \
 	../../../rtl/interface/apb_slave_regs.sv \
 
-	../../../rtl/top/wrappers/msk_wapper.sv \
-	../../../rtl/top/wrappers/demod_wapper.sv \
-	../../../rtl/top/wrappers/cdr_wapper.sv \
-	../../../rtl/top/wrappers/cordic_wapper.sv \
-	../../../rtl/top/wrappers/interface_wapper.sv \
+	../../../rtl/top/wrappers/msk_wrapper.sv \
+	../../../rtl/top/wrappers/demod_wrapper.sv \
+	../../../rtl/top/wrappers/cdr_wrapper.sv \
+	../../../rtl/top/wrappers/cordic_wrapper.sv \
+	../../../rtl/top/wrappers/interface_wrapper.sv \
 
 	../../../rtl/top/top.sv \
 }
