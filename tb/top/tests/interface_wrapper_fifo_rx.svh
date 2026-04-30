@@ -24,33 +24,36 @@ begin
     
     // Test pattern 1: Inject serial bit stream
     $display("  [FIFO_RX] Injecting serial data via CDR...");
-    set_bus_b({2'b11, 1'b0, 8'h00});        // serial_rx=1, cdr_sample_valid=1
+    set_bus_a({1'b1, 11'h000});             // cdr_sample_valid=1
+    set_bus_b({1'b0, 1'b1, 8'h00});         // serial_rx=1
     repeat(10) @(posedge i_clk);
     
     // Assert: First pattern active
-    assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b1)
+    assert (i_bus_a[11] == 1'b1 && i_bus_b[8] == 1'b1)
         $display("  [FIFO_RX] ✓ First pattern active (cdr_sample_valid=1, serial_rx=1)");
     else
         $error("  [FIFO_RX] ✗ FAIL: First pattern mismatch!");
     
     // Test pattern 2: Different serial pattern
     $display("  [FIFO_RX] Changing serial pattern...");
-    set_bus_b({2'b10, 1'b0, 8'h00});        // cdr_sample_valid=1, serial_rx=0
+    set_bus_a({1'b1, 11'h000});             // cdr_sample_valid=1
+    set_bus_b({1'b0, 1'b0, 8'h00});         // serial_rx=0
     repeat(10) @(posedge i_clk);
     
     // Assert: Second pattern active
-    assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b0)
+    assert (i_bus_a[11] == 1'b1 && i_bus_b[8] == 1'b0)
         $display("  [FIFO_RX] ✓ Second pattern active (serial_rx=0)");
     else
         $error("  [FIFO_RX] ✗ FAIL: Second pattern mismatch!");
     
     // Test pattern 3: Back to first pattern
     $display("  [FIFO_RX] Restoring serial pattern...");
-    set_bus_b({2'b11, 1'b0, 8'h00});
+    set_bus_a({1'b1, 11'h000});             // cdr_sample_valid=1
+    set_bus_b({1'b0, 1'b1, 8'h00});         // serial_rx=1
     repeat(10) @(posedge i_clk);
     
     // Assert: Pattern restored
-    assert (i_bus_b[9] == 1'b1)
+    assert (i_bus_b[8] == 1'b1)
         $display("  [FIFO_RX] ✓ Pattern restored (serial_rx=1)");
     else
         $error("  [FIFO_RX] ✗ FAIL: Pattern restore failed!");

@@ -45,8 +45,8 @@ module test_wrapper_tb;
     // ==========================================================================
     // TESTBENCH SIGNALS (BUS-BASED)
     // ==========================================================================
-    logic [9:0]  i_bus_a;      // APB control: psel, penable, pwrite, paddr[6:0]
-    logic [11:0] i_bus_b;      // APB data + serial: pwdata, paddr[7], serial_rx, cdr_sample_valid
+    logic [11:0] i_bus_a;      // APB control: psel, penable, pwrite, paddr[6:0], paddr[7], cdr_sample_valid
+    logic [9:0]  i_bus_b;      // APB data + serial: pwdata, serial_rx, reserved
     logic [11:0] o_bus_c;      // APB readback + FIFO: prdata, fifo status
     logic [1:0]  o_bus_d;      // Serial outputs: serial_tx, tx_valid
 
@@ -99,14 +99,14 @@ module test_wrapper_tb;
     end
     endtask
 
-    task automatic set_bus_a(logic [9:0] data);
+    task automatic set_bus_a(logic [11:0] data);
     begin
         i_bus_a = data;
         @(posedge i_clk);
     end
     endtask
 
-    task automatic set_bus_b(logic [11:0] data);
+    task automatic set_bus_b(logic [9:0] data);
     begin
         i_bus_b = data;
         @(posedge i_clk);
@@ -119,15 +119,17 @@ module test_wrapper_tb;
 
     // TC_BUS_A_INPUT: Verify Bus A inputs are accepted
     task automatic tc_bus_a_input();
-        logic [9:0] test_pattern;
+        logic [11:0] test_pattern;
     begin
         $display("[TC_BUS_A] Testing Bus A input routing");
         
         set_config(CFG_CLASSIC);
         
         // Send APB control signals via Bus A
-        // [0]: psel, [1]: penable, [2]: pwrite, [9:3]: paddr[6:0]
-        test_pattern = {7'h08,  // paddr[6:0] = 0x08
+        // [0]: psel, [1]: penable, [2]: pwrite, [9:3]: paddr[6:0], [10]: paddr[7], [11]: cdr_sample_valid
+        test_pattern = {1'b0,   // cdr_sample_valid = 0
+                        1'b0,   // paddr[7] = 0
+                        7'h08,  // paddr[6:0] = 0x08
                         1'b1,   // pwrite = 1
                         1'b1,   // penable = 1
                         1'b1};  // psel = 1
@@ -142,16 +144,16 @@ module test_wrapper_tb;
 
     // TC_BUS_B_INPUT: Verify Bus B inputs are accepted
     task automatic tc_bus_b_input();
-        logic [11:0] test_pattern;
+        logic [9:0] test_pattern;
     begin
         $display("[TC_BUS_B] Testing Bus B input routing");
         
         set_config(CFG_CLASSIC);
         
         // Send APB data + serial signals via Bus B
-        // [7:0]: pwdata, [8]: paddr[7], [9]: serial_rx, [10]: cdr_sample_valid
-        test_pattern = {2'b11,    // cdr_sample_valid=1, serial_rx=1
-                        1'b0,     // paddr[7] = 0
+        // [7:0]: pwdata, [8]: serial_rx, [9]: reserved
+        test_pattern = {1'b0,     // reserved
+                        1'b1,     // serial_rx = 1
                         8'hA5};   // pwdata = 0xA5
         
         set_bus_b(test_pattern);
@@ -168,8 +170,8 @@ module test_wrapper_tb;
         $display("[TC_BUS_C] Testing Bus C output routing");
         
         set_config(CFG_CLASSIC);
-        set_bus_a(10'b0);
-        set_bus_b(12'b0);
+        set_bus_a(12'b0);
+        set_bus_b(10'b0);
         
         repeat(3) @(posedge i_clk);
         

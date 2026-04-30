@@ -23,8 +23,10 @@ begin
     
     // Test pattern 1: Setup APB and serial RX
     $display("  [RX_ONLY] Injecting serial data via CDR...");
-    set_bus_a({7'h00, 1'b0, 1'b1, 1'b1});  // paddr=0x00, pwrite=0, penable=1, psel=1
-    set_bus_b({2'b11, 1'b0, 8'h00});        // serial_rx=1, cdr_sample_valid=1
+    // 12 bits: cdr_sample_valid=1, paddr[7]=0, paddr[6:0]=0, pwrite=0, penable=1, psel=1
+    set_bus_a({1'b1, 1'b0, 7'h00, 1'b0, 1'b1, 1'b1});  
+    // 10 bits: reserved=0, serial_rx=1, pwdata=0
+    set_bus_b({1'b0, 1'b1, 8'h00});        
     repeat(4) @(posedge i_clk);
     
     // Assert: Read mode is active
@@ -34,18 +36,19 @@ begin
         $error("  [RX_ONLY] ✗ FAIL: pwrite should be 0!");
     
     // Assert: Serial RX is active
-    assert (i_bus_b[9] == 1'b1)
+    assert (i_bus_b[8] == 1'b1)
         $display("  [RX_ONLY] ✓ Serial RX active (serial_rx=1)");
     else
         $error("  [RX_ONLY] ✗ FAIL: serial_rx not set!");
     
     // Test pattern 2: Different serial pattern
     $display("  [RX_ONLY] Injecting different serial pattern...");
-    set_bus_b({2'b10, 1'b0, 8'h00});        // cdr_sample_valid=1, serial_rx=0
+    set_bus_a({1'b1, 1'b0, 7'h00, 1'b0, 1'b1, 1'b1});
+    set_bus_b({1'b0, 1'b0, 8'h00});        // serial_rx=0
     repeat(4) @(posedge i_clk);
     
     // Assert: Serial pattern changed
-    assert (i_bus_b[9] == 1'b0)
+    assert (i_bus_b[8] == 1'b0)
         $display("  [RX_ONLY] ✓ Serial pattern changed (serial_rx=0)");
     else
         $error("  [RX_ONLY] ✗ FAIL: serial_rx pattern mismatch!");
