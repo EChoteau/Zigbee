@@ -1,33 +1,44 @@
-module demod_wrapper (
-    input  logic              i_clk,
-    input  logic              i_rst_n,
+module demod_wrapper #(
+    parameter int CFG_WIDTH   = 3,
+    parameter int BUS_A_WIDTH = 10,
+    parameter int BUS_B_WIDTH = 12,
+    parameter int BUS_C_WIDTH = 12,
+    parameter int BUS_D_WIDTH = 2
+)(
+    input  logic i_clk,
+    input  logic i_rst_n,
+    input  logic [CFG_WIDTH-1:0] i_cfg,
 
-    input  logic [3:0]        i_i,
-    input  logic [3:0]        i_q,
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // unused
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b, // input 
 
-    input  logic [9:0]        i_Bus_B_10,
-    input  logic [2:0]        i_cfg,
-
-    output logic signed [5:0] o_i_bb,
-    output logic signed [5:0] o_q_bb,
-
-    output logic signed [3:0] o_cos_test,
-    output logic signed [3:0] o_sin_test,
-
-    output logic [11:0]       o_Bus_B_12
+    output logic [BUS_C_WIDTH-1:0] o_bus_c, //  output 
+    output logic [BUS_D_WIDTH-1:0] o_bus_d // unused
 );
 
-    // =========================================================
-    // Découpage bus de test
-    // =========================================================
+    localparam logic [2:0] MODE_0 = 3'b000;
+    localparam logic [2:0] MODE_1 = 3'b001;
+    localparam logic [2:0] MODE_2 = 3'b010;
+    localparam logic [2:0] MODE_3 = 3'b011;
+    localparam logic [2:0] MODE_4 = 3'b100;
+    localparam logic [2:0] MODE_5 = 3'b101;
+    localparam logic [2:0] MODE_6 = 3'b110;
+    localparam logic [2:0] MODE_7 = 3'b111;
 
-    logic [3:0] s_test_i;
-    logic [3:0] s_test_q;
+    // =========================================================
+    // Découpage bus B
+    // =========================================================
+    // i_bus_b[7:4] = I test ADC 4 bits
+    // i_bus_b[3:0] = Q test ADC 4 bits
+    // i_bus_b[7:0] = entrée FIR test 8 bits
+
+    logic [3:0]        s_test_i;
+    logic [3:0]        s_test_q;
     logic signed [7:0] s_test_fir_in;
 
-    assign s_test_i      = i_Bus_B_10[9:6];
-    assign s_test_q      = i_Bus_B_10[3:0];
-    assign s_test_fir_in = i_Bus_B_10[7:0];
+    assign s_test_i      = i_bus_b[7:4];
+    assign s_test_q      = i_bus_b[3:0];
+    assign s_test_fir_in = i_bus_b[7:0];
 
     // =========================================================
     // MUX entrée démodulateur
@@ -37,38 +48,38 @@ module demod_wrapper (
     logic [3:0] s_demod_q_in;
 
     always_comb begin
-        s_demod_i_in = i_i;
-        s_demod_q_in = i_q;
+        s_demod_i_in = s_test_i;
+        s_demod_q_in = s_test_q;
 
-        case (i_cfg)
+        unique case (i_cfg)
 
             // Test cos + demod I
-            3'b010: begin
+            MODE_2: begin
                 s_demod_i_in = s_test_i;
                 s_demod_q_in = s_test_q;
             end
 
             // Test sin + demod Q
-            3'b011: begin
+            MODE_3: begin
                 s_demod_i_in = s_test_i;
                 s_demod_q_in = s_test_q;
             end
 
             // Test chaîne complète côté I uniquement
-            3'b110: begin
+            MODE_6: begin
                 s_demod_i_in = s_test_i;
-                s_demod_q_in = 4'b1000; // zéro en offset binary
+                s_demod_q_in = 4'b1000;
             end
 
             // Test chaîne complète côté Q uniquement
-            3'b111: begin
-                s_demod_i_in = 4'b1000; // zéro en offset binary
+            MODE_7: begin
+                s_demod_i_in = 4'b1000;
                 s_demod_q_in = s_test_q;
             end
 
             default: begin
-                s_demod_i_in = i_i;
-                s_demod_q_in = i_q;
+                s_demod_i_in = s_test_i;
+                s_demod_q_in = s_test_q;
             end
 
         endcase
@@ -81,6 +92,9 @@ module demod_wrapper (
     logic signed [7:0] s_demod_out_i;
     logic signed [7:0] s_demod_out_q;
 
+    logic signed [3:0] s_cos_test;
+    logic signed [3:0] s_sin_test;
+
     IQ_DEMOD u_iqdemod (
         .i_clk      (i_clk),
         .i_rst_n    (i_rst_n),
@@ -91,8 +105,8 @@ module demod_wrapper (
         .o_I_out    (s_demod_out_i),
         .o_Q_out    (s_demod_out_q),
 
-        .o_cos_test (o_cos_test),
-        .o_sin_test (o_sin_test)
+        .o_cos_test (s_cos_test),
+        .o_sin_test (s_sin_test)
     );
 
     // =========================================================
@@ -106,16 +120,17 @@ module demod_wrapper (
         s_fir_i_in = s_demod_out_i;
         s_fir_q_in = s_demod_out_q;
 
-        case (i_cfg)
+        unique case (i_cfg)
 
             // Test FIR uniquement côté I
-            3'b100: begin
+            MODE_4: beginsim:/tb_demod_wrapper/o_bus_c
+
                 s_fir_i_in = s_test_fir_in;
                 s_fir_q_in = 8'sd0;
             end
 
             // Test FIR uniquement côté Q
-            3'b101: begin
+            MODE_5: begin
                 s_fir_i_in = 8'sd0;
                 s_fir_q_in = s_test_fir_in;
             end
@@ -132,72 +147,80 @@ module demod_wrapper (
     // FIR I / FIR Q
     // =========================================================
 
+    logic signed [5:0] s_i_bb;
+    logic signed [5:0] s_q_bb;
+
     fir_top u_fir_i (
-        .i_clk    (i_clk),
-        .i_rst_n  (i_rst_n),
-        .i_x_in   (s_fir_i_in),
-        .o_y_out  (o_i_bb)
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_x_in  (s_fir_i_in),
+        .o_y_out (s_i_bb)
     );
 
     fir_top u_fir_q (
-        .i_clk    (i_clk),
-        .i_rst_n  (i_rst_n),
-        .i_x_in   (s_fir_q_in),
-        .o_y_out  (o_q_bb)
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_x_in  (s_fir_q_in),
+        .o_y_out (s_q_bb)
     );
 
     // =========================================================
-    // MUX sortie test 12 bits
+    // MUX sortie bus C
     // =========================================================
 
     always_comb begin
-        case (i_cfg)
+        o_bus_c = '0;
+        o_bus_d = '0;
 
-            // Test cos seul
-            3'b000: begin
-                o_Bus_B_12 = {o_cos_test, s_demod_out_i};
+        unique case (i_cfg)
+
+            // Test cos seul / cos + sortie I demod
+            MODE_0: begin
+                o_bus_c = {s_cos_test, s_demod_out_i};
             end
 
-            // Test sin seul
-            3'b001: begin
-                o_Bus_B_12 = {o_sin_test, s_demod_out_q};
+            // Test sin seul / sin + sortie Q demod
+            MODE_1: begin
+                o_bus_c = {s_sin_test, s_demod_out_q};
             end
 
             // Test cos + sortie I demod
-            3'b010: begin
-                o_Bus_B_12 = {o_cos_test, s_demod_out_i};
+            MODE_2: begin
+                o_bus_c = {s_cos_test, s_demod_out_i};
             end
 
             // Test sin + sortie Q demod
-            3'b011: begin
-                o_Bus_B_12 = {o_sin_test, s_demod_out_q};
+            MODE_3: begin
+                o_bus_c = {s_sin_test, s_demod_out_q};
             end
 
             // Test FIR I seul
-            3'b100: begin
-                o_Bus_B_12 = {o_i_bb, o_q_bb};
+            MODE_4: begin
+                o_bus_c = {s_i_bb, s_q_bb};
             end
 
             // Test FIR Q seul
-            3'b101: begin
-                o_Bus_B_12 = {o_i_bb, o_q_bb};
+            MODE_5: begin
+                o_bus_c = {s_i_bb, s_q_bb};
             end
 
             // Test chaîne complète côté I
-            3'b110: begin
-                o_Bus_B_12 = {o_i_bb, o_q_bb};
+            MODE_6: begin
+                o_bus_c = {s_i_bb, s_q_bb};
             end
 
             // Test chaîne complète côté Q
-            3'b111: begin
-                o_Bus_B_12 = {o_i_bb, o_q_bb};
+            MODE_7: begin
+                o_bus_c = {s_i_bb, s_q_bb};
             end
 
             default: begin
-                o_Bus_B_12 = 12'b0;
+                o_bus_c = '0;
             end
 
         endcase
+
+        o_bus_d = {s_i_bb[5], s_q_bb[5]};
     end
 
 endmodule
