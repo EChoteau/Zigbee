@@ -11,7 +11,9 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/demod/FIR/fir_top.v \
     ../../../rtl/demod/WAVE/demod.sv \
     ../../../rtl/demod/WAVE/wave_generator.sv \
+    ../../../rtl/top/wrappers/demod_wrapper.sv \
     ../../../rtl/demod/top_level_all.sv \
+
 }
 
 elaborate demod_system -library WORK
