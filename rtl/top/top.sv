@@ -20,7 +20,7 @@ module top #(
     input  logic [BUS_A_WIDTH-1:0] i_bus_a,  // Test input bus A
     input  logic [BUS_B_WIDTH-1:0] i_bus_b,  // Test input bus B
     output logic [BUS_C_WIDTH-1:0] o_bus_c,  // Test output bus C
-    output logic [BUS_D_WIDTH-1:0] o_bus_d,  // Test output bus D
+    output logic [BUS_D_WIDTH-1:0] o_bus_d  // Test output bus D
 );
 
     // =========================================================================
