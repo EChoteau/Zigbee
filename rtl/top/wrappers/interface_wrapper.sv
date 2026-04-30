@@ -252,7 +252,7 @@ module interface_wrapper #(
                 o_bus_c[7:0]          = s_if_prdata[7:0];
                 o_bus_c[8]            = s_dbg_rx_fifo_full;
                 o_bus_c[9]            = s_dbg_rx_fifo_empty;
-                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[10]           = s_dbg_des_o_push;
                 o_bus_c[11]           = s_dbg_rx_fifo_pop;
 
                 o_bus_d[1:0]          = '0;  // Not used in RX_ONLY
@@ -278,7 +278,7 @@ module interface_wrapper #(
                 o_bus_c[7:0]          = s_if_prdata[7:0];
                 o_bus_c[8]            = s_if_serial_tx;
                 o_bus_c[9]            = s_dbg_tx_fifo_push;
-                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[10]           = s_dbg_des_o_push;
                 o_bus_c[11]           = s_dbg_rx_ovf_err;
 
                 // Pack debug to Bus D
@@ -324,7 +324,7 @@ module interface_wrapper #(
                 o_bus_c[7:0]          = s_dbg_rx_fifo_q;
                 o_bus_c[8]            = s_dbg_rx_fifo_full;
                 o_bus_c[9]            = s_dbg_rx_fifo_empty;
-                o_bus_c[10]           = s_dbg_rx_fifo_push;
+                o_bus_c[10]           = s_dbg_des_o_push;
                 o_bus_c[11]           = s_dbg_rx_fifo_pop;
 
                 // Pack RX status to Bus D
