@@ -22,6 +22,9 @@ vlog -sv +acc ../../rtl/demod/WAVE/demod.sv
 vlog -sv +acc ../../rtl/demod/FIR/fir_core.v
 vlog -sv +acc ../../rtl/demod/FIR/fir_top.v
 
+# Bloc WRAPPER (Le module qui relie tout)
+vlog -sv +acc ../../rtl/top/wrappers/demod_wrapper.sv
+
 # Bloc TOP (Le module qui relie tout)
 vlog -sv +acc ../../rtl/demod/top_level_all.sv
 
@@ -29,6 +32,7 @@ vlog -sv +acc ../../rtl/demod/top_level_all.sv
 echo "Compiling global testbench..."
 vlog -sv +acc tb_all.sv
 vlog -sv +acc tb_fir.v
+vlog -sv +acc tb_wrapper.sv
 
 # 4. Vérification du succès
 if [ $? -eq 0 ]; then
