@@ -9,24 +9,31 @@ set_interactive_constraint_modes [all_constraint_modes -active]
 
 set_input_transition $input_transition_min_best -min [get_ports "i_clk"]
 set_input_transition $input_transition_min_best -min [get_ports "i_rst_n"]
-set_input_transition $input_transition_min_best -min [get_ports {i_i[*]}]
-set_input_transition $input_transition_min_best -min [get_ports {i_q[*]}]
+set_input_transition $input_transition_min_best -min [get_ports {i_top_cfg[*]}]
+set_input_transition $input_transition_min_best -min [get_ports {i_wrapper_cfg[*]}]
+set_input_transition $input_transition_min_best -min [get_ports {i_bus_a[*]}]
+set_input_transition $input_transition_min_best -min [get_ports {i_bus_b[*]}]
 
 
 set_input_transition $input_transition_max_best -max [get_ports "i_clk"]
 set_input_transition $input_transition_max_best -max [get_ports "i_rst_n"]
-set_input_transition $input_transition_max_best -max [get_ports {i_i[*]}]
-set_input_transition $input_transition_max_best -max [get_ports {i_q[*]}]
+set_input_transition $input_transition_max_best -max [get_ports {i_top_cfg[*]}]
+set_input_transition $input_transition_max_best -max [get_ports {i_wrapper_cfg[*]}]
+set_input_transition $input_transition_max_best -max [get_ports {i_bus_a[*]}]
+set_input_transition $input_transition_max_best -max [get_ports {i_bus_b[*]}]
 
 
 set_load -pin_load $std_load_best -min [get_ports "i_clk"]
 set_load -pin_load $std_load_best -min [get_ports "i_rst_n"]
-set_load -pin_load $std_load_best -min [get_ports {i_i[*]}]
-set_load -pin_load $std_load_best -min [get_ports {i_q[*]}]
+set_load -pin_load $std_load_best -min [get_ports {i_top_cfg[*]}]
+set_load -pin_load $std_load_best -min [get_ports {i_wrapper_cfg[*]}]
+set_load -pin_load $std_load_best -min [get_ports {i_bus_a[*]}]
+set_load -pin_load $std_load_best -min [get_ports {i_bus_b[*]}]
 
 
 
 ##---------------------------------------------------------
 ## Output
 ##---------------------------------------------------------
-set_max_capacitance $max_cap_best [get_ports {o_phase[*]}]
+set_max_capacitance $max_cap_best [get_ports {o_bus_c[*]}]
+set_max_capacitance $max_cap_best [get_ports {o_bus_d[*]}]

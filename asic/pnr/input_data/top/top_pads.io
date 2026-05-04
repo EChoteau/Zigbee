@@ -2,67 +2,75 @@
 #  Encounter CORNER Pad placement file               #
 ######################################################
 
-# Format
-# Pad:	<pad_name>	<side> [<cell type>]
+#### Info ####
+# DIL 48
+# Square die 2mm x 2mm
+# 12 pads by side
+# 4 corner pads
 
-# Definition des pads North
+
+#### Pads definition North ####
+Pad:    io_i_wrapper_cfg_0  N
+Pad:    io_i_wrapper_cfg_1  N
+Pad:    io_i_wrapper_cfg_2  N
+Pad:	GND1				N GND3ALLP 
+Pad:	io_i_clk			N
+Pad:    io_i_top_cfg_0      N
+Pad:	io_i_rst_n			N
+Pad:    io_i_top_cfg_1      N
 Pad:	PWR1				N VDD3ALLP
-Pad:	GND1				N GND3ALLP
-Pad:	io_i_i_0			N
-Pad:	io_i_i_1			N
-Pad:	io_i_i_2			N
-Pad:	io_i_i_3			N
-Pad:	io_i_i_4			N
-Pad:	io_i_i_5			N
-Pad:	PWR4				N VDD3ALLP
-Pad:	GND4				N GND3ALLP
-Pad:	PWR2				N VDD3ALLP
-Pad:	GND2				N GND3ALLP
+Pad:	io_i_top_cfg_2	    N 
+Pad:    io_o_bus_d_0        N
+Pad:    io_o_bus_d_1        N
 
-# Definition des pads East
-Pad:	PWR3				E VDD3ALLP
-Pad:	GND3				E GND3ALLP
-Pad:	io_o_phase_10			E
-Pad:	GND5				E GND3ALLP
-Pad:	PWR6				E VDD3ALLP
-Pad:	GND6				E GND3ALLP
-Pad:	io_i_clk			E
-Pad:	io_i_rst_n			E
-Pad:	PWR5				E VDD3ALLP
-Pad:	GND8				E GND3ALLP
-Pad:	PWR7				E VDD3ALLP
-Pad:	GND7				E GND3ALLP
 
-# Definition des pads South
-Pad:	PWR8				S VDD3ALLP
-Pad:	io_o_phase_0			S
-Pad:	io_o_phase_1			S
-Pad:	io_o_phase_2			S
-Pad:	io_o_phase_3			S
-Pad:	io_o_phase_4			S
-Pad:	io_o_phase_5			S
-Pad:	io_o_phase_6			S
-Pad:	io_o_phase_7			S
-Pad:	io_o_phase_8			S
-Pad:	io_o_phase_9			S
-Pad:	GND9				S GND3ALLP
+#### Pads definition East ####
+Pad:    io_i_bus_a_0        E
+Pad:    io_i_bus_a_1        E
+Pad:    io_i_bus_a_2        E
+Pad:    io_i_bus_a_3        E
+Pad:    io_i_bus_a_4        E
+Pad:    io_i_bus_a_5        E
+Pad:    io_i_bus_a_6        E
+Pad:    io_i_bus_a_7        E
+Pad:    io_i_bus_a_8        E
+Pad:    io_i_bus_a_9        E
+Pad:    io_i_bus_a_10       E
+Pad:    io_i_bus_a_11       E
 
-# Definition des pads West
-Pad:	PWR10				W VDD3ALLP
-Pad:	GND10				W GND3ALLP
-Pad:	io_i_q_0			W
-Pad:	io_i_q_1			W
-Pad:	io_i_q_2			W
-Pad:	io_i_q_3			W
-Pad:	io_i_q_4			W
-Pad:	io_i_q_5			W
-Pad:	PWR9				W VDD3ALLP
-Pad:	GND12				W GND3ALLP
-Pad:	PWR11				W VDD3ALLP
-Pad:	GND11				W GND3ALLP
+#### Pads definition South ####
+Pad:    io_i_bus_b_0        S
+Pad:    io_i_bus_b_1        S
+Pad:    io_i_bus_b_2        S
+Pad:    io_i_bus_b_3        S
+Pad:    io_i_bus_b_4        S
+Pad:    io_i_bus_b_5        S
+Pad:    io_i_bus_b_6        S
+Pad:    io_i_bus_b_7        S
+Pad:    io_i_bus_b_8        S
+Pad:    io_i_bus_b_9        S
+Pad:	GND2				S GND3ALLP
+Pad:	PWR2				S VDD3ALLP
 
-# Definition des pads de Corner
+#### Pads definition West ####
+Pad:    io_o_bus_c_0        W
+Pad:    io_i_bus_c_1        W
+Pad:    io_i_bus_b_2        W
+Pad:    io_i_bus_b_3        W
+Pad:    io_i_bus_b_4        W
+Pad:    io_i_bus_b_5        W
+Pad:    io_i_bus_b_6        W
+Pad:    io_i_bus_b_7        W
+Pad:    io_i_bus_b_8        W
+Pad:    io_i_bus_b_9        W
+Pad:    io_o_bus_d_10       W
+Pad:    io_o_bus_d_11       W
+
+
+
+#### Pads definition Corner ####
 Pad:	io_CORNER0	NW CORNERP
 Pad:	io_CORNER1	NE CORNERP
 Pad:	io_CORNER2	SE CORNERP
 Pad:	io_CORNER3	SW CORNERP
+
