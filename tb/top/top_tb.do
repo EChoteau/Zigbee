@@ -14,6 +14,8 @@ vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/CDR/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/demod/*.sv
+vlog -incr -sv -work lib_RTL +acc rtl/demod/FIR/*.v
+vlog -incr -sv -work lib_RTL +acc rtl/demod/WAVE/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/msk/*.sv
 
 vlog -incr -sv -work lib_RTL +acc tb/top/*.sv
