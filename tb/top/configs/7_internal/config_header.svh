@@ -1,4 +1,6 @@
 task automatic test_7_internal();
+    // task-local declarations must appear before statements
+    integer i;
     begin
         $display("[%0t] test_7_internal", $time);        
         i_top_cfg = 3'd7;
@@ -12,7 +14,6 @@ task automatic test_7_internal();
         // Generate a simple bitstream into the MSK wrapper via i_bus_a[0]
         $display("[TEST7] Sending bitstream to MSK wrapper...");
         // Send a 16-bit pattern LSB first
-        integer i;
         for (i = 0; i < 16; i = i + 1) begin
             i_bus_a = 12'b0;
             i_bus_a[0] = (i % 2); // alternate 1/0 pattern
