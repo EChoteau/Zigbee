@@ -1,13 +1,4 @@
 `timescale 1ns/1ps
-`include "tb/top/configs/0_rx/config_header.sv"
-`include "tb/top/configs/1_tx/config_header.sv"
-`include "tb/top/configs/2_interface/config_header.sv"
-`include "tb/top/configs/3_msk/config_header.sv"
-`include "tb/top/configs/4_demod/config_header.sv"
-`include "tb/top/configs/5_cordic/config_header.sv"
-`include "tb/top/configs/6_cdr/config_header.sv"
-`include "tb/top/configs/7_internal/config_header.sv"
-
 module top_tb;
     // Clock and reset
     logic clk;
@@ -17,11 +8,21 @@ module top_tb;
     logic [2:0] i_top_cfg;
     logic [2:0] i_wrapper_cfg;
 
-    // Simple buses (tie to zero for most tests)
     logic [11:0] i_bus_a;
     logic [9:0]  i_bus_b;
     logic [11:0] o_bus_c;
     logic [1:0]  o_bus_d;
+
+    // Include test config tasks (placed here so they can access the
+    // module-scoped signals above)
+    `include "tb/top/configs/0_rx/config_header.sv"
+    `include "tb/top/configs/1_tx/config_header.sv"
+    `include "tb/top/configs/2_interface/config_header.sv"
+    `include "tb/top/configs/3_msk/config_header.sv"
+    `include "tb/top/configs/4_demod/config_header.sv"
+    `include "tb/top/configs/5_cordic/config_header.sv"
+    `include "tb/top/configs/6_cdr/config_header.sv"
+    `include "tb/top/configs/7_internal/config_header.sv"
 
     // Instantiate DUT
     top uut (
