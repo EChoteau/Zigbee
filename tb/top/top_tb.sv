@@ -15,14 +15,14 @@ module top_tb;
 
     // Include test config tasks (placed here so they can access the
     // module-scoped signals above)
-    `include "tb/top/configs/0_rx/config_header.sv"
-    `include "tb/top/configs/1_tx/config_header.sv"
-    `include "tb/top/configs/2_interface/config_header.sv"
-    `include "tb/top/configs/3_msk/config_header.sv"
-    `include "tb/top/configs/4_demod/config_header.sv"
-    `include "tb/top/configs/5_cordic/config_header.sv"
-    `include "tb/top/configs/6_cdr/config_header.sv"
-    `include "tb/top/configs/7_internal/config_header.sv"
+    `include "tb/top/configs/0_rx/config_header.svh"
+    `include "tb/top/configs/1_tx/config_header.svh"
+    `include "tb/top/configs/2_interface/config_header.svh"
+    `include "tb/top/configs/3_msk/config_header.svh"
+    `include "tb/top/configs/4_demod/config_header.svh"
+    `include "tb/top/configs/5_cordic/config_header.svh"
+    `include "tb/top/configs/6_cdr/config_header.svh"
+    `include "tb/top/configs/7_internal/config_header.svh"
 
     // Instantiate DUT
     top uut (
