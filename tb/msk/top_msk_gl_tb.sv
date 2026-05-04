@@ -31,7 +31,6 @@ module top_msk_tb();
     );
 
     // Horloge 10 MHz
-    //always #50 s_clk = (s_clk === 1'b0);
     initial s_clk = 0;
     always #50 s_clk = ~s_clk;
     // -------------------------------------------------------------------------
@@ -45,9 +44,9 @@ module top_msk_tb();
         s_flag_enable=0;
         s_b_in=0;
 
-        #200 
+        #125 
 	s_rst_n = 1;
-        @(negedge s_clk);
+        @(posedge s_clk);
 
         foreach (s_sequence[i]) begin
             s_b_in = s_sequence[i];

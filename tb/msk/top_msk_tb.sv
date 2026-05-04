@@ -9,7 +9,7 @@ module top_msk_tb();
     parameter int MSK_RES               = 6;
     
     // Signaux
-    logic s_clk;
+    logic s_clk ;
     logic s_rst_n;
     logic s_enable_ech;
     logic s_flag_enable;
@@ -37,7 +37,7 @@ module top_msk_tb();
     // -------------------------------------------------------------------------
     // Horloge 10 MHz (Période = 100ns -> demi-période = 50ns)
     // -------------------------------------------------------------------------
-    
+    initial s_clk = 0;
     always #50 s_clk = ~s_clk;
 
     // -------------------------------------------------------------------------
@@ -46,7 +46,7 @@ module top_msk_tb();
     initial begin
         $display("--- SIMULATION MSK @ 10 MHz (10 pts / arche) ---");
         
-        s_clk		=0;
+        //s_clk	      = 0;
         s_rst_n       = 0;
         s_enable_ech  = 1; // Toujours à 1 car clk = freq echantillonnage
         s_flag_enable = 0;

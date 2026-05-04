@@ -16,14 +16,9 @@ module msk_test_wrapper #(
     input  logic        i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
-    // Entrées/Sorties "Pads" (Normales)
-    logic        i_flag_enable,
-    logic        i_enable_ech,
-    logic        i_b_in,
-    logic signed [MSK_RES-1:0] o_I_BB,
-    logic signed [MSK_RES-1:0] o_Q_BB,
 
-    // --- INTERFACE DE TEST (Identique au CORDIC) ---
+
+    // --- INTERFACE DE TEST  ---
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // INPUT pure (Injection)
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // Unused
     output logic [BUS_C_WIDTH-1:0] o_bus_c, // Observation Data
@@ -33,6 +28,12 @@ module msk_test_wrapper #(
     // --------------------------------------------------------------------------
     // 1. FILS INTERNES
     // --------------------------------------------------------------------------
+
+    logic        i_flag_enable,
+    logic        i_enable_ech,
+    logic        i_b_in,
+    logic signed [MSK_RES-1:0] o_I_BB,
+    logic signed [MSK_RES-1:0] o_Q_BB,
     logic w_b_enc;               // Fil interne : Encodeur -> Demux
     logic w_a_I, w_a_Q;          // Fil interne : Demux -> Shaping
     
