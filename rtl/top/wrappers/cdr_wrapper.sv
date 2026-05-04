@@ -50,16 +50,14 @@ module cdr_wrapper #(
                 o_bus_c = {{(BUS_C_WIDTH-BUS_B_WIDTH){1'b0}}, i_bus_b};
             end
             MODE_2: begin
-                // Combine Bus A and Bus B
-                o_bus_c = {i_bus_b[BUS_C_WIDTH-BUS_A_WIDTH-1:0], i_bus_a[BUS_A_WIDTH-1:0]};
+                o_bus_c = '0;
             end
             MODE_3: begin
-                // Mirror Bus A to both upper and lower halves of Bus C
-                o_bus_c = {i_bus_a[BUS_A_WIDTH-1:0], i_bus_a[BUS_A_WIDTH-1:0]};
+                o_bus_c = '1;
             end
             MODE_4: begin
                 // Inverted Bus A
-                o_bus_c = {{(BUS_C_WIDTH-BUS_A_WIDTH){1'b0}}, ~i_bus_a};
+                o_bus_c = ~i_bus_a;
             end
             MODE_5: begin
                 // Shift Bus A left
