@@ -77,6 +77,11 @@ module custom_wrapper_example #(
                 o_bus_d[0] = w_d;
             end
             default: begin
+                w_a = 1'b0;
+                w_b = 1'b0;
+                w_c = 1'b0;
+                w_d = 1'b0;
+            end
 
         endcase
     end
