@@ -44,9 +44,9 @@ module top_msk_tb();
         s_flag_enable=0;
         s_b_in=0;
 
-        #125 
+        #225 
 	s_rst_n = 1;
-        @(posedge s_clk);
+        @(negedge s_clk);
 
         foreach (s_sequence[i]) begin
             s_b_in = s_sequence[i];
