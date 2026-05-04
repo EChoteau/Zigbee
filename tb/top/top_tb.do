@@ -17,7 +17,7 @@ vlog -incr -sv -work lib_RTL +acc rtl/demod/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/msk/*.sv
 
 vlog -incr -sv -work lib_RTL +acc tb/top/*.sv
-vlog -incr -sv -work lib_RTL +acc tb/top/configs/*.sv
+vlog -incr -sv -work lib_RTL +acc tb/top/configs/*/*.sv
 
 vsim -voptargs=+acc lib_RTL.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
