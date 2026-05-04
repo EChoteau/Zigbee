@@ -89,3 +89,10 @@ module custom_wrapper_example #(
     // ==========================================================================
     // DUT INSTANTIATION (Placeholder)
     // ==========================================================================
+
+    // No DUT in this example; provide a safe placeholder comment and close the
+    // module to avoid EOF / unterminated-block parser errors.
+
+    // End of example wrapper
+
+endmodule
