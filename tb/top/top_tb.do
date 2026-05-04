@@ -30,7 +30,7 @@ sim:/top_tb/i_wrapper_cfg \
 sim:/top_tb/i_bus_a \
 sim:/top_tb/i_bus_b \
 sim:/top_tb/o_bus_c \
-sim:/top_tb/o_bus_d \
+sim:/top_tb/o_bus_d
 
 run -all
 
