@@ -35,5 +35,3 @@ sim:/top_tb/i_bus_b
 run -all
 
 wave zoom full
-
-quit -f
