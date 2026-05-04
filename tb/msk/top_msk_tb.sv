@@ -9,7 +9,7 @@ module top_msk_tb();
     parameter int MSK_RES               = 6;
     
     // Signaux
-    logic s_clk ;
+    logic s_clk;
     logic s_rst_n;
     logic s_enable_ech;
     logic s_flag_enable;
