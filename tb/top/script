@@ -1,0 +1,24 @@
+#!/bin/bash
+# Script de compilation et simulation pour test_wrapper_tb
+# Teste interface_top avec l'architecture 4-bus
+
+# Répertoires de base
+RTL_DIR="../../rtl"
+TB_DIR=".."
+
+# Nettoyer et créer les librairies
+vdel -all -lib lib_rtl_top 2>/dev/null
+vlib lib_rtl_top
+vmap lib_rtl lib_rtl_top
+
+echo "  Compiling interface_top..."
+vlog -sv $RTL_DIR/interface/*.sv -work lib_rtl_top
+
+vlog -sv $RTL_DIR/top/wrappers/interface_wrapper.sv -work lib_rtl_top
+
+vlog -sv $TB_DIR/common/*.sv -work lib_rtl_top
+
+vlog -sv ./test_wrapper_tb.sv -work lib_rtl_top
+
+# Lancer la simulation avec interface_top_tb (ou test_wrapper_tb selon le module)
+vsim -voptargs=+acc lib_rtl_top.test_wrapper_tb
