@@ -18,7 +18,7 @@ module complete_tb();
     )dut (
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(i_i), .i_q(i_q),
-        .o_phase(o_phase),
+        .o_phase(o_phase)
     );
 
     // --- Clock Generation ---
