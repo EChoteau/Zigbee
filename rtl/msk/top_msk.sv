@@ -1,10 +1,10 @@
 
 // ==============================================================================
-// Module      : msk_system
+// Module      : top_msk
 // Description : Top-level du modulateur MSK (Baseband) - Version Configurable
 // ==============================================================================
 
-module msk_system #(
+module top_msk #(
     parameter int SAMPLES_PER_HALF_SINE = 10, // Transmis au shaping
     parameter int MSK_RES               = 6   // Transmis au shaping
 )(

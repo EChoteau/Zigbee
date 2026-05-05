@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module msk_system_tb();
+module top_msk_tb();
 
     // -------------------------------------------------------------------------
     // PARAMÈTRES (10 MHz -> 10 pts/µs)
@@ -21,7 +21,7 @@ module msk_system_tb();
     logic s_sequence [0:9] = '{1, 0, 1, 1, 0, 0, 1, 1, 0, 1};
 
     // Instanciation
-    msk_system #(
+    top_msk #(
         .SAMPLES_PER_HALF_SINE(SAMPLES_PER_HALF_SINE),
         .MSK_RES(MSK_RES)
     ) DUT (

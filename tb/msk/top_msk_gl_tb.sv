@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module msk_system_tb();
+module top_msk_tb();
 
     // -------------------------------------------------------------------------
     // CONSTANTES DU TESTBENCH
@@ -20,7 +20,7 @@ module msk_system_tb();
     // -------------------------------------------------------------------------
     // INSTANCIATION DU DUT (Version Gate-Level fixe)
     // -------------------------------------------------------------------------
-    msk_system DUT(
+    top_msk DUT(
         .i_clk(s_clk),
         .i_rst_n(s_rst_n),
         .i_enable_ech(s_enable_ech),
