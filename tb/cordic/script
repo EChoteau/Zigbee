@@ -10,7 +10,7 @@ source config/config_RTL
 #vsim -do tb/cordic/cordic_top_sine_tb.do
 #vsim -do tb/cordic/boxcar_filter_tb.do
 #vsim -do tb/cordic/derive_tb.do
-vsim -c -do tb/cordic/complete_tb.do
+vsim -do tb/cordic/complete_tb.do
 
 #vsim -do tb/cordic/complete_postsynth.do
 #vsim -do tb/cordic/complete_postroute.do
