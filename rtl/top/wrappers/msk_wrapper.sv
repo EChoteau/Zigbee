@@ -29,11 +29,11 @@ module msk_test_wrapper #(
     // 1. FILS INTERNES
     // --------------------------------------------------------------------------
 
-    logic        i_flag_enable,
-    logic        i_enable_ech,
-    logic        i_b_in,
-    logic signed [MSK_RES-1:0] o_I_BB,
-    logic signed [MSK_RES-1:0] o_Q_BB,
+    logic        i_flag_enable;
+    logic        i_enable_ech;
+    logic        i_b_in;
+    logic signed [MSK_RES-1:0] o_I_BB;
+    logic signed [MSK_RES-1:0] o_Q_BB;
     logic w_b_enc;               // Fil interne : Encodeur -> Demux
     logic w_a_I, w_a_Q;          // Fil interne : Demux -> Shaping
     
