@@ -13,11 +13,12 @@ module complete_tb();
     logic signed [OUT_WIDTH-1:0] o_phase;
     
 
-    cordic_system dut (
+    cordic_system #(
+    	.INSIDE_WRAPPER(0) // Set inside wrapper flag to 0 for direct testing of cordic system
+    )dut (
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(i_i), .i_q(i_q),
         .o_phase(o_phase),
-        .i_wrapper_flag(1'b0) // Set wrapper flag to 0 for direct testing of cordic system
     );
 
     // --- Clock Generation ---

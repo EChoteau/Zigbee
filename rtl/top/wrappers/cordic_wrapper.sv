@@ -128,6 +128,7 @@ module cordic_wrapper #(
         .WIDTH_IN(WIDTH_IN),
         .FILTER_N(FILTER_N),
         .WIDTH_PHASE(WIDTH_PHASE)
+        .INSIDE_WRAPPER(1) // Set inside wrapper flag to 1 to enable internal muxing
     ) cordic_system_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
@@ -137,8 +138,7 @@ module cordic_wrapper #(
         .i_phase_to_derivative(mux_deriv_in),
         .o_phase_derivative(w_phase_deriv),
         .i_phase_to_boxcar(mux_filter_in),
-        .o_phase(w_phase_filter_out),
-        .i_wrapper_flag(i_wrapper_flag) // Always in wrapper mode for muxing
+        .o_phase(w_phase_filter_out)
     );
 
 

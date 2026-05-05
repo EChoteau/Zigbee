@@ -1,7 +1,8 @@
 module cordic_system #(
     parameter int WIDTH_IN = 6,
     parameter int FILTER_N = 5,
-    parameter int WIDTH_PHASE = WIDTH_IN + 2
+    parameter int WIDTH_PHASE = WIDTH_IN + 2,
+    parameter bool INSIDE_WRAPPER = 0
     
 )(
     input  logic i_clk,
@@ -17,10 +18,6 @@ module cordic_system #(
     input   logic signed [WIDTH_PHASE-1:0] i_phase_to_derivative,   //input to derivate 
     output  logic signed [WIDTH_PHASE-1:0] o_phase_derivative,      // Output of derivative,
     input   logic signed [WIDTH_PHASE-1:0] i_phase_to_boxcar,       // input to boxcar filter
-
-    //flag to indicate if the system is being used in wrapper or standalone, used to control internal muxing of signals
-    input logic i_wrapper_flag
-
 );
 
 	logic signed [WIDTH_IN-1:0] s_i_buf;
@@ -34,8 +31,8 @@ module cordic_system #(
     assign o_phase_derivative   = w_phase_derivative;
     
     // Si wrapper_flag == 1 : utilise inputs externes, sinon : utilise signaux internes
-    assign w_phase_to_derivative = i_wrapper_flag ? i_phase_to_derivative : w_phase_cordic;
-    assign w_phase_to_boxcar     = i_wrapper_flag ? i_phase_to_boxcar : w_phase_derivative;
+    assign w_phase_to_derivative = INSIDE_WRAPPER ? i_phase_to_derivative : w_phase_cordic;
+    assign w_phase_to_boxcar     = INSIDE_WRAPPER ? i_phase_to_boxcar : w_phase_derivative;
     
 
     always_ff @(posedge i_clk or negedge i_rst_n) begin
