@@ -2,8 +2,7 @@ module cordic_system #(
     parameter int WIDTH_IN = 6,
     parameter int FILTER_N = 5,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
-    parameter bool INSIDE_WRAPPER = 0
-    
+    parameter int INSIDE_WRAPPER = 0
 )(
     input  logic i_clk,
     input  logic i_rst_n,
