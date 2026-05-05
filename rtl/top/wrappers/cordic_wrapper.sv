@@ -26,7 +26,10 @@ module cordic_wrapper #(
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // LSB used
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
     output logic [BUS_C_WIDTH-1:0] o_bus_c,  // LSB used
-    output logic [BUS_D_WIDTH-1:0] o_bus_d   // unused
+    output logic [BUS_D_WIDTH-1:0] o_bus_d,   // unused
+
+    // Direct connections for testing without bus muxing
+    input logic i_wrapper_flag 
 );
 
     // ------------------------------------------------------------------
@@ -35,24 +38,28 @@ module cordic_wrapper #(
     logic signed [WIDTH_PHASE-1:0] w_phase_cordic;
     logic signed [WIDTH_PHASE-1:0] w_phase_deriv;
     logic signed [WIDTH_PHASE-1:0] w_phase_filter_in;
-    logic signed [WIDTH_PHASE-1:0]   w_phase_filter_out;
+    logic signed [WIDTH_PHASE-1:0] w_phase_filter_out;
     logic signed [WIDTH_IN-1:0]    w_cordic_i, w_cordic_q;
 
-    // Muxed sources
+    // Muxed sources from modules :
     logic signed [WIDTH_PHASE-1:0] mux_deriv_in;
     logic signed [WIDTH_PHASE-1:0] mux_filter_in;
 
     // ------------------------------------------------------------------
     // Configuration modes
     // ------------------------------------------------------------------
-    localparam logic [2:0] MODE_0 = 3'b000;
-    localparam logic [2:0] MODE_1 = 3'b001;
-    localparam logic [2:0] MODE_2 = 3'b010;
-    localparam logic [2:0] MODE_3 = 3'b011;
-    localparam logic [2:0] MODE_4 = 3'b100;
-    localparam logic [2:0] MODE_5 = 3'b101;
-    localparam logic [2:0] MODE_6 = 3'b110;
-    localparam logic [2:0] MODE_7 = 3'b111;
+    localparam logic [2:0] MODE_0 = 3'b000; // Input=Cordic, Output=Filter (default)
+    localparam logic [2:0] MODE_1 = 3'b001; // Input=Cordic, Output=Cordic
+    localparam logic [2:0] MODE_2 = 3'b010; // Input=Derivate, Output=Derivate
+    localparam logic [2:0] MODE_3 = 3'b011; // Input=Filter, Output=Filter
+    localparam logic [2:0] MODE_4 = 3'b100; // Input=Cordic, Output=Derivate
+    localparam logic [2:0] MODE_5 = 3'b101; // Input=Cordic, Output=Filter
+    localparam logic [2:0] MODE_6 = 3'b110; // Input=Derivate, Output=Filter
+    localparam logic [2:0] MODE_7 = 3'b111; // Input=Filter, Output=Filter
+
+    // ------------------------------------------------------------------
+    // Configuration-based muxing
+    // ------------------------------------------------------------------
 
     // Default assignments
     always_comb begin
@@ -117,30 +124,21 @@ module cordic_wrapper #(
     // ------------------------------------------------------------------
     // Instantiate blocks (cordic_top, derivative, boxcar_filter)
     // ------------------------------------------------------------------
-    cordic_top #(
+    cordic_system #(
         .WIDTH_IN(WIDTH_IN),
+        .FILTER_N(FILTER_N),
         .WIDTH_PHASE(WIDTH_PHASE)
-    ) cordic_top_inst (
+    ) cordic_system_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
         .i_q(w_cordic_q),
-        .o_phase(w_phase_cordic)
-    );
-
-    derivative #(
-        .WIDTH(WIDTH_PHASE)
-    ) derivative_inst (
-        .i_clk(i_clk), .i_rst_n(i_rst_n),
-        .i_phase(mux_deriv_in),
-        .o_phase_deriv(w_phase_deriv)
-    );
-
-    boxcar_filter #(
-        .WIDTH(WIDTH_PHASE), .N(FILTER_N)
-    ) boxcar_filter_inst (
-        .i_clk(i_clk), .i_rst_n(i_rst_n),
-        .i_data(mux_filter_in),
-        .o_data(w_phase_filter_out)
+        .o_phase(w_phase_cordic),
+        .o_phase_cordic(w_phase_cordic),
+        .i_phase_to_derivative(mux_deriv_in),
+        .o_phase_derivative(w_phase_deriv),
+        .i_phase_to_boxcar(mux_filter_in),
+        .o_phase(w_phase_filter_out),
+        .i_wrapper_flag(i_wrapper_flag) // Always in wrapper mode for muxing
     );
 
 
