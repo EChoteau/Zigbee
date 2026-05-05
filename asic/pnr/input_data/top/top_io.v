@@ -31,14 +31,14 @@ wire i_clk_P;
 wire i_rst_n_P;
 
 // 6 dedicated configuration pins:
-wire	[2:0]	i_top_cfg_P,
-wire	[2:0]	i_wrapper_cfg_P,
+wire	[2:0]	i_top_cfg_P;
+wire	[2:0]	i_wrapper_cfg_P;
 
 // Test bus ports (external interface)
-wire	[11:0] 	i_bus_a_P,  	// Bus A
-wire  	[9:0] 	i_bus_b_P,  	// Bus B
-wire  	[11:0] 	o_bus_c_P,  	// Bus C
-wire  	[1:0] 	o_bus_d_P  		// Bus D
+wire	[11:0] 	i_bus_a_P;  	// Bus A
+wire  	[9:0] 	i_bus_b_P;  	// Bus B
+wire  	[11:0] 	o_bus_c_P;  	// Bus C
+wire  	[1:0] 	o_bus_d_P;  	// Bus D
 
 
 
@@ -111,12 +111,12 @@ ITP	io_i_bus_a_11 ( .PAD(i_bus_a[11]), .Y(i_bus_a_P[11]) );
 
 ITP	io_i_bus_b_0 ( .PAD(i_bus_b[0]), .Y(i_bus_b_P[0]) );
 ITP	io_i_bus_b_1 ( .PAD(i_bus_b[1]), .Y(i_bus_b_P[1]) );
-ITP	io_i_bus_b_2 ( .PAD(i_bus_b[2]), .Y(iBus_b_P[2]) );
+ITP	io_i_bus_b_2 ( .PAD(i_bus_b[2]), .Y(i_bus_b_P[2]) );
 ITP	io_i_bus_b_3 ( .PAD(i_bus_b[3]), .Y(i_bus_b_P[3]) );
 ITP	io_i_bus_b_4 ( .PAD(i_bus_b[4]), .Y(i_bus_b_P[4]) );
 ITP	io_i_bus_b_5 ( .PAD(i_bus_b[5]), .Y(i_bus_b_P[5]) );
 ITP	io_i_bus_b_6 ( .PAD(i_bus_b[6]), .Y(i_bus_b_P[6]) );
-ITP	io_i_bus_b_7 ( .PAD(i_bus_b(7)), .Y(i_bus_b_P(7)) );
+ITP	io_i_bus_b_7 ( .PAD(i_bus_b[7]), .Y(i_bus_b_P[7]) );
 ITP	io_i_bus_b_8 ( .PAD(i_bus_b[8]), .Y(i_bus_b_P[8]) );
 ITP	io_i_bus_b_9 ( .PAD(i_bus_b[9]), .Y(i_bus_b_P[9]) );
 
