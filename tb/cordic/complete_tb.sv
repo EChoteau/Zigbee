@@ -17,6 +17,7 @@ module complete_tb();
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(i_i), .i_q(i_q),
         .o_phase(o_phase)
+        .i_wrapper_flag(1'b0) // Set wrapper flag to 0 for direct testing of cordic system
     );
 
     // --- Clock Generation ---
