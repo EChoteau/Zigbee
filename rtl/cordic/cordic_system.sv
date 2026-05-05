@@ -17,7 +17,7 @@ module cordic_system #(
     output  logic signed [WIDTH_PHASE-1:0] o_phase_cordic,         // Output of cordic
     input   logic signed [WIDTH_PHASE-1:0] i_phase_to_derivative,   //input to derivate 
     output  logic signed [WIDTH_PHASE-1:0] o_phase_derivative,      // Output of derivative,
-    input   logic signed [WIDTH_PHASE-1:0] i_phase_to_boxcar,       // input to boxcar filter
+    input   logic signed [WIDTH_PHASE-1:0] i_phase_to_boxcar       // input to boxcar filter
 );
 
 	logic signed [WIDTH_IN-1:0] s_i_buf;
