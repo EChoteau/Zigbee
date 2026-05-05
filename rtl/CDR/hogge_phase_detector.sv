@@ -1,4 +1,4 @@
-    module phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
+    module hogge_phase_detector(i_clk,i_rst_n,i_sample_clk,i_decision_in,o_decision_out, o_up,o_down);
         //inout definition
          input wire  i_clk;
          input wire i_rst_n,i_sample_clk;
@@ -16,4 +16,4 @@
         assign o_up           =(i_decision_in ^ s_a );
         assign o_down         = (s_a ^ s_b);
 
-       endmodule
+endmodule

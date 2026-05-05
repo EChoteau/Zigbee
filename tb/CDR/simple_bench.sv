@@ -27,12 +27,24 @@ module tb_cdr;
     //---------------------------------
     // Instantiate DUT
     //---------------------------------
-    cdr_top dut (
+    CDR_top dut (
         .i_clk(clk),
         .i_rst_n(rst),
         .i_dphi(dphi),
         .o_data(decision_out),
-        .o_enable(clk_rec)
+        .o_enable(clk_rec),
+        // debug signals.
+        .i_recovered_clk_d('0),
+        .i_decision_d('0),
+        .i_up_d('0),
+        .i_down_d('0),
+        .i_decision_sig_d('0),
+        .i_ack_d('0),
+        .i_control_d('0),
+        //debug control 
+        .i_phase_detector_debug('0),
+        .i_loop_filter_debug('0),
+        .i_nco_debug('0)
     );
 
     //---------------------------------
@@ -120,7 +132,9 @@ end
     initial begin
         #20000000;
         
-        $display("nombre de data transmis = %0d, recu =%0d  erreur = %0d TEB = %0f",nb_data_t,nb_data,nb_err,nb_err/nb_data);
+        $display("Transmis=%0d  Reçus=%0d  Erreurs=%0d  TEB=%0f",
+                  nb_data_t, nb_data, nb_err,
+                  (nb_data > 0) ? real'(nb_err)/real'(nb_data) : 0.0);
         $stop;
     end
 
