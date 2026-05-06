@@ -11,6 +11,8 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/wrappers/cordic/*.sv
+vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
+
 
 
 vsim -voptargs=+acc lib_RTL.cordic_system_wrapper_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
