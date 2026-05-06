@@ -14,7 +14,8 @@ module cordic_wrapper #(
     parameter int BUS_A_WIDTH = 12,
     parameter int BUS_B_WIDTH = 10,
     parameter int BUS_C_WIDTH = 12,
-    parameter int BUS_D_WIDTH = 2
+    parameter int BUS_D_WIDTH = 2,
+    parameter bit INSIDE_WRAPPER = 1 // Set to 1 to enable internal muxing for testing
 )(
     input  logic i_clk,
     input  logic i_rst_n,
@@ -27,9 +28,6 @@ module cordic_wrapper #(
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
     output logic [BUS_C_WIDTH-1:0] o_bus_c,  // LSB used
     output logic [BUS_D_WIDTH-1:0] o_bus_d,   // unused
-
-    // Direct connections for testing without bus muxing
-    input logic i_wrapper_flag 
 );
 
     // ------------------------------------------------------------------
@@ -128,7 +126,7 @@ module cordic_wrapper #(
         .WIDTH_IN(WIDTH_IN),
         .FILTER_N(FILTER_N),
         .WIDTH_PHASE(WIDTH_PHASE)
-        .INSIDE_WRAPPER(1) // Set inside wrapper flag to 1 to enable internal muxing
+        .INSIDE_WRAPPER(INSIDE_WRAPPER) // Set inside wrapper flag to 1 to enable internal muxing
     ) cordic_system_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
