@@ -1,6 +1,6 @@
 module demod_wrapper #(
     parameter int CFG_WIDTH      = 3,
-    parameter int BUS_IN_WIDTH   = 18,
+    parameter int BUS_IN_WIDTH   = 22,
     parameter int BUS_OUT_WIDTH  = 14
 )(
     input  logic              i_clk,
