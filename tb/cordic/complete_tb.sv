@@ -123,6 +123,18 @@ module complete_tb();
             i_q <= $rtoi(s_q_val * SCALE);
             @(negedge i_clk); #1;
         end
+        for (int i = 0; i < 20; i = i + 1) begin
+            // Calculate cos/sin in simulation
+            s_angle = -(i * 2.0 * PI) / 20.0;
+            s_i_val = $cos(s_angle);
+            s_q_val = $sin(s_angle);
+            
+            // Assign to registered inputs
+            i_i <= $rtoi(s_i_val * SCALE);
+            i_q <= $rtoi(s_q_val * SCALE);
+            @(negedge i_clk); #1;
+        end
+        #100;
         $finish;
     end
 endmodule
