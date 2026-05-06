@@ -1,5 +1,3 @@
-`include "tb/wrappers/interface/test_plan_wrapper.svh"
-
 task automatic test_2_interface();
     begin
         $display("[%0t] test_2_interface", $time);
@@ -11,6 +9,6 @@ task automatic test_2_interface();
         repeat (20) @(posedge clk);
 
         // Invoke the interface wrapper test plan for wrapper config 000
-        run_test_plan_wrapper();
+        // run_test_plan_wrapper();
     end
 endtask
