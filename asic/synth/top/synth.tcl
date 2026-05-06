@@ -10,47 +10,47 @@ remove_design -all
 
 # --- 2. Read ---
 analyze -library WORK -format sverilog { \
-	../../../rtl/top/zigbee_top.sv \
+	../../../../rtl/top/zigbee_top.sv \
 
-	../../../rtl/top/wrappers/msk_wrapper.sv \
-	../../../rtl/top/wrappers/demod_wrapper.sv \
-	../../../rtl/top/wrappers/cdr_wrapper.sv \
-	../../../rtl/top/wrappers/cordic_wrapper.sv \
-	../../../rtl/top/wrappers/interface_wrapper.sv \
+	../../../../rtl/top/wrappers/msk_wrapper.sv \
+	../../../../rtl/top/wrappers/demod_wrapper.sv \
+	../../../../rtl/top/wrappers/cdr_wrapper.sv \
+	../../../../rtl/top/wrappers/cordic_wrapper.sv \
+	../../../../rtl/top/wrappers/interface_wrapper.sv \
 
-	../../../rtl/msk/demux_msk.sv \
-	../../../rtl/msk/encodeur_diff.sv \
-	../../../rtl/msk/shaping_msk.sv \
-	../../../rtl/msk/top_msk.sv \
+	../../../../rtl/msk/demux_msk.sv \
+	../../../../rtl/msk/encodeur_diff.sv \
+	../../../../rtl/msk/shaping_msk.sv \
+	../../../../rtl/msk/top_msk.sv \
 
-	../../../rtl/demod/FIR/fir_core.vs \
-	../../../rtl/demod/FIR/fir_top.vs \
-	../../../rtl/demod/WAVE/demod.sv \
-	../../../rtl/demod/WAVE/wave_generator.sv \
-	../../../rtl/demod/demod_system_top.sv \
+	../../../../rtl/demod/FIR/fir_core.vs \
+	../../../../rtl/demod/FIR/fir_top.vs \
+	../../../../rtl/demod/WAVE/demod.sv \
+	../../../../rtl/demod/WAVE/wave_generator.sv \
+	../../../../rtl/demod/demod_system_top.sv \
 
-	../../../rtl/CDR/cdr.sv \
-	../../../rtl/CDR/hogge_phase_detector.sv \
-	../../../rtl/CDR/loop_filter.sv \
-	../../../rtl/CDR/nco.sv \
-	../../../rtl/CDR/decision.sv \
-	../../../rtl/CDR/bascule.sv \
+	../../../../rtl/CDR/cdr.sv \
+	../../../../rtl/CDR/hogge_phase_detector.sv \
+	../../../../rtl/CDR/loop_filter.sv \
+	../../../../rtl/CDR/nco.sv \
+	../../../../rtl/CDR/decision.sv \
+	../../../../rtl/CDR/bascule.sv \
 
-	../../../rtl/cordic/cordic_system.sv \
-	../../../rtl/cordic/cordic_top.sv \
-	../../../rtl/cordic/cordic_init.sv \
-	../../../rtl/cordic/cordic_step.sv \
-	../../../rtl/cordic/boxcar_filter.sv \
-	../../../rtl/cordic/cordic_top_pipeline.sv \
-	../../../rtl/cordic/cordic_top_hybride.sv \
-	../../../rtl/cordic/derivate.sv \
+	../../../../rtl/cordic/cordic_system.sv \
+	../../../../rtl/cordic/cordic_top.sv \
+	../../../../rtl/cordic/cordic_init.sv \
+	../../../../rtl/cordic/cordic_step.sv \
+	../../../../rtl/cordic/boxcar_filter.sv \
+	../../../../rtl/cordic/cordic_top_pipeline.sv \
+	../../../../rtl/cordic/cordic_top_hybride.sv \
+	../../../../rtl/cordic/derivate.sv \
 
-	../../../rtl/interface/interface_top.sv \
-	../../../rtl/interface/serializer.sv \
-	../../../rtl/interface/fifo.sv \
-	../../../rtl/interface/deserializer.sv \
-	../../../rtl/interface/baud_rate_gen.sv \
-	../../../rtl/interface/apb_slave_regs.sv \
+	../../../../rtl/interface/interface_top.sv \
+	../../../../rtl/interface/serializer.sv \
+	../../../../rtl/interface/fifo.sv \
+	../../../../rtl/interface/deserializer.sv \
+	../../../../rtl/interface/baud_rate_gen.sv \
+	../../../../rtl/interface/apb_slave_regs.sv \
 	
 }
 
@@ -81,14 +81,14 @@ set_leakage_optimization true
 compile_ultra -gate_clock
 
 # --- 5. Reports ---
-report_timing > reports/timing.rpt
-report_area > reports/area.rpt
-report_power > reports/power.rpt
-report_constraint -all_violators > reports/violations.rpt
-report_clock_gating > reports/report_cg_summary.txt
+report_timing > ../reports/timing.rpt
+report_area > ../reports/area.rpt
+report_power > ../reports/power.rpt
+report_constraint -all_violators > ../reports/violations.rpt
+report_clock_gating > ../reports/report_cg_summary.txt
 
 # --- 6. Export Files for Simulation ---
-write -format verilog -hierarchy -output netlist/top_synth.v
-write_sdf netlist/top_synth.sdf
+write -format verilog -hierarchy -output ../netlist/top_synth.v
+write_sdf ../netlist/top_synth.sdf
 
 exit

@@ -22,7 +22,7 @@ set test_default_bidir_delay {0}
 set test_default_strobe {40}
 set test_stil_netlist_format {verilog}
 
-set hdlin_enable_rtldrc_info {true}
+# set hdlin_enable_rtldrc_info {true}
 
 set write_name_nets_same_as_ports {true}
 set write_name_nets_same_as_ports {true}

@@ -54,30 +54,32 @@ if [ "$NB_ERRORS" -gt 0 ]; then
     # Check in reverse chronological order
     if [ -n "$BLOCK_COMPILE" ] && echo "$BLOCK_COMPILE" | grep -i -q "error"; then
         # \e[100m = gray background, \e[0m = reset
-        echo "=> Error located in phase : \e[100m compile_ultra \e[0m"
+        echo -e "=> Error located in phase : \e[100m compile_ultra \e[0m"
         # Display the details :
         echo "$BLOCK_COMPILE" | grep -i "error" | head -n 3
 
     elif [ -n "$BLOCK_ELABORATE" ] && echo "$BLOCK_ELABORATE" | grep -i -q "error"; then
         # \e[100m = gray background, \e[0m = reset
-        echo "=> Error located in phase : \e[100m elaborate \e[0m"
+        echo -e"=> Error located in phase : \e[100m elaborate \e[0m"
         # Display the details :
         echo "$BLOCK_ELABORATE" | grep -i "error" | head -n 3
         
     elif [ -n "$BLOCK_ANALYZE" ] && echo "$BLOCK_ANALYZE" | grep -i -q "error"; then
         # \e[100m = gray background, \e[0m = reset
-        echo "=> Error located in phase : \e[100m analyze \e[0m"
+        echo -e "=> Error located in phase : \e[100m analyze \e[0m"
         # Display the details :
         echo "$BLOCK_ANALYZE" | grep -i "error" | head -n 3
     else
-        echo "=> Error phase not dynamically identified. See the complete log."
+        echo -e "=> Error phase not dynamically identified. See the complete log."
     fi
 else
     # \e[42m = green background, \e[97m = white text, \e[0m = reset
     echo -e "\e[42m\e[97m DONE \e[0m"
+fi
 
 echo "----------------------------------------"
 echo -e " Total Errors   : $NB_ERRORS"
 echo -e " Total Warnings : $NB_WARNINGS"
 echo "========================================"
 
+cd ../../../../
