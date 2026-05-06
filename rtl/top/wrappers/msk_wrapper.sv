@@ -20,58 +20,33 @@ module msk_wrapper #(
     output logic [BUS_D_WIDTH-1:0] o_bus_d
 );
 
-// ==========================================================================
-    // Configuration modes
-    // ==========================================================================
-    localparam logic [2:0] CFG_NORMAL         = 3'b000;  // Normal operation
-    localparam logic [2:0] CFG_ENC_OVERRIDE   = 3'b001;  // Override encodeur input
-    localparam logic [2:0] CFG_DEMUX_OVERRIDE = 3'b010;  // Override demux input
-    localparam logic [2:0] CFG_SHAPING_OVERRIDE = 3'b011; // Override shaping inputs
-    localparam logic [2:0] CFG_OBSERVE_INTERNALS = 3'b100; // Observe internal signals
 
-    // ==========================================================================
-    // Signals to top_msk
-    // ==========================================================================
-    logic                 s_flag_enable;
-    logic                 s_enable_ech;
-    logic                 s_b_in;
-    logic                 s_dbg_enc_override_en;
-    logic                 s_dbg_enc_b_in;
-    logic                 s_dbg_demux_override_en;
-    logic                 s_dbg_demux_b_enc;
-    logic                 s_dbg_shaping_override_en;
-    logic                 s_dbg_shaping_a_I;
-    logic                 s_dbg_shaping_a_Q;
 
-    // ==========================================================================
-    // Signals from top_msk
-    // ==========================================================================
-    logic signed [MSK_RES-1:0] s_I_BB;
-    logic signed [MSK_RES-1:0] s_Q_BB;
-    logic                 s_dbg_b_enc;
-    logic                 s_dbg_a_I;
-    logic                 s_dbg_a_Q;
-    logic signed [MSK_RES-1:0] s_dbg_I_BB;
-    logic signed [MSK_RES-1:0] s_dbg_Q_BB;
+    // --- INTERFACE DE TEST  ---
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // INPUT pure (Injection)
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b, // Unused
+    output logic [BUS_C_WIDTH-1:0] o_bus_c, // Observation Data
+    output logic [BUS_D_WIDTH-1:0] o_bus_d  // Observation Sync
+);
 
-    // ==========================================================================
-    // INPUT BUS DECODING
-    // ==========================================================================
-    // Bus A: control signals and data
-    // [0]: flag_enable
-    // [1]: enable_ech
-    // [2]: b_in
-    // [3]: enc_override_b_in (for CFG_ENC_OVERRIDE)
-    // [4]: demux_override_b_enc (for CFG_DEMUX_OVERRIDE)
-    // [5]: shaping_override_a_I (for CFG_SHAPING_OVERRIDE)
-    // [6]: shaping_override_a_Q (for CFG_SHAPING_OVERRIDE)
-    // Bus B: unused for now
+    // --------------------------------------------------------------------------
+    // 1. FILS INTERNES
+    // --------------------------------------------------------------------------
 
-    // ==========================================================================
-    // OUTPUT BUS PACKING
-    // ==========================================================================
-    // Bus C: data outputs (depends on config)
-    // Bus D: status (depends on config)
+    logic        i_flag_enable,
+    logic        i_enable_ech,
+    logic        i_b_in,
+    logic signed [MSK_RES-1:0] o_I_BB,
+    logic signed [MSK_RES-1:0] o_Q_BB,
+    logic w_b_enc;               // Fil interne : Encodeur -> Demux
+    logic w_a_I, w_a_Q;          // Fil interne : Demux -> Shaping
+    
+    // --------------------------------------------------------------------------
+    // 2. MUX (Aiguillage)
+    // --------------------------------------------------------------------------
+    logic mux_to_enc;
+    logic mux_to_dmx;
+    logic mux_to_shp_I, mux_to_shp_Q;
 
     always_comb begin
         // Default: normal operation

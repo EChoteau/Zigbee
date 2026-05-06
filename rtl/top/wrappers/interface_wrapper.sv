@@ -289,12 +289,16 @@ module interface_wrapper #(
             // ====================================================================
             // CFG_FIFO_TX (0x4): TX FIFO direct control
             // Test: Direct write to TX FIFO bypassing APB
-            // Inputs: Bus B (FIFO write data + controls)
+            // Inputs: Bus A (write/read enables) + Bus B (FIFO write data)
             // Outputs: Bus C (FIFO status) + Bus D (serial output)
             // ====================================================================
             CFG_FIFO_TX: begin
-                // FIFO TX data and control from Bus B
+                // FIFO TX control signals from Bus A
                 s_if_fifo_tx_override_en = 1'b1;
+                s_if_fifo_tx_wr_en      = i_bus_a[0];  // Write enable
+                s_if_fifo_tx_rd_en      = i_bus_a[1];  // Read enable
+                
+                // FIFO TX data from Bus B
                 s_if_fifo_tx_data[7:0]  = i_bus_b[7:0];
 
                 // Pack FIFO status to Bus C
@@ -311,12 +315,17 @@ module interface_wrapper #(
 
             // ====================================================================
             // CFG_FIFO_RX (0x5): RX FIFO direct control
-            // Test: Direct read from RX FIFO bypassing APB
-            // Inputs: Bus B (CDR serial signals)
+            // Test: Direct read from RX FIFO (with optional CDR input)
+            // Inputs: Bus A (write/read enables) + Bus B (CDR serial signals)
             // Outputs: Bus C (RX FIFO data) + Bus D (RX status)
             // ====================================================================
             CFG_FIFO_RX: begin
-                // Serial RX from Bus B
+                // FIFO RX control signals from Bus A
+                s_if_fifo_rx_override_en = 1'b1;
+                s_if_fifo_rx_wr_en      = i_bus_a[0];  // Write enable (for deserializer input)
+                s_if_fifo_rx_rd_en      = i_bus_a[1];  // Read enable
+                
+                // Serial RX from Bus B (fed to deserializer)
                 s_if_serial_rx        = i_bus_b[9];
                 s_if_cdr_sample_valid = i_bus_b[10];
 
