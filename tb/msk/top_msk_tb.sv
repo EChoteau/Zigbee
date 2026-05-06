@@ -31,7 +31,10 @@ module top_msk_tb();
         .i_enable_ech(s_enable_ech),
         .i_b_in(s_b_in),
         .o_I_BB(s_I_BB),
-        .o_Q_BB(s_Q_BB)
+        .o_Q_BB(s_Q_BB),
+	.i_dbg_enc_override_en(1'b0),
+	.i_dbg_demux_override_en(1'b0),
+	.i_dbg_shaping_override_en(1'b0)
     );
 
     // -------------------------------------------------------------------------

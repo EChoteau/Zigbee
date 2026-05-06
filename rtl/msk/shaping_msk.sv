@@ -7,7 +7,7 @@
 
 module shaping_msk #(
     parameter int SAMPLES_PER_HALF_SINE = 10, // Nb points pour 1µs (bosse)
-    parameter int MSK_RES               = 6,  // Résolution (ex: 6 bits signés)
+    parameter int MSK_RES               = 6  // Résolution (ex: 6 bits signés)
    // parameter real PI = 3.14159265358979323846
 )(
     input  logic                 i_clk,
