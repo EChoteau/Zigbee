@@ -269,10 +269,6 @@ module top #(
                 o_bus_c = cdr_wr_o_bus_c;
                 o_bus_d = cdr_wr_o_bus_d;
             end
-
-            default: begin
-                // leave defaults (all zeros)
-            end
         endcase
     end
 endmodule
