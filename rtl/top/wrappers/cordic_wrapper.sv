@@ -55,9 +55,14 @@ module cordic_wrapper #(
     // Configuration-based muxing (ORIGINAL LOGIC)
     // ====================================================================
     always_comb begin
-        // Default behavior
-        mux_deriv_in  = w_phase_cordic;  // default to cordic output
-        mux_filter_in = w_phase_deriv;   // default to derivative output
+        // Use LSBs of bus A for all inputs by default
+        w_cordic_i   = i_bus_a[WIDTH_IN-1:0];
+        w_cordic_q   = i_bus_a[2*WIDTH_IN-1:WIDTH_IN];
+        mux_deriv_in   = w_phase_cordic; // default to cordic output
+        mux_filter_in  = w_phase_deriv;  // default to derivative output
+
+        o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, value};
+        o_bus_d = '0; // unused
 
         unique case (i_cfg)
             // MODE_0: 000 -> Input=Cordic, Output=Filter
