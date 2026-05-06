@@ -13,20 +13,14 @@ module top_tb;
     logic [11:0] o_bus_c;
     logic [1:0]  o_bus_d;
 
-    // Include shared test tasks
-    `include "tb/top/generic/apply_reset.svh"
-    `include "tb/top/generic/run_tc_wrapper_reset.svh"
-    `include "tb/top/generic/run_tc_wrapper_tx_path.svh"
-    `include "tb/top/generic/run_tc_wrapper_config_000.svh"
-
-    `include "tb/top/configs/0_rx/config_header.svh"
-    `include "tb/top/configs/1_tx/config_header.svh"
-    `include "tb/top/configs/2_interface/config_header.svh"
-    `include "tb/top/configs/3_msk/config_header.svh"
-    `include "tb/top/configs/4_demod/config_header.svh"
-    `include "tb/top/configs/5_cordic/config_header.svh"
-    `include "tb/top/configs/6_cdr/config_header.svh"
-    `include "tb/top/configs/7_internal/config_header.svh"
+    `include "tb/top/configs/top_0_rx.svh"
+    `include "tb/top/configs/top_1_tx.svh"
+    `include "tb/top/configs/top_2_interface.svh"
+    `include "tb/top/configs/top_3_msk.svh"
+    `include "tb/top/configs/top_4_demod.svh"
+    `include "tb/top/configs/top_5_cordic.svh"
+    `include "tb/top/configs/top_6_cdr.svh"
+    `include "tb/top/configs/top_7_internal.svh"
 
     // Instantiate DUT
     top uut (
