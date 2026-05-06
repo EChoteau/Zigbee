@@ -86,7 +86,7 @@ module cordic_wrapper #(
             MODE_2: begin
                 mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
                 
-                o_bus_c = {{(BUS_C_WIDTH-WIDTH_){1'b0}}, w_phase_deriv};
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_deriv};
 
             end
 
