@@ -102,7 +102,8 @@ module tb_cdr_wrapper;
     //---------------------------------
     // Modèle dphi MSK : ±8 selon le bit
     //---------------------------------
-    
+    logic ck_fast=0;
+    always #2 ck_fast=~ck_fast;
     always @(posedge clk) begin
         if (data_bit) dphi_t <= 8'sd8;
         else          dphi_t <= -8'sd8;
@@ -147,16 +148,16 @@ module tb_cdr_wrapper;
         $display("=== CFG1 : test decision_block ===");
         cfg = 1;
         dphi_i = 8'sd8;
-        bus_b = {{2{1'b0}}, dphi};
-        repeat(1) @(posedge clk);
-        #1
-        assert(w_dec_sig == 1'b1)
+        bus_b = {{4{1'b0}}, dphi_i};
+        repeat(5) @(posedge clk);
+        #10
+        assert(bus_c[0] == 1'b1)
             else $error("CFG1 KO : dphi=+8 devrait donner decision=1");
         dphi_i = -8'sd8;
-        bus_b = {{2{1'b0}}, dphi};
-        repeat(1) @(posedge clk);
-        #1
-        assert(w_dec_sig == 1'b0)
+        bus_b = {{4{1'b0}}, dphi_i};
+        repeat(5) @(posedge clk);
+        #10
+        assert(bus_c[0] == 1'b0)
             else $error("CFG1 KO : dphi=-8 devrait donner decision=0");
         $display("CFG1 OK");
 
@@ -212,7 +213,7 @@ module tb_cdr_wrapper;
         // CFG0 : mode normal CDR
         // run 20ms et vérifie le comptage
         //------------------------------
-        bus_b = {{2{1'b0}}, dphi_t};
+        bus_b = {{4{1'b0}}, dphi_t};
         $display("=== CFG0 : mode normal CDR ===");
         cfg  = 0;
         bus_b = {{2{1'b0}}, dphi_t};

@@ -38,7 +38,6 @@ module tb_cdr;
         .i_decision_d('0),
         .i_up_d('0),
         .i_down_d('0),
-        .i_decision_sig_d('0),
         .i_ack_d('0),
         .i_control_d('0),
         //debug control 
