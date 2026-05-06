@@ -1,179 +1,157 @@
 `timescale 1ns/1ps
 
-// Testbench pour IQ_DEMOD (ADC 6 bits unsigned, Fs=20 MHz via adc_eoc)
-// i_clk système = 50 MHz (20 ns). adc_eoc = pulse 1-cycle à ~20 MHz
-module tb_IQ_DEMOD;
+module tb_demod_wrapper;
 
-  // -------------------------
-  // DUT I/O
-  // -------------------------
-  logic i_clk;
-  logic i_rst_n;
-  logic adc_eoc;
+    localparam int CLK_PERIOD = 100;
 
-  logic [5:0] I_in, Q_in;
-  logic signed [12:0] I_out, Q_out;
+    logic i_clk = 0;
+    logic i_rst_n;
 
-  // -------------------------
-  // Instantiate DUT
-  // -------------------------
-  IQ_DEMOD dut (
-    .i_clk(i_clk),
-    .i_rst_n(i_rst_n),
-    .adc_eoc(adc_eoc),
-    .I_in(I_in),
-    .Q_in(Q_in),
-    .I_out(I_out),
-    .Q_out(Q_out)
-  );
+    logic [2:0]  i_cfg;
+    logic [9:0]  i_bus_a;
+    logic [11:0] i_bus_b;
 
-  // -------------------------
-  // 50 MHz clock (20 ns)
-  // -------------------------
-  initial i_clk = 1'b0;
-  always #10 i_clk = ~i_clk;
+    logic [11:0] o_bus_c;
+    logic [1:0]  o_bus_d;
 
-  // -------------------------
-  // Async reset sequence
-  // -------------------------
-  initial begin
-    i_rst_n    = 1'b0;
-    adc_eoc = 1'b0;
-    I_in    = 6'd32;   // offset-binary midscale => 0 signed
-    Q_in    = 6'd32;
+    // =========================================================
+    // DUT
+    // =========================================================
+    demod_wrapper dut (
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_cfg   (i_cfg),
 
-    // reset asynchrone maintenu un peu
-    #75;
-    i_rst_n = 1'b1;
-  end
+        .i_bus_a (i_bus_a),
+        .i_bus_b (i_bus_b),
 
-  // ---------------------------------------------------------
-  // Génération adc_eoc ~ 20 MHz à partir de i_clk=50 MHz
-  // 50/20 = 2.5 cycles -> on alterne attente 2 puis 3 cycles
-  // adc_eoc est un pulse d'1 cycle de i_clk
-  // ---------------------------------------------------------
-  int unsigned wait_cycles;
-  bit alt_2_3;
+        .o_bus_c (o_bus_c),
+        .o_bus_d (o_bus_d)
+    );
 
-  initial begin
-    alt_2_3 = 1'b0;
-    @(posedge i_rst_n);
+    // =========================================================
+    // CLOCK
+    // =========================================================
+    always #(CLK_PERIOD/2) i_clk = ~i_clk;
 
-    forever begin
-      wait_cycles = (alt_2_3) ? 3 : 2;
-      alt_2_3 = ~alt_2_3;
+    // =========================================================
+    // RESET
+    // =========================================================
+    initial begin
+        i_rst_n = 1'b0;
+        i_cfg   = 3'b000;
+        i_bus_a = 10'd0;
+        i_bus_b = 12'd0;
 
-      repeat (wait_cycles) @(posedge i_clk);
-
-      adc_eoc <= 1'b1;
-      @(posedge i_clk);
-      adc_eoc <= 1'b0;
-    end
-  end
-
-  // ---------------------------------------------------------
-  // LUT de sin/cos (doit matcher ton wave_generator 8 points, 6 bits)
-  // sin: [0, 22, 31, 22, 0, -22, -31, -22]
-  // cos: [31,22,0,-22,-31,-22,0,22]
-  // ---------------------------------------------------------
-  function automatic signed [5:0] lut_sin(input int idx);
-    case (idx % 8)
-      0: lut_sin =  6'sd0;
-      1: lut_sin =  6'sd22;
-      2: lut_sin =  6'sd31;
-      3: lut_sin =  6'sd22;
-      4: lut_sin =  6'sd0;
-      5: lut_sin = -6'sd22;
-      6: lut_sin = -6'sd31;
-      7: lut_sin = -6'sd22;
-    endcase
-  endfunction
-
-  function automatic signed [5:0] lut_cos(input int idx);
-    case (idx % 8)
-      0: lut_cos =  6'sd31;
-      1: lut_cos =  6'sd22;
-      2: lut_cos =  6'sd0;
-      3: lut_cos = -6'sd22;
-      4: lut_cos = -6'sd31;
-      5: lut_cos = -6'sd22;
-      6: lut_cos =  6'sd0;
-      7: lut_cos =  6'sd22;
-    endcase
-  endfunction
-
-  // ---------------------------------------------------------
-  // Convert signed (-32..+31) -> ADC unsigned (0..63) via +32 + clip
-  // ---------------------------------------------------------
-  function automatic [5:0] to_adc_u6(input integer signed s);
-    integer tmp;
-    begin
-      tmp = s + 32;
-      if (tmp < 0)  tmp = 0;
-      if (tmp > 63) tmp = 63;
-      to_adc_u6 = tmp[5:0];
-    end
-  endfunction
-
-  // ---------------------------------------------------------
-  // Stimulus:
-  // On veut tester que la démod "tourne" bien.
-  //
-  // Ton demod fait : (I + jQ) * (cos + j sin)
-  //
-  // Si on injecte : I = A*cos, Q = -A*sin
-  // alors (I+jQ)*(cos+jsin) = A*(cos^2+sin^2) + j*0  ≈ constant, Q≈0
-  //
-  // NB: cos^2+sin^2 n'est pas exactement constant ici car LUT quantifiée,
-  // mais Q_out doit rester proche de 0.
-  // ---------------------------------------------------------
-  int n;
-  integer signed A;
-  signed [5:0] c, s;
-  integer signed I_sig, Q_sig;
-
-  initial begin
-    @(posedge i_rst_n);
-
-    A = 20;   // amplitude choisie (<=31 conseillé)
-    n = 0;
-
-    // On applique de nouveaux samples uniquement sur adc_eoc
-    repeat (200) begin
-      @(posedge i_clk);
-      if (adc_eoc) begin
-        c = lut_cos(n);
-        s = lut_sin(n);
-
-        // scale pour rester dans [-32..31]
-        I_sig = (A * c) / 31;
-        Q_sig = -(A * s) / 31;
-
-        I_in <= to_adc_u6(I_sig);
-        Q_in <= to_adc_u6(Q_sig);
-
-        n++;
-      end
+        #(5*CLK_PERIOD);
+        @(negedge i_clk);
+        i_rst_n = 1'b1;
     end
 
-    $display("TB finished.");
-    $finish;
-  end
+    // =========================================================
+    // APPLY INPUT ON BUS B
+    // bus_b[7:4] = I debug input
+    // bus_b[3:0] = Q debug input
+    // bus_b[7:0] = FIR debug input
+    // =========================================================
+    task automatic apply_bus_b_sample(
+        input logic [3:0] I,
+        input logic [3:0] Q
+    );
+        begin
+            @(negedge i_clk);
+            i_bus_b[7:4]  = I;
+            i_bus_b[3:0]  = Q;
+            i_bus_b[11:8] = 4'd0;
+        end
+    endtask
 
-  // ---------------------------------------------------------
-  // Monitor (affiche à chaque nouveau sample)
-  // ---------------------------------------------------------
-  always @(posedge i_clk) begin
-    if (i_rst_n && adc_eoc) begin
-      $display("t=%0t ns | n=%0d | I_in=%0d Q_in=%0d | I_out=%0d Q_out=%0d",
-               $time, n, I_in, Q_in, I_out, Q_out);
+    task automatic apply_fir_sample(
+        input logic signed [7:0] x
+    );
+        begin
+            @(negedge i_clk);
+            i_bus_b[7:0]  = x;
+            i_bus_b[11:8] = 4'd0;
+        end
+    endtask
+
+    // =========================================================
+    // MONITOR
+    // =========================================================
+    initial begin
+        $timeformat(-9, 1, " ns", 12);
+
+        $display("time | cfg | I | Q | FIR_in | o_bus_c | o_bus_d");
+        $display("------------------------------------------------");
+
+        forever begin
+            @(posedge i_clk);
+            #5;
+            $display("%t | %b | I=%2d Q=%2d | FIR=%4d | o_bus_c=%b | o_bus_d=%b",
+                $time,
+                i_cfg,
+                i_bus_b[7:4],
+                i_bus_b[3:0],
+                $signed(i_bus_b[7:0]),
+                o_bus_c,
+                o_bus_d
+            );
+        end
     end
-  end
 
-  // Dump waves
-  initial begin
-    $dumpfile("tb_IQ_DEMOD.vcd");
-    $dumpvars(0, tb_IQ_DEMOD);
-  end
+    // =========================================================
+    // MAIN TEST
+    // =========================================================
+    initial begin
+        wait(i_rst_n);
+
+        for (int cfg = 0; cfg < 8; cfg++) begin
+            @(negedge i_clk);
+            i_cfg = cfg[2:0];
+
+            $display("\n==============================");
+            $display("TEST CFG = %0d", cfg);
+            $display("==============================");
+
+            if ((cfg == 4) || (cfg == 5)) begin
+
+                // =================================================
+                // MODE 4 / 5 : FIR only
+                // i_bus_b[7:0] is interpreted as signed 8-bit FIR input
+                // =================================================
+                repeat (4) begin
+                    apply_fir_sample(8'sd20);
+                    apply_fir_sample(8'sd0);
+                    apply_fir_sample(-8'sd20);
+                    apply_fir_sample(8'sd0);
+                end
+
+            end else begin
+
+                // =================================================
+                // MODE 0/1/2/3 : DEMOD observation
+                // MODE 6/7     : full chain I-only / Q-only
+                //
+                // Inputs are 4-bit offset binary:
+                // 4'd8  = zero
+                // 4'd15 = positive max
+                // 4'd0  = negative max
+                // =================================================
+                repeat (4) begin
+                    apply_bus_b_sample(4'd15, 4'd8);
+                    apply_bus_b_sample(4'd8 , 4'd15);
+                    apply_bus_b_sample(4'd0 , 4'd8);
+                    apply_bus_b_sample(4'd8 , 4'd0);
+                end
+
+            end
+
+            repeat (20) @(posedge i_clk);
+        end
+
+        $display("\nFIN TEST WRAPPER");
+        $finish;
+    end
 
 endmodule
