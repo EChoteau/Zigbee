@@ -78,7 +78,7 @@ module cordic_wrapper #(
 
             // MODE_1: 001 -> Input=Cordic, Output=Cordic
             MODE_1: begin
-                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_filter_out};
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_cordic};
 
             end
 
