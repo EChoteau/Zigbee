@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module top_cordic_tb();
+module cordic_system_wrapper_tb();
 
     parameter int WIDTH = 6;
     parameter int WIDTH_PHASE = WIDTH + 2;
