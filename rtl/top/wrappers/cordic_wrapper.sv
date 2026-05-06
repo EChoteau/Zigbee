@@ -85,18 +85,24 @@ module cordic_wrapper #(
             // MODE_2: 010 -> Input=Derivate, Output=Derivate
             MODE_2: begin
                 mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
-                o_bus_c = w_phase_deriv[BUS_C_WIDTH-1:0];
+                
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_){1'b0}}, w_phase_deriv};
+
             end
 
             // MODE_3: 011 -> Input=Filter, Output=Filter
             MODE_3: begin
                 mux_filter_in  = i_bus_a[WIDTH_PHASE-1:0];
-                o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
+                
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_filter_out};
+
             end
 
             // MODE_4: 100 -> Input=Cordic, Output=Derivate
             MODE_4: begin
-                o_bus_c = w_phase_deriv[BUS_C_WIDTH-1:0];
+                
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_deriv};
+
             end
 
             // MODE_5: 101 -> Input=Cordic, Output=Filter
@@ -107,13 +113,17 @@ module cordic_wrapper #(
             // MODE_6: 110 -> Input=Derivate, Output=Filter
             MODE_6: begin
                 mux_deriv_in   = i_bus_a[WIDTH_PHASE-1:0];
-                o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
+                
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_filter_out};
+
             end
 
             // MODE_7: 111 -> Input=Filter, Output=Filter
             MODE_7: begin
                 mux_filter_in  = i_bus_a[WIDTH_PHASE-1:0];
-                o_bus_c = w_phase_filter_out[BUS_C_WIDTH-1:0];
+                
+                o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_filter_out};
+
             end
 
             default: ;
