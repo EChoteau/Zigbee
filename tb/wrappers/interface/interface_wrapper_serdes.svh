@@ -18,9 +18,9 @@ begin
     
     // Assert: Config is correctly set
     assert (i_cfg_local == CFG_SERDES)
-        $display("  [SERDES] ✓ Config correctly set to CFG_SERDES");
+        $display("  [SERDES] Config correctly set to CFG_SERDES");
     else
-        $error("  [SERDES] ✗ FAIL: Config mismatch!");
+        $error("  [SERDES] FAIL: Config mismatch!");
     
     // Test pattern 1: Inject data to serializer
     $display("  [SERDES] Injecting data to serializer...");
@@ -30,9 +30,9 @@ begin
     
     // Assert: First pattern loaded
     assert (i_bus_a[7:0] == 8'h55)
-        $display("  [SERDES] ✓ First pattern loaded to serializer: 0x%02h", i_bus_a[7:0]);
+        $display("  [SERDES] First pattern loaded to serializer: 0x%02h", i_bus_a[7:0]);
     else
-        $error("  [SERDES] ✗ FAIL: First pattern mismatch!");
+        $error("  [SERDES] FAIL: First pattern mismatch!");
     
     // Test pattern 2: Different serializer data
     $display("  [SERDES] Changing serializer data...");
@@ -41,9 +41,9 @@ begin
     
     // Assert: Second pattern loaded
     assert (i_bus_a[7:0] == 8'hAA)
-        $display("  [SERDES] ✓ Second pattern loaded: 0x%02h", i_bus_a[7:0]);
+        $display("  [SERDES] Second pattern loaded: 0x%02h", i_bus_a[7:0]);
     else
-        $error("  [SERDES] ✗ FAIL: Second pattern mismatch!");
+        $error("  [SERDES] FAIL: Second pattern mismatch!");
     
     // Test pattern 3: Complementary pattern
     $display("  [SERDES] Sending complementary pattern...");
@@ -52,9 +52,9 @@ begin
     
     // Assert: Third pattern loaded
     assert (i_bus_a[7:0] == 8'hF0)
-        $display("  [SERDES] ✓ Third pattern loaded: 0x%02h", i_bus_a[7:0]);
+        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus_a[7:0]);
     else
-        $error("  [SERDES] ✗ FAIL: Third pattern mismatch!");
+        $error("  [SERDES] FAIL: Third pattern mismatch!");
     
     // Monitor deserializer output
     $display("  [SERDES] Monitoring deserializer output...");
@@ -62,15 +62,15 @@ begin
     
     // Verify deserializer output on Bus C
     assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [SERDES] ✓ PASS - Bus C (deserializer data) valid: 0x%03h", o_bus_c);
+        $display("  [SERDES] PASS - Bus C (deserializer data) valid: 0x%03h", o_bus_c);
     else
-        $error("  [SERDES] ✗ FAIL - Bus C has undefined values!");
+        $error("  [SERDES] FAIL - Bus C has undefined values!");
     
     // Verify ser/des status on Bus D
     assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [SERDES] ✓ PASS - Bus D (ser/des status) valid: 0b%02b", o_bus_d);
+        $display("  [SERDES] PASS - Bus D (ser/des status) valid: 0b%02b", o_bus_d);
     else
-        $error("  [SERDES] ✗ FAIL - Bus D has undefined values!");
+        $error("  [SERDES] FAIL - Bus D has undefined values!");
     
     $display("========== CFG_SERDES TEST COMPLETE ==========\n");
 end

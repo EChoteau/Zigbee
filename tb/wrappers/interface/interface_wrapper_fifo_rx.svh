@@ -18,9 +18,9 @@ begin
     
     // Assert: Config is correctly set
     assert (i_cfg_local == CFG_FIFO_RX)
-        $display("  [FIFO_RX] ✓ Config correctly set to CFG_FIFO_RX");
+        $display("  [FIFO_RX] Config correctly set to CFG_FIFO_RX");
     else
-        $error("  [FIFO_RX] ✗ FAIL: Config mismatch!");
+        $error("  [FIFO_RX] FAIL: Config mismatch!");
     
     // Test pattern 1: Inject serial bit stream
     $display("  [FIFO_RX] Injecting serial data via CDR...");
@@ -29,9 +29,9 @@ begin
     
     // Assert: First pattern active
     assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b1)
-        $display("  [FIFO_RX] ✓ First pattern active (cdr_sample_valid=1, serial_rx=1)");
+        $display("  [FIFO_RX] First pattern active (cdr_sample_valid=1, serial_rx=1)");
     else
-        $error("  [FIFO_RX] ✗ FAIL: First pattern mismatch!");
+        $error("  [FIFO_RX] FAIL: First pattern mismatch!");
     
     // Test pattern 2: Different serial pattern
     $display("  [FIFO_RX] Changing serial pattern...");
@@ -40,9 +40,9 @@ begin
     
     // Assert: Second pattern active
     assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b0)
-        $display("  [FIFO_RX] ✓ Second pattern active (serial_rx=0)");
+        $display("  [FIFO_RX] Second pattern active (serial_rx=0)");
     else
-        $error("  [FIFO_RX] ✗ FAIL: Second pattern mismatch!");
+        $error("  [FIFO_RX] FAIL: Second pattern mismatch!");
     
     // Test pattern 3: Back to first pattern
     $display("  [FIFO_RX] Restoring serial pattern...");
@@ -51,9 +51,9 @@ begin
     
     // Assert: Pattern restored
     assert (i_bus_b[9] == 1'b1)
-        $display("  [FIFO_RX] ✓ Pattern restored (serial_rx=1)");
+        $display("  [FIFO_RX] Pattern restored (serial_rx=1)");
     else
-        $error("  [FIFO_RX] ✗ FAIL: Pattern restore failed!");
+        $error("  [FIFO_RX] FAIL: Pattern restore failed!");
     
     // Monitor RX FIFO
     $display("  [FIFO_RX] Monitoring RX FIFO...");
@@ -61,15 +61,15 @@ begin
     
     // Verify RX FIFO data on Bus C
     assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [FIFO_RX] ✓ PASS - Bus C (RX FIFO data) valid: 0x%03h", o_bus_c);
+        $display("  [FIFO_RX] PASS - Bus C (RX FIFO data) valid: 0x%03h", o_bus_c);
     else
-        $error("  [FIFO_RX] ✗ FAIL - Bus C has undefined values!");
+        $error("  [FIFO_RX] FAIL - Bus C has undefined values!");
     
     // Verify RX status on Bus D
     assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [FIFO_RX] ✓ PASS - Bus D (RX status) valid: 0b%02b", o_bus_d);
+        $display("  [FIFO_RX] PASS - Bus D (RX status) valid: 0b%02b", o_bus_d);
     else
-        $error("  [FIFO_RX] ✗ FAIL - Bus D has undefined values!");
+        $error("  [FIFO_RX] FAIL - Bus D has undefined values!");
     
     $display("========== CFG_FIFO_RX TEST COMPLETE ==========\n");
 end

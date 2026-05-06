@@ -18,9 +18,9 @@ begin
     
     // Assert: Config is correctly set
     assert (i_cfg_local == CFG_BAUD)
-        $display("  [BAUD] ✓ Config correctly set to CFG_BAUD");
+        $display("  [BAUD] Config correctly set to CFG_BAUD");
     else
-        $error("  [BAUD] ✗ FAIL: Config mismatch!");
+        $error("  [BAUD] FAIL: Config mismatch!");
     
     // Test pattern 1: Default baud rate (divisor = 0x10)
     $display("  [BAUD] Setting baud divisor to 0x10...");
@@ -29,9 +29,9 @@ begin
     
     // Assert: Baud divisor 0x10 loaded
     assert (i_bus_a[8:1] == 8'h10)
-        $display("  [BAUD] ✓ Baud divisor set to 0x10");
+        $display("  [BAUD] Baud divisor set to 0x10");
     else
-        $error("  [BAUD] ✗ FAIL: Baud divisor 0x10 not loaded!");
+        $error("  [BAUD] FAIL: Baud divisor 0x10 not loaded!");
     
     // Test pattern 2: Slower baud rate (divisor = 0x20)
     $display("  [BAUD] Setting baud divisor to 0x20 (slower)...");
@@ -40,9 +40,9 @@ begin
     
     // Assert: Baud divisor 0x20 loaded
     assert (i_bus_a[8:1] == 8'h20)
-        $display("  [BAUD] ✓ Baud divisor set to 0x20");
+        $display("  [BAUD] Baud divisor set to 0x20");
     else
-        $error("  [BAUD] ✗ FAIL: Baud divisor 0x20 not loaded!");
+        $error("  [BAUD] FAIL: Baud divisor 0x20 not loaded!");
     
     // Test pattern 3: Faster baud rate (divisor = 0x08)
     $display("  [BAUD] Setting baud divisor to 0x08 (faster)...");
@@ -51,9 +51,9 @@ begin
     
     // Assert: Baud divisor 0x08 loaded
     assert (i_bus_a[8:1] == 8'h08)
-        $display("  [BAUD] ✓ Baud divisor set to 0x08");
+        $display("  [BAUD] Baud divisor set to 0x08");
     else
-        $error("  [BAUD] ✗ FAIL: Baud divisor 0x08 not loaded!");
+        $error("  [BAUD] FAIL: Baud divisor 0x08 not loaded!");
     
     // Test pattern 4: Disable baud generator
     $display("  [BAUD] Disabling baud generator...");
@@ -62,9 +62,9 @@ begin
     
     // Assert: Baud generator disabled
     assert (i_bus_a[0] == 1'b0)
-        $display("  [BAUD] ✓ Baud generator disabled (baud_enable=0)");
+        $display("  [BAUD] Baud generator disabled (baud_enable=0)");
     else
-        $error("  [BAUD] ✗ FAIL: Baud generator not disabled!");
+        $error("  [BAUD] FAIL: Baud generator not disabled!");
     
     // Monitor baud ticks
     $display("  [BAUD] Monitoring baud generator output...");
@@ -72,9 +72,9 @@ begin
     
     // Verify baud tick output on Bus D
     assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [BAUD] ✓ PASS - Bus D (baud tick) valid: 0b%02b", o_bus_d);
+        $display("  [BAUD] PASS - Bus D (baud tick) valid: 0b%02b", o_bus_d);
     else
-        $error("  [BAUD] ✗ FAIL - Bus D has undefined values!");
+        $error("  [BAUD] FAIL - Bus D has undefined values!");
     
     $display("========== CFG_BAUD TEST COMPLETE ==========\n");
 end
