@@ -7,37 +7,32 @@
 // ============================================================================
 
 module cordic_wrapper #(
-    parameter int WIDTH_IN    = 6,
-    parameter int FILTER_N    = 5,
-    parameter int WIDTH_PHASE = WIDTH_IN + 2,
-    parameter int CFG_WIDTH   = 3,
-    parameter int BUS_IN_WIDTH  = 22,
-    parameter int BUS_OUT_WIDTH = 14
+    parameter int WIDTH_IN   = 6,
+    parameter int FILTER_N   = 5,
+    parameter int WIDTH_PHASE= WIDTH_IN + 2,
+    parameter int CFG_WIDTH  = 3,
+    parameter int BUS_A_WIDTH = 12,
+    parameter int BUS_B_WIDTH = 10,
+    parameter int BUS_C_WIDTH = 12,
+    parameter int BUS_D_WIDTH = 2,
+    parameter bit INSIDE_WRAPPER = 1 // Set to 1 to enable internal muxing for testing
 )(
     input  logic i_clk,
     input  logic i_rst_n,
     input  logic [CFG_WIDTH-1:0] i_cfg,
-    input  logic i_out_en,
-    
-    input  logic [BUS_IN_WIDTH-1:0]  i_bus_in,
-    output logic [BUS_OUT_WIDTH-1:0] o_bus_out
+
+    // All inputs come from `i_bus_a` LSBs and all observed outputs
+    // are driven on `o_bus_c` LSBs.
+
+    input  logic [BUS_A_WIDTH-1:0] i_bus_a, // LSB used
+    input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
+    output logic [BUS_C_WIDTH-1:0] o_bus_c,  // LSB used
+    output logic [BUS_D_WIDTH-1:0] o_bus_d,   // unused
 );
 
-    // ====================================================================
-    // Configuration modes (ORIGINAL NAMES KEPT)
-    // ====================================================================
-    localparam logic [2:0] MODE_0 = 3'b000;  // Input=Cordic, Output=Filter
-    localparam logic [2:0] MODE_1 = 3'b001;  // Input=Cordic, Output=Cordic
-    localparam logic [2:0] MODE_2 = 3'b010;  // Input=Derivate, Output=Derivate
-    localparam logic [2:0] MODE_3 = 3'b011;  // Input=Filter, Output=Filter
-    localparam logic [2:0] MODE_4 = 3'b100;  // Input=Cordic, Output=Derivate
-    localparam logic [2:0] MODE_5 = 3'b101;  // Input=Cordic, Output=Filter
-    localparam logic [2:0] MODE_6 = 3'b110;  // Input=Derivate, Output=Filter
-    localparam logic [2:0] MODE_7 = 3'b111;  // Input=Filter, Output=Filter
-
-    // ====================================================================
-    // Internal wires (ORIGINAL SIGNALS KEPT)
-    // ====================================================================
+    // ------------------------------------------------------------------
+    // Internal wires
+    // ------------------------------------------------------------------
     logic signed [WIDTH_PHASE-1:0] w_phase_cordic;
     logic signed [WIDTH_PHASE-1:0] w_phase_deriv;
     logic signed [WIDTH_PHASE-1:0] w_phase_filter_out;
@@ -151,8 +146,8 @@ module cordic_wrapper #(
     cordic_system #(
         .WIDTH_IN(WIDTH_IN),
         .FILTER_N(FILTER_N),
-        .WIDTH_PHASE(WIDTH_PHASE),
-        .INSIDE_WRAPPER(1)
+        .WIDTH_PHASE(WIDTH_PHASE)
+        .INSIDE_WRAPPER(INSIDE_WRAPPER) // Set inside wrapper flag to 1 to enable internal muxing
     ) cordic_system_inst (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
