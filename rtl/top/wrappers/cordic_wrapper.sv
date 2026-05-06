@@ -26,7 +26,7 @@ module cordic_wrapper #(
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // LSB used
     input  logic [BUS_B_WIDTH-1:0] i_bus_b, // unused
     output logic [BUS_C_WIDTH-1:0] o_bus_c,  // LSB used
-    output logic [BUS_D_WIDTH-1:0] o_bus_d,   // unused
+    output logic [BUS_D_WIDTH-1:0] o_bus_d   // unused
 );
 
 
