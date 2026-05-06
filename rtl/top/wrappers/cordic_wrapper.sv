@@ -131,7 +131,6 @@ module cordic_wrapper #(
         .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
         .i_q(w_cordic_q),
-        .o_phase(w_phase_cordic),
         .o_phase_cordic(w_phase_cordic),
         .i_phase_to_derivative(mux_deriv_in),
         .o_phase_derivative(w_phase_deriv),
