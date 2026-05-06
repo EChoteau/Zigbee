@@ -54,8 +54,8 @@ analyze -library WORK -format sverilog { \
 	
 }
 
-current_design top
-elaborate top -library WORK
+current_design zigbee_top
+elaborate zigbee_top -library WORK
 link
 
 # --- 3. Constrains ---
@@ -65,15 +65,15 @@ create_clock -name i_clk -period 100 {i_clk}
 set_max_area 0
 
 # --- 4. Synthesis ---
-current_design top
-set_ungroup top
-set_boundary_optimization top
+current_design zigbee_top
+set_ungroup zigbee_top
+set_boundary_optimization zigbee_top
 set_scan_configuration -style none
-set_flatten true -design top -effort high -minimize multiple_output -phase true
-set_structure true -design top -boolean true -timing false
+set_flatten true -design zigbee_top -effort high -minimize multiple_output -phase true
+set_structure true -design zigbee_top -boolean true -timing false
 
-# set_max_fanout 3 top
-# set_max_transition 1.5 top
+# set_max_fanout 3 zigbee_top
+# set_max_transition 1.5 zigbee_top
 set_dynamic_optimization true
 set_leakage_optimization true
 # set_max_dynamic_power 0
@@ -88,7 +88,7 @@ report_constraint -all_violators > ../reports/violations.rpt
 report_clock_gating > ../reports/report_cg_summary.txt
 
 # --- 6. Export Files for Simulation ---
-write -format verilog -hierarchy -output ../netlist/top_synth.v
-write_sdf ../netlist/top_synth.sdf
+write -format verilog -hierarchy -output ../netlist/zigbee_top_synth.v
+write_sdf ../netlist/zigbee_top_synth.sdf
 
 exit

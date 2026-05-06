@@ -53,21 +53,24 @@ if [ "$NB_ERRORS" -gt 0 ]; then
 
     # Check in reverse chronological order
     if [ -n "$BLOCK_COMPILE" ] && echo "$BLOCK_COMPILE" | grep -i -q "error"; then
-        # \e[100m = gray background, \e[0m = reset
-        echo -e "=> Error located in phase : \e[100m compile_ultra \e[0m"
+        # \e[100m = gray background, \e[97m = white text, \e[0m = reset
+        echo -e "=> Error located in phase : \e[100m\e[97m compile_ultra \e[0m"
         # Display the details :
+        echo "Extract (up to 3 lines):"
         echo "$BLOCK_COMPILE" | grep -i "error" | head -n 3
 
     elif [ -n "$BLOCK_ELABORATE" ] && echo "$BLOCK_ELABORATE" | grep -i -q "error"; then
-        # \e[100m = gray background, \e[0m = reset
-        echo -e"=> Error located in phase : \e[100m elaborate \e[0m"
+        # \e[100m = gray background, \e[97m = white text, \e[0m = reset
+        echo -e"=> Error located in phase : \e[100m\e[97m elaborate \e[0m"
         # Display the details :
+        echo "Extract (up to 3 lines):"
         echo "$BLOCK_ELABORATE" | grep -i "error" | head -n 3
         
     elif [ -n "$BLOCK_ANALYZE" ] && echo "$BLOCK_ANALYZE" | grep -i -q "error"; then
-        # \e[100m = gray background, \e[0m = reset
-        echo -e "=> Error located in phase : \e[100m analyze \e[0m"
+        # \e[100m = gray background, \e[97m = white text, \e[0m = reset
+        echo -e "=> Error located in phase : \e[100m\e[97m analyze \e[0m"
         # Display the details :
+        echo "Extract (up to 3 lines):"
         echo "$BLOCK_ANALYZE" | grep -i "error" | head -n 3
     else
         echo -e "=> Error phase not dynamically identified. See the complete log."
