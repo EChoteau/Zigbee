@@ -56,12 +56,6 @@ module top #(
     logic [BUS_C_WIDTH-1:0] msk_wr_o_bus_c;
     logic [BUS_D_WIDTH-1:0] msk_wr_o_bus_d;
 
-    // Mux outputs
-    logic [BUS_A_WIDTH-1:0] mux_i_bus_a;
-    logic [BUS_B_WIDTH-1:0] mux_i_bus_b;
-    logic [BUS_C_WIDTH-1:0] mux_o_bus_c;
-    logic [BUS_D_WIDTH-1:0] mux_o_bus_d;
-
     // =========================================================================
     // Wrapper instantiations
     // =========================================================================
