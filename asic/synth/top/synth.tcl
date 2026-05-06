@@ -3,6 +3,7 @@
 source ../.synopsys_dc.setup
 
 #Stop on fail
+set sh_script_stop_severity E
 set sh_continue_on_error false
 
 #Clean previous design
@@ -72,7 +73,7 @@ set_scan_configuration -style none
 set_flatten true -design zigbee_top -effort high -minimize multiple_output -phase true
 set_structure true -design zigbee_top -boolean true -timing false
 
-# set_max_fanout 3 zigbee_top
+set_max_fanout 3 zigbee_top
 # set_max_transition 1.5 zigbee_top
 set_dynamic_optimization true
 set_leakage_optimization true
