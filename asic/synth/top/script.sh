@@ -19,13 +19,16 @@ echo "----------------------------------------"
 source config/config_ASIC
 cd asic/synth/top
 
-#Clean previous work
-rm -rf work
-mkdir work
+#Clean previous results
+rm -rf reports
+rm -rf netlist
+mkdir reports
+mkdir netlist
+
 cd work
 
 #Run design_vision for synthesis
-dc_shell -f ../synth.tcl | tee log_synthese.log
+dc_shell -f ../synth.tcl < /dev/null | tee log_synthese.log
 
 echo ""
 echo ""

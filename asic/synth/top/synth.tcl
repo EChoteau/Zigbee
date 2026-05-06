@@ -1,12 +1,9 @@
 # --- 1. Setup Environment ---
+#Setup
+source ../.synopsys_dc.setup
+
 #Stop on fail
 set sh_continue_on_error false
-
-#Result c
-file rm -rf reports
-file rm -rf netlist
-file mkdir reports
-file mkdir netlist
 
 #Clean previous design
 remove_design -all
