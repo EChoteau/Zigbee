@@ -42,7 +42,7 @@ module tb_demod_system;
     // =========================================================
     // DUT
     // =========================================================
-    demod_system dut (
+    demod_top dut (
         .i_clk     (i_clk),
         .i_rst_n   (i_rst_n),
         .i_i       (i_I_in),

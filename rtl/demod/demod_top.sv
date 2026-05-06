@@ -1,4 +1,4 @@
-module demod_system (
+module demod_top (
     input  logic              i_clk,
     input  logic              i_rst_n,
     input  logic [2:0]        i_cfg,
