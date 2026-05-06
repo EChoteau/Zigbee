@@ -42,7 +42,7 @@ NB_WARNINGS=$(grep -i -c "warning" log_synthese.log)
 
 if [ "$NB_ERRORS" -gt 0 ]; then
     # \e[41m = red background, \e[97m = white text, \e[0m = reset
-    echo -e "\e[41m\e[97m FAIL \e[0m"
+    echo -e "                \e[41m\e[97m FAIL \e[0m"
     echo ""
     
     # Extract blocks from the command to the end of the log
@@ -56,28 +56,28 @@ if [ "$NB_ERRORS" -gt 0 ]; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e "=> Error located in phase : \e[100m\e[97m compile_ultra \e[0m"
         # Display the details :
-        echo "Extract (up to 3 lines):"
-        echo "$BLOCK_COMPILE" | grep -i "error" | head -n 3
+        echo "First errors (4 rows):"
+        echo "$BLOCK_COMPILE" | grep -i -B 1 "error" | head -n 4
 
     elif [ -n "$BLOCK_ELABORATE" ] && echo "$BLOCK_ELABORATE" | grep -i -q "error"; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e"=> Error located in phase : \e[100m\e[97m elaborate \e[0m"
         # Display the details :
-        echo "Extract (up to 3 lines):"
-        echo "$BLOCK_ELABORATE" | grep -i "error" | head -n 3
+        echo "First errors (4 rows):"
+        echo "$BLOCK_ELABORATE" | grep -i -B 1 "error" | head -n 4
         
     elif [ -n "$BLOCK_ANALYZE" ] && echo "$BLOCK_ANALYZE" | grep -i -q "error"; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e "=> Error located in phase : \e[100m\e[97m analyze \e[0m"
         # Display the details :
-        echo "Extract (up to 3 lines):"
-        echo "$BLOCK_ANALYZE" | grep -i "error" | head -n 3
+        echo "First errors (4 rows):"
+        echo "$BLOCK_ANALYZE" | grep -i -B 1 "error" | head -n 4
     else
         echo -e "=> Error phase not dynamically identified. See the complete log."
     fi
 else
     # \e[42m = green background, \e[97m = white text, \e[0m = reset
-    echo -e "\e[42m\e[97m DONE \e[0m"
+    echo -e "                \e[42m\e[97m DONE \e[0m"
 fi
 
 echo "----------------------------------------"

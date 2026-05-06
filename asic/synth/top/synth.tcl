@@ -10,50 +10,19 @@ set sh_continue_on_error false
 remove_design -all
 
 # --- 2. Read ---
-analyze -library WORK -format sverilog { \
+set source_files [glob -nocomplain \
 	../../../../rtl/top/zigbee_top.sv \
+	../../../../rtl/top/wrappers/*.sv \
+	../../../../rtl/msk/*.sv \
+	../../../../rtl/demod/*.sv \
+	../../../../rtl/demod/FIR/*.sv \
+	../../../../rtl/demod/WAVE/*.sv \
+	../../../../rtl/CDR/*.sv \
+	../../../../rtl/cordic/*.sv \
+	../../../../rtl/interface/*.sv \
+]
 
-	../../../../rtl/top/wrappers/msk_wrapper.sv \
-	../../../../rtl/top/wrappers/demod_wrapper.sv \
-	../../../../rtl/top/wrappers/cdr_wrapper.sv \
-	../../../../rtl/top/wrappers/cordic_wrapper.sv \
-	../../../../rtl/top/wrappers/interface_wrapper.sv \
-
-	../../../../rtl/msk/demux_msk.sv \
-	../../../../rtl/msk/encodeur_diff.sv \
-	../../../../rtl/msk/shaping_msk.sv \
-	../../../../rtl/msk/top_msk.sv \
-
-	../../../../rtl/demod/FIR/fir_core.vs \
-	../../../../rtl/demod/FIR/fir_top.vs \
-	../../../../rtl/demod/WAVE/demod.sv \
-	../../../../rtl/demod/WAVE/wave_generator.sv \
-	../../../../rtl/demod/demod_system_top.sv \
-
-	../../../../rtl/CDR/cdr.sv \
-	../../../../rtl/CDR/hogge_phase_detector.sv \
-	../../../../rtl/CDR/loop_filter.sv \
-	../../../../rtl/CDR/nco.sv \
-	../../../../rtl/CDR/decision.sv \
-	../../../../rtl/CDR/bascule.sv \
-
-	../../../../rtl/cordic/cordic_system.sv \
-	../../../../rtl/cordic/cordic_top.sv \
-	../../../../rtl/cordic/cordic_init.sv \
-	../../../../rtl/cordic/cordic_step.sv \
-	../../../../rtl/cordic/boxcar_filter.sv \
-	../../../../rtl/cordic/cordic_top_pipeline.sv \
-	../../../../rtl/cordic/cordic_top_hybride.sv \
-	../../../../rtl/cordic/derivate.sv \
-
-	../../../../rtl/interface/interface_top.sv \
-	../../../../rtl/interface/serializer.sv \
-	../../../../rtl/interface/fifo.sv \
-	../../../../rtl/interface/deserializer.sv \
-	../../../../rtl/interface/baud_rate_gen.sv \
-	../../../../rtl/interface/apb_slave_regs.sv \
-	
-}
+analyze -library WORK -format sverilog $source_files
 
 current_design zigbee_top
 elaborate zigbee_top -library WORK
@@ -73,6 +42,7 @@ set_scan_configuration -style none
 set_flatten true -design zigbee_top -effort high -minimize multiple_output -phase true
 set_structure true -design zigbee_top -boolean true -timing false
 
+set_max_fanout 3 zigbee_top
 set_max_fanout 3 zigbee_top
 # set_max_transition 1.5 zigbee_top
 set_dynamic_optimization true
