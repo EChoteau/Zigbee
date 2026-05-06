@@ -2,7 +2,7 @@
 vdel -all -lib work
 vlib work
 vmap work work
-set test_bench_dir=../../tb/CDR
+set test_bench_dir=../../tb/cdr
 set rtl_dir="."
 vlog -sv $rtl_dir/*.sv -define $2 -define behaviour_model
 vlog -sv $test_bench_dir/*.sv

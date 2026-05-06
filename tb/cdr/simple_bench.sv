@@ -27,7 +27,7 @@ module tb_cdr;
     //---------------------------------
     // Instantiate DUT
     //---------------------------------
-    CDR_top dut (
+    cdr_top dut (
         .i_clk(clk),
         .i_rst_n(rst),
         .i_dphi(dphi),

@@ -1,4 +1,4 @@
-module CDR_wrapper #(
+module cdr_wrapper #(
     parameter int CFG_WIDTH  = 3,
     parameter int BUS_A_WIDTH = 12,
     parameter int BUS_B_WIDTH = 10,

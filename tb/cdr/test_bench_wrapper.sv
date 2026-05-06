@@ -48,7 +48,7 @@ module tb_cdr_wrapper;
     //---------------------------------
     // Instanciation DUT
     //---------------------------------
-    CDR_wrapper #(
+    cdr_wrapper #(
         .CFG_WIDTH  (3),
         .BUS_A_WIDTH(12),
         .BUS_B_WIDTH(10),
