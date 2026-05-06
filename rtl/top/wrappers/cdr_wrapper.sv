@@ -58,9 +58,9 @@ module CDR_wrapper #(
 
         // --- phase_detector ---
         // CFG2 : on injecte les stimuli de test directement
+        s_pd_decision_in = i_bus_b[1];
+        s_pd_sample_clk  = i_bus_b[0];
         if (i_cfg == CFG2) begin
-            s_pd_decision_in = i_bus_b[1];
-            s_pd_sample_clk  = i_bus_b[0];
             s_phase_detector_debug = 1'b1;
         end else begin
             // Chemin normal : sortie du décodeur + horloge récupérée du NCO
@@ -69,10 +69,10 @@ module CDR_wrapper #(
 
         // --- loop_filter ---
         // CFG3 : on injecte les stimuli de test directement
+        s_lf_up       = i_bus_b[2];
+        s_lf_down     = i_bus_b[1];
+        s_lf_ctrl_ack = i_bus_b[0];
         if (i_cfg == CFG3) begin
-            s_lf_up       = i_bus_b[2];
-            s_lf_down     = i_bus_b[1];
-            s_lf_ctrl_ack = i_bus_b[0];
             s_loop_filter_debug = 1'b1;
         end else begin
             // Chemin normal : sorties du phase_detector + ack du NCO
@@ -81,14 +81,13 @@ module CDR_wrapper #(
 
         // --- NCO ---
         // CFG4 : on injecte la commande de contrôle directement
+        s_nco_ctrl = signed'(i_bus_b[CTRL_WIDTH-1:0]);
         if (i_cfg == CFG4)
         begin
-            s_nco_ctrl = signed'(i_bus_b[CTRL_WIDTH-1:0]);
             s_nco_debug = 1'b1;
         end
         else
         begin
-            s_nco_ctrl = s_control;
             s_nco_debug = 1'b0;
         end
 
@@ -97,16 +96,34 @@ module CDR_wrapper #(
     // -----------------------------------------------------------------------
     // Instanciation des sous-blocs
     // -----------------------------------------------------------------------
-
-CDR_top#(.phase_resolution(D_PHI_W),.ctrl_width(CTRL_WIDTH)) u_CDR(.i_clk(i_clk),.i_rst_n(i_rst_n),.i_dphi(i_bus_b[D_PHI_W-1:0]),.o_data(),.o_enable(),.i_phase_detector_debug(s_phase_detector_debug), .i_loop_filter_debug(s_loop_filter_debug),.i_nco_debug(s_nco_debug),.i_recovered_clk_d(s_pd_sample_clk),.i_decision_d(s_pd_decision_in),.i_up_d(s_lf_up),.i_down_d(s_lf_down),.i_decision_sig_d(s_pd_decision_in),.i_ack_d(s_lf_ctrl_ack),.i_control_d(s_nco_ctrl));
-
-    // Registre de décision (identique à CDR) : capture sur recovered_clk
-    always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (~i_rst_n)
-            s_decision_out <= 1'b0;
-        else if (s_recovered_clk)
-            s_decision_out <= s_decision_sig;
-    end
+// definition des sortie des block 
+wire [CTRL_WIDTH-1:0] s_ctrl;
+CDR_top#(
+        .phase_resolution(D_PHI_W),
+        .ctrl_width(CTRL_WIDTH)
+        ) 
+u_CDR(  
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_dphi(i_bus_b[D_PHI_W-1:0]),
+        .o_data(s_data),
+        .o_enable(s_sample_enable),
+        .i_phase_detector_debug(s_phase_detector_debug),
+        .i_loop_filter_debug(s_loop_filter_debug),
+        .i_nco_debug(s_nco_debug),
+        .i_recovered_clk_d(s_pd_sample_clk),
+        .i_decision_d(s_pd_decision_in),
+        .i_up_d(s_lf_up),
+        .i_down_d(s_lf_down),
+        .i_ack_d(s_lf_ctrl_ack),
+        .i_control_d(s_nco_ctrl),
+        .o_decision(s_decision_sig),
+        .o_up(s_up),
+        .o_down(s_down),
+        .o_ack(s_ack),
+        .o_ctrl(s_control),
+        .o_recovered_clk(s_recovered_clk)
+ );
 
     // -----------------------------------------------------------------------
     // Mux de sortie
@@ -115,19 +132,19 @@ CDR_top#(.phase_resolution(D_PHI_W),.ctrl_width(CTRL_WIDTH)) u_CDR(.i_clk(i_clk)
         unique case (i_cfg)
 
             CFG0: // Mode normal CDR : data + enable
-                o_bus_c = {10'h0, u_CDR.o_data, u_CDR.o_enable};
+                o_bus_c = {10'h0,s_data,s_sample_enable};
 
             CFG1: // Debug décodeur : décision combinatoire
-                o_bus_c = {11'h0, u_CDR.s_decision_sig};
+                o_bus_c = {11'h0, s_decision_sig};
 
             CFG2: // Test phase_detector isolé : up / down
-                o_bus_c = {10'h0, u_CDR.s_up, u_CDR.s_down};
+                o_bus_c = {10'h0,s_up, s_down};
 
             CFG3: // Test loop_filter isolé : bus de contrôle
-                o_bus_c = {11'h0, u_CDR.s_control};
+                o_bus_c = {{BUS_C_WIDTH-CTRL_WIDTH{1'b0}}, s_control};
 
             CFG4: // Test NCO isolé : enable + ack
-                o_bus_c = {10'h0, u_CDR.s_decision_out, u_CDR.o_enable, u_CDR.s_ack};
+                o_bus_c = {9'h0,s_recovered_clk,s_sample_enable,s_ack};
 
             default:
                 o_bus_c = 12'h0;

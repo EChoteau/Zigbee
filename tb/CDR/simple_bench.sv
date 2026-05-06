@@ -32,7 +32,22 @@ module tb_cdr;
         .i_rst_n(rst),
         .i_dphi(dphi),
         .o_data(decision_out),
+<<<<<<< HEAD
         .o_enable(clk_rec)
+=======
+        .o_enable(clk_rec),
+        // debug signals.
+        .i_recovered_clk_d('0),
+        .i_decision_d('0),
+        .i_up_d('0),
+        .i_down_d('0),
+        .i_ack_d('0),
+        .i_control_d('0),
+        //debug control 
+        .i_phase_detector_debug('0),
+        .i_loop_filter_debug('0),
+        .i_nco_debug('0)
+>>>>>>> ebe6c18 (fixed the wrapper by adding output signal to top)
     );
 
     //---------------------------------
