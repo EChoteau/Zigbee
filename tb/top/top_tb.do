@@ -8,7 +8,7 @@ if ![file isdirectory lib_RTL] {
     vmap lib_RTL lib_RTL
 }
 
-vlog -incr -sv -work lib_RTL +acc rtl/top/*.sv
+vlog -incr -sv -work lib_RTL +acc rtl/top/top.sv
 vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/CDR/*.sv
