@@ -11,7 +11,7 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/wrappers/cordic/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/cordic_system_wrapper.sv
+vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/cordic_wrapper.sv
 
 
 
