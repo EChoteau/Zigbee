@@ -1,6 +1,6 @@
 
 
-module CDR_top
+module cdr_top
   #(parameter phase_resolution=6,
     parameter ctrl_width=4) 
   (i_clk,i_rst_n,i_dphi,o_data,o_enable,i_phase_detector_debug, i_loop_filter_debug,i_nco_debug,i_recovered_clk_d,i_decision_d,i_up_d,i_down_d,i_ack_d,i_control_d,o_decision,o_up,o_down,o_ack,o_recovered_clk,o_ctrl);
