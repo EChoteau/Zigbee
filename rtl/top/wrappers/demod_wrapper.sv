@@ -42,7 +42,7 @@ module demod_wrapper #(
     logic signed [7:0] s_demod_out_i;
     logic signed [7:0] s_demod_out_q;
 
-    demod_system u_demod_system (
+    demod_top u_demod_top (
         .i_clk         (i_clk),
         .i_rst_n       (i_rst_n),
         .i_cfg         (i_cfg),
