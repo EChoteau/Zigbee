@@ -52,7 +52,7 @@ module cordic_system_wrapper_tb();
         .BUS_B_WIDTH(BUS_B_WIDTH),
         .BUS_C_WIDTH(BUS_C_WIDTH),
         .BUS_D_WIDTH(BUS_D_WIDTH),
-        .CFG_WIDTH(CFG_WIDTH),
+        .CFG_WIDTH(CFG_WIDTH)
     ) dut (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
