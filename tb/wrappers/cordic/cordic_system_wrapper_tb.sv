@@ -53,7 +53,6 @@ module cordic_system_wrapper_tb();
         .BUS_C_WIDTH(BUS_C_WIDTH),
         .BUS_D_WIDTH(BUS_D_WIDTH),
         .CFG_WIDTH(CFG_WIDTH),
-        .INSIDE_WRAPPER(1) // Set inside wrapper flag to 1 to enable internal muxing for testing
     ) dut (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
