@@ -17,11 +17,11 @@ module msk_test_wrapper #(
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
     // Entrées/Sorties "Pads" (Normales)
-    logic        i_flag_enable,
-    logic        i_enable_ech,
-    logic        i_b_in,
-    logic signed [MSK_RES-1:0] o_I_BB,
-    logic signed [MSK_RES-1:0] o_Q_BB,
+    input  logic        i_flag_enable,
+    input  logic        i_enable_ech,
+    input  logic        i_b_in,
+    output logic signed [MSK_RES-1:0] o_I_BB,
+    output logic signed [MSK_RES-1:0] o_Q_BB,
 
     // --- INTERFACE DE TEST (Identique au CORDIC) ---
     input  logic [BUS_A_WIDTH-1:0] i_bus_a, // INPUT pure (Injection)
