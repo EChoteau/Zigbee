@@ -14,4 +14,4 @@ source config/config_RTL
 
 #vsim -do tb/cordic/complete_postsynth.do
 #vsim -do tb/cordic/complete_postroute.do
-vsim -do tb/wrapper/cordic/cordic_system_wrapper_tb.do
+vsim -do tb/wrappers/cordic/cordic_system_wrapper_tb.do
