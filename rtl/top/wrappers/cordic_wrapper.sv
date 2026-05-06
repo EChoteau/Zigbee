@@ -67,7 +67,7 @@ module cordic_wrapper #(
         mux_deriv_in   = w_phase_cordic; // default to cordic output
         mux_filter_in  = w_phase_deriv;  // default to derivative output
 
-        o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, value};
+        o_bus_c = {{(BUS_C_WIDTH-WIDTH_PHASE){1'b0}}, w_phase_filter_out};
         o_bus_d = '0; // unused
 
         unique case (i_cfg)
