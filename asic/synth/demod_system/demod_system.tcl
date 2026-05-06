@@ -11,11 +11,14 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/demod/FIR/fir_top.v \
     ../../../rtl/demod/WAVE/demod.sv \
     ../../../rtl/demod/WAVE/wave_generator.sv \
+    ../../../rtl/top/wrappers/demod_wrapper.sv \
     ../../../rtl/demod/top_level_all.sv \
+
 }
 
 elaborate demod_system -library WORK
-current_design demod_system
+#current_design demod_system
+current_design demod_wrapper
 link
 
 # --- 3. Contraintes ---
@@ -24,7 +27,8 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design demod_system
+#current_design demod_system
+current_design demod_wrapper
 ungroup -all -flatten
 compile_ultra -gate_clock
 #compile_ultra -gate_clock
