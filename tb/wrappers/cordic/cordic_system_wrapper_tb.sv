@@ -231,6 +231,7 @@ module cordic_system_wrapper_tb();
         logic signed [WIDTH_PHASE-1:0] ref_deriv;
         logic signed [WIDTH_PHASE-1:0] error_margin = 2; // allow small margin of error due to quantization and noise
         bit ref_valid;
+        bit is_close_enough= 1'b0;
 
         ref_valid = 1'b0;
 
@@ -261,7 +262,16 @@ module cordic_system_wrapper_tb();
                 ref_deriv = curr_deriv;
                 ref_valid = 1'b1;
             end else begin
-                assert (curr_deriv === ref_deriv || $abs(curr_deriv - ref_deriv) <= error_margin)
+                if (curr_deriv > ref_deriv + error_margin) begin
+                    is_close_enough = 1'b0;
+                end 
+                else if (curr_deriv < ref_deriv - error_margin) begin
+                    is_close_enough = 1'b0;
+                end 
+                else begin
+                    is_close_enough = 1'b1;
+                end
+                assert (is_close_enough)
                     else $error("cordic_derivate: expected constant phase derivative %0d, got %0d at step %0d",
                                 ref_deriv, curr_deriv, i);
             end
