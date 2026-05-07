@@ -247,7 +247,7 @@ module cordic_system_wrapper_tb();
             i_bus_a = {i_cordic_q, i_cordic_i};
 
             // Let the DUT settle so the derivative output can be checked
-            if (i<8) begin
+            if (i<4) begin
                 // During the first few steps, the derivative may not be stable yet due to initial conditions
                 continue;
             end
