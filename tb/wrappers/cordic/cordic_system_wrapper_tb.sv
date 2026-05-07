@@ -143,7 +143,7 @@ module cordic_system_wrapper_tb();
             @(negedge i_clk);
             i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
             @(posedge i_clk);
-            curr_deriv = o_bus_c;
+            curr_deriv = $signed(o_bus_c);
 
             assert (!$isunknown(curr_deriv))
                 else $error("derivate_only_triangle_step (rising): o_bus_c contains X/Z");
@@ -159,7 +159,7 @@ module cordic_system_wrapper_tb();
             @(negedge i_clk);
             i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
             @(posedge i_clk);
-            curr_deriv = o_bus_c;
+            curr_deriv = $signed(o_bus_c);
 
             assert (!$isunknown(curr_deriv))
                 else $error("derivate_only_triangle_step (falling): o_bus_c contains X/Z");
@@ -186,13 +186,13 @@ module cordic_system_wrapper_tb();
         @(posedge i_clk);
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
 
-        prev_out = o_bus_c[WIDTH_PHASE-1:0];
+        prev_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         seen_change = 1'b0;
 
         // Monitor for N+2 cycles to allow filter to stabilize
         repeat (10) begin
             @(posedge i_clk);
-            curr_out = o_bus_c[WIDTH_PHASE-1:0];
+            curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             assert (!$isunknown(curr_out))
                 else $error("filter_step: o_bus_c contains X/Z");
@@ -204,10 +204,10 @@ module cordic_system_wrapper_tb();
         end
 
         // After stabilization, output should hold steady for several cycles
-        stable_out = o_bus_c[WIDTH_PHASE-1:0];
+        stable_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         repeat (3) begin
             @(posedge i_clk);
-            curr_out = o_bus_c[WIDTH_PHASE-1:0];
+            curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
             assert (curr_out === stable_out)
                 else $error("filter_step: output not stable, expected %0d got %0d", stable_out, curr_out);
         end
