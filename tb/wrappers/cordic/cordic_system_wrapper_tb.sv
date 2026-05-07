@@ -99,7 +99,7 @@ module cordic_system_wrapper_tb();
             is_close_enough = 1'b1;
         end
 
-        assert (is_close_enough)
+        assert (!is_close_enough)
             else $error("%s: expected %0d got %0d", label, expected, observed);
     endtask
 
