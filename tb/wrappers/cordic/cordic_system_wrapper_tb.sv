@@ -126,7 +126,7 @@ module cordic_system_wrapper_tb();
 
     task automatic derivate_only_triangle_step();
         logic signed [WIDTH_PHASE-1:0] phase_val;
-        logic signed [BUS_C_WIDTH-1:0] curr_deriv;
+        logic signed [WIDTH_PHASE-1:0] curr_deriv;
 
         // Reset stimulus: check that the output is connected and stable at 0
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, '0 };
@@ -222,8 +222,8 @@ module cordic_system_wrapper_tb();
         real s_q_val;
         logic signed [WIDTH-1:0] i_cordic_i;
         logic signed [WIDTH-1:0] i_cordic_q;
-        logic signed [BUS_C_WIDTH-1:0] curr_deriv;
-        logic signed [BUS_C_WIDTH-1:0] ref_deriv;
+        logic signed [WIDTH_PHASE-1:0] curr_deriv;
+        logic signed [WIDTH_PHASE-1:0] ref_deriv;
         bit ref_valid;
 
         ref_valid = 1'b0;
@@ -246,9 +246,9 @@ module cordic_system_wrapper_tb();
                 // During the first few steps, the derivative may not be stable yet due to initial conditions
                 continue;
             end
-            curr_deriv = o_bus_c;
+            curr_deriv = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
-            assert (!$isunknown(o_bus_c))
+            assert (!$isunknown(o_bus_c[WIDTH_PHASE-1:0]))
                 else $error("cordic_derivate: o_bus_c is not connected (contains X/Z) at step %0d", i);
 
             if (!ref_valid) begin
@@ -337,9 +337,9 @@ module cordic_system_wrapper_tb();
 
     task automatic derivate_filter_triangle_step();
         logic signed [WIDTH_PHASE-1:0] phase_val;
-        logic signed [BUS_C_WIDTH-1:0] prev_out;
-        logic signed [BUS_C_WIDTH-1:0] curr_out;
-        logic signed [BUS_C_WIDTH-1:0] stable_out;
+        logic signed [WIDTH_PHASE-1:0] prev_out;
+        logic signed [WIDTH_PHASE-1:0] curr_out;
+        logic signed [WIDTH_PHASE-1:0] stable_out;
         bit seen_change;
 
         // Phase = 0 for several cycles (derivative = 0)
@@ -359,12 +359,12 @@ module cordic_system_wrapper_tb();
         end
 
         // Monitor filter response to derivative step for N cycles
-        prev_out = o_bus_c;
+        prev_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         seen_change = 1'b0;
 
         repeat (15) begin 
             @(posedge i_clk);
-            curr_out = o_bus_c;
+            curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             assert (!$isunknown(curr_out))
                 else $error("derivate_filter_triangle_step: o_bus_c contains X/Z");
@@ -376,10 +376,10 @@ module cordic_system_wrapper_tb();
         end
 
         // After stabilization, output should hold steady
-        stable_out = o_bus_c;
+        stable_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         repeat (3) begin
             @(posedge i_clk);
-            curr_out = o_bus_c;
+            curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
             assert (curr_out === stable_out)
                 else $error("derivate_filter_triangle_step: output not stable, expected %0d got %0d", stable_out, curr_out);
         end
