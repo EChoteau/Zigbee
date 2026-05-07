@@ -17,6 +17,7 @@ module zigbee_top #(
 )(
     input  logic i_clk,
     input  logic i_rst_n,
+    input  logic [2:0] i_cfg_top,
     input  logic [2:0] i_cfg,
     input  logic i_out_en,
     
@@ -115,7 +116,7 @@ module zigbee_top #(
         w_cordic_cfg    = 3'b000;
         w_cdr_cfg       = 3'b000;
 
-        unique case (i_cfg)
+        unique case (i_cfg_top)
             CFG_RX_PATH: begin
                 // RX Chain: Demod → Cordic → CDR → Interface
                 // All blocks forced to mode 3'b000 (normal operation in chain)
@@ -180,7 +181,7 @@ module zigbee_top #(
         w_cdr_input       = i_bus_in;
 
         // 2. Écrasement chirurgical des bits de données pour les modes chaînés
-        unique case (i_cfg)
+        unique case (i_cfg_top)
             
             CFG_RX_PATH: begin
                 // Demod : Reçoit l'ADC (pins i_i, i_q externes dédiées)
@@ -300,7 +301,7 @@ module zigbee_top #(
         o_bus_out = '0; // Sécurité Tri-state
 
         if (i_out_en) begin
-            unique case (i_cfg)
+            unique case (i_cfg_top)
                 // Chaîne RX : On sort tout ce que l'interface a à nous dire
                 CFG_RX_PATH:      o_bus_out = w_interface_out; 
                 
