@@ -411,7 +411,7 @@ module cordic_system_wrapper_tb();
     endtask
 
     task automatic rst_wait(input logic [2:0] wrapper_cfg);
-        @negedge i_clk;
+        @(negedge i_clk);
         i_rst_n = 1'b0;
         repeat (4) @(negedge i_clk);
         i_wrapper_cfg = wrapper_cfg; // re-assert config after reset
