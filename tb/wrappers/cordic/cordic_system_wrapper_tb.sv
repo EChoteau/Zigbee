@@ -45,7 +45,7 @@ module cordic_system_wrapper_tb();
     end
 
     // DUT instantiation
-    cordic_wrapper  #(
+    cordic_system_wrapper  #(
         .WIDTH_IN(WIDTH),
         .WIDTH_PHASE(WIDTH_PHASE),
         .BUS_A_WIDTH(BUS_A_WIDTH),
