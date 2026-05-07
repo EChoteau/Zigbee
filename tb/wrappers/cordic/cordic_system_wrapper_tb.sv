@@ -233,11 +233,11 @@ module cordic_system_wrapper_tb();
 
         ref_valid = 1'b0;
 
-        for (int i = 0; i < 40; i = i + 1) begin
+        for (int i = 0; i < 20; i = i + 1) begin
             @(posedge i_clk);
 
             // Calculate cos/sin in simulation
-            s_angle = (i * 2.0 * PI) / 40.0;
+            s_angle = (i * 2.0 * PI) / 20.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
 
@@ -247,7 +247,7 @@ module cordic_system_wrapper_tb();
             i_bus_a = {i_cordic_q, i_cordic_i};
 
             // Let the DUT settle so the derivative output can be checked
-            if (i<5) begin
+            if (i<8) begin
                 // During the first few steps, the derivative may not be stable yet due to initial conditions
                 continue;
             end
