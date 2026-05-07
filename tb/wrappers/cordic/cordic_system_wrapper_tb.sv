@@ -183,12 +183,12 @@ module cordic_system_wrapper_tb();
         bit seen_change;
 
         phase_step = '0;
-        @(posedge i_clk);
+        @(negedge i_clk);
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
         repeat (4) @(posedge i_clk);
 
         phase_step = {{(WIDTH_PHASE-WIDTH){1'b0}}, {1'b0, {(WIDTH-1){1'b1}}}};
-        @(posedge i_clk);
+        @(negedge i_clk);
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
 
         prev_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
