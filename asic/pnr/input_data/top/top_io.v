@@ -12,7 +12,7 @@ wire [5:0] i_i_P;
 wire [5:0] i_q_P;
 wire [10:0] o_phase_P;
 
-cordic_system_complete cordic_system_complete_inst (
+cordic_system_top cordic_system_top_inst (
 	.i_clk(i_clk_P),
 	.i_rst_n(i_rst_n_P),
 	.i_i(i_i_P),

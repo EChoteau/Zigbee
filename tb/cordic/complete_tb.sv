@@ -4,7 +4,7 @@ module complete_tb();
     parameter WIDTH = 6;
     parameter FILTER_N = 5;
     parameter real PI = 3.14159265359;
-    parameter int OUT_WIDTH = WIDTH + 2; // matches cordic_system WIDTH_PHASE
+    parameter int OUT_WIDTH = WIDTH + 2; // matches cordic_system_top WIDTH_PHASE
 
     logic i_clk;
     logic i_rst_n;
@@ -13,7 +13,7 @@ module complete_tb();
     logic signed [OUT_WIDTH-1:0] o_phase;
     
 
-    cordic_system #(
+    cordic_system_top #(
     	.INSIDE_WRAPPER(0) // Set inside wrapper flag to 0 for direct testing of cordic system
     )dut (
 	    .i_clk(i_clk), .i_rst_n(i_rst_n),

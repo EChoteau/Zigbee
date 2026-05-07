@@ -1,4 +1,4 @@
-module cordic_system #(
+module cordic_system_top #(
     parameter int WIDTH_IN = 6,
     parameter int FILTER_N = 5,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
