@@ -64,7 +64,7 @@ module cdr_top #(
     // ==========================================================================
     // DECISION OUTPUT REGISTER
     // ==========================================================================
-    always @(posedge i_clk or negedge i_rst_n) begin
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (~i_rst_n)
             s_decision_out <= 1'b0;
         else if (s_sample_clk)

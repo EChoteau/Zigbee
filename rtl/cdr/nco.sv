@@ -14,7 +14,7 @@ module nco #(
     logic [3:0] s_period;   // Adjusted period: bounded between 4 and 6
     logic [3:0] s_cnt;
 
-    always @(posedge i_clk or negedge i_rst_n) begin
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (~i_rst_n) begin
             s_cnt <= 4'h0;
             s_period <= 4'h5;  // K_NOMINAL

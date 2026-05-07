@@ -22,7 +22,7 @@ module bascule (
     assign s_en_d = s_en_d_r;
     assign o_Q = o_Q_r;
 
-    always @(posedge i_ck or negedge i_rst) begin
+    always_ff @(posedge i_ck or negedge i_rst) begin
         if (~i_rst) begin
             s_en_d_r <= 1'b0;
             o_Q_r <= 1'b0;

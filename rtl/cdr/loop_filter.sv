@@ -11,7 +11,7 @@ module loop_filter #(
 
     logic s_up_d, s_down_d;
 
-    always @(posedge i_clk or negedge i_rst_n) begin
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
         if (~i_rst_n) begin
             o_ctrl <= '0;
             s_up_d <= 1'b0;
@@ -22,9 +22,9 @@ module loop_filter #(
             s_down_d <= i_down;
 
             if (i_up & ~s_up_d)
-                o_ctrl <= signed'(1);
+                o_ctrl <= $signed(4'sd1);
             else if (i_down & ~s_down_d)
-                o_ctrl <= signed'(-1);
+                o_ctrl <= $signed(4'sd-1);
             else if (i_ctrl_ack)
                 o_ctrl <= '0;  // Reset after consumption
         end
