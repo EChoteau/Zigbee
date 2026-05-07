@@ -1,9 +1,5 @@
 module cdr_wrapper #(
     parameter int CFG_WIDTH  = 3,
-    parameter int BUS_A_WIDTH = 12,
-    parameter int BUS_B_WIDTH = 10,
-    parameter int BUS_C_WIDTH = 12,
-    parameter int BUS_D_WIDTH = 2,
     parameter int BUS_IN_WIDTH  = 22,
     parameter int BUS_OUT_WIDTH = 14
 )(
@@ -125,11 +121,11 @@ module cdr_wrapper #(
 wire [CTRL_WIDTH-1:0] s_ctrl;
 logic s_data;
 
-CDR_top#(
+cdr_top#(
         .phase_resolution(D_PHI_W),
         .ctrl_width(CTRL_WIDTH)
         ) 
-u_CDR(  
+u_cdr(  
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_dphi(w_dphi),
