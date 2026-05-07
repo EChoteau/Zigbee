@@ -6,6 +6,8 @@ module top_tb;
 
     // Zigbee top configuration and bus signals
     logic [2:0] i_cfg;
+    logic [2:0] i_wrapper_cfg;
+    logic [2:0] i_top_cfg;
     logic i_out_en;
 
     logic [21:0] i_bus_in;
@@ -13,12 +15,12 @@ module top_tb;
 
     `include "tb/top/configs/top_0_rx.svh"
     `include "tb/top/configs/top_1_tx.svh"
-    `include "tb/top/configs/top_2_interface.svh"
-    `include "tb/top/configs/top_3_msk.svh"
-    `include "tb/top/configs/top_4_demod.svh"
-    `include "tb/top/configs/top_5_cordic.svh"
-    `include "tb/top/configs/top_6_cdr.svh"
-    `include "tb/top/configs/top_7_internal.svh"
+    `include "tb/top/configs/top_2_internal.svh"
+    `include "tb/top/configs/top_3_interface.svh"
+    `include "tb/top/configs/top_4_msk.svh"
+    `include "tb/top/configs/top_5_demod.svh"
+    `include "tb/top/configs/top_6_cordic.svh"
+    `include "tb/top/configs/top_7_cdr.svh"
 
     // Instantiate DUT
     zigbee_top uut (
