@@ -121,11 +121,11 @@ module cdr_wrapper #(
 wire [CTRL_WIDTH-1:0] s_ctrl;
 logic s_data;
 
-CDR_top#(
+cdr_top#(
         .phase_resolution(D_PHI_W),
         .ctrl_width(CTRL_WIDTH)
         ) 
-u_CDR(  
+u_cdr(  
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_dphi(w_dphi),
