@@ -22,8 +22,10 @@ cd asic/synth/top
 #Clean previous results
 rm -rf reports
 rm -rf netlist
+rm -rf work
 mkdir reports
 mkdir netlist
+mkdir work
 
 cd work
 
