@@ -81,7 +81,7 @@ module cordic_system_wrapper_tb();
         input string label
     );
         logic signed [WIDTH_PHASE-1:0] observed;
-        logic signed error_margin = 2; // allow small margin of error due to quantization and noise
+        logic signed error_margin = 1; // allow small margin of error due to quantization and noise
         logic is_close_enough;
 
         observed = $signed(o_bus_c);
@@ -99,7 +99,7 @@ module cordic_system_wrapper_tb();
             is_close_enough = 1'b1;
         end
 
-        assert (!is_close_enough)
+        assert (is_close_enough)
             else $error("%s: expected %0d got %0d", label, expected, observed);
     endtask
 
