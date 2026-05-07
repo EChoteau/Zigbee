@@ -1,41 +1,36 @@
 
+module bascule (
+    input  logic  i_ck,
+    input  logic  i_en,
+    input  logic  i_rst,
+    input  logic  i_D,
+    output logic  o_Q
+);
 
-module bascule(i_ck, i_en, i_rst, i_D, o_Q);
-    input wire i_ck, i_en, i_rst, i_D;
-    output wire o_Q;
+    logic s_en_d;      // i_en delayed by one cycle
+    logic s_enable;    // rising edge of i_en
+    logic s_D_mux;     // D with hold if no enable
 
-    wire s_en_d;      // i_en retardé d'un cycle
-    wire s_enable;    // flanc montant de i_en
-    wire s_D_mux;     // D avec maintien si pas d'enable
-
-    // détection du flanc montant de i_en
+    // Rising edge detection of i_en
     assign s_enable = i_en & ~s_en_d;
 
-    // mux sur l'entrée D : capture i_D sur flanc, maintien sinon
-    assign s_D_mux  = s_enable ? i_D : o_Q;
+    // Mux on input D: capture i_D on edge, hold otherwise
+    assign s_D_mux = s_enable ? i_D : o_Q;
 
-    `ifdef non_behaviour_model
-        // FF1 : mémorise i_en
-        bascule_temp ff1 (.ck(i_ck), .clear(i_rst), .D(i_en),   .Q(s_en_d));
+    // Behavioral model (standard)
+    logic s_en_d_r, o_Q_r;
+    assign s_en_d = s_en_d_r;
+    assign o_Q = o_Q_r;
 
-        // FF2 : capture i_D quand enable, maintien sinon
-        bascule_temp ff2 (.ck(i_ck), .clear(i_rst), .D(s_D_mux), .Q(o_Q));
-    `else
-        // modèle comportemental équivalent
-        reg s_en_d_r, o_Q_r;
-        assign s_en_d = s_en_d_r;
-        assign o_Q    = o_Q_r;
-
-        always @(posedge i_ck or negedge i_rst) begin
-            if (~i_rst) begin
-                s_en_d_r <= 1'b0;
-                o_Q_r    <= 1'b0;
-            end
-            else begin
-                s_en_d_r <= i_en;
-                o_Q_r    <= s_D_mux;
-            end
+    always @(posedge i_ck or negedge i_rst) begin
+        if (~i_rst) begin
+            s_en_d_r <= 1'b0;
+            o_Q_r <= 1'b0;
         end
-    `endif
+        else begin
+            s_en_d_r <= i_en;
+            o_Q_r <= s_D_mux;
+        end
+    end
 
 endmodule

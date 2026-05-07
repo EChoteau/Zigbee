@@ -1,22 +1,21 @@
 module cdr_wrapper #(
-    parameter int CFG_WIDTH  = 3,
-    parameter int BUS_IN_WIDTH  = 22,
-    parameter int BUS_OUT_WIDTH = 14
-)(
-    input  logic i_clk,
-    input  logic i_rst_n,
-    input  logic [CFG_WIDTH-1:0] i_cfg,
-    input  logic i_out_en,
-
-    input  logic [BUS_IN_WIDTH-1:0]  i_bus_in,
-    output logic [BUS_OUT_WIDTH-1:0] o_bus_out
+    parameter int CFG_WIDTH      = 3,
+    parameter int BUS_IN_WIDTH   = 22,
+    parameter int BUS_OUT_WIDTH  = 14
+) (
+    input  logic                          i_clk,
+    input  logic                          i_rst_n,
+    input  logic [CFG_WIDTH-1:0]          i_cfg,
+    input  logic                          i_out_en,
+    input  logic [BUS_IN_WIDTH-1:0]       i_bus_in,
+    output logic [BUS_OUT_WIDTH-1:0]      o_bus_out
 );
 
-    localparam logic [CFG_WIDTH-1:0] CFG0 = 'd0;
-    localparam logic [CFG_WIDTH-1:0] CFG1 = 'd1;
-    localparam logic [CFG_WIDTH-1:0] CFG2 = 'd2;
-    localparam logic [CFG_WIDTH-1:0] CFG3 = 'd3;
-    localparam logic [CFG_WIDTH-1:0] CFG4 = 'd4;
+    localparam logic [CFG_WIDTH-1:0] CFG0 = 3'b000;
+    localparam logic [CFG_WIDTH-1:0] CFG1 = 3'b001;
+    localparam logic [CFG_WIDTH-1:0] CFG2 = 3'b010;
+    localparam logic [CFG_WIDTH-1:0] CFG3 = 3'b011;
+    localparam logic [CFG_WIDTH-1:0] CFG4 = 3'b100;
 
     // Largeur du bus de contrôle NCO / loop_filter
     localparam int CTRL_WIDTH = 4;
@@ -30,6 +29,7 @@ module cdr_wrapper #(
     // IN[12]     = s_lf_up
     // IN[13:10]  = s_nco_ctrl[3:0]
     // ====================================================================
+    // Input bus decoding (22 bits)
     logic [D_PHI_W-1:0]           w_dphi;
     logic                         w_pd_sample_clk;
     logic                         w_pd_decision_in;
@@ -117,9 +117,9 @@ module cdr_wrapper #(
     // -----------------------------------------------------------------------
     // Instanciation des sous-blocs
     // -----------------------------------------------------------------------
-// definition des sortie des block 
-wire [CTRL_WIDTH-1:0] s_ctrl;
-logic s_data;
+    // Definition of block outputs
+    logic signed [CTRL_WIDTH-1:0] s_ctrl;
+    logic                         s_data;
 
 cdr_top#(
         .phase_resolution(D_PHI_W),
