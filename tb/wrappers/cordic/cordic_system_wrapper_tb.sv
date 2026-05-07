@@ -87,10 +87,12 @@ module cordic_system_wrapper_tb();
         assert (!$isunknown(o_bus_c))
             else $error("%s: o_bus_c is not connected (contains X/Z)", label);
 
-        logic is_close_enough = 1'b0;
+        logic is_close_enough;
+        is_close_enough = 1'b0;
 
-        if ( observed > expected )
+        if ( observed > expected ) begin
             is_close_enough = (observed - expected) <= error_margin; // observed can be slightly above expected
+        end
         else
             is_close_enough = (expected - observed) <= error_margin; // observed can be slightly below expected
 
