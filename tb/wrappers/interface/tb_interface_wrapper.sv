@@ -67,7 +67,7 @@ module tb_interface_wrapper;
     end
     endtask
 
-    include "interface_wrapper_test_plan.svh"
+    `include "interface_wrapper_test_plan.svh"
 
     initial begin
         // init
