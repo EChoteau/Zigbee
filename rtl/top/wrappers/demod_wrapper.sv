@@ -117,10 +117,8 @@ module demod_wrapper #(
                 // Output: Complete demod+FIR chain (s_i_bb, s_q_bb)
                 // ====================================================================
                 CFG_NORMAL: begin
-                    o_bus_out[5:0]   = s_q_bb[5:0];
-                    o_bus_out[11:6]  = s_i_bb[5:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[5:0]   = s_i_bb[5:0];
+                    o_bus_out[11:6]  = s_q_bb[5:0];
                 end
 
                 // ====================================================================
@@ -130,8 +128,8 @@ module demod_wrapper #(
                 CFG_DEBUG_DEMOD_I: begin
                     o_bus_out[7:0]   = s_demod_out_i[7:0];
                     o_bus_out[11:8]  = s_cos_test[3:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[12]    = s_i_bb[5];
+                    o_bus_out[13]    = s_q_bb[5];
                 end
 
                 // ====================================================================
@@ -141,8 +139,8 @@ module demod_wrapper #(
                 CFG_DEBUG_DEMOD_Q: begin
                     o_bus_out[7:0]   = s_demod_out_q[7:0];
                     o_bus_out[11:8]  = s_sin_test[3:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[12]    = s_i_bb[5];
+                    o_bus_out[13]    = s_q_bb[5];
                 end
 
                 // ====================================================================
@@ -157,10 +155,8 @@ module demod_wrapper #(
                 // Test: FIR I output with direct s_test_fir_in injection
                 // ====================================================================
                 CFG_DEBUG_FIR_I: begin
-                    o_bus_out[5:0]   = s_q_bb[5:0];
-                    o_bus_out[11:6]  = s_i_bb[5:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[5:0]   = s_i_bb[5:0];
+                    o_bus_out[11:6]  = s_q_bb[5:0];
                 end
 
                 // ====================================================================
@@ -168,10 +164,8 @@ module demod_wrapper #(
                 // Test: FIR Q output with direct s_test_fir_in injection
                 // ====================================================================
                 CFG_DEBUG_FIR_Q: begin
-                    o_bus_out[5:0]   = s_q_bb[5:0];
-                    o_bus_out[11:6]  = s_i_bb[5:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[5:0]   = s_i_bb[5:0];
+                    o_bus_out[11:6]  = s_q_bb[5:0];
                 end
 
                 // ====================================================================
@@ -179,10 +173,8 @@ module demod_wrapper #(
                 // Test: Full path I → Demod → FIR (Q frozen to 0, debug I injection)
                 // ====================================================================
                 CFG_DEBUG_FIRC_I: begin
-                    o_bus_out[5:0]   = s_q_bb[5:0];
-                    o_bus_out[11:6]  = s_i_bb[5:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[5:0]   = s_i_bb[5:0];
+                    o_bus_out[11:6]  = s_q_bb[5:0];
                 end
 
                 // ====================================================================
@@ -190,10 +182,8 @@ module demod_wrapper #(
                 // Test: Full path Q → Demod → FIR (I frozen to 0, debug Q injection)
                 // ====================================================================
                 CFG_DEBUG_FIRC_Q: begin
-                    o_bus_out[5:0]   = s_q_bb[5:0];
-                    o_bus_out[11:6]  = s_i_bb[5:0];
-                    o_bus_out[12]    = s_q_bb[5];
-                    o_bus_out[13]    = s_i_bb[5];
+                    o_bus_out[5:0]   = s_i_bb[5:0];
+                    o_bus_out[11:6]  = s_q_bb[5:0];
                 end
 
                 default: begin

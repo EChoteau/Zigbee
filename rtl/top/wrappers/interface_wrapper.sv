@@ -205,9 +205,8 @@ module interface_wrapper #(
                     s_if_psel             = i_bus_in[0];
                     s_if_penable          = i_bus_in[1];
                     s_if_pwrite           = i_bus_in[2];
-                    s_if_paddr[6:0]       = i_bus_in[9:3];
-                    s_if_paddr[7]         = i_bus_in[18];
-                    s_if_pwdata[7:0]      = i_bus_in[17:10];
+                    s_if_paddr[7:0]       = i_bus_in[10:3];
+                    s_if_pwdata[7:0]      = i_bus_in[18:11];
                     s_if_serial_rx        = i_bus_in[19];
                     s_if_cdr_sample_valid = i_bus_in[20];
 
@@ -229,9 +228,8 @@ module interface_wrapper #(
                     s_if_psel             = i_bus_in[0];
                     s_if_penable          = i_bus_in[1];
                     s_if_pwrite           = i_bus_in[2];
-                    s_if_paddr[6:0]       = i_bus_in[9:3];
-                    s_if_paddr[7]         = i_bus_in[18];
-                    s_if_pwdata[7:0]      = i_bus_in[17:10];
+                    s_if_paddr[7:0]       = i_bus_in[10:3];
+                    s_if_pwdata[7:0]      = i_bus_in[18:11];
 
                     // Pack FIFO status to output bus
                     o_bus_out[7:0]        = s_dbg_tx_fifo_q;
@@ -251,9 +249,8 @@ module interface_wrapper #(
                     s_if_psel             = i_bus_in[0];
                     s_if_penable          = i_bus_in[1];
                     s_if_pwrite           = i_bus_in[2];
-                    s_if_paddr[6:0]       = i_bus_in[9:3];
-                    s_if_paddr[7]         = i_bus_in[18];
-                    s_if_pwdata[7:0]      = i_bus_in[17:10];
+                    s_if_paddr[7:0]       = i_bus_in[10:3];
+                    s_if_pwdata[7:0]      = i_bus_in[18:11];
                     s_if_serial_rx        = i_bus_in[19];
                     s_if_cdr_sample_valid = i_bus_in[20];
 
@@ -273,9 +270,8 @@ module interface_wrapper #(
                     s_if_psel             = i_bus_in[0];
                     s_if_penable          = i_bus_in[1];
                     s_if_pwrite           = i_bus_in[2];
-                    s_if_paddr[6:0]       = i_bus_in[9:3];
-                    s_if_paddr[7]         = i_bus_in[18];
-                    s_if_pwdata[7:0]      = i_bus_in[17:10];
+                    s_if_paddr[7:0]       = i_bus_in[10:3];
+                    s_if_pwdata[7:0]      = i_bus_in[18:11];
                     s_if_cdr_sample_valid = i_bus_in[20];
                     s_if_serial_rx        = s_if_serial_tx;  // Loopback TX to RX
 
