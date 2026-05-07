@@ -70,7 +70,7 @@ interface_wrapper #(
     .o_bus_d(w_bus_d_interface)
 );
 
-cordic_wrapper #(
+cordic_system_wrapper #(
     .WIDTH_IN(6),
     .FILTER_N(5),
     .WIDTH_PHASE(8),
