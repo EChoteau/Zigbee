@@ -18,7 +18,14 @@ vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/cordic_wrapper.sv
 vsim -voptargs=+acc lib_RTL.cordic_system_wrapper_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 add wave -position insertpoint  \
-sim:/cordic_system_wrapper_tb/o_phase
+sim:/cordic_system_wrapper_tb/i_clk
+sim:/cordic_system_wrapper_tb/i_rst_n
+sim:/cordic_system_wrapper_tb/i_wrapper_cfg
+sim:/cordic_system_wrapper_tb/i_bus_a
+sim:/cordic_system_wrapper_tb/i_bus_c
+sim:/cordic_system_wrapper_tb/i_bus_a
+
+
 
 run -all
 
