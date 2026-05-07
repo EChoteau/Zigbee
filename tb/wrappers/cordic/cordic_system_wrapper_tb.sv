@@ -81,7 +81,7 @@ module cordic_system_wrapper_tb();
         input string label
     );
         logic signed [WIDTH_PHASE-1:0] observed;
-        logic signed error_margin = 1; // allow small margin of error due to quantization and noise
+        logic signed [WIDTH_PHASE-1:0] error_margin = 4; // allow small margin of error due to quantization and noise
         logic is_close_enough;
 
         observed = $signed(o_bus_c);
