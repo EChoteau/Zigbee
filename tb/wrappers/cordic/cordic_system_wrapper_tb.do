@@ -22,7 +22,7 @@ sim:/cordic_system_wrapper_tb/i_clk \
 sim:/cordic_system_wrapper_tb/i_rst_n \
 sim:/cordic_system_wrapper_tb/i_wrapper_cfg \
 sim:/cordic_system_wrapper_tb/i_bus_a \
-sim:/cordic_system_wrapper_tb/i_bus_c
+sim:/cordic_system_wrapper_tb/o_bus_c
 
 
 
