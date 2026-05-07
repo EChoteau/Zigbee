@@ -74,8 +74,8 @@ module test_wrapper_tb;
 
     // Interface wrapper signals
     logic [CFG_WIDTH-1:0]       i_cfg_local;
-    logic [BUS_IN_WIDTH-1:0]    i_bus;
-    logic [BUS_OUT_WIDTH-1:0]   o_bus;
+    logic [BUS_IN_WIDTH-1:0]    i_bus_in;
+    logic [BUS_OUT_WIDTH-1:0]   o_bus_out;
 
     // Demod wrapper signals
     logic [CFG_WIDTH-1:0]       d_cfg_local;
@@ -96,8 +96,8 @@ module test_wrapper_tb;
         .i_rst_n(i_rst_n),
         .i_out_en(i_out_en),
         .i_cfg(i_cfg_local),
-        .i_bus_in(i_bus),
-        .o_bus_out(o_bus)
+        .i_bus_in(i_bus_in),
+        .o_bus_out(o_bus_out)
     );
 
     demod_wrapper #(
@@ -133,7 +133,7 @@ module test_wrapper_tb;
 
     task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
     begin
-        i_bus = bus_val;
+        i_bus_in = bus_val;
         @(posedge i_clk);
     end
     endtask

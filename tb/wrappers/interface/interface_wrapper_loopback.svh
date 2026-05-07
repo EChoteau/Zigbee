@@ -28,8 +28,8 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Assert: Loopback data loaded
-    assert (i_bus[13:6] == 8'h5A)
-        $display("  [LOOPBACK] Loopback data loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'h5A)
+        $display("  [LOOPBACK] Loopback data loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [LOOPBACK] FAIL: Loopback data mismatch!");
     
@@ -43,14 +43,14 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Assert: Second pattern loaded
-    assert (i_bus[13:6] == 8'hA5)
-        $display("  [LOOPBACK] Second pattern loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'hA5)
+        $display("  [LOOPBACK] Second pattern loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [LOOPBACK] FAIL: Second pattern mismatch!");
     
     // Verify loopback signals on Bus
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [LOOPBACK] PASS - Bus (loopback status) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [LOOPBACK] PASS - Bus (loopback status) valid: 0x%04h", o_bus_out);
     else
         $error("  [LOOPBACK] FAIL - Bus has undefined values!");
     

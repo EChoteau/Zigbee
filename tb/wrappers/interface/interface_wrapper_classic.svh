@@ -27,7 +27,7 @@ begin
         $error("  [CLASSIC] FAIL: Config mismatch!");
     
     // Assert: Bus is loaded
-    assert (i_bus[0] == 1'b1)
+    assert (i_bus_in[0] == 1'b1)
         $display("  [CLASSIC] Bus[0] (psel) = 1");
     else
         $error("  [CLASSIC] FAIL: Bus[0] not set!");
@@ -38,15 +38,15 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Write bit is 0 for read
-    assert (i_bus[2] == 1'b0)
+    assert (i_bus_in[2] == 1'b0)
         $display("  [CLASSIC] Bus[2] (pwrite) = 0 (read mode)");
     else
         $error("  [CLASSIC] FAIL: pwrite bit not cleared!");
     
     // Verify outputs are being driven
-    if (o_bus !== 14'bx && o_bus !== 14'bz) begin
-        assert (o_bus !== 14'bx && o_bus !== 14'bz)
-            $display("  [CLASSIC] PASS - Bus outputs valid: 0x%04h", o_bus);
+    if (o_bus_out !== 14'bx && o_bus_out !== 14'bz) begin
+        assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+            $display("  [CLASSIC] PASS - Bus outputs valid: 0x%04h", o_bus_out);
         else
             $error("  [CLASSIC] FAIL - Bus has undefined values!");
     end else begin

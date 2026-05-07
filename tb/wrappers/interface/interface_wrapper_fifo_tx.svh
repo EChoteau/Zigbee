@@ -28,8 +28,8 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: First byte loaded
-    assert (i_bus[13:6] == 8'h11)
-        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'h11)
+        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [FIFO_TX] FAIL: First byte mismatch!");
     
@@ -39,8 +39,8 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Second byte loaded
-    assert (i_bus[13:6] == 8'h22)
-        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'h22)
+        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [FIFO_TX] FAIL: Second byte mismatch!");
     
@@ -50,8 +50,8 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Third byte loaded
-    assert (i_bus[13:6] == 8'h33)
-        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'h33)
+        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [FIFO_TX] FAIL: Third byte mismatch!");
     
@@ -60,8 +60,8 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Verify FIFO status on Bus
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [FIFO_TX] PASS - Bus (FIFO status) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [FIFO_TX] PASS - Bus (FIFO status) valid: 0x%04h", o_bus_out);
     else
         $error("  [FIFO_TX] FAIL - Bus has undefined values!");
     

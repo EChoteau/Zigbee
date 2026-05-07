@@ -28,7 +28,7 @@ begin
     repeat(20) @(posedge i_clk);
     
     // Assert: Baud divisor 0x10 loaded
-    assert (i_bus[0] == 1'b1)
+    assert (i_bus_in[0] == 1'b1)
         $display("  [BAUD] Baud divisor set with enable bit");
     else
         $error("  [BAUD] FAIL: Baud enable not loaded!");
@@ -39,7 +39,7 @@ begin
     repeat(30) @(posedge i_clk);
     
     // Assert: Baud divisor 0x20 loaded
-    assert (i_bus[0] == 1'b1)
+    assert (i_bus_in[0] == 1'b1)
         $display("  [BAUD] Baud divisor set with enable");
     else
         $error("  [BAUD] FAIL: Baud divisor 0x20 not loaded!");
@@ -50,7 +50,7 @@ begin
     repeat(15) @(posedge i_clk);
     
     // Assert: Baud divisor 0x08 loaded
-    assert (i_bus[0] == 1'b1)
+    assert (i_bus_in[0] == 1'b1)
         $display("  [BAUD] Baud divisor set");
     else
         $error("  [BAUD] FAIL: Baud divisor 0x08 not loaded!");
@@ -61,7 +61,7 @@ begin
     repeat(10) @(posedge i_clk);
     
     // Assert: Baud generator disabled
-    assert (i_bus[0] == 1'b0)
+    assert (i_bus_in[0] == 1'b0)
         $display("  [BAUD] Baud generator disabled (baud_enable=0)");
     else
         $error("  [BAUD] FAIL: Baud generator not disabled!");
@@ -71,8 +71,8 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Verify baud tick output on Bus
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [BAUD] PASS - Bus (baud tick) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [BAUD] PASS - Bus (baud tick) valid: 0x%04h", o_bus_out);
     else
         $error("  [BAUD] FAIL - Bus has undefined values!");
     

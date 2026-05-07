@@ -27,7 +27,7 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Write enable is active
-    assert (i_bus[2] == 1'b1)
+    assert (i_bus_in[2] == 1'b1)
         $display("  [TX_ONLY] Write enable (pwrite) = 1");
     else
         $error("  [TX_ONLY] FAIL: pwrite not set!");
@@ -38,8 +38,8 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Second byte is loaded
-    assert (i_bus[13:6] == 8'hAA)
-        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'hAA)
+        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [TX_ONLY] FAIL: Second byte mismatch!");
     
@@ -48,8 +48,8 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Assert: Bus outputs are valid (not x or z)
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [TX_ONLY] PASS - Bus (FIFO status) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [TX_ONLY] PASS - Bus (FIFO status) valid: 0x%04h", o_bus_out);
     else
         $error("  [TX_ONLY] FAIL - Bus has undefined values!");
     

@@ -27,13 +27,13 @@ begin
     repeat(4) @(posedge i_clk);
     
     // Assert: Read mode is active
-    assert (i_bus[2] == 1'b0)
+    assert (i_bus_in[2] == 1'b0)
         $display("  [RX_ONLY] Read mode active (pwrite=0)");
     else
         $error("  [RX_ONLY] FAIL: pwrite should be 0!");
     
     // Assert: Serial RX is active
-    assert (i_bus[3] == 1'b1)
+    assert (i_bus_in[3] == 1'b1)
         $display("  [RX_ONLY] Serial RX active (serial_rx=1)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx not set!");
@@ -44,7 +44,7 @@ begin
     repeat(4) @(posedge i_clk);
     
     // Assert: Serial pattern changed
-    assert (i_bus[3] == 1'b0)
+    assert (i_bus_in[3] == 1'b0)
         $display("  [RX_ONLY] Serial pattern changed (serial_rx=0)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx pattern mismatch!");
@@ -54,8 +54,8 @@ begin
     repeat(3) @(posedge i_clk);
     
     // Assert: Bus outputs are valid
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [RX_ONLY] PASS - Bus (RX status) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [RX_ONLY] PASS - Bus (RX status) valid: 0x%04h", o_bus_out);
     else
         $error("  [RX_ONLY] FAIL - Bus has undefined values!");
     

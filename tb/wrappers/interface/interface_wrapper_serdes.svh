@@ -28,8 +28,8 @@ begin
     repeat(10) @(posedge i_clk);
     
     // Assert: First pattern loaded
-    assert (i_bus[7:0] == 8'h55)
-        $display("  [SERDES] First pattern loaded to serializer: 0x%02h", i_bus[7:0]);
+    assert (i_bus_in[7:0] == 8'h55)
+        $display("  [SERDES] First pattern loaded to serializer: 0x%02h", i_bus_in[7:0]);
     else
         $error("  [SERDES] FAIL: First pattern mismatch!");
     
@@ -39,8 +39,8 @@ begin
     repeat(10) @(posedge i_clk);
     
     // Assert: Second pattern loaded
-    assert (i_bus[7:0] == 8'hAA)
-        $display("  [SERDES] Second pattern loaded: 0x%02h", i_bus[7:0]);
+    assert (i_bus_in[7:0] == 8'hAA)
+        $display("  [SERDES] Second pattern loaded: 0x%02h", i_bus_in[7:0]);
     else
         $error("  [SERDES] FAIL: Second pattern mismatch!");
     
@@ -50,8 +50,8 @@ begin
     repeat(10) @(posedge i_clk);
     
     // Assert: Third pattern loaded
-    assert (i_bus[13:6] == 8'hF0)
-        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus[13:6]);
+    assert (i_bus_in[13:6] == 8'hF0)
+        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus_in[13:6]);
     else
         $error("  [SERDES] FAIL: Third pattern mismatch!");
     
@@ -60,8 +60,8 @@ begin
     repeat(5) @(posedge i_clk);
     
     // Verify deserializer output on Bus
-    assert (o_bus !== 14'bx && o_bus !== 14'bz)
-        $display("  [SERDES] PASS - Bus (deserializer data) valid: 0x%04h", o_bus);
+    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
+        $display("  [SERDES] PASS - Bus (deserializer data) valid: 0x%04h", o_bus_out);
     else
         $error("  [SERDES] FAIL - Bus has undefined values!");
     
