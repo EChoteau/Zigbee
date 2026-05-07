@@ -37,8 +37,8 @@ echo "            SYNTHESIS SUMMARY           "
 echo "========================================"
 
 # Count errors and warnings in the log file
-NB_ERRORS=$(grep -i -c "error" log_synthese.log)
-NB_WARNINGS=$(grep -i -c "warning" log_synthese.log)
+NB_ERRORS=$(grep -i -c "error:" log_synthese.log)
+NB_WARNINGS=$(grep -i -c "warning:" log_synthese.log)
 
 if [ "$NB_ERRORS" -gt 0 ]; then
     # \e[41m = red background, \e[97m = white text, \e[0m = reset
@@ -52,26 +52,26 @@ if [ "$NB_ERRORS" -gt 0 ]; then
     BLOCK_ELABORATE=$(sed -n '/elaborate top/,$p' log_synthese.log)
 
     # Check in reverse chronological order
-    if [ -n "$BLOCK_COMPILE" ] && echo "$BLOCK_COMPILE" | grep -i -q "error"; then
+    if [ -n "$BLOCK_COMPILE" ] && echo "$BLOCK_COMPILE" | grep -i -q "error:"; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e "=> Error located in phase : \e[100m\e[97m compile_ultra \e[0m"
         # Display the details :
         echo "First errors (4 rows):"
-        echo "$BLOCK_COMPILE" | grep -i -B 1 "error" | head -n 4
+        echo "$BLOCK_COMPILE" | grep -i -B 1 "error:" | head -n 4
 
-    elif [ -n "$BLOCK_ELABORATE" ] && echo "$BLOCK_ELABORATE" | grep -i -q "error"; then
+    elif [ -n "$BLOCK_ELABORATE" ] && echo "$BLOCK_ELABORATE" | grep -i -q "error:"; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e"=> Error located in phase : \e[100m\e[97m elaborate \e[0m"
         # Display the details :
         echo "First errors (4 rows):"
-        echo "$BLOCK_ELABORATE" | grep -i -B 1 "error" | head -n 4
+        echo "$BLOCK_ELABORATE" | grep -i -B 1 "error:" | head -n 4
         
-    elif [ -n "$BLOCK_ANALYZE" ] && echo "$BLOCK_ANALYZE" | grep -i -q "error"; then
+    elif [ -n "$BLOCK_ANALYZE" ] && echo "$BLOCK_ANALYZE" | grep -i -q "error:"; then
         # \e[100m = gray background, \e[97m = white text, \e[0m = reset
         echo -e "=> Error located in phase : \e[100m\e[97m analyze \e[0m"
         # Display the details :
         echo "First errors (4 rows):"
-        echo "$BLOCK_ANALYZE" | grep -i -B 1 "error" | head -n 4
+        echo "$BLOCK_ANALYZE" | grep -i -B 1 "error:" | head -n 4
     else
         echo -e "=> Error phase not dynamically identified. See the complete log."
     fi

@@ -100,3 +100,4 @@ module top_msk #(
     assign o_dbg_a_Q = w_a_Q;
     assign o_dbg_I_BB = o_I_BB;
     assign o_dbg_Q_BB = o_Q_BB;
+endmodule

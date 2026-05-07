@@ -24,8 +24,8 @@ set source_files [glob -nocomplain \
 
 analyze -library WORK -format sverilog $source_files
 
-current_design zigbee_top
 elaborate zigbee_top -library WORK
+current_design zigbee_top
 link
 
 # --- 3. Constrains ---
@@ -35,21 +35,18 @@ create_clock -name i_clk -period 100 {i_clk}
 set_max_area 0
 
 # --- 4. Synthesis ---
-current_design zigbee_top
-set_ungroup zigbee_top
 set_boundary_optimization zigbee_top
 set_scan_configuration -style none
 set_flatten true -design zigbee_top -effort high -minimize multiple_output -phase true
 set_structure true -design zigbee_top -boolean true -timing false
 
 set_max_fanout 3 zigbee_top
-set_max_fanout 3 zigbee_top
 # set_max_transition 1.5 zigbee_top
 set_dynamic_optimization true
 set_leakage_optimization true
 # set_max_dynamic_power 0
 # set_max_leakage_power 0
-compile_ultra -gate_clock
+compile_ultra
 
 # --- 5. Reports ---
 report_timing > ../reports/timing.rpt
