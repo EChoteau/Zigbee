@@ -5,10 +5,8 @@ module top_tb;
     logic rst_n;
 
     // Zigbee top configuration and bus signals
-    logic [2:0] i_cfg;
     logic [2:0] i_wrapper_cfg;
     logic [2:0] i_top_cfg;
-    logic i_out_en;
 
     logic [21:0] i_bus_in;
     logic [13:0] o_bus_out;
@@ -28,7 +26,6 @@ module top_tb;
         .i_rst_n(rst_n),
         .i_cfg(i_wrapper_cfg),
         .i_cfg_top(i_top_cfg),
-        .i_out_en(i_out_en),
         .i_bus_in(i_bus_in),
         .o_bus_out(o_bus_out)
     );
@@ -45,7 +42,6 @@ module top_tb;
         rst_n = 1;
         i_wrapper_cfg = 3'b000;
         i_top_cfg = 3'b000;
-        i_out_en = 1'b1;
         i_bus_in = '0;
 
         $display("Starting top_tb at time %0t", $time);
