@@ -1,9 +1,5 @@
 module cdr_wrapper #(
     parameter int CFG_WIDTH  = 3,
-    parameter int BUS_A_WIDTH = 12,
-    parameter int BUS_B_WIDTH = 10,
-    parameter int BUS_C_WIDTH = 12,
-    parameter int BUS_D_WIDTH = 2,
     parameter int BUS_IN_WIDTH  = 22,
     parameter int BUS_OUT_WIDTH = 14
 )(
