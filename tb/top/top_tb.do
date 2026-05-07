@@ -8,7 +8,7 @@ if ![file isdirectory lib_RTL] {
     vmap lib_RTL lib_RTL
 }
 
-vlog -incr -sv -work lib_RTL +acc rtl/top/top.sv
+vlog -incr -sv -work lib_RTL +acc rtl/top/zigbee_top.sv
 vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/CDR/*.sv
@@ -27,10 +27,8 @@ sim:/top_tb/clk \
 sim:/top_tb/rst_n \
 sim:/top_tb/i_top_cfg \
 sim:/top_tb/i_wrapper_cfg \
-sim:/top_tb/i_bus_a \
-sim:/top_tb/i_bus_b \
-sim:/top_tb/o_bus_c \
-sim:/top_tb/o_bus_d
+sim:/top_tb/i_bus_in \
+sim:/top_tb/o_bus_out
 
 run -all
 
