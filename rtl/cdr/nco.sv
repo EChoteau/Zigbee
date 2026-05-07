@@ -1,48 +1,50 @@
 module nco #(
-    parameter PHASE_WIDTH = 16,
-    parameter K_NOMINAL   = 5,    // nombre de cycles i_clk par bit
-    parameter CTRL_W      = 8
-)(
-    input  wire                   i_clk,
-    input  wire                   i_rst_n,
-    input  wire signed [CTRL_W-1:0] i_ctrl,
-    output wire                   o_recovered_clk,
-    output reg                    o_sample_enable,
-    output reg o_ctrl_ack
+    parameter int PHASE_WIDTH = 16,
+    parameter int K_NOMINAL   = 5,      // number of i_clk cycles per bit
+    parameter int CTRL_W      = 8
+) (
+    input  logic                          i_clk,
+    input  logic                          i_rst_n,
+    input  logic signed [CTRL_W-1:0]      i_ctrl,
+    output logic                          o_recovered_clk,
+    output logic                          o_sample_enable,
+    output logic                          o_ctrl_ack
 );
 
-// Période ajustée : bornée entre 23 et 27
-reg [3:0] s_period;
-reg [3:0] s_cnt;
+    logic [3:0] s_period;   // Adjusted period: bounded between 4 and 6
+    logic [3:0] s_cnt;
 
-// Calcul de la période avec saturation
-
-always @(posedge i_clk or negedge i_rst_n) begin  // ← posedge
-    if (~i_rst_n) begin
-        s_cnt           <= 0;
-        s_period        <= K_NOMINAL;
-        o_sample_enable <= 0;
-        o_ctrl_ack      <= 0;
-    end
-    else begin
-        o_sample_enable <= 0;
-        o_ctrl_ack      <= 0;
-
-        if (s_cnt == s_period - 1) begin
-            s_cnt           <= 0;
-            o_sample_enable <= 1;
-            o_ctrl_ack      <= 1;  // ← ack mis à 1
-
-            if      (i_ctrl > 0 && s_period < 6) s_period <= s_period + 1;  // ← bornes cohérentes
-            else if (i_ctrl < 0 && s_period > 4)  s_period <= s_period - 1;
-            else s_period <= K_NOMINAL;
+    always @(posedge i_clk or negedge i_rst_n) begin
+        if (~i_rst_n) begin
+            s_cnt <= 4'h0;
+            s_period <= 4'h5;  // K_NOMINAL
+            o_sample_enable <= 1'b0;
+            o_ctrl_ack <= 1'b0;
         end
         else begin
-            s_cnt <= s_cnt + 1;
+            o_sample_enable <= 1'b0;
+            o_ctrl_ack <= 1'b0;
+
+            if (s_cnt == (s_period - 4'h1)) begin
+                s_cnt <= 4'h0;
+                o_sample_enable <= 1'b1;
+                o_ctrl_ack <= 1'b1;
+
+                // Period adjustment based on control input
+                if (i_ctrl > 0 && s_period < 4'h6) 
+                    s_period <= s_period + 4'h1;
+                else if (i_ctrl < 0 && s_period > 4'h4) 
+                    s_period <= s_period - 4'h1;
+                else 
+                    s_period <= 4'h5;  // K_NOMINAL
+            end
+            else begin
+                s_cnt <= s_cnt + 4'h1;
+            end
         end
     end
-end
-// horloge récupérée = MSB du compteur (50% duty cycle)
-assign o_recovered_clk = s_cnt < (s_period >> 1);
+
+    // Recovered clock = MSB of counter (50% duty cycle)
+    assign o_recovered_clk = s_cnt < (s_period >> 1);
 
 endmodule
