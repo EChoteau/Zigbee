@@ -410,10 +410,10 @@ module cordic_system_wrapper_tb();
         endcase
     endtask
 
-    task automatic rst_wait();
+    task automatic rst_wait(input logic [2:0] wrapper_cfg);
         i_rst_n = 1'b0;
-        i_bus_a = '0;
         repeat (4) @(posedge i_clk);
+        i_wrapper_cfg = wrapper_cfg; // re-assert config after reset
         i_rst_n = 1'b1;
         repeat (2) @(posedge i_clk);
     endtask
@@ -425,21 +425,21 @@ module cordic_system_wrapper_tb();
         $display("--- top_cordic_tb: starting wrapper_cfg sweep ---");
 
         run_cfg(MODE_0);    // default path: cordic -> filter
-        rst_wait();
+        rst_wait(MODE_1);
         run_cfg(MODE_1);    // cordic -> cordic
-        rst_wait();
+        rst_wait(MODE_2);
         run_cfg(MODE_2);    // derivate -> derivate
-        rst_wait();
+        rst_wait(MODE_3);
         run_cfg(MODE_3);    // filter -> filter
-        rst_wait();
+        rst_wait(MODE_4);
         run_cfg(MODE_4);    // cordic -> derivate
-        rst_wait();
+        rst_wait(MODE_5);
         run_cfg(MODE_5);    // cordic -> filter (same as default, retest to check for consistency)
-        rst_wait();
+        rst_wait(MODE_6);
         run_cfg(MODE_6);    // derivate -> filter
-        rst_wait();
+        rst_wait(MODE_7);
         run_cfg(MODE_7);    // filter -> filter (same as MODE_3, retest to check for consistency)
-        rst_wait();
+        rst_wait(MODE_0);
 
         $display("--- top_cordic_tb: finished ---");
         $finish;
