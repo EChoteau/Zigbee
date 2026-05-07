@@ -11,7 +11,7 @@ module interface_wrapper #(
     input  logic              i_clk,
     input  logic              i_rst_n,
     input  logic              i_out_en,    // Output enable (1=drive bus, 0=tri-state)
-    input  logic [CFG_WIDTH-1:0] i_cfg_local,
+    input  logic [CFG_WIDTH-1:0] i_cfg,
     input  logic [BUS_IN_WIDTH-1:0] i_bus_in,
     output logic [BUS_OUT_WIDTH-1:0] o_bus_out
 );
@@ -196,7 +196,7 @@ module interface_wrapper #(
 
         // Only drive outputs if enabled
         if (i_out_en) begin
-            unique case (i_cfg_local)
+            unique case (i_cfg)
                 // ====================================================================
                 // CFG_CLASSIC (0x0): APB + serial loopback
                 // ====================================================================
