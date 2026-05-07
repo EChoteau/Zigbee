@@ -18,7 +18,7 @@ module tb_interface_wrapper;
 `include "interface_wrapper_serdes.svh"
 `include "interface_wrapper_baud.svh"
 
-`include "../interface_wrapper_test_plan.svh"
+`include "interface_wrapper_test_plan.svh"
 
     // localparams (keep consistent with wrappers)
     localparam int CFG_WIDTH      = 3;
