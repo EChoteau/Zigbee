@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 module top_tb;
     // Clock and reset
-    logic clk;
-    logic rst_n;
+    logic i_clk;
+    logic i_rst_n;
 
     // Zigbee top configuration and bus signals
     logic [2:0] i_wrapper_cfg;
@@ -22,8 +22,8 @@ module top_tb;
 
     // Instantiate DUT
     zigbee_top uut (
-        .i_clk(clk),
-        .i_rst_n(rst_n),
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
         .i_cfg(i_wrapper_cfg),
         .i_cfg_top(i_top_cfg),
         .i_bus_in(i_bus_in),
@@ -32,14 +32,14 @@ module top_tb;
 
     // Clock generation
     initial begin
-        clk = 0;
-        forever #50 clk = ~clk;
+        i_clk = 0;
+        forever #50 i_clk = ~i_clk;
     end
 
     // Test sequence
     initial begin
         // default values
-        rst_n = 1;
+        i_rst_n = 1;
         i_wrapper_cfg = 3'b000;
         i_top_cfg = 3'b000;
         i_bus_in = '0;
