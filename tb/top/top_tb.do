@@ -11,7 +11,7 @@ if ![file isdirectory lib_RTL] {
 vlog -incr -sv -work lib_RTL +acc rtl/top/zigbee_top.sv
 vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/CDR/*.sv
+vlog -incr -sv -work lib_RTL +acc rtl/cdr/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/demod/*.sv
 vlog -incr -sv -work lib_RTL +acc rtl/demod/FIR/*.v
