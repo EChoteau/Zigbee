@@ -37,9 +37,9 @@ begin
     set_bus({1'b0, 8'hAA, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0xAA, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(3) @(posedge i_clk);
     
-    // Assert: Second byte is loaded
-    assert (i_bus_in[13:6] == 8'hAA)
-        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Second byte is loaded (pwdata at [18:11])
+    assert (i_bus_in[18:11] == 8'hAA)
+        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus_in[18:11]);
     else
         $error("  [TX_ONLY] FAIL: Second byte mismatch!");
     

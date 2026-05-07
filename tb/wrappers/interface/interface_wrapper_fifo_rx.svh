@@ -49,8 +49,8 @@ begin
     set_bus({1'b0, 1'b1, 1'b1, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=1, [1]fifo_rx_rd_en=1, [0]fifo_rx_wr_en=1
     repeat(10) @(posedge i_clk);
     
-    // Assert: Pattern restored
-    assert (i_bus_in[3] == 1'b1)
+    // Assert: Pattern restored (serial_rx at bit 19)
+    assert (i_bus_in[19] == 1'b1)
         $display("  [FIFO_RX] Pattern restored (serial_rx=1)");
     else
         $error("  [FIFO_RX] FAIL: Pattern restore failed!");

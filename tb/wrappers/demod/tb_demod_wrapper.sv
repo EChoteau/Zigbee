@@ -18,7 +18,7 @@ module tb_demod_wrapper;
 `include "demod_wrapper_debug_firc_i.svh"
 `include "demod_wrapper_debug_firc_q.svh"
 
-`include "../demod_wrapper_test_plan.svh"
+`include "demod_wrapper_test_plan.svh"
 
     // localparams
     localparam int CFG_WIDTH      = 3;

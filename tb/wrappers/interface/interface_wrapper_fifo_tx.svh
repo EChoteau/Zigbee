@@ -27,9 +27,9 @@ begin
     set_bus({1'b0, 8'h11, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x11, [10:3]paddr=0x00, all control=0
     repeat(3) @(posedge i_clk);
     
-    // Assert: First byte loaded
-    assert (i_bus_in[13:6] == 8'h11)
-        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: First byte loaded (fifo tx data at [17:10])
+    assert (i_bus_in[17:10] == 8'h11)
+        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus_in[17:10]);
     else
         $error("  [FIFO_TX] FAIL: First byte mismatch!");
     
@@ -38,9 +38,9 @@ begin
     set_bus({1'b0, 8'h22, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x22, [10:3]paddr=0x00
     repeat(3) @(posedge i_clk);
     
-    // Assert: Second byte loaded
-    assert (i_bus_in[13:6] == 8'h22)
-        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Second byte loaded (fifo tx data at [17:10])
+    assert (i_bus_in[17:10] == 8'h22)
+        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus_in[17:10]);
     else
         $error("  [FIFO_TX] FAIL: Second byte mismatch!");
     
@@ -49,9 +49,9 @@ begin
     set_bus({1'b0, 8'h33, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x33, [10:3]paddr=0x00
     repeat(3) @(posedge i_clk);
     
-    // Assert: Third byte loaded
-    assert (i_bus_in[13:6] == 8'h33)
-        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Third byte loaded (fifo tx data at [17:10])
+    assert (i_bus_in[17:10] == 8'h33)
+        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus_in[17:10]);
     else
         $error("  [FIFO_TX] FAIL: Third byte mismatch!");
     

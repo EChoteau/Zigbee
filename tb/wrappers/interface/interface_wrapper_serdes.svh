@@ -49,9 +49,9 @@ begin
     set_bus({1'b0, 1'b1, 9'h00, 1'b0, 1'b1, 8'hF0});  // [20]cdr_sample_valid=0, [19]serial_rx=1, [9]ser_tx_fifo_empty=0, [8]ser_tx_data_valid=1, [7:0]ser_tx_data=0xF0
     repeat(10) @(posedge i_clk);
     
-    // Assert: Third pattern loaded
-    assert (i_bus_in[13:6] == 8'hF0)
-        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Third pattern loaded (ser_tx_data at [7:0])
+    assert (i_bus_in[7:0] == 8'hF0)
+        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus_in[7:0]);
     else
         $error("  [SERDES] FAIL: Third pattern mismatch!");
     

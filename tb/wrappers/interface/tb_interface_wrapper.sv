@@ -48,7 +48,7 @@ module tb_interface_wrapper;
 
     // clock
     initial begin
-        i_clk = 1'b0;
+    `include "interface_wrapper_test_plan.svh"
         forever #50 i_clk = ~i_clk;
     end
 
