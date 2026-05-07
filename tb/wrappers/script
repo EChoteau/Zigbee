@@ -2,16 +2,22 @@
 # Script de compilation et simulation pour test_wrapper_tb
 
 # Nettoyer et créer les librairies
-vdel -all -lib lib_rtl_top 2>/dev/null
-vlib lib_rtl_top
-vmap lib_rtl lib_rtl_top
+vdel -all -lib lib_rtl_wrapper 2>/dev/null
+vlib lib_rtl_wrapper
+vmap lib_rtl lib_rtl_wrapper
 
-vlog -sv ../../rtl/interface/*.sv -work lib_rtl_top
+vlog -sv ../../rtl/interface/*.sv -work lib_rtl_wrapper
 
-vlog -sv ../../rtl/top/wrappers/interface_wrapper.sv -work lib_rtl_top
+vlog -sv ../../rtl/top/wrappers/interface_wrapper.sv -work lib_rtl_wrapper
 
-vlog -sv ./common/*.sv -work lib_rtl_top
+vlog -sv ../../rtl/demod/FIR/*.sv -work lib_rtl_wrapper
+vlog -sv ../../rtl/demod/WAVE/*.sv -work lib_rtl_wrapper
+vlog -sv ../../rtl/demod/*.sv -work lib_rtl_wrapper
 
-vlog -sv ./test_wrapper_tb.sv -work lib_rtl_top
+vlog -sv ../../rtl/top/wrappers/demod_wrapper.sv -work lib_rtl_wrapper
 
-vsim -voptargs=+acc lib_rtl_top.test_wrapper_tb
+vlog -sv ./common/*.sv -work lib_rtl_wrapper
+
+vlog -sv ./test_wrapper_tb.sv -work lib_rtl_wrapper
+
+vsim -voptargs=+acc lib_rtl_wrapper.test_wrapper_tb
