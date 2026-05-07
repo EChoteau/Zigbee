@@ -258,23 +258,22 @@ module cordic_system_wrapper_tb();
             assert (!$isunknown(o_bus_c[WIDTH_PHASE-1:0]))
                 else $error("cordic_derivate: o_bus_c is not connected (contains X/Z) at step %0d", i);
 
-            if (!ref_valid) begin
-                ref_deriv = curr_deriv;
-                ref_valid = 1'b1;
-            end else begin
-                if (curr_deriv > ref_deriv + error_margin) begin
-                    is_close_enough = 1'b0;
-                end 
-                else if (curr_deriv < ref_deriv - error_margin) begin
-                    is_close_enough = 1'b0;
-                end 
-                else begin
-                    is_close_enough = 1'b1;
-                end
-                assert (is_close_enough)
-                    else $error("cordic_derivate: expected constant phase derivative %0d, got %0d at step %0d",
-                                ref_deriv, curr_deriv, i);
+
+            ref_deriv = '8;
+
+            if (curr_deriv > ref_deriv + error_margin) begin
+                is_close_enough = 1'b0;
+            end 
+            else if (curr_deriv < ref_deriv - error_margin) begin
+                is_close_enough = 1'b0;
+            end 
+            else begin
+                is_close_enough = 1'b1;
             end
+            assert (is_close_enough)
+                else $error("cordic_derivate: expected constant phase derivative %0d, got %0d at step %0d",
+                            ref_deriv, curr_deriv, i);
+        
         end
 
         repeat (2) @(posedge i_clk);
