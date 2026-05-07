@@ -19,7 +19,6 @@ module zigbee_top #(
     input  logic i_rst_n,
     input  logic [2:0] i_cfg_top,
     input  logic [2:0] i_cfg,
-    input  logic i_out_en,
     
     input  logic [BUS_IN_WIDTH-1:0]  i_bus_in,
     output logic [BUS_OUT_WIDTH-1:0] o_bus_out
@@ -103,6 +102,17 @@ module zigbee_top #(
     logic [2:0] w_cdr_cfg;        // CDR block config (forced 3'b000 in chains, i_cfg in isolation)
 
     // ====================================================================
+    // WRAPPER OUTPUT ENABLES
+    // Each wrapper output is forced to zero when the block is not part of the
+    // selected top-level configuration.
+    // ====================================================================
+    logic w_interface_out_en;
+    logic w_demod_out_en;
+    logic w_msk_out_en;
+    logic w_cordic_out_en;
+    logic w_cdr_out_en;
+
+    // ====================================================================
     // CONFIGURATION MAPPING LOGIC
     // Maps top-level i_cfg to block-specific modes to avoid mode conflicts
     // In chain modes: force blocks to 3'b000 (normal/safe operation)
@@ -116,53 +126,74 @@ module zigbee_top #(
         w_cordic_cfg    = 3'b000;
         w_cdr_cfg       = 3'b000;
 
+        // Default: all wrapper outputs disabled unless used by the selected mode
+        w_interface_out_en = 1'b0;
+        w_demod_out_en     = 1'b0;
+        w_msk_out_en       = 1'b0;
+        w_cordic_out_en    = 1'b0;
+        w_cdr_out_en       = 1'b0;
+
         unique case (i_cfg_top)
             CFG_RX_PATH: begin
                 // RX Chain: Demod → Cordic → CDR → Interface
                 // All blocks forced to mode 3'b000 (normal operation in chain)
                 // No special cfg mapping needed, all stay at 3'b000
+                w_interface_out_en = 1'b1;
+                w_demod_out_en     = 1'b1;
+                w_cordic_out_en    = 1'b1;
+                w_cdr_out_en       = 1'b1;
             end
 
             CFG_TX_PATH: begin
                 // TX Chain: Interface → MSK
                 // All blocks forced to mode 3'b000 (normal operation in chain)
                 // No special cfg mapping needed, all stay at 3'b000
+                w_interface_out_en = 1'b1;
+                w_msk_out_en       = 1'b1;
             end
 
             CFG_MOD_CORDIC: begin
                 // MOD+CORDIC+CDR Chain: MSK → Cordic → CDR
                 // All blocks forced to mode 3'b000 (normal operation in chain)
                 // No special cfg mapping needed, all stay at 3'b000
+                w_msk_out_en    = 1'b1;
+                w_cordic_out_en = 1'b1;
+                w_cdr_out_en    = 1'b1;
             end
 
             CFG_INTERFACE: begin
                 // Interface block isolation: test interface independently
                 w_interface_cfg = i_cfg;  // Pass i_cfg to Interface (mode 3'b011 = isolated test)
                 // All other blocks stay at 3'b000 (disabled)
+                w_interface_out_en = 1'b1;
             end
 
             CFG_MODULATION: begin
                 // MSK block isolation: test MSK independently
                 w_msk_cfg = i_cfg;  // Pass i_cfg to MSK (mode 3'b100 = isolated test)
                 // All other blocks stay at 3'b000 (disabled)
+                w_msk_out_en = 1'b1;
             end
 
             CFG_DEMODULATION: begin
                 // Demod block isolation: test Demod independently
                 w_demod_cfg = i_cfg;  // Pass i_cfg to Demod (mode 3'b101 = isolated test)
                 // All other blocks stay at 3'b000 (disabled)
+                w_demod_out_en = 1'b1;
             end
 
             CFG_CORDIC: begin
                 // Cordic block isolation: test Cordic independently
                 w_cordic_cfg = i_cfg;  // Pass i_cfg to Cordic (mode 3'b110 = isolated test)
                 // All other blocks stay at 3'b000 (disabled)
+                w_cordic_out_en = 1'b1;
             end
 
             CFG_CDR: begin
                 // CDR block isolation: test CDR independently
                 w_cdr_cfg = i_cfg;  // Pass i_cfg to CDR (mode 3'b111 = isolated test)
                 // All other blocks stay at 3'b000 (disabled)
+                w_cdr_out_en = 1'b1;
             end
 
             default: begin
@@ -233,7 +264,7 @@ module zigbee_top #(
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_cfg(w_interface_cfg),
-        .i_out_en(i_out_en),
+        .i_out_en(w_interface_out_en),
         .i_bus_in(w_interface_input),
         .o_bus_out(w_interface_out)
     );
@@ -247,7 +278,7 @@ module zigbee_top #(
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_cfg(w_demod_cfg),
-        .i_out_en(i_out_en),
+        .i_out_en(w_demod_out_en),
         .i_bus_in(w_demod_input),
         .o_bus_out(w_demod_out)
     );
@@ -261,7 +292,7 @@ module zigbee_top #(
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_cfg(w_msk_cfg),
-        .i_out_en(i_out_en),
+        .i_out_en(w_msk_out_en),
         .i_bus_in(w_msk_input),
         .o_bus_out(w_msk_out)
     );
@@ -275,7 +306,7 @@ module zigbee_top #(
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_cfg(w_cordic_cfg),
-        .i_out_en(i_out_en),
+        .i_out_en(w_cordic_out_en),
         .i_bus_in(w_cordic_input),
         .o_bus_out(w_cordic_out)
     );
@@ -289,7 +320,7 @@ module zigbee_top #(
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_cfg(w_cdr_cfg),
-        .i_out_en(i_out_en),
+        .i_out_en(w_cdr_out_en),
         .i_bus_in(w_cdr_input),
         .o_bus_out(w_cdr_out)
     );
@@ -298,30 +329,28 @@ module zigbee_top #(
     // OUTPUT ROUTING (Les pins de sortie)
     // ====================================================================
     always_comb begin
-        o_bus_out = '0; // Sécurité Tri-state
+        o_bus_out = '0;
 
-        if (i_out_en) begin
-            unique case (i_cfg_top)
-                // Chaîne RX : On sort tout ce que l'interface a à nous dire
-                CFG_RX_PATH:      o_bus_out = w_interface_out; 
-                
-                // Chaîne TX : 12 bits pour le signal MSK, 2 bits pour l'état Interface
-                CFG_TX_PATH: begin
-                    o_bus_out[11:0]  = w_msk_out[11:0];       // Signal modulé (I & Q)
-                    o_bus_out[13:12] = w_interface_out[13:12]; // tx_valid & serial_tx
-                end
-                
-                // Chaîne Interne : On regarde le bout de la chaîne (CDR)
-                CFG_MOD_CORDIC:   o_bus_out = w_cdr_out;
-                
-                // Modes isolés : On branche directement le composant testé sur les pins
-                CFG_INTERFACE:    o_bus_out = w_interface_out;
-                CFG_MODULATION:   o_bus_out = w_msk_out;
-                CFG_DEMODULATION: o_bus_out = w_demod_out;
-                CFG_CORDIC:       o_bus_out = w_cordic_out;
-                CFG_CDR:          o_bus_out = w_cdr_out;
-            endcase
-        end
+        unique case (i_cfg_top)
+            // Chaîne RX : On sort tout ce que l'interface a à nous dire
+            CFG_RX_PATH:      o_bus_out = w_interface_out; 
+            
+            // Chaîne TX : 12 bits pour le signal MSK, 2 bits pour l'état Interface
+            CFG_TX_PATH: begin
+                o_bus_out[11:0]  = w_msk_out[11:0];       // Signal modulé (I & Q)
+                o_bus_out[13:12] = w_interface_out[13:12]; // tx_valid & serial_tx
+            end
+            
+            // Chaîne Interne : On regarde le bout de la chaîne (CDR)
+            CFG_MOD_CORDIC:   o_bus_out = w_cdr_out;
+            
+            // Modes isolés : On branche directement le composant testé sur les pins
+            CFG_INTERFACE:    o_bus_out = w_interface_out;
+            CFG_MODULATION:   o_bus_out = w_msk_out;
+            CFG_DEMODULATION: o_bus_out = w_demod_out;
+            CFG_CORDIC:       o_bus_out = w_cordic_out;
+            CFG_CDR:          o_bus_out = w_cdr_out;
+        endcase
     end
 
 endmodule
