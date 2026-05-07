@@ -17,7 +17,7 @@ set source_files [glob -nocomplain \
 	../../../../rtl/demod/*.sv \
 	../../../../rtl/demod/FIR/*.sv \
 	../../../../rtl/demod/WAVE/*.sv \
-	../../../../rtl/CDR/*.sv \
+	../../../../rtl/cdr/*.sv \
 	../../../../rtl/cordic/*.sv \
 	../../../../rtl/interface/*.sv \
 ]

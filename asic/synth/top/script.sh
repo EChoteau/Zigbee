@@ -41,6 +41,7 @@ echo "========================================"
 # Count errors and warnings in the log file
 NB_ERRORS=$(grep -i -c "error:" log_synthese.log)
 NB_WARNINGS=$(grep -i -c "warning:" log_synthese.log)
+NB_UNREFERENCES=$(grep -i -c "unresolved references" log_synthese.log)
 
 if [ "$NB_ERRORS" -gt 0 ]; then
     # \e[41m = red background, \e[97m = white text, \e[0m = reset
@@ -78,8 +79,14 @@ if [ "$NB_ERRORS" -gt 0 ]; then
         echo -e "=> Error phase not dynamically identified. See the complete log."
     fi
 else
-    # \e[42m = green background, \e[97m = white text, \e[0m = reset
-    echo -e "                \e[42m\e[97m DONE \e[0m"
+    
+    if [ "$NB_UNREFERENCES" -gt 0 ]; then
+        # \e[43m = yellow background, \e[97m = white text, \e[0m = reset
+        echo -e "                \e[43m\e[97m DONE WITH UNREFERENCED \e[0m"
+    else
+        # \e[42m = green background, \e[97m = white text, \e[0m = reset
+        echo -e "                \e[42m\e[97m DONE \e[0m"
+    fi
 fi
 
 echo "----------------------------------------"
