@@ -1,3 +1,12 @@
+`include "interface_wrapper_baud.svh"
+`include "interface_wrapper_fifo_rx.svh"
+`include "interface_wrapper_fifo_tx.svh"
+`include "interface_wrapper_loopback.svh"
+`include "interface_wrapper_rx_only.svh"
+`include "interface_wrapper_serdes.svh"
+`include "interface_wrapper_tx_only.svh"
+`include "interface_wrapper_classic.svh"
+
 task automatic run_interface_wrapper_test_plan();
 begin
     test_interface_wrapper_classic();
