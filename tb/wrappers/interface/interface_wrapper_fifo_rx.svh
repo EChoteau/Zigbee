@@ -24,33 +24,33 @@ begin
     
     // Test pattern 1: Inject serial bit stream
     $display("  [FIFO_RX] Injecting serial data via CDR...");
-    set_bus_b({2'b11, 1'b0, 8'h00});        // serial_rx=1, cdr_sample_valid=1
+    set_bus({1'b0, 1'b1, 1'b1, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=1, [1]fifo_rx_rd_en=1, [0]fifo_rx_wr_en=1
     repeat(10) @(posedge i_clk);
     
     // Assert: First pattern active
-    assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b1)
+    assert (i_bus[20] == 1'b1 && i_bus[19] == 1'b1)
         $display("  [FIFO_RX] First pattern active (cdr_sample_valid=1, serial_rx=1)");
     else
         $error("  [FIFO_RX] FAIL: First pattern mismatch!");
     
     // Test pattern 2: Different serial pattern
     $display("  [FIFO_RX] Changing serial pattern...");
-    set_bus_b({2'b10, 1'b0, 8'h00});        // cdr_sample_valid=1, serial_rx=0
+    set_bus({1'b0, 1'b1, 1'b0, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [1]fifo_rx_rd_en=1, [0]fifo_rx_wr_en=1
     repeat(10) @(posedge i_clk);
     
     // Assert: Second pattern active
-    assert (i_bus_b[10] == 1'b1 && i_bus_b[9] == 1'b0)
+    assert (i_bus[20] == 1'b1 && i_bus[19] == 1'b0)
         $display("  [FIFO_RX] Second pattern active (serial_rx=0)");
     else
         $error("  [FIFO_RX] FAIL: Second pattern mismatch!");
     
     // Test pattern 3: Back to first pattern
     $display("  [FIFO_RX] Restoring serial pattern...");
-    set_bus_b({2'b11, 1'b0, 8'h00});
+    set_bus({1'b0, 1'b1, 1'b1, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=1, [1]fifo_rx_rd_en=1, [0]fifo_rx_wr_en=1
     repeat(10) @(posedge i_clk);
     
     // Assert: Pattern restored
-    assert (i_bus_b[9] == 1'b1)
+    assert (i_bus[3] == 1'b1)
         $display("  [FIFO_RX] Pattern restored (serial_rx=1)");
     else
         $error("  [FIFO_RX] FAIL: Pattern restore failed!");
@@ -59,17 +59,11 @@ begin
     $display("  [FIFO_RX] Monitoring RX FIFO...");
     repeat(5) @(posedge i_clk);
     
-    // Verify RX FIFO data on Bus C
-    assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [FIFO_RX] PASS - Bus C (RX FIFO data) valid: 0x%03h", o_bus_c);
+    // Verify RX FIFO data on Bus
+    assert (o_bus !== 14'bx && o_bus !== 14'bz)
+        $display("  [FIFO_RX] PASS - Bus (RX FIFO data) valid: 0x%04h", o_bus);
     else
-        $error("  [FIFO_RX] FAIL - Bus C has undefined values!");
-    
-    // Verify RX status on Bus D
-    assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [FIFO_RX] PASS - Bus D (RX status) valid: 0b%02b", o_bus_d);
-    else
-        $error("  [FIFO_RX] FAIL - Bus D has undefined values!");
+        $error("  [FIFO_RX] FAIL - Bus has undefined values!");
     
     $display("========== CFG_FIFO_RX TEST COMPLETE ==========\n");
 end

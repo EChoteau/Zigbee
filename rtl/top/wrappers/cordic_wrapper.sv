@@ -124,17 +124,17 @@ module cordic_wrapper #(
             unique case (i_cfg)
                 // Output = Filter (modes 0, 3, 5, 6, 7)
                 MODE_0, MODE_3, MODE_5, MODE_6, MODE_7: begin
-                    o_bus_out[11:0] = w_phase_filter_out[11:0];
+                    o_bus_out[7:0] = w_phase_filter_out[7:0];
                 end
 
                 // Output = Cordic (mode 1)
                 MODE_1: begin
-                    o_bus_out[11:0] = w_phase_cordic[11:0];
+                    o_bus_out[7:0] = w_phase_cordic[7:0];
                 end
 
                 // Output = Derivative (modes 2, 4)
                 MODE_2, MODE_4: begin
-                    o_bus_out[11:0] = w_phase_deriv[11:0];
+                    o_bus_out[7:0] = w_phase_deriv[7:0];
                 end
 
                 default: begin

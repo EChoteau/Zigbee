@@ -17,8 +17,7 @@ begin
     
     // Test pattern 1: APB write
     $display("  [CLASSIC] Sending APB write command...");
-    set_bus_a({7'h08, 1'b1, 1'b1, 1'b1});  // paddr=0x08, pwrite=1, penable=1, psel=1
-    set_bus_b({2'b11, 1'b0, 8'hA5});        // serial_rx=1, cdr_sample_valid=1, pwdata=0xA5
+    set_bus({1'b1, 8'hA5, 8'h08, 1'b1, 1'b1, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=1, [18:11]pwdata=0xA5, [10:3]paddr=0x08, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(3) @(posedge i_clk);
     
     // Assert: Config is correctly set
@@ -27,41 +26,31 @@ begin
     else
         $error("  [CLASSIC] FAIL: Config mismatch!");
     
-    // Assert: Bus A is loaded
-    assert (i_bus_a[0] == 1'b1)
-        $display("  [CLASSIC] Bus A[0] (psel) = 1");
+    // Assert: Bus is loaded
+    assert (i_bus[0] == 1'b1)
+        $display("  [CLASSIC] Bus[0] (psel) = 1");
     else
-        $error("  [CLASSIC] FAIL: Bus A[0] not set!");
+        $error("  [CLASSIC] FAIL: Bus[0] not set!");
     
     // Test pattern 2: APB read
     $display("  [CLASSIC] Sending APB read command...");
-    set_bus_a({7'h10, 1'b0, 1'b1, 1'b1});  // paddr=0x10, pwrite=0, penable=1, psel=1
-    set_bus_b({2'b00, 1'b1, 8'h00});
+    set_bus({1'b0, 8'h00, 8'h10, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x00, [10:3]paddr=0x10, [2]pwrite=0, [1]penable=1, [0]psel=1
     repeat(3) @(posedge i_clk);
     
     // Assert: Write bit is 0 for read
-    assert (i_bus_a[2] == 1'b0)
-        $display("  [CLASSIC] Bus A[2] (pwrite) = 0 (read mode)");
+    assert (i_bus[2] == 1'b0)
+        $display("  [CLASSIC] Bus[2] (pwrite) = 0 (read mode)");
     else
         $error("  [CLASSIC] FAIL: pwrite bit not cleared!");
     
     // Verify outputs are being driven
-    if (o_bus_c !== 12'bx && o_bus_c !== 12'bz) begin
-        assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-            $display("  [CLASSIC] PASS - Bus C outputs valid: 0x%03h", o_bus_c);
+    if (o_bus !== 14'bx && o_bus !== 14'bz) begin
+        assert (o_bus !== 14'bx && o_bus !== 14'bz)
+            $display("  [CLASSIC] PASS - Bus outputs valid: 0x%04h", o_bus);
         else
-            $error("  [CLASSIC] FAIL - Bus C has undefined values!");
+            $error("  [CLASSIC] FAIL - Bus has undefined values!");
     end else begin
-        $display("  [CLASSIC] PASS - Bus C initializing");
-    end
-    
-    if (o_bus_d !== 2'bx && o_bus_d !== 2'bz) begin
-        assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-            $display("  [CLASSIC] PASS - Bus D outputs valid: 0b%02b", o_bus_d);
-        else
-            $error("  [CLASSIC] FAIL - Bus D has undefined values!");
-    end else begin
-        $display("  [CLASSIC] PASS - Bus D initializing");
+        $display("  [CLASSIC] PASS - Bus initializing");
     end
     
     $display("========== CFG_CLASSIC TEST COMPLETE ==========\n");
