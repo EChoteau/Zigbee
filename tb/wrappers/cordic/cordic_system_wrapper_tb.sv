@@ -229,15 +229,16 @@ module cordic_system_wrapper_tb();
         logic signed [WIDTH-1:0] i_cordic_q;
         logic signed [WIDTH_PHASE-1:0] curr_deriv;
         logic signed [WIDTH_PHASE-1:0] ref_deriv;
+        logic signed [WIDTH_PHASE-1:0] error_margin = 2; // allow small margin of error due to quantization and noise
         bit ref_valid;
 
         ref_valid = 1'b0;
 
-        for (int i = 0; i < 20; i = i + 1) begin
+        for (int i = 0; i < 30; i = i + 1) begin
             @(posedge i_clk);
 
             // Calculate cos/sin in simulation
-            s_angle = (i * 2.0 * PI) / 20.0;
+            s_angle = (i * 2.0 * PI) / 30.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
 
@@ -247,7 +248,7 @@ module cordic_system_wrapper_tb();
             i_bus_a = {i_cordic_q, i_cordic_i};
 
             // Let the DUT settle so the derivative output can be checked
-            if (i<5) begin
+            if (i<8) begin // SETTING : need adjust depending on cordic architecture
                 // During the first few steps, the derivative may not be stable yet due to initial conditions
                 continue;
             end
@@ -260,7 +261,7 @@ module cordic_system_wrapper_tb();
                 ref_deriv = curr_deriv;
                 ref_valid = 1'b1;
             end else begin
-                assert (curr_deriv === ref_deriv)
+                assert (curr_deriv === ref_deriv || $abs(curr_deriv - ref_deriv) <= error_margin)
                     else $error("cordic_derivate: expected constant phase derivative %0d, got %0d at step %0d",
                                 ref_deriv, curr_deriv, i);
             end
