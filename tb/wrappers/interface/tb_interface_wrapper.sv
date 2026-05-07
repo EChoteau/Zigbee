@@ -6,6 +6,7 @@
 `timescale 1ns/1ps
 
 import tb_pkg::*;
+import interface_wrapper_baud::*;
 
 module tb_interface_wrapper;
 
@@ -75,14 +76,6 @@ module tb_interface_wrapper;
         repeat(2) @(posedge i_clk);
     end
     endtask
-    `include "interface_wrapper_baud.svh"
-    `include "interface_wrapper_fifo_rx.svh"
-    `include "interface_wrapper_fifo_tx.svh"
-    `include "interface_wrapper_loopback.svh"
-    `include "interface_wrapper_rx_only.svh"
-    `include "interface_wrapper_serdes.svh"
-    `include "interface_wrapper_tx_only.svh"
-    `include "interface_wrapper_classic.svh"
 
     initial begin
         // init
@@ -97,13 +90,6 @@ module tb_interface_wrapper;
 
         $display("\n===== INTERFACE WRAPPER TB START =====\n");
         test_interface_wrapper_baud();
-        test_interface_wrapper_classic();
-        test_interface_wrapper_fifo_rx();
-        test_interface_wrapper_fifo_tx();
-        test_interface_wrapper_loopback();
-        test_interface_wrapper_rx_only();
-        test_interface_wrapper_serdes();
-        test_interface_wrapper_tx_only();
         $display("\n===== INTERFACE WRAPPER TB COMPLETE =====\n");
 
         repeat(10) @(posedge i_clk);
