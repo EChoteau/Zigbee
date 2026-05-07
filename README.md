@@ -48,7 +48,7 @@ Ce depot contient:
 	- estimation de phase CORDIC (`cordic_top.sv` / version pipeline),
 	- derivee de phase (`derivate.sv`),
 	- filtrage boxcar (`boxcar_filter.sv`),
-	- integration de la chaine (`cordic_system.sv`).
+	- integration de la chaine (`cordic_system_top.sv`).
 
 
 ### Chaine CDR
@@ -76,7 +76,7 @@ Chaque script de synthese:
 2. se place dans le dossier du module,
 3. lance `dc_shell -f <script>.tcl`.
 
-Les scripts TCL de synthese (ex: `cordic_system.tcl`, `demod_dc_shell_script.tcl`) font:
+Les scripts TCL de synthese (ex: `cordic_system_top.tcl`, `demod_dc_shell_script.tcl`) font:
 1. lecture des sources RTL,
 2. elaboration du top de module,
 3. application des contraintes (horloge, incertitude, aire),

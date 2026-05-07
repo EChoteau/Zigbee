@@ -21,6 +21,6 @@ ams_cds -tech c35b4 -mode fb &
 #Run Control -> Multi thread
 #Ignore INFO_---
 #Ignore Ratio Metal
-#calibre -drc .calibreDRCRunset -hier -turbo -threads 8 -drc_runset .calibreDRCRunset cordic_system.gds cordic_system.drc
+#calibre -drc .calibreDRCRunset -hier -turbo -threads 8 -drc_runset .calibreDRCRunset cordic_system_top.gds cordic_system_top.drc
 #ams_cds -tech c35b4 -mode fb -execute "source ../scripts/mask_verification.il" &
 #virtuoso -batch -nowin -execute "source ../scripts/mask_verification.il" &

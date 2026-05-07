@@ -10,15 +10,15 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/cordic/boxcar_filter.sv \
     ../../../rtl/cordic/cordic_init.sv \
     ../../../rtl/cordic/cordic_step.sv \
-    ../../../rtl/cordic/cordic_system.sv \
+    ../../../rtl/cordic/cordic_system_top.sv \
     ../../../rtl/cordic/cordic_top.sv \
     ../../../rtl/cordic/cordic_top_pipeline.sv \
     ../../../rtl/cordic/cordic_top_hybride.sv \
     ../../../rtl/cordic/derivate.sv \
 }
 
-elaborate cordic_system -library WORK
-current_design cordic_system
+elaborate cordic_system_top -library WORK
+current_design cordic_system_top
 link
 
 # --- 3. Contraintes ---
@@ -27,7 +27,7 @@ set_clock_uncertainty 5 i_clk
 set_max_area 0
 
 # --- 4. Synthèse ---
-current_design cordic_system
+current_design cordic_system_top
 ungroup -all -flatten
 compile_ultra -gate_clock
 # (Optionnel)

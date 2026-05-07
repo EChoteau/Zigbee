@@ -1,12 +1,12 @@
 // ============================================================================
-// Module      : cordic_wrapper
+// Module      : cordic_system_wrapper
 // Description : Test wrapper for the Cordic -> Derivative -> Filter chain.
 //               Provides injection via `i_bus_a` and observation buses.
 //               Supports 8 configs (C0,C1,C2) selecting which block
 //               receives injection and which block is observed.
 // ============================================================================
 
-module cordic_wrapper #(
+module cordic_system_wrapper #(
     parameter int WIDTH_IN   = 6,
     parameter int FILTER_N   = 5,
     parameter int WIDTH_PHASE= WIDTH_IN + 2,
@@ -133,12 +133,12 @@ module cordic_wrapper #(
     // ------------------------------------------------------------------
     // Instantiate blocks (cordic_top, derivative, boxcar_filter)
     // ------------------------------------------------------------------
-    cordic_system #(
+    cordic_system_top #(
         .WIDTH_IN(WIDTH_IN),
         .FILTER_N(FILTER_N),
         .WIDTH_PHASE(WIDTH_PHASE),
         .INSIDE_WRAPPER(1) // Set inside wrapper flag to 1 to enable internal muxing
-    ) cordic_system_inst (
+    ) cordic_system_top_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
         .i_q(w_cordic_q),
