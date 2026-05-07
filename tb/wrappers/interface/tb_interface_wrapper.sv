@@ -75,7 +75,14 @@ module tb_interface_wrapper;
         repeat(2) @(posedge i_clk);
     end
     endtask
-
+    `include "interface_wrapper_baud.svh"
+    `include "interface_wrapper_fifo_rx.svh"
+    `include "interface_wrapper_fifo_tx.svh"
+    `include "interface_wrapper_loopback.svh"
+    `include "interface_wrapper_rx_only.svh"
+    `include "interface_wrapper_serdes.svh"
+    `include "interface_wrapper_tx_only.svh"
+    `include "interface_wrapper_classic.svh"
     `include "interface_wrapper_test_plan.svh"
 
     initial begin
