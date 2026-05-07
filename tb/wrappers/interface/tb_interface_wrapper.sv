@@ -6,7 +6,6 @@
 `timescale 1ns/1ps
 
 import tb_pkg::*;
-import interface_wrapper_baud::*;
 
 module tb_interface_wrapper;
 
@@ -77,6 +76,8 @@ module tb_interface_wrapper;
     end
     endtask
 
+    `include "/headers/interface_wrapper_baud.svh"
+
     initial begin
         // init
         i_rst_n = 1'b0;
@@ -87,11 +88,7 @@ module tb_interface_wrapper;
         // reset
         repeat(5) @(posedge i_clk);
         apply_reset(10);
-
-        $display("\n===== INTERFACE WRAPPER TB START =====\n");
         test_interface_wrapper_baud();
-        $display("\n===== INTERFACE WRAPPER TB COMPLETE =====\n");
-
         repeat(10) @(posedge i_clk);
         $finish;
     end
