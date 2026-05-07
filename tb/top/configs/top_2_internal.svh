@@ -1,9 +1,9 @@
-task automatic test_7_internal();
+task automatic test_2_internal();
     // task-local declarations must appear before statements
     integer i;
     begin
-        $display("[%0t] test_7_internal", $time);        
-        i_top_cfg = 3'd7;
+        $display("[%0t] test_2_internal", $time);        
+        i_top_cfg = 3'd2;
         // Use wrapper config 1 for MSK: injection into encoder (see msk_test_wrapper)
         i_wrapper_cfg = 3'b000;
         rst_n = 0;

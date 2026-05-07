@@ -1,7 +1,7 @@
-task automatic test_4_demod();
+task automatic test_6_cordic();
     begin
-        $display("[%0t] test_4_demod", $time);
-        i_top_cfg = 3'd4;
+        $display("[%0t] test_6_cordic", $time);
+        i_top_cfg = 3'd6;
         i_wrapper_cfg = 3'b000;
         rst_n = 0;
         repeat (2) @(posedge clk);

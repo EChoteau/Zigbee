@@ -1,7 +1,7 @@
-task automatic test_3_msk();
+task automatic test_4_msk();
     begin
-        $display("[%0t] test_3_msk", $time);
-        i_top_cfg = 3'd3;
+        $display("[%0t] test_4_msk", $time);
+        i_top_cfg = 3'd4;
         i_wrapper_cfg = 3'b000;
         rst_n = 0;
         repeat (2) @(posedge clk);
