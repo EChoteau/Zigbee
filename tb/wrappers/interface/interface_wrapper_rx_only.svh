@@ -23,42 +23,41 @@ begin
     
     // Test pattern 1: Setup APB and serial RX
     $display("  [RX_ONLY] Injecting serial data via CDR...");
-    set_bus_a({7'h00, 1'b0, 1'b1, 1'b1});  // paddr=0x00, pwrite=0, penable=1, psel=1
-    set_bus_b({2'b11, 1'b0, 8'h00});        // serial_rx=1, cdr_sample_valid=1
+    set_bus({1'b1, 8'h00, 8'h00, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=1, [18:11]pwdata=0x00, [10:3]paddr=0x00, [2]pwrite=0, [1]penable=1, [0]psel=1
     repeat(4) @(posedge i_clk);
     
     // Assert: Read mode is active
-    assert (i_bus_a[2] == 1'b0)
+    assert (i_bus[2] == 1'b0)
         $display("  [RX_ONLY] Read mode active (pwrite=0)");
     else
         $error("  [RX_ONLY] FAIL: pwrite should be 0!");
     
     // Assert: Serial RX is active
-    assert (i_bus_b[9] == 1'b1)
+    assert (i_bus[3] == 1'b1)
         $display("  [RX_ONLY] Serial RX active (serial_rx=1)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx not set!");
     
     // Test pattern 2: Different serial pattern
     $display("  [RX_ONLY] Injecting different serial pattern...");
-    set_bus_b({2'b10, 1'b0, 8'h00});        // cdr_sample_valid=1, serial_rx=0
+    set_bus({1'b1, 8'h00, 8'h00, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0x00, [10:3]paddr=0x00, [2]pwrite=0, [1]penable=1, [0]psel=1
     repeat(4) @(posedge i_clk);
     
     // Assert: Serial pattern changed
-    assert (i_bus_b[9] == 1'b0)
+    assert (i_bus[3] == 1'b0)
         $display("  [RX_ONLY] Serial pattern changed (serial_rx=0)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx pattern mismatch!");
     
-    // Verify RX FIFO status on Bus C
+    // Verify RX FIFO status on Bus
     $display("  [RX_ONLY] Monitoring RX FIFO...");
     repeat(3) @(posedge i_clk);
     
-    // Assert: Bus C outputs are valid
-    assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [RX_ONLY] PASS - Bus C (RX status) valid: 0x%03h", o_bus_c);
+    // Assert: Bus outputs are valid
+    assert (o_bus !== 14'bx && o_bus !== 14'bz)
+        $display("  [RX_ONLY] PASS - Bus (RX status) valid: 0x%04h", o_bus);
     else
-        $error("  [RX_ONLY] FAIL - Bus C has undefined values!");
+        $error("  [RX_ONLY] FAIL - Bus has undefined values!");
     
     $display("========== CFG_RX_ONLY TEST COMPLETE ==========\n");
 end

@@ -24,34 +24,34 @@ begin
     
     // Test pattern 1: Push first byte to TX FIFO
     $display("  [FIFO_TX] Pushing first byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h11});        // First data pattern
+    set_bus({1'b0, 8'h11, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x11, [10:3]paddr=0x00, all control=0
     repeat(3) @(posedge i_clk);
     
     // Assert: First byte loaded
-    assert (i_bus_b[7:0] == 8'h11)
-        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus_b[7:0]);
+    assert (i_bus[13:6] == 8'h11)
+        $display("  [FIFO_TX] First byte loaded: 0x%02h", i_bus[13:6]);
     else
         $error("  [FIFO_TX] FAIL: First byte mismatch!");
     
     // Test pattern 2: Push second byte
     $display("  [FIFO_TX] Pushing second byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h22});        // Second data pattern
+    set_bus({1'b0, 8'h22, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x22, [10:3]paddr=0x00
     repeat(3) @(posedge i_clk);
     
     // Assert: Second byte loaded
-    assert (i_bus_b[7:0] == 8'h22)
-        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus_b[7:0]);
+    assert (i_bus[13:6] == 8'h22)
+        $display("  [FIFO_TX] Second byte loaded: 0x%02h", i_bus[13:6]);
     else
         $error("  [FIFO_TX] FAIL: Second byte mismatch!");
     
     // Test pattern 3: Push third byte
     $display("  [FIFO_TX] Pushing third byte to TX FIFO...");
-    set_bus_b({2'b00, 1'b0, 8'h33});        // Third data pattern
+    set_bus({1'b0, 8'h33, 8'h00, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x33, [10:3]paddr=0x00
     repeat(3) @(posedge i_clk);
     
     // Assert: Third byte loaded
-    assert (i_bus_b[7:0] == 8'h33)
-        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus_b[7:0]);
+    assert (i_bus[13:6] == 8'h33)
+        $display("  [FIFO_TX] Third byte loaded: 0x%02h", i_bus[13:6]);
     else
         $error("  [FIFO_TX] FAIL: Third byte mismatch!");
     
@@ -59,17 +59,11 @@ begin
     $display("  [FIFO_TX] Monitoring TX FIFO status...");
     repeat(5) @(posedge i_clk);
     
-    // Verify FIFO status on Bus C
-    assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [FIFO_TX] PASS - Bus C (FIFO status) valid: 0x%03h", o_bus_c);
+    // Verify FIFO status on Bus
+    assert (o_bus !== 14'bx && o_bus !== 14'bz)
+        $display("  [FIFO_TX] PASS - Bus (FIFO status) valid: 0x%04h", o_bus);
     else
-        $error("  [FIFO_TX] FAIL - Bus C has undefined values!");
-    
-    // Verify serial TX on Bus D
-    assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [FIFO_TX] PASS - Bus D (serial TX) valid: 0b%02b", o_bus_d);
-    else
-        $error("  [FIFO_TX] FAIL - Bus D has undefined values!");
+        $error("  [FIFO_TX] FAIL - Bus has undefined values!");
     
     $display("========== CFG_FIFO_TX TEST COMPLETE ==========\n");
 end

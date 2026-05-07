@@ -23,43 +23,35 @@ begin
     
     // Test pattern 1: Write data to TX FIFO
     $display("  [TX_ONLY] Sending data to TX FIFO...");
-    set_bus_a({7'h00, 1'b1, 1'b1, 1'b1});  // paddr=0x00, pwrite=1, penable=1, psel=1
-    set_bus_b({2'b00, 1'b0, 8'h55});        // pwdata=0x55
+    set_bus({1'b0, 8'h55, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x55, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(3) @(posedge i_clk);
     
     // Assert: Write enable is active
-    assert (i_bus_a[2] == 1'b1)
+    assert (i_bus[2] == 1'b1)
         $display("  [TX_ONLY] Write enable (pwrite) = 1");
     else
         $error("  [TX_ONLY] FAIL: pwrite not set!");
     
     // Test pattern 2: Write another byte
     $display("  [TX_ONLY] Sending another byte...");
-    set_bus_a({7'h00, 1'b1, 1'b1, 1'b1});
-    set_bus_b({2'b00, 1'b0, 8'hAA});        // pwdata=0xAA
+    set_bus({1'b0, 8'hAA, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0xAA, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(3) @(posedge i_clk);
     
     // Assert: Second byte is loaded
-    assert (i_bus_b[7:0] == 8'hAA)
-        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus_b[7:0]);
+    assert (i_bus[13:6] == 8'hAA)
+        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus[13:6]);
     else
         $error("  [TX_ONLY] FAIL: Second byte mismatch!");
     
-    // Verify TX FIFO status on Bus C
+    // Verify TX FIFO status on Bus
     $display("  [TX_ONLY] Monitoring FIFO status...");
     repeat(5) @(posedge i_clk);
     
-    // Assert: Bus C outputs are valid (not x or z)
-    assert (o_bus_c !== 12'bx && o_bus_c !== 12'bz)
-        $display("  [TX_ONLY] PASS - Bus C (FIFO status) valid: 0x%03h", o_bus_c);
+    // Assert: Bus outputs are valid (not x or z)
+    assert (o_bus !== 14'bx && o_bus !== 14'bz)
+        $display("  [TX_ONLY] PASS - Bus (FIFO status) valid: 0x%04h", o_bus);
     else
-        $error("  [TX_ONLY] FAIL - Bus C has undefined values!");
-    
-    // Verify serial output on Bus D
-    assert (o_bus_d !== 2'bx && o_bus_d !== 2'bz)
-        $display("  [TX_ONLY] PASS - Bus D (serial TX) valid: 0b%02b", o_bus_d);
-    else
-        $error("  [TX_ONLY] FAIL - Bus D has undefined values!");
+        $error("  [TX_ONLY] FAIL - Bus has undefined values!");
     
     $display("========== CFG_TX_ONLY TEST COMPLETE ==========\n");
 end
