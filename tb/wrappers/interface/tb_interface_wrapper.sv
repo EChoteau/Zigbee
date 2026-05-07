@@ -83,7 +83,6 @@ module tb_interface_wrapper;
     `include "interface_wrapper_serdes.svh"
     `include "interface_wrapper_tx_only.svh"
     `include "interface_wrapper_classic.svh"
-    `include "interface_wrapper_test_plan.svh"
 
     initial begin
         // init
@@ -97,7 +96,14 @@ module tb_interface_wrapper;
         apply_reset(10);
 
         $display("\n===== INTERFACE WRAPPER TB START =====\n");
-        run_interface_wrapper_test_plan();
+        test_interface_wrapper_baud();
+        test_interface_wrapper_classic();
+        test_interface_wrapper_fifo_rx();
+        test_interface_wrapper_fifo_tx();
+        test_interface_wrapper_loopback();
+        test_interface_wrapper_rx_only();
+        test_interface_wrapper_serdes();
+        test_interface_wrapper_tx_only();
         $display("\n===== INTERFACE WRAPPER TB COMPLETE =====\n");
 
         repeat(10) @(posedge i_clk);
