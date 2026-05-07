@@ -2,7 +2,7 @@
 
 // ==============================================================================
 // Module      : encodeur_diff
-// Description : Encodeur différentiel pour modulation MSK
+// Description : Encodeur differentiel pour modulation MSK
 // ==============================================================================
 
 module encodeur_diff (
