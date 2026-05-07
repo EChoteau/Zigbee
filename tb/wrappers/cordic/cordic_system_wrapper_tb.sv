@@ -91,10 +91,12 @@ module cordic_system_wrapper_tb();
 
         is_close_enough = 1'b0;
 
-        if ( observed > expected ) begin
-            is_close_enough = (observed - expected) <= error_margin; // observed can be slightly above expected
-        end else begin
-            is_close_enough = (expected - observed) <= error_margin; // observed can be slightly below expected
+        if ( observed > expected + error_margin ) begin
+        end 
+        else if ( observed < expected - error_margin ) begin
+        end
+        else begin
+            is_close_enough = 1'b1;
         end
 
         assert (is_close_enough)
