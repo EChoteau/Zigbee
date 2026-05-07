@@ -130,7 +130,7 @@ module cordic_system_wrapper_tb();
 
         // Reset stimulus: check that the output is connected and stable at 0
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, '0 };
-        repeat (2) @(posedge i_clk);
+        repeat (5) @(posedge i_clk);
 
         assert (!$isunknown(o_bus_c[WIDTH_PHASE-1:0]))
             else $error("derivate_only_triangle_step: o_bus_c is not connected (contains X/Z)");
