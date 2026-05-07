@@ -412,6 +412,7 @@ module cordic_system_wrapper_tb();
 
     task automatic rst_wait();
         i_rst_n = 1'b0;
+        i_bus_a = '0;
         repeat (4) @(posedge i_clk);
         i_rst_n = 1'b1;
         repeat (2) @(posedge i_clk);
