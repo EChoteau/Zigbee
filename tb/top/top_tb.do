@@ -23,8 +23,8 @@ vlog -incr -sv -work lib_RTL +acc tb/top/*.sv
 vsim -voptargs=+acc lib_RTL.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 add wave -position insertpoint  \
-sim:/top_tb/clk \
-sim:/top_tb/rst_n \
+sim:/top_tb/i_clk \
+sim:/top_tb/i_rst_n \
 sim:/top_tb/i_top_cfg \
 sim:/top_tb/i_wrapper_cfg \
 sim:/top_tb/i_bus_in \
