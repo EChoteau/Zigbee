@@ -41,7 +41,8 @@ module top_tb;
     initial begin
         // default values
         rst_n = 1;
-        i_cfg = 3'b000;
+        i_wrapper_cfg = 3'b000;
+        i_top_cfg = 3'b000;
         i_out_en = 1'b1;
         i_bus_in = '0;
 
@@ -52,17 +53,17 @@ module top_tb;
         #100;
         test_1_tx();
         #100;
-        test_2_interface();
+        test_2_internal();
         #100;
-        test_3_msk();
+        test_3_interface();
         #100;
-        test_4_demod();
+        test_4_msk();
         #100;
-        test_5_cordic();
+        test_5_demod();
         #100;
-        test_6_cdr();
+        test_6_cordic();
         #100;
-        test_7_internal();
+        test_7_cdr();
         #100;
 
         $display("All config tests completed at time %0t", $time);
