@@ -258,8 +258,7 @@ module cordic_system_wrapper_tb();
             assert (!$isunknown(o_bus_c[WIDTH_PHASE-1:0]))
                 else $error("cordic_derivate: o_bus_c is not connected (contains X/Z) at step %0d", i);
 
-
-            ref_deriv = '8;
+            ref_deriv = 'd8;
 
             if (curr_deriv > ref_deriv + error_margin) begin
                 is_close_enough = 1'b0;
