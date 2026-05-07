@@ -23,6 +23,15 @@ module tb_interface_wrapper;
     logic [BUS_IN_WIDTH-1:0] i_bus_in;
     logic [BUS_OUT_WIDTH-1:0] o_bus_out;
 
+    localparam logic [2:0] CFG_CLASSIC   = 3'b000;  // APB + serial loopback
+    localparam logic [2:0] CFG_TX_ONLY   = 3'b001;  // TX path with FIFO control
+    localparam logic [2:0] CFG_RX_ONLY   = 3'b010;  // RX path with FIFO control
+    localparam logic [2:0] CFG_LOOPBACK  = 3'b011;  // Serializer output looped to deserializer input
+    localparam logic [2:0] CFG_FIFO_TX   = 3'b100;  // Direct TX FIFO control
+    localparam logic [2:0] CFG_FIFO_RX   = 3'b101;  // Direct RX FIFO control
+    localparam logic [2:0] CFG_SERDES    = 3'b110;  // Serializer/deserializer chain testing
+    localparam logic [2:0] CFG_BAUD      = 3'b111;  // Baud rate generator control
+
     // DUT
     interface_wrapper #(
         .CFG_WIDTH(CFG_WIDTH),
