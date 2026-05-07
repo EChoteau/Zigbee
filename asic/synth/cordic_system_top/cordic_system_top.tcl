@@ -45,9 +45,9 @@ report_constraint -all_violators > reports/violations.rpt
 
 # --- 6. Export Files for Simulation ---
 # Write the Gate-Level Netlist
-write -format verilog -hierarchy -output netlist/cordic_system_synth.v
+write -format verilog -hierarchy -output netlist/cordic_system_top_wrapper.v
 
 # Write the SDF timing file
-write_sdf netlist/cordic_system_synth.sdf
+write_sdf netlist/cordic_system_top_wrapper.sdf
 
 exit
