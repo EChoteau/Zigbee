@@ -411,11 +411,12 @@ module cordic_system_wrapper_tb();
     endtask
 
     task automatic rst_wait(input logic [2:0] wrapper_cfg);
+        @negedge i_clk;
         i_rst_n = 1'b0;
-        repeat (4) @(posedge i_clk);
+        repeat (4) @(negedge i_clk);
         i_wrapper_cfg = wrapper_cfg; // re-assert config after reset
         i_rst_n = 1'b1;
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
     endtask
 
 /*---------------- Test sequence control----------------*/
