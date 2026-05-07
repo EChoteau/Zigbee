@@ -12,7 +12,7 @@ task automatic test_2_internal();
         repeat (20) @(posedge clk);
 
         // Generate a simple bitstream into the MSK wrapper via i_bus_a[0]
-        $display("[TEST7] Sending bitstream to MSK wrapper...");
+        $display("[TEST2] Sending bitstream to MSK wrapper...");
         // Send a 16-bit pattern LSB first
         for (i = 0; i < 16; i = i + 1) begin
             i_bus_a = 12'b0;
@@ -26,8 +26,8 @@ task automatic test_2_internal();
         repeat (40) @(posedge clk);
 
         // Sample the recovered stream from top outputs (CDR wrapper outputs)
-        $display("[TEST7] Observed CDR outputs: o_bus_c=0x%03h o_bus_d=0b%02b", o_bus_c, o_bus_d);
+        $display("[TEST2] Observed CDR outputs: o_bus_c=0x%03h o_bus_d=0b%02b", o_bus_c, o_bus_d);
 
-        $display("[TEST7] test_7_internal complete");
+        $display("[TEST2] test_2_internal complete");
     end
 endtask
