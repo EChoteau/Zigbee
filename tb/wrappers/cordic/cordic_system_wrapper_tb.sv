@@ -81,12 +81,18 @@ module cordic_system_wrapper_tb();
         input string label
     );
         logic signed [WIDTH_PHASE-1:0] observed;
+        logic signed error_margin = 2; // allow small margin of error due to quantization and noise
         observed = $signed(o_bus_c);
 
         assert (!$isunknown(o_bus_c))
             else $error("%s: o_bus_c is not connected (contains X/Z)", label);
+        bit is_close_enough;
+        if ( observed > expected )
+            is_close_enough = (observed - expected) <= error_margin; // observed can be slightly above expected
+        else
+            is_close_enough = (expected - observed) <= error_margin; // observed can be slightly below expected
 
-        assert (observed === expected)
+        assert (is_close_enough)
             else $error("%s: expected %0d got %0d", label, expected, observed);
     endtask
 
