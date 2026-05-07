@@ -7,7 +7,6 @@
 // Inputs: Bus A (baud divisor control)
 // Outputs: Bus D (baud tick and status)
 // ============================================================================
-
 task automatic test_interface_wrapper_baud();
 begin
     $display("\n========== TEST: CFG_BAUD (0x7) ==========");

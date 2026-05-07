@@ -27,9 +27,9 @@ begin
     set_bus({1'b1, 8'h5A, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0x5A, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(5) @(posedge i_clk);
     
-    // Assert: Loopback data loaded
-    assert (i_bus_in[13:6] == 8'h5A)
-        $display("  [LOOPBACK] Loopback data loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Loopback data loaded (pwdata at [18:11])
+    assert (i_bus_in[18:11] == 8'h5A)
+        $display("  [LOOPBACK] Loopback data loaded: 0x%02h", i_bus_in[18:11]);
     else
         $error("  [LOOPBACK] FAIL: Loopback data mismatch!");
     
@@ -42,9 +42,9 @@ begin
     set_bus({1'b1, 8'hA5, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0xA5, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
     repeat(5) @(posedge i_clk);
     
-    // Assert: Second pattern loaded
-    assert (i_bus_in[13:6] == 8'hA5)
-        $display("  [LOOPBACK] Second pattern loaded: 0x%02h", i_bus_in[13:6]);
+    // Assert: Second pattern loaded (pwdata at [18:11])
+    assert (i_bus_in[18:11] == 8'hA5)
+        $display("  [LOOPBACK] Second pattern loaded: 0x%02h", i_bus_in[18:11]);
     else
         $error("  [LOOPBACK] FAIL: Second pattern mismatch!");
     

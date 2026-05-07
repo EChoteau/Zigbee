@@ -32,8 +32,8 @@ begin
     else
         $error("  [RX_ONLY] FAIL: pwrite should be 0!");
     
-    // Assert: Serial RX is active
-    assert (i_bus_in[3] == 1'b1)
+    // Assert: Serial RX is active (serial_rx at bit 19)
+    assert (i_bus_in[19] == 1'b1)
         $display("  [RX_ONLY] Serial RX active (serial_rx=1)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx not set!");
@@ -43,8 +43,8 @@ begin
     set_bus({1'b1, 8'h00, 8'h00, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0x00, [10:3]paddr=0x00, [2]pwrite=0, [1]penable=1, [0]psel=1
     repeat(4) @(posedge i_clk);
     
-    // Assert: Serial pattern changed
-    assert (i_bus_in[3] == 1'b0)
+    // Assert: Serial pattern changed (serial_rx at bit 19)
+    assert (i_bus_in[19] == 1'b0)
         $display("  [RX_ONLY] Serial pattern changed (serial_rx=0)");
     else
         $error("  [RX_ONLY] FAIL: serial_rx pattern mismatch!");
