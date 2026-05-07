@@ -24,7 +24,8 @@ module top_tb;
     zigbee_top uut (
         .i_clk(clk),
         .i_rst_n(rst_n),
-        .i_cfg(i_cfg),
+        .i_cfg(i_wrapper_cfg),
+        .i_cfg_top(i_top_cfg),
         .i_out_en(i_out_en),
         .i_bus_in(i_bus_in),
         .o_bus_out(o_bus_out)
