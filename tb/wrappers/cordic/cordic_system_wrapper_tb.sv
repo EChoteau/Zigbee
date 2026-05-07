@@ -236,17 +236,19 @@ module cordic_system_wrapper_tb();
         ref_valid = 1'b0;
 
         for (int i = 0; i < 30; i = i + 1) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
 
             // Calculate cos/sin in simulation
             s_angle = (i * 2.0 * PI) / 30.0;
             s_i_val = $cos(s_angle);
             s_q_val = $sin(s_angle);
 
-            // Drive bus A directly from local variables
+            // Drive bus A away from the DUT sampling edge to avoid races
             i_cordic_i = $rtoi(s_i_val * SCALE);
             i_cordic_q = $rtoi(s_q_val * SCALE);
             i_bus_a = {i_cordic_q, i_cordic_i};
+
+            @(posedge i_clk);
 
             // Let the DUT settle so the derivative output can be checked
             if (i<8) begin // SETTING : need adjust depending on cordic architecture
