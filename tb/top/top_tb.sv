@@ -4,14 +4,12 @@ module top_tb;
     logic clk;
     logic rst_n;
 
-    // Top config signals
-    logic [2:0] i_top_cfg;
-    logic [2:0] i_wrapper_cfg;
+    // Zigbee top configuration and bus signals
+    logic [2:0] i_cfg;
+    logic i_out_en;
 
-    logic [11:0] i_bus_a;
-    logic [9:0]  i_bus_b;
-    logic [11:0] o_bus_c;
-    logic [1:0]  o_bus_d;
+    logic [21:0] i_bus_in;
+    logic [13:0] o_bus_out;
 
     `include "tb/top/configs/top_0_rx.svh"
     `include "tb/top/configs/top_1_tx.svh"
@@ -23,15 +21,13 @@ module top_tb;
     `include "tb/top/configs/top_7_internal.svh"
 
     // Instantiate DUT
-    top uut (
+    zigbee_top uut (
         .i_clk(clk),
         .i_rst_n(rst_n),
-        .i_top_cfg(i_top_cfg),
-        .i_wrapper_cfg(i_wrapper_cfg),
-        .i_bus_a(i_bus_a),
-        .i_bus_b(i_bus_b),
-        .o_bus_c(o_bus_c),
-        .o_bus_d(o_bus_d)
+        .i_cfg(i_cfg),
+        .i_out_en(i_out_en),
+        .i_bus_in(i_bus_in),
+        .o_bus_out(o_bus_out)
     );
 
     // Clock generation
@@ -44,10 +40,9 @@ module top_tb;
     initial begin
         // default values
         rst_n = 1;
-        i_top_cfg = 3'b000;
-        i_wrapper_cfg = 3'b000;
-        i_bus_a = '0;
-        i_bus_b = '0;
+        i_cfg = 3'b000;
+        i_out_en = 1'b1;
+        i_bus_in = '0;
 
         $display("Starting top_tb at time %0t", $time);
         #10;
