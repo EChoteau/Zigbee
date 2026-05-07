@@ -76,7 +76,7 @@ module tb_interface_wrapper;
     end
     endtask
 
-    `include "/headers/interface_wrapper_baud.svh"
+    `include "headers/interface_wrapper_baud.svh"
 
     initial begin
         // init
