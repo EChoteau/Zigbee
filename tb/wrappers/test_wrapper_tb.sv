@@ -117,8 +117,14 @@ module test_wrapper_tb;
 
     // ==========================================================================
     // CLOCK GENERATION
+    // Use an explicit initial/forever generator so the clock exists at time 0
+    // (avoids certain simulator warnings when an `always` toggles an
+    // uninitialized signal compiled out-of-order).
     // ==========================================================================
-    always #50 i_clk = ~i_clk;
+    initial begin
+        i_clk = 1'b0;
+        forever #50 i_clk = ~i_clk;
+    end
 
     // ==========================================================================
     // MINIMAL HELPER TASKS
@@ -250,11 +256,11 @@ module test_wrapper_tb;
     // ==========================================================================
     initial begin
         // Initialize
-        i_clk = 1'b0;
+        // i_clk is initialized by the clock generator above
         i_rst_n = 1'b0;
         i_out_en = 1'b1;
         i_cfg_local = '0;
-        i_bus = '0;
+        i_bus_in = '0;
         d_cfg_local = '0;
         d_i = '0;
         d_q = '0;
