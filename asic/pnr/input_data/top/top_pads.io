@@ -65,26 +65,26 @@ Pad:    io_i_bus_in_2       N               # N3
 Pad:    io_i_bus_in_1       N               # N4
 Pad:    io_i_bus_in_0       N               # N5
 Pad:	PWR1				N VDD3ALLP      # N6
-Pad:    io_i_top_cfg_0      N               # N7
-Pad:    io_i_top_cfg_1      N               # N8
-Pad:    io_i_top_cfg_2      N               # N9
-Pad:    io_i_wrapper_cfg_0  N               # N10
-Pad:    io_i_wrapper_cfg_1  N               # N11
-Pad:    io_i_wrapper_cfg_2  N               # N12
+Pad:    io_i_cfg_top_0      N               # N7
+Pad:    io_i_cfg_top_1      N               # N8
+Pad:    io_i_cfg_top_2      N               # N9
+Pad:    io_i_cfg_0          N               # N10
+Pad:    io_i_cfg_1          N               # N11
+Pad:    io_i_cfg_2          N               # N12
 
-#=========== EST ===========
-Pad:    io_o_bus_out_11     E               # E1
-Pad:    io_o_bus_out_10     E               # E2
-Pad:    io_o_bus_out_9      E               # E3
-Pad:    io_o_bus_out_8      E               # E4
+#=========== EAST ===========
+Pad:    io_o_bus_out_13     E               # E1
+Pad:    io_o_bus_out_12     E               # E2
+Pad:    io_o_bus_out_11      E               # E3
+Pad:    io_o_bus_out_10      E               # E4
 Pad:	io_i_rst_n			E GND3ALLP      # E5
 Pad:	io_i_clk			E GND3ALLP      # E6
 Pad:	GND1				E GND3ALLP      # E7
-Pad:    io_o_bus_out_7      E               # E8
-Pad:    io_o_bus_out_6      E               # E9
-Pad:    io_o_bus_out_5      E               # E10
-Pad:    io_o_bus_out_4      E               # E11
-Pad:    io_o_bus_out_3      E               # E12
+Pad:    io_o_bus_out_9      E               # E8
+Pad:    io_o_bus_out_8      E               # E9
+Pad:    io_o_bus_out_7      E               # E10
+Pad:    io_o_bus_out_6      E               # E11
+Pad:    io_o_bus_out_5      E               # E12
 
 #=========== SOUTH ===========
 Pad:    io_i_bus_in_15      S               # S1
@@ -94,11 +94,11 @@ Pad:    io_i_bus_in_18      S               # S4
 Pad:    io_i_bus_in_19      S               # S5
 Pad:    io_i_bus_in_20      S               # S6
 Pad:    io_i_bus_in_21      S               # S7
-Pad:    io_i_bus_in_22      S               # S8
-Pad:    io_i_bus_in_23      S               # S9
-Pad:    io_o_bus_out_0      S               # S10
-Pad:    io_o_bus_out_1      S               # S11
-Pad:    io_o_bus_out_2      S               # S12
+Pad:    io_o_bus_out_0      S               # S8
+Pad:    io_o_bus_out_1      S               # S9
+Pad:    io_o_bus_out_2      S               # S10
+Pad:    io_o_bus_out_3      S               # S11
+Pad:    io_o_bus_out_4      S               # S12
 
 #=========== WEST ===========
 Pad:    io_i_bus_in_5       W               # W1
