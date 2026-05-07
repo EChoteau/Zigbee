@@ -70,7 +70,7 @@ module cordic_system_wrapper_tb();
         i_wrapper_cfg = 3'b000; // select test sequence in wrapper (will be overridden by run_cfg)
         i_bus_a = '0;
         i_bus_b = '0;
-        repeat (4) @(posedge i_clk);
+        repeat (4) @(negedge i_clk);
         i_rst_n = 1'b1;
     end
 
@@ -112,7 +112,7 @@ module cordic_system_wrapper_tb();
         i_cordic_i = $rtoi(SCALE);
         @(negedge i_clk);
         i_bus_a = {i_cordic_q, i_cordic_i};
-        repeat (5) @(posedge i_clk);
+        repeat (5) @(negedge i_clk);
         check_phase_connected_and_value('0, "cordic_only (0 rad)");
 
         // Phase = pi/2
@@ -120,7 +120,7 @@ module cordic_system_wrapper_tb();
         i_cordic_i = '0;
         @(negedge i_clk);
         i_bus_a = {i_cordic_q, i_cordic_i};
-        repeat (5) @(posedge i_clk);
+        repeat (5) @(negedge i_clk);
         check_phase_connected_and_value(PHASE_QUARTER, "cordic_only (pi/2)");
     endtask
 
@@ -130,7 +130,7 @@ module cordic_system_wrapper_tb();
 
         // Reset stimulus: check that the output is connected and stable at 0
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, '0 };
-        repeat (5) @(posedge i_clk);
+        repeat (5) @(negedge i_clk);
 
         assert (!$isunknown(o_bus_c[WIDTH_PHASE-1:0]))
             else $error("derivate_only_triangle_step: o_bus_c is not connected (contains X/Z)");
@@ -142,7 +142,7 @@ module cordic_system_wrapper_tb();
             phase_val = i;
             @(negedge i_clk);
             i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_deriv = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             if (i < 2) continue; // skip first 2 steps
@@ -161,7 +161,7 @@ module cordic_system_wrapper_tb();
             phase_val = 39 - i;
             @(negedge i_clk);
             i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_deriv = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             if((i - 20) < 2) continue; // skip first 2 steps of falling ramp
@@ -172,7 +172,7 @@ module cordic_system_wrapper_tb();
                 else $error("derivate_only_triangle_step (falling): expected -1, got %0d at step %0d", curr_deriv, i);
         end
 
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
     endtask
 
     task automatic filter_step();
@@ -185,7 +185,7 @@ module cordic_system_wrapper_tb();
         phase_step = '0;
         @(negedge i_clk);
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
-        repeat (4) @(posedge i_clk);
+        repeat (4) @(negedge i_clk);
 
         phase_step = {{(WIDTH_PHASE-WIDTH){1'b0}}, {1'b0, {(WIDTH-1){1'b1}}}};
         @(negedge i_clk);
@@ -196,7 +196,7 @@ module cordic_system_wrapper_tb();
 
         // Monitor for N+2 cycles to allow filter to stabilize
         repeat (10) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             assert (!$isunknown(curr_out))
@@ -211,7 +211,7 @@ module cordic_system_wrapper_tb();
         // After stabilization, output should hold steady for several cycles
         stable_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         repeat (3) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
             assert (curr_out === stable_out)
                 else $error("filter_step: output not stable, expected %0d got %0d", stable_out, curr_out);
@@ -277,7 +277,7 @@ module cordic_system_wrapper_tb();
         
         end
 
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
     endtask
 
     task automatic cordic_full();
@@ -296,7 +296,7 @@ module cordic_system_wrapper_tb();
         i_cordic_q = '0;
         @(negedge i_clk);
         i_bus_a = {i_cordic_q, i_cordic_i};
-        repeat (5) @(posedge i_clk);
+        repeat (5) @(negedge i_clk);
 
         assert (!$isunknown(o_bus_c))
             else $error("cordic_full: o_bus_c is not connected (contains X/Z)");
@@ -324,7 +324,7 @@ module cordic_system_wrapper_tb();
         seen_change = 1'b0;
 
         repeat (15) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = o_bus_c;
 
             assert (!$isunknown(curr_out))
@@ -339,7 +339,7 @@ module cordic_system_wrapper_tb();
         // After stabilization, output should hold steady
         stable_out = o_bus_c;
         repeat (3) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = o_bus_c;
             assert (curr_out === stable_out)
                 else $error("cordic_full: output not stable, expected %0d got %0d", stable_out, curr_out);
@@ -348,7 +348,7 @@ module cordic_system_wrapper_tb();
         assert (seen_change)
             else $error("cordic_full: filtered output did not react to phase step");
 
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
     endtask
 
     task automatic derivate_filter_triangle_step();
@@ -360,9 +360,9 @@ module cordic_system_wrapper_tb();
 
         // Phase = 0 for several cycles (derivative = 0)
         phase_val = '0;
-        @(posedge i_clk);
+        @(negedge i_clk);
         i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
-        repeat (5) @(posedge i_clk);
+        repeat (5) @(negedge i_clk);
 
         assert (!$isunknown(o_bus_c))
             else $error("derivate_filter_triangle_step: o_bus_c is not connected (contains X/Z)");
@@ -370,7 +370,7 @@ module cordic_system_wrapper_tb();
         // Rising ramp: phase increases linearly (creates constant derivative step)
         for (int i = 0; i < 20; i = i + 1) begin
             phase_val = i;
-            @(posedge i_clk);
+            @(negedge i_clk);
             i_bus_a = { {(BUS_A_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
         end
 
@@ -379,7 +379,7 @@ module cordic_system_wrapper_tb();
         seen_change = 1'b0;
 
         repeat (15) begin 
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
 
             assert (!$isunknown(curr_out))
@@ -394,7 +394,7 @@ module cordic_system_wrapper_tb();
         // After stabilization, output should hold steady
         stable_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
         repeat (3) begin
-            @(posedge i_clk);
+            @(negedge i_clk);
             curr_out = $signed(o_bus_c[WIDTH_PHASE-1:0]);
             assert (curr_out === stable_out)
                 else $error("derivate_filter_triangle_step: output not stable, expected %0d got %0d", stable_out, curr_out);
@@ -403,13 +403,13 @@ module cordic_system_wrapper_tb();
         assert (seen_change)
             else $error("derivate_filter_triangle_step: filtered output did not react to derivative step");
 
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
     endtask
 
 /*------------Run configuration and apply corresponding stimulus------------------------*/
     task automatic run_cfg(input logic [2:0] cfg);
         i_wrapper_cfg = cfg;
-        repeat (2) @(posedge i_clk);
+        repeat (2) @(negedge i_clk);
         case (cfg)
             MODE_0, MODE_5: begin i_wrapper_cfg = MODE_0; cordic_full(); end
             MODE_1:         begin cordic_only(); end
