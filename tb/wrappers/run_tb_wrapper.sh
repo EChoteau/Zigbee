@@ -12,4 +12,9 @@ cd demod/
 source run_demod_tb.sh
 cd ..
 
+echo "Running CDR TB..."
+cd cdr/
+source run_cdr_tb.sh
+cd ..
+
 echo "All done."

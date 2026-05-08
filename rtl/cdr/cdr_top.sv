@@ -1,5 +1,3 @@
-
-
 module cdr_top #(
     parameter int phase_resolution = 6,
     parameter int ctrl_width = 4
@@ -36,19 +34,18 @@ module cdr_top #(
     logic                          s_decision;
     logic                          s_decision_out;
     logic signed [ctrl_width-1:0]  s_control;
+    logic                          s_sample_clk_d; // Pour le détecteur de front
     
     // Phase detector debug mux
     logic s_sample_clk;
     logic s_decision_in;
-    
     // Loop filter debug mux
     logic s_ctrl_ack;
     logic s_up_in;
     logic s_down_in;
-    
     // NCO debug mux
     logic signed [ctrl_width-1:0] s_control_in;
-    
+
     // ==========================================================================
     // DEBUG MULTIPLEXERS
     // ==========================================================================
@@ -62,13 +59,19 @@ module cdr_top #(
     assign s_control_in  = (i_nco_debug) ? i_control_d : s_control;
     
     // ==========================================================================
-    // DECISION OUTPUT REGISTER
+    // DECISION OUTPUT REGISTER (CORRIGÉ AVEC DÉTECTEUR DE FRONT)
     // ==========================================================================
     always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (~i_rst_n)
+        if (~i_rst_n) begin
             s_decision_out <= 1'b0;
-        else if (s_sample_clk)
-            s_decision_out <= o_decision;
+            s_sample_clk_d <= 1'b0;
+        end else begin
+            s_sample_clk_d <= s_sample_clk;
+            // On capture la décision uniquement sur le front montant de l'horloge récupérée
+            if (s_sample_clk & ~s_sample_clk_d) begin
+                s_decision_out <= o_decision;
+            end
+        end
     end
     
     assign o_data = s_decision_out;
@@ -76,10 +79,7 @@ module cdr_top #(
     // ==========================================================================
     // MODULE INSTANTIATIONS
     // ==========================================================================
-    
-    decision_block #(
-        .resolution_in(phase_resolution)
-    ) u_decision (
+    decision_block #(.resolution_in(phase_resolution)) u_decision (
         .i_dphi_in(i_dphi),
         .o_decision_out(o_decision)
     );
@@ -94,9 +94,7 @@ module cdr_top #(
         .o_down(o_down)
     );
     
-    loop_filter #(
-        .WIDTH(ctrl_width)
-    ) u_loop_filter (
+    loop_filter #(.WIDTH(ctrl_width)) u_loop_filter (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_up(s_up_in),
@@ -105,9 +103,7 @@ module cdr_top #(
         .o_ctrl(s_control)
     );
     
-    nco #(
-        .CTRL_W(ctrl_width)
-    ) u_nco (
+    nco #(.CTRL_W(ctrl_width)) u_nco (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_ctrl(s_control_in),
