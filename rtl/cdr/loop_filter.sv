@@ -22,9 +22,9 @@ module loop_filter #(
             s_down_d <= i_down;
 
             if (i_up & ~s_up_d)
-                o_ctrl <= $signed(4'sd1);
+                o_ctrl <= 4'sd1;       // <--- CORRIGÉ ICI
             else if (i_down & ~s_down_d)
-                o_ctrl <= $signed(4'sd-1);
+                o_ctrl <= -4'sd1;      // <--- CORRIGÉ ICI (le moins est devant)
             else if (i_ctrl_ack)
                 o_ctrl <= '0;  // Reset after consumption
         end
