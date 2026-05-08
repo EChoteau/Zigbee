@@ -78,7 +78,6 @@ module interface_wrapper #(
     logic                       s_if_ser_tx_data_valid;
     logic                       s_if_ser_tx_fifo_empty;
     logic                       s_if_ser_baud_tick;
-    logic                       s_tx_valid;
 
     logic [DATA_WIDTH-1:0]      s_dbg_des_o_para_data;
     logic                       s_dbg_des_o_push;
