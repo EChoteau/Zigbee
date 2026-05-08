@@ -316,11 +316,13 @@ module interface_wrapper #(
                     s_if_ser_tx_fifo_empty  = i_bus_in[9];
 
                     // Deserializer override from bus
-                    s_if_des_override_en    = 1'b1;
+                    
+                    s_if_ser_baud_tick      = i_bus_in[21];
                     s_if_serial_rx          = i_bus_in[19];
                     s_if_cdr_sample_valid   = i_bus_in[20];
 
                     // Pack deserializer output to output bus
+                    s_if_des_override_en    = 1'b1;
                     o_bus_out[7:0]        = s_dbg_des_o_para_data[7:0];
                     o_bus_out[8]          = s_dbg_des_o_push;
                     o_bus_out[9]          = s_dbg_des_o_ovf_pulse;

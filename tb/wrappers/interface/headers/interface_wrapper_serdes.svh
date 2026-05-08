@@ -1,70 +1,104 @@
-// ============================================================================
-// interface_wrapper_serdes.svh
-// Test: CFG_SERDES (0x6) - Serializer/Deserializer chain testing
-// ============================================================================
-// Purpose: Verify direct control of serializer inputs + deserializer outputs
-// Tests the complete serializer -> CDR -> deserializer data path
-// Inputs: Bus A (serializer data) + Bus B (deserializer serial)
-// Outputs: Bus C (deserializer para data) + Bus D (ser/des status)
-// ============================================================================
-
 task automatic test_interface_wrapper_serdes();
-begin
-    $display("\n========== TEST: CFG_SERDES (0x6) ==========");
-    $display("Test: Serializer/Deserializer chain control");
-    
-    set_config(CFG_SERDES);
-    repeat(2) @(posedge i_clk);
-    
-    // Assert: Config is correctly set
-    assert (i_cfg_local == CFG_SERDES)
-        $display("  [SERDES] Config correctly set to CFG_SERDES");
-    else
-        $error("  [SERDES] FAIL: Config mismatch!");
-    
-    // Test pattern 1: Inject data to serializer
-    $display("  [SERDES] Injecting data to serializer...");
-    set_bus({1'b0, 1'b1, 9'h00, 1'b0, 1'b1, 8'h55});  // [20]cdr_sample_valid=0, [19]serial_rx=1, [9]ser_tx_fifo_empty=0, [8]ser_tx_data_valid=1, [7:0]ser_tx_data=0x55
-    repeat(10) @(posedge i_clk);
-    
-    // Assert: First pattern loaded
-    assert (i_bus_in[7:0] == 8'h55)
-        $display("  [SERDES] First pattern loaded to serializer: 0x%02h", i_bus_in[7:0]);
-    else
-        $error("  [SERDES] FAIL: First pattern mismatch!");
-    
-    // Test pattern 2: Different serializer data
-    $display("  [SERDES] Changing serializer data...");
-    set_bus({1'b0, 1'b1, 9'h00, 1'b0, 1'b1, 8'hAA});  // [20]cdr_sample_valid=0, [19]serial_rx=1, [9]ser_tx_fifo_empty=0, [8]ser_tx_data_valid=1, [7:0]ser_tx_data=0xAA
-    repeat(10) @(posedge i_clk);
-    
-    // Assert: Second pattern loaded
-    assert (i_bus_in[7:0] == 8'hAA)
-        $display("  [SERDES] Second pattern loaded: 0x%02h", i_bus_in[7:0]);
-    else
-        $error("  [SERDES] FAIL: Second pattern mismatch!");
-    
-    // Test pattern 3: Complementary pattern
-    $display("  [SERDES] Sending complementary pattern...");
-    set_bus({1'b0, 1'b1, 9'h00, 1'b0, 1'b1, 8'hF0});  // [20]cdr_sample_valid=0, [19]serial_rx=1, [9]ser_tx_fifo_empty=0, [8]ser_tx_data_valid=1, [7:0]ser_tx_data=0xF0
-    repeat(10) @(posedge i_clk);
-    
-    // Assert: Third pattern loaded (ser_tx_data at [7:0])
-    assert (i_bus_in[7:0] == 8'hF0)
-        $display("  [SERDES] Third pattern loaded: 0x%02h", i_bus_in[7:0]);
-    else
-        $error("  [SERDES] FAIL: Third pattern mismatch!");
-    
-    // Monitor deserializer output
-    $display("  [SERDES] Monitoring deserializer output...");
-    repeat(5) @(posedge i_clk);
-    
-    // Verify deserializer output on Bus
-    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
-        $display("  [SERDES] PASS - Bus (deserializer data) valid: 0x%04h", o_bus_out);
-    else
-        $error("  [SERDES] FAIL - Bus has undefined values!");
-    
-    $display("========== CFG_SERDES TEST COMPLETE ==========\n");
-end
+    logic [21:0] bus_val;
+    logic [7:0] tx_test_data = 8'hCA; // 11001010
+    logic [7:0] rx_test_data = 8'h53; // 01010011
+    logic [7:0] captured_tx;
+    int timeout;
+
+    begin
+        $display("\n========== START TEST: CFG_SERDES (0x6) ==========");
+        
+        set_config(CFG_SERDES);
+        repeat(2) @(posedge i_clk);
+
+        assert (i_cfg_local == CFG_SERDES)
+            $display("  [SERDES] Config ok");
+        else
+            $error("  [SERDES] Config error");
+
+        // ==========================================================
+        // 1. TEST DU SERIALIZER (TX)
+        // ==========================================================
+        $display("\n  [SERDES] --- Test du Serializer ---");
+        $display("  [SERDES] Presentation de la donnee 0x%0h...", tx_test_data);
+        
+        // On simule une FIFO contenant une donnee valide
+        bus_val = '0;
+        bus_val[7:0] = tx_test_data; // ser_tx_data
+        bus_val[8] = 1'b1;           // ser_tx_data_valid = true
+        bus_val[9] = 1'b0;           // ser_tx_fifo_empty = false
+        set_bus(bus_val);
+        repeat(2) @(posedge i_clk);
+        
+        // Le serializer est sense avoir charge la donnee (tx_busy passe a 1)
+        // On simule la FIFO qui se vide
+        bus_val[8] = 1'b0;           // valid = 0
+        bus_val[9] = 1'b1;           // empty = 1
+        set_bus(bus_val);
+        repeat(2) @(posedge i_clk);
+
+        $display("  [SERDES] Generation de 8 baud ticks et capture...");
+        for (int i = 0; i < 8; i++) begin
+            // Envoyer un tick manuel (bit 21)
+            bus_val[21] = 1'b1;
+            set_bus(bus_val);
+            
+            // Attendre la reaction du RTL (mise a jour de serial_tx)
+            repeat(2) @(posedge i_clk);
+            
+            // Capturer la sortie serie sur o_bus_out[10]
+            captured_tx[i] = o_bus_out[10];
+            
+            // Rabaisser le tick
+            bus_val[21] = 1'b0;
+            set_bus(bus_val);
+            repeat(1) @(posedge i_clk);
+        end
+
+        // Verification du mot serialise
+        assert (captured_tx === tx_test_data)
+            $display("  [SERDES] PASS : Serializer a emis = 0x%0h", captured_tx);
+        else
+            $error("  [SERDES] FAIL : Capture 0x%0h, attendu 0x%0h", captured_tx, tx_test_data);
+
+
+        // ==========================================================
+        // 2. TEST DU DESERIALIZER (RX)
+        // ==========================================================
+        $display("\n  [SERDES] --- Test du Deserializer ---");
+        $display("  [SERDES] Injection bit par bit de 0x%0h...", rx_test_data);
+        
+        bus_val = '0;
+        for (int i = 0; i < 8; i++) begin
+            // Placer le bit de donnee et lever le valid (sample_valid = bit 20)
+            bus_val[19] = rx_test_data[i]; 
+            bus_val[20] = 1'b1;            
+            set_bus(bus_val);
+            
+            // Rabaisser le valid (pour simuler une impulsion de 1 cycle)
+            bus_val[20] = 1'b0;            
+            set_bus(bus_val);
+        end
+
+        $display("  [SERDES] Attente du signal push (fin de deserialisation)...");
+        
+        // o_bus_out[8] = s_dbg_des_o_push
+        timeout = 0;
+        while (o_bus_out[8] == 1'b0 && timeout < 20) begin 
+            @(posedge i_clk);
+            timeout++;
+        end
+
+        if (timeout >= 20) begin
+            $error("  [SERDES] Timeout: Deserializer n'a jamais envoye push !");
+        end else begin
+            // La donnee parallele reconstruite est dispo sur o_bus_out[7:0]
+            assert (o_bus_out[7:0] === rx_test_data)
+                $display("  [SERDES] PASS : Deserializer a recu = 0x%0h", o_bus_out[7:0]);
+            else
+                $error("  [SERDES] FAIL : Recu 0x%0h, attendu 0x%0h", o_bus_out[7:0], rx_test_data);
+        end
+
+        $display("\n========== CFG_SERDES TEST COMPLETE ==========\n");
+    end
 endtask
