@@ -1,11 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// tb_interface_wrapper.sv
-// Per-block testbench for interface_wrapper
-////////////////////////////////////////////////////////////////////////////////
-
 `timescale 1ns/1ps
-
-import tb_pkg::*;
 
 module tb_interface_wrapper;
 
@@ -13,7 +6,18 @@ module tb_interface_wrapper;
     localparam int CFG_WIDTH      = 3;
     localparam int BUS_IN_WIDTH   = 22;
     localparam int BUS_OUT_WIDTH  = 14;
+    // INTERFACE WRAPPER PARAMETERS
+    localparam int APB_ADDR_WIDTH = 8;
+    localparam int APB_DATA_WIDTH = 8;
+    localparam int DATA_WIDTH     = 8;
+    localparam int FIFO_DEPTH     = 8;
+    localparam int DIV_WIDTH      = 8;
 
+    // APB REGISTER ADDRESSES
+    localparam logic [APB_ADDR_WIDTH-1:0] ADDR_DATA    = 8'h00;
+    localparam logic [APB_ADDR_WIDTH-1:0] ADDR_STATUS  = 8'h04;
+    localparam logic [APB_ADDR_WIDTH-1:0] ADDR_CONTROL = 8'h08;
+    localparam logic [APB_ADDR_WIDTH-1:0] ADDR_DIVIDER = 8'h0C;
     // signals
     logic i_clk;
     logic i_rst_n;

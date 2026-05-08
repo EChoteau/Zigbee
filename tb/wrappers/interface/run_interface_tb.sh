@@ -10,7 +10,6 @@ vmap lib_rtl lib_rtl_interface
 # compile RTL and TB
 vlog -sv ../../rtl/interface/*.sv -work lib_rtl_interface
 vlog -sv ../../rtl/top/wrappers/interface_wrapper.sv -work lib_rtl_interface
-vlog -sv ../common/tb_pkg.sv -work lib_rtl_interface
 vlog -sv ./tb_interface_wrapper.sv -work lib_rtl_interface
 
 # run
