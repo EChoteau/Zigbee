@@ -258,6 +258,9 @@ module interface_wrapper #(
                     o_bus_out[9]          = s_dbg_tx_fifo_push;
                     o_bus_out[10]         = s_dbg_des_o_push;
                     o_bus_out[11]         = s_dbg_rx_ovf_err;
+
+                    o_bus_out[12]         = s_dbg_tx_tick;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 // ====================================================================

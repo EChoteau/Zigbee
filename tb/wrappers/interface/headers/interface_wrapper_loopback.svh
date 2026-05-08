@@ -1,59 +1,124 @@
-// ============================================================================
-// interface_wrapper_loopback.svh
-// Test: CFG_LOOPBACK (0x3) - Serial loopback testing
-// ============================================================================
-// Purpose: Verify TX serial output looped back to RX deserializer
-// Validates serializer -> CDR -> deserializer chain
-// Inputs: Bus A (APB control) + Bus B (APB data + CDR signals)
-// Outputs: Bus C (debug status) + Bus D (loopback signals)
-// ============================================================================
-
 task automatic test_interface_wrapper_loopback();
-begin
-    $display("\n========== TEST: CFG_LOOPBACK (0x3) ==========");
-    $display("Test: Serial loopback (TX -> RX chain)");
-    
-    set_config(CFG_LOOPBACK);
-    repeat(2) @(posedge i_clk);
-    
-    // Assert: Config is correctly set
-    assert (i_cfg_local == CFG_LOOPBACK)
-        $display("  [LOOPBACK] Config correctly set to CFG_LOOPBACK");
-    else
-        $error("  [LOOPBACK] FAIL: Config mismatch!");
-    
-    // Test pattern 1: Load TX FIFO and enable loopback
-    $display("  [LOOPBACK] Enabling serial loopback chain...");
-    set_bus({1'b1, 8'h5A, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0x5A, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
-    repeat(5) @(posedge i_clk);
-    
-    // Assert: Loopback data loaded (pwdata at [18:11])
-    assert (i_bus_in[18:11] == 8'h5A)
-        $display("  [LOOPBACK] Loopback data loaded: 0x%02h", i_bus_in[18:11]);
-    else
-        $error("  [LOOPBACK] FAIL: Loopback data mismatch!");
-    
-    // Test pattern 2: Monitor loopback activity
-    $display("  [LOOPBACK] Monitoring loopback signals...");
-    repeat(5) @(posedge i_clk);
-    
-    // Test pattern 3: Second data pattern
-    $display("  [LOOPBACK] Sending second pattern through loopback...");
-    set_bus({1'b1, 8'hA5, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=1, [19]serial_rx=0, [18:11]pwdata=0xA5, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
-    repeat(5) @(posedge i_clk);
-    
-    // Assert: Second pattern loaded (pwdata at [18:11])
-    assert (i_bus_in[18:11] == 8'hA5)
-        $display("  [LOOPBACK] Second pattern loaded: 0x%02h", i_bus_in[18:11]);
-    else
-        $error("  [LOOPBACK] FAIL: Second pattern mismatch!");
-    
-    // Verify loopback signals on Bus
-    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
-        $display("  [LOOPBACK] PASS - Bus (loopback status) valid: 0x%04h", o_bus_out);
-    else
-        $error("  [LOOPBACK] FAIL - Bus has undefined values!");
-    
-    $display("========== CFG_LOOPBACK TEST COMPLETE ==========\n");
-end
+    logic [21:0] bus_val;
+    logic [7:0] test_data = 8'hC3; // 11000011 (bon pattern pour verifier l'ordre des bits)
+    logic [7:0] read_data;
+    int timeout;
+
+    begin
+        $display("\n========== START TEST: CFG_LOOPBACK (0x3) ==========");
+        
+        set_config(CFG_LOOPBACK);
+        repeat(2) @(posedge i_clk);
+
+        assert (i_cfg_local == CFG_LOOPBACK)
+            $display("  [LOOPBACK] Config ok");
+        else
+            $error("  [LOOPBACK] Config error");
+
+        // --- 1. CONFIGURATION BAUD RATE ---
+        $display("  [LOOPBACK] Config Baud Rate (div=0x02)...");
+        bus_val = '0;
+        bus_val[0] = 1'b1; // psel
+        bus_val[2] = 1'b1; // pwrite
+        bus_val[10:3] = 8'h0C; // paddr (ADDR_DIVIDER)
+        bus_val[18:11] = 8'h02; // pwdata
+        set_bus(bus_val); // SETUP
+        bus_val[1] = 1'b1; // penable
+        set_bus(bus_val); // ACCESS
+        set_bus('0);
+
+        // --- 2. ACTIVATION RX ET GLOBAL ---
+        $display("  [LOOPBACK] Activation RX_EN et GLOBAL_EN (sans tx_start)...");
+        bus_val = '0;
+        bus_val[0] = 1'b1;
+        bus_val[2] = 1'b1;
+        bus_val[10:3] = 8'h08; // paddr (ADDR_CONTROL)
+        bus_val[18:11] = 8'h11; // pwdata (rx_enable=1, global_en=1) -> 00010001
+        set_bus(bus_val);
+        bus_val[1] = 1'b1;
+        set_bus(bus_val);
+        set_bus('0);
+        repeat(2) @(posedge i_clk);
+
+        // --- 3. ECRITURE TX FIFO ---
+        $display("  [LOOPBACK] Ecriture donnee 0x%0h dans FIFO TX...", test_data);
+        bus_val = '0;
+        bus_val[0] = 1'b1;
+        bus_val[2] = 1'b1;
+        bus_val[10:3] = 8'h00; // paddr (ADDR_DATA)
+        bus_val[18:11] = test_data;
+        set_bus(bus_val);
+        bus_val[1] = 1'b1;
+        set_bus(bus_val);
+        set_bus('0);
+        repeat(2) @(posedge i_clk);
+
+        // --- 4. START TX ---
+        $display("  [LOOPBACK] Declenchement TX_START...");
+        bus_val = '0;
+        bus_val[0] = 1'b1;
+        bus_val[2] = 1'b1;
+        bus_val[10:3] = 8'h08; // paddr
+        bus_val[18:11] = 8'h19; // pwdata (rx_en=1, tx_start=1, global=1) -> 00011001
+        set_bus(bus_val);
+        bus_val[1] = 1'b1;
+        set_bus(bus_val);
+        set_bus('0);
+
+        // --- 5. SYNCHRO ET GENERATION DU CLOCK RECOVERY ---
+        $display("  [LOOPBACK] Generation du signal sample_valid pour le Deserializer...");
+        
+        timeout = 0;
+        while (o_bus_out[13] == 1'b0 && timeout < 50) begin
+            @(posedge i_clk);
+            timeout++;
+        end
+
+        if (timeout >= 50) begin
+            $error("  [LOOPBACK] Timeout: Le TX n'a pas demarre !");
+        end else begin
+            for (int i = 0; i < 8; i++) begin
+                // Attendre l'impulsion du baud_rate_gen interne
+                while (o_bus_out[12] == 1'b0) @(posedge i_clk); 
+                
+                // Le bit change juste apres le tick. 
+                // On declenche notre sample_valid pour echantillonner la valeur !
+                bus_val = '0;
+                bus_val[20] = 1'b1; // cdr_sample_valid
+                set_bus(bus_val); // Dure 1 cycle d'horloge
+                
+                bus_val[20] = 1'b0;
+                set_bus(bus_val); // Retombe a 0
+            end
+        end
+
+        // --- 6. ATTENTE DE FIN DE DESERIALISATION ---
+        // Le deserializer indique qu'il a fini avec un push (o_bus_out[10])
+        timeout = 0;
+        while (o_bus_out[10] == 1'b0 && timeout < 50) begin
+            @(posedge i_clk);
+            timeout++;
+        end
+
+        // --- 7. LECTURE RX FIFO VIA APB ---
+        $display("  [LOOPBACK] Lecture de la FIFO RX...");
+        bus_val = '0;
+        bus_val[0] = 1'b1; // psel
+        bus_val[2] = 1'b0; // pwrite (LECTURE)
+        bus_val[10:3] = 8'h00; // paddr
+        set_bus(bus_val); // SETUP
+        bus_val[1] = 1'b1; // penable
+        set_bus(bus_val); // ACCESS
+        
+        // La donnee lue est sur o_bus_out[7:0]
+        read_data = o_bus_out[7:0];
+        set_bus('0);
+
+        assert (read_data === test_data)
+            $display("  [LOOPBACK] PASS : Boucle complete reussie ! Donnee lue = 0x%0h", read_data);
+        else
+            $error("  [LOOPBACK] FAIL : Donnee lue 0x%0h, attendu 0x%0h", read_data, test_data);
+
+        $display("========== CFG_LOOPBACK TEST COMPLETE ==========\n");
+    end
 endtask
