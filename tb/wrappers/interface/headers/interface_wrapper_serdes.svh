@@ -63,8 +63,11 @@ task automatic test_interface_wrapper_serdes();
             set_bus(bus_val);
             
             // Au 8eme bit (i==7), le RTL a leve le flag push (o_bus_out[8])
-            // exactement a ce moment precis, on l'attrape au vol !
             if (i == 7) begin
+                // On se place au milieu du cycle (front descendant) 
+                // pour eviter la race condition du simulateur !
+                @(negedge i_clk);
+                
                 assert (o_bus_out[8] == 1'b1)
                     $display("  [SERDES] PASS : Signal push detecte au 8eme bit !");
                 else
