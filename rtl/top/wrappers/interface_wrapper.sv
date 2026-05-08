@@ -295,8 +295,7 @@ module interface_wrapper #(
                     s_if_fifo_rx_rd_en      = i_bus_in[1];
                     
                     // Serial RX from bus (fed to deserializer)
-                    s_if_serial_rx        = i_bus_in[19];
-                    s_if_cdr_sample_valid = i_bus_in[20];
+                    s_if_fifo_rx_data[7:0]  = i_bus_in[17:10];
 
                     // Pack RX FIFO data to output bus
                     o_bus_out[7:0]        = s_dbg_rx_fifo_q;
