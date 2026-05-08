@@ -1,4 +1,4 @@
-task automatic run_demod_wrapper_test_plan();
+task automatic run_cdr_wrapper_test_plan();
 begin
 
     test_cdr_wrapper_debug_decision();
