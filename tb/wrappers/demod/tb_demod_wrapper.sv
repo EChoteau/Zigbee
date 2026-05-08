@@ -15,8 +15,8 @@ module tb_demod_wrapper;
     logic [CFG_WIDTH-1:0]     d_cfg_local;
     logic [3:0]               tb_i;       // Renommé de d_i pour matcher les .svh
     logic [3:0]               tb_q;       // Renommé de d_q pour matcher les .svh
-    logic [BUS_IN_WIDTH-1:0]  d_bus_in;
-    logic [BUS_OUT_WIDTH-1:0] d_bus_out;
+    logic [BUS_IN_WIDTH-1:0]  i_bus_in;
+    logic [BUS_OUT_WIDTH-1:0] o_bus_out;
 
     // DUT
     demod_wrapper #(
@@ -30,8 +30,8 @@ module tb_demod_wrapper;
         .i_cfg(d_cfg_local),
         .i_i(tb_i),
         .i_q(tb_q),
-        .i_bus_in(d_bus_in),
-        .o_bus_out(d_bus_out)
+        .i_bus_in(i_bus_in),
+        .o_bus_out(o_bus_out)
     );
 
     // clock
