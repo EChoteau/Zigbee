@@ -50,7 +50,7 @@ module tb_demod_wrapper;
 
     task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
     begin
-        d_bus_in = bus_val;
+        i_bus_in = bus_val;
         @(posedge i_clk);
     end
     endtask
@@ -60,7 +60,7 @@ module tb_demod_wrapper;
         i_rst_n = 1'b0;
         tb_i = '0; 
         tb_q = '0; 
-        d_bus_in = '0;
+        i_bus_in = '0;
         repeat(cycles) @(posedge i_clk);
         i_rst_n = 1'b1;
         repeat(2) @(posedge i_clk);
@@ -80,7 +80,7 @@ module tb_demod_wrapper;
         d_cfg_local = '0;
         tb_i = '0; 
         tb_q = '0; 
-        d_bus_in = '0;
+        i_bus_in = '0;
 
         // reset initial
         repeat(5) @(posedge i_clk);
