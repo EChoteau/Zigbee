@@ -44,7 +44,7 @@ module interface_wrapper #(
     logic                       s_if_serial_rx;
     logic                       s_if_cdr_sample_valid;
     logic                       s_if_serial_tx;
-    logic                       s_if_tx_valid;
+    logic                       s_tx_valid;
     logic                       s_if_tx_sample_tick;
 
     // ==========================================================================
@@ -136,7 +136,7 @@ module interface_wrapper #(
     // ==========================================================================
     // OUTPUT BUS PACKING (14 bits)
     // ==========================================================================
-    // OUT[13]:   s_if_tx_valid (CFG: 0,1,4,7)
+    // OUT[13]:   s_tx_valid (CFG: 0,1,4,7)
     // OUT[12]:   s_if_serial_tx (CFG: 0,1,4)
     // OUT[12]:   s_dbg_tx_fifo_pop (CFG: 6)
     // OUT[12]:   s_dbg_tx_tick (CFG: 7)
@@ -217,7 +217,7 @@ module interface_wrapper #(
                     o_bus_out[10]         = s_dbg_tx_fifo_push;
                     o_bus_out[11]         = s_dbg_tx_fifo_pop;
                     o_bus_out[12]         = s_if_serial_tx;
-                    o_bus_out[13]         = s_if_tx_valid;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 // ====================================================================
@@ -238,7 +238,7 @@ module interface_wrapper #(
                     o_bus_out[10]         = s_dbg_tx_fifo_push;
                     o_bus_out[11]         = s_dbg_tx_fifo_pop;
                     o_bus_out[12]         = s_if_serial_tx;
-                    o_bus_out[13]         = s_if_tx_valid;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 // ====================================================================
@@ -302,7 +302,7 @@ module interface_wrapper #(
                     o_bus_out[10]         = s_dbg_tx_fifo_push;
                     o_bus_out[11]         = s_dbg_tx_fifo_pop;
                     o_bus_out[12]         = s_if_serial_tx;
-                    o_bus_out[13]         = s_if_tx_valid;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 // ====================================================================
@@ -346,9 +346,9 @@ module interface_wrapper #(
                     o_bus_out[8]          = s_dbg_des_o_push;
                     o_bus_out[9]          = s_dbg_des_o_ovf_pulse;
                     o_bus_out[10]         = s_if_serial_tx;
-                    o_bus_out[11]         = s_tx_valid;
+                    o_bus_out[11]         = s_if_tx_sample_tick;
                     o_bus_out[12]         = s_dbg_tx_fifo_pop;
-                    o_bus_out[13]         = s_if_tx_sample_tick;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 // ====================================================================
@@ -360,7 +360,7 @@ module interface_wrapper #(
                     s_if_baud_div_val     = i_bus_in[8:1];
 
                     o_bus_out[12]         = s_dbg_tx_tick;
-                    o_bus_out[13]         = s_if_tx_valid;
+                    o_bus_out[13]         = s_tx_valid;
                 end
 
                 default: begin
