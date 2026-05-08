@@ -3,11 +3,11 @@
 module tb_demod_wrapper;
 
     // --- NOUVELLES INCLUSIONS (On remplace les 8 anciens fichiers par nos 4 nouveaux) ---
-    `include "demod_wrapper_normal.svh"
-    `include "demod_wrapper_debug_demod.svh"
-    `include "demod_wrapper_debug_fir.svh"
-    `include "demod_wrapper_debug_chain.svh"
-    `include "demod_wrapper_test_plan.svh"
+    `include "headers/demod_wrapper_normal.svh"
+    `include "headers/demod_wrapper_debug_demod.svh"
+    `include "headers/demod_wrapper_debug_fir.svh"
+    `include "headers/demod_wrapper_debug_chain.svh"
+    `include "headers/demod_wrapper_test_plan.svh"
 
     // localparams
     localparam int CFG_WIDTH      = 3;
