@@ -1,58 +1,87 @@
-// ============================================================================
-// interface_wrapper_tx_only.svh
-// Test: CFG_TX_ONLY (0x1) - TX path with FIFO control
-// ============================================================================
-// Purpose: Verify APB writes to TX FIFO and serializer output
-// Inputs: Bus A (APB control) + Bus B (APB data)
-// Outputs: Bus C (FIFO status) + Bus D (serial output)
-// ============================================================================
-
 task automatic test_interface_wrapper_tx_only();
-begin
-    $display("\n========== TEST: CFG_TX_ONLY (0x1) ==========");
-    $display("Test: TX path with FIFO control");
-    
-    set_config(CFG_TX_ONLY);
-    repeat(2) @(posedge i_clk);
-    
-    // Assert: Config is correctly set
-    assert (i_cfg_local == CFG_TX_ONLY)
-        $display("  [TX_ONLY] Config correctly set to CFG_TX_ONLY");
-    else
-        $error("  [TX_ONLY] FAIL: Config mismatch!");
-    
-    // Test pattern 1: Write data to TX FIFO
-    $display("  [TX_ONLY] Sending data to TX FIFO...");
-    set_bus({1'b0, 8'h55, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0x55, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
-    repeat(3) @(posedge i_clk);
-    
-    // Assert: Write enable is active
-    assert (i_bus_in[2] == 1'b1)
-        $display("  [TX_ONLY] Write enable (pwrite) = 1");
-    else
-        $error("  [TX_ONLY] FAIL: pwrite not set!");
-    
-    // Test pattern 2: Write another byte
-    $display("  [TX_ONLY] Sending another byte...");
-    set_bus({1'b0, 8'hAA, 8'h00, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1});  // [20]cdr_sample_valid=0, [19]serial_rx=0, [18:11]pwdata=0xAA, [10:3]paddr=0x00, [2]pwrite=1, [1]penable=1, [0]psel=1
-    repeat(3) @(posedge i_clk);
-    
-    // Assert: Second byte is loaded (pwdata at [18:11])
-    assert (i_bus_in[18:11] == 8'hAA)
-        $display("  [TX_ONLY] Second byte loaded: 0x%02h", i_bus_in[18:11]);
-    else
-        $error("  [TX_ONLY] FAIL: Second byte mismatch!");
-    
-    // Verify TX FIFO status on Bus
-    $display("  [TX_ONLY] Monitoring FIFO status...");
-    repeat(5) @(posedge i_clk);
-    
-    // Assert: Bus outputs are valid (not x or z)
-    assert (o_bus_out !== 14'bx && o_bus_out !== 14'bz)
-        $display("  [TX_ONLY] PASS - Bus (FIFO status) valid: 0x%04h", o_bus_out);
-    else
-        $error("  [TX_ONLY] FAIL - Bus has undefined values!");
-    
-    $display("========== CFG_TX_ONLY TEST COMPLETE ==========\n");
-end
+    logic [7:0] test_data = 8'hA5; 
+    logic [7:0] captured_data;
+    int timeout;
+
+    begin
+        $display("\n========== START TEST: CFG_TX_ONLY (0x1) ==========");
+        
+        // set config
+        set_config(CFG_TX_ONLY);
+        repeat(2) @(posedge i_clk);
+
+        assert (i_cfg_local == CFG_TX_ONLY)
+            $display("  [TX_ONLY] Config ok");
+        else
+            $error("  [TX_ONLY] Config error");
+
+        // --- 1. CONFIGURATION DU BAUD RATE ---
+        $display("  [TX_ONLY] Configuration APB: Diviseur Baud Rate = 0x02...");
+        // ADDR_DIVIDER = 0x0C, valeur = 0x02
+        // SETUP: psel=1, penable=0, pwrite=1
+        set_bus({1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b0, 1'b1});
+        // ACCESS: psel=1, penable=1, pwrite=1
+        set_bus({1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b1, 1'b1});
+        set_bus('0);
+        repeat(2) @(posedge i_clk);
+
+        // --- 2. ACTIVATION DU TX ---
+        $display("  [TX_ONLY] Configuration APB: Activation TX_START et GLOBAL_EN...");
+        // ADDR_CONTROL = 0x08, valeur = 0x09 (bit 3: tx_start, bit 0: global_en)
+        // SETUP
+        set_bus({1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b0, 1'b1});
+        // ACCESS
+        set_bus({1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b1, 1'b1});
+        set_bus('0);
+        repeat(2) @(posedge i_clk);
+
+        // --- 3. ECRITURE DANS LA FIFO TX ---
+        $display("  [TX_ONLY] Ecriture APB: Envoi de la donnee 0x%0h dans la FIFO TX...", test_data);
+        // ADDR_DATA = 0x00, valeur = test_data
+        // SETUP
+        set_bus({1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b0, 1'b1});
+        // ACCESS
+        set_bus({1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b1, 1'b1});
+        set_bus('0);
+
+        // --- 4. OBSERVATION DE LA SORTIE SERIE ---
+        $display("  [TX_ONLY] Attente de l'emission serie...");
+        
+        // Attente que tx_valid (o_bus_out[13]) passe a 1 (indique que le TX a demarre)
+        timeout = 0;
+        while (o_bus_out[13] == 1'b0 && timeout < 50) begin
+            @(posedge i_clk);
+            timeout++;
+        end
+
+        if (timeout >= 50) begin
+            $error("  [TX_ONLY] Timeout: TX n'a jamais demarre !");
+        end else begin
+            // Le TX a demarre. On attend l'arrivee du 1er bit.
+            // Avec un diviseur de 0x02, la periode est de 3 cycles. 
+            // En RTL, la premiere mise a jour de o_serial_data a lieu 4 cycles apres le passage de tx_busy a 1.
+            repeat(4) @(posedge i_clk);
+            
+            for (int i = 0; i < 8; i++) begin
+                // Lire la sortie serie sur o_bus_out[12]
+                captured_data[i] = o_bus_out[12];
+                
+                // Attendre la periode d'un bit (3 cycles) avant d'echantillonner le bit suivant
+                if (i < 7) repeat(3) @(posedge i_clk);
+            end
+
+            // Verification de la donnee reconstruite
+            assert (captured_data === test_data)
+                $display("  [TX_ONLY] PASS : Serie capturee = 0x%0h", captured_data);
+            else
+                $error("  [TX_ONLY] FAIL : Capture 0x%0h, attendu 0x%0h", captured_data, test_data);
+        end
+
+        // --- 5. FIN DU TEST ---
+        // On attend que tx_busy redescende a 0 pour confirmer la fin de trame
+        while (o_bus_out[13] == 1'b1) @(posedge i_clk);
+        $display("  [TX_ONLY] Transmission terminee (tx_busy = 0)");
+
+        $display("========== CFG_TX_ONLY TEST COMPLETE ==========\n");
+    end
 endtask
