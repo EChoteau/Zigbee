@@ -2,13 +2,6 @@
 
 module tb_demod_wrapper;
 
-    // --- NOUVELLES INCLUSIONS (On remplace les 8 anciens fichiers par nos 4 nouveaux) ---
-    `include "headers/demod_wrapper_normal.svh"
-    `include "headers/demod_wrapper_debug_demod.svh"
-    `include "headers/demod_wrapper_debug_fir.svh"
-    `include "headers/demod_wrapper_debug_chain.svh"
-    `include "headers/demod_wrapper_test_plan.svh"
-
     // localparams
     localparam int CFG_WIDTH      = 3;
     localparam int BUS_IN_WIDTH   = 22;
@@ -73,6 +66,12 @@ module tb_demod_wrapper;
         repeat(2) @(posedge i_clk);
     end
     endtask
+
+    `include "headers/demod_wrapper_normal.svh"
+    `include "headers/demod_wrapper_debug_demod.svh"
+    `include "headers/demod_wrapper_debug_fir.svh"
+    `include "headers/demod_wrapper_debug_chain.svh"
+    `include "headers/demod_wrapper_test_plan.svh"
 
     initial begin
         // init
