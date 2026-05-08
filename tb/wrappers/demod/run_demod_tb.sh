@@ -11,8 +11,7 @@ vlog -sv ../../rtl/demod/FIR/*.sv -work lib_rtl_demod
 vlog -sv ../../rtl/demod/WAVE/*.sv -work lib_rtl_demod
 vlog -sv ../../rtl/demod/*.sv -work lib_rtl_demod
 vlog -sv ../../rtl/top/wrappers/demod_wrapper.sv -work lib_rtl_demod
-vlog -sv ../common/tb_pkg.sv -work lib_rtl_demod
-vlog -sv ./tb_demod_wrapper.sv -work lib_rtl_demod
+vlog -sv tb_demod_wrapper.sv -work lib_rtl_demod
 
 # run
 n=lib_rtl_demod.tb_demod_wrapper
