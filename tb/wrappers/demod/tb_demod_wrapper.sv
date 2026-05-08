@@ -1,24 +1,13 @@
-////////////////////////////////////////////////////////////////////////////////
-// tb_demod_wrapper.sv
-// Per-block testbench for demod_wrapper
-////////////////////////////////////////////////////////////////////////////////
-
 `timescale 1ns/1ps
-
-import tb_pkg::*;
 
 module tb_demod_wrapper;
 
-`include "demod_wrapper_normal.svh"
-`include "demod_wrapper_debug_demod_i.svh"
-`include "demod_wrapper_debug_demod_q.svh"
-`include "demod_wrapper_reserved.svh"
-`include "demod_wrapper_debug_fir_i.svh"
-`include "demod_wrapper_debug_fir_q.svh"
-`include "demod_wrapper_debug_firc_i.svh"
-`include "demod_wrapper_debug_firc_q.svh"
-
-`include "demod_wrapper_test_plan.svh"
+    // --- NOUVELLES INCLUSIONS (On remplace les 8 anciens fichiers par nos 4 nouveaux) ---
+    `include "demod_wrapper_normal.svh"
+    `include "demod_wrapper_debug_demod.svh"
+    `include "demod_wrapper_debug_fir.svh"
+    `include "demod_wrapper_debug_chain.svh"
+    `include "demod_wrapper_test_plan.svh"
 
     // localparams
     localparam int CFG_WIDTH      = 3;
@@ -30,12 +19,13 @@ module tb_demod_wrapper;
     logic i_rst_n;
     logic i_out_en;
 
-    logic [CFG_WIDTH-1:0]    d_cfg_local;
-    logic [3:0]              d_i;
-    logic [3:0]              d_q;
-    logic [BUS_IN_WIDTH-1:0] d_bus_in;
+    logic [CFG_WIDTH-1:0]     d_cfg_local;
+    logic [3:0]               tb_i;       // Renommé de d_i pour matcher les .svh
+    logic [3:0]               tb_q;       // Renommé de d_q pour matcher les .svh
+    logic [BUS_IN_WIDTH-1:0]  d_bus_in;
     logic [BUS_OUT_WIDTH-1:0] d_bus_out;
 
+    // DUT
     demod_wrapper #(
         .CFG_WIDTH(CFG_WIDTH),
         .BUS_IN_WIDTH(BUS_IN_WIDTH),
@@ -45,8 +35,8 @@ module tb_demod_wrapper;
         .i_rst_n(i_rst_n),
         .i_out_en(i_out_en),
         .i_cfg(d_cfg_local),
-        .i_i(d_i),
-        .i_q(d_q),
+        .i_i(tb_i),
+        .i_q(tb_q),
         .i_bus_in(d_bus_in),
         .o_bus_out(d_bus_out)
     );
@@ -58,14 +48,14 @@ module tb_demod_wrapper;
     end
 
     // minimal helpers
-    task automatic set_demod_config(logic [CFG_WIDTH-1:0] cfg);
+    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
     begin
         d_cfg_local = cfg;
         @(posedge i_clk);
     end
     endtask
 
-    task automatic set_demod_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
+    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
     begin
         d_bus_in = bus_val;
         @(posedge i_clk);
@@ -75,7 +65,9 @@ module tb_demod_wrapper;
     task automatic apply_demod_reset(int cycles);
     begin
         i_rst_n = 1'b0;
-        d_i = '0; d_q = '0; d_bus_in = '0;
+        tb_i = '0; 
+        tb_q = '0; 
+        d_bus_in = '0;
         repeat(cycles) @(posedge i_clk);
         i_rst_n = 1'b1;
         repeat(2) @(posedge i_clk);
@@ -87,9 +79,11 @@ module tb_demod_wrapper;
         i_rst_n = 1'b0;
         i_out_en = 1'b1;
         d_cfg_local = '0;
-        d_i = '0; d_q = '0; d_bus_in = '0;
+        tb_i = '0; 
+        tb_q = '0; 
+        d_bus_in = '0;
 
-        // reset
+        // reset initial
         repeat(5) @(posedge i_clk);
         apply_demod_reset(10);
 
