@@ -19,13 +19,10 @@ task automatic test_interface_wrapper_rx_only();
         // Adresse 0x08 (ADDR_CONTROL), Data 0x11 (bit 4: rx_enable, bit 0: global_en)
         // APB SETUP: psel=1, penable=0, pwrite=1
         set_bus({1'b0, 1'b0, 1'b0, 8'h11, 8'h08, 1'b1, 1'b0, 1'b1});
-        repeat(1) @(posedge i_clk);
         // APB ACCESS: psel=1, penable=1, pwrite=1
         set_bus({1'b0, 1'b0, 1'b0, 8'h11, 8'h08, 1'b1, 1'b1, 1'b1});
-        repeat(1) @(posedge i_clk);
         // Deselect
         set_bus('0);
-        repeat(2) @(posedge i_clk);
 
         $display("  [RX_ONLY] Injecting serial data 0x%0h...", test_data);
         
@@ -33,11 +30,9 @@ task automatic test_interface_wrapper_rx_only();
         for (int i = 0; i < 8; i++) begin
             // bit 20: cdr_sample_valid, bit 19: serial_rx
             set_bus({1'b0, 1'b1, test_data[i], 8'h00, 8'h00, 3'b000}); 
-            repeat(1) @(posedge i_clk);
             
             // clear valid
             set_bus({1'b0, 1'b0, 1'b0, 8'h00, 8'h00, 3'b000});
-            repeat(2) @(posedge i_clk);
         end
 
         timeout = 0;
@@ -55,10 +50,8 @@ task automatic test_interface_wrapper_rx_only();
 
         $display("  [RX_ONLY] APB read...");
         set_bus({1'b0, 1'b0, 1'b0, 8'h00, 8'h00, 1'b0, 1'b0, 1'b1});
-        repeat(1) @(posedge i_clk);
         // read: pwrite=0, penable=1, psel=1
         set_bus({1'b0, 1'b0, 1'b0, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});
-        repeat(2) @(posedge i_clk);
         
         read_data = o_bus_out[7:0];
 
