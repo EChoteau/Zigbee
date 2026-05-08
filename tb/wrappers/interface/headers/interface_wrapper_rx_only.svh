@@ -1,6 +1,7 @@
 task automatic test_interface_wrapper_rx_only();
     logic [7:0] test_data = 8'hA5; 
     logic [7:0] read_data;
+    int timeout;
 
     begin
         $display("\n========== START TEST: CFG_RX_ONLY (0x2) ==========");
@@ -13,6 +14,18 @@ task automatic test_interface_wrapper_rx_only();
             $display("  [RX_ONLY] Config ok");
         else
             $error("  [RX_ONLY] Config error");
+
+        $display("  [RX_ONLY] Configuration APB: Activation RX_EN et GLOBAL_EN...");
+        // Adresse 0x08 (ADDR_CONTROL), Data 0x11 (bit 4: rx_enable, bit 0: global_en)
+        // APB SETUP: psel=1, penable=0, pwrite=1
+        set_bus({1'b0, 1'b0, 1'b0, 8'h11, 8'h08, 1'b1, 1'b0, 1'b1});
+        repeat(1) @(posedge i_clk);
+        // APB ACCESS: psel=1, penable=1, pwrite=1
+        set_bus({1'b0, 1'b0, 1'b0, 8'h11, 8'h08, 1'b1, 1'b1, 1'b1});
+        repeat(1) @(posedge i_clk);
+        // Deselect
+        set_bus('0);
+        repeat(2) @(posedge i_clk);
 
         $display("  [RX_ONLY] Injecting serial data 0x%0h...", test_data);
         
@@ -27,8 +40,12 @@ task automatic test_interface_wrapper_rx_only();
             repeat(2) @(posedge i_clk);
         end
 
-        // attente traitement des donnees
-        repeat(5) @(posedge i_clk);
+        timeout = 0;
+        // o_bus_out[9] = s_dbg_rx_fifo_empty (passe a 0 quand la donnee arrive)
+        while (o_bus_out[9] == 1'b1 && timeout < 50) begin
+            @(posedge i_clk);
+            timeout++;
+        end
 
         // verif fifo pas vide (o_bus_out[9] = rx_fifo_empty)
         assert (o_bus_out[9] == 1'b0)
@@ -37,7 +54,8 @@ task automatic test_interface_wrapper_rx_only();
             $error("  [RX_ONLY] FIFO empty error");
 
         $display("  [RX_ONLY] APB read...");
-        
+        set_bus({1'b0, 1'b0, 1'b0, 8'h00, 8'h00, 1'b0, 1'b0, 1'b1});
+        repeat(1) @(posedge i_clk);
         // read: pwrite=0, penable=1, psel=1
         set_bus({1'b0, 1'b0, 1'b0, 8'h00, 8'h00, 1'b0, 1'b1, 1'b1});
         repeat(2) @(posedge i_clk);
