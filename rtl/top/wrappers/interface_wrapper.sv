@@ -318,8 +318,8 @@ module interface_wrapper #(
                     // Deserializer override from bus
                     
                     s_if_ser_baud_tick      = i_bus_in[21];
-                    s_if_serial_rx          = i_bus_in[19];
-                    s_if_cdr_sample_valid   = i_bus_in[20];
+                    s_if_des_serial_data    = i_bus_in[19];
+                    s_if_des_sample_valid   = i_bus_in[20];
 
                     // Pack deserializer output to output bus
                     s_if_des_override_en    = 1'b1;
