@@ -20,9 +20,9 @@ module interface_wrapper #(
     // Configuration modes: select which internal signals are routed to i_test_in
     // and which debug outputs are routed to o_test_out
     // ==========================================================================
-    localparam logic [2:0] CFG_CLASSIC   = 3'b000;  // APB + serial loopback
+    localparam logic [2:0] CFG_RX_ONLY   = 3'b000;  // RX path with FIFO control
     localparam logic [2:0] CFG_TX_ONLY   = 3'b001;  // TX path with FIFO control
-    localparam logic [2:0] CFG_RX_ONLY   = 3'b010;  // RX path with FIFO control
+    localparam logic [2:0] CFG_reserved  = 3'b010;  // RESERVED NOT USED YET
     localparam logic [2:0] CFG_LOOPBACK  = 3'b011;  // Serializer output looped to deserializer input
     localparam logic [2:0] CFG_FIFO_TX   = 3'b100;  // Direct TX FIFO control
     localparam logic [2:0] CFG_FIFO_RX   = 3'b101;  // Direct RX FIFO control
@@ -196,28 +196,6 @@ module interface_wrapper #(
         // Only drive outputs if enabled
         if (i_out_en) begin
             unique case (i_cfg)
-                // ====================================================================
-                // CFG_CLASSIC (0x0): APB + serial loopback
-                // ====================================================================
-                CFG_CLASSIC: begin
-                    // Decode inputs from bus
-                    s_if_psel             = i_bus_in[0];
-                    s_if_penable          = i_bus_in[1];
-                    s_if_pwrite           = i_bus_in[2];
-                    s_if_paddr[7:0]       = i_bus_in[10:3];
-                    s_if_pwdata[7:0]      = i_bus_in[18:11];
-                    s_if_serial_rx        = i_bus_in[19];
-                    s_if_cdr_sample_valid = i_bus_in[20];
-
-                    // Pack outputs to bus
-                    o_bus_out[7:0]        = s_if_prdata[7:0];
-                    o_bus_out[8]          = s_dbg_tx_fifo_full;
-                    o_bus_out[9]          = s_dbg_tx_fifo_empty;
-                    o_bus_out[10]         = s_dbg_tx_fifo_push;
-                    o_bus_out[11]         = s_dbg_tx_fifo_pop;
-                    o_bus_out[12]         = s_if_serial_tx;
-                    o_bus_out[13]         = s_tx_valid;
-                end
 
                 // ====================================================================
                 // CFG_TX_ONLY (0x1): TX path testing
@@ -241,7 +219,7 @@ module interface_wrapper #(
                 end
 
                 // ====================================================================
-                // CFG_RX_ONLY (0x2): RX path testing
+                // CFG_RX_ONLY (0x0): RX path testing
                 // ====================================================================
                 CFG_RX_ONLY: begin
                     // Decode APB and serial from bus

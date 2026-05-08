@@ -77,7 +77,6 @@ module tb_interface_wrapper;
     endtask
 
     `include "headers/interface_wrapper_baud.svh"
-    `include "headers/interface_wrapper_classic.svh"
     `include "headers/interface_wrapper_fifo_rx.svh"
     `include "headers/interface_wrapper_fifo_tx.svh"
     `include "headers/interface_wrapper_loopback.svh"
