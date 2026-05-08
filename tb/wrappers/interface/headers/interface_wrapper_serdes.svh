@@ -39,20 +39,17 @@ task automatic test_interface_wrapper_serdes();
 
         $display("  [SERDES] Generation de 8 baud ticks et capture...");
         for (int i = 0; i < 8; i++) begin
-            // Envoyer un tick manuel (bit 21)
+            // 1. Lever le tick (set_bus consomme exactement 1 cycle d'horloge)
             bus_val[21] = 1'b1;
             set_bus(bus_val);
             
-            // Attendre la reaction du RTL (mise a jour de serial_tx)
-            repeat(2) @(posedge i_clk);
-            
-            // Capturer la sortie serie sur o_bus_out[10]
-            captured_tx[i] = o_bus_out[10];
-            
-            // Rabaisser le tick
+            // 2. Rabaisser IMMEDIATEMENT le tick 
+            // (pendant ce 2eme cycle, le RTL met a jour serial_data)
             bus_val[21] = 1'b0;
             set_bus(bus_val);
-            repeat(1) @(posedge i_clk);
+            
+            // 3. Capturer la donnee
+            captured_tx[i] = o_bus_out[10];
         end
 
         // Verification du mot serialise

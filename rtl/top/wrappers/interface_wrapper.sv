@@ -323,6 +323,7 @@ module interface_wrapper #(
 
                     // Pack deserializer output to output bus
                     s_if_des_override_en    = 1'b1;
+                    s_if_des_enable         = 1'b1;
                     o_bus_out[7:0]        = s_dbg_des_o_para_data[7:0];
                     o_bus_out[8]          = s_dbg_des_o_push;
                     o_bus_out[9]          = s_dbg_des_o_ovf_pulse;
