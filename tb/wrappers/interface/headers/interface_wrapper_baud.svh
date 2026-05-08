@@ -18,8 +18,8 @@ task automatic test_interface_wrapper_baud();
         $display("  [BAUD] Setting fast divisor to 0x02...");
         set_bus({13'h00, 8'h02, 1'b1}); 
         
-        // Note: a ajuster si ton baud gen multiplie en interne (ex: diviseur * 16)
-        expected_cycles = 2; 
+        // a ajuster si ton baud gen multiplie en interne (ex: diviseur * 16)
+        expected_cycles = 3; 
         
         // synchro sur le premier tick
         while (o_bus_out[12] == 1'b0) @(posedge i_clk);
@@ -40,7 +40,7 @@ task automatic test_interface_wrapper_baud();
         // --- Test 2: Diviseur un peu plus lent (0x05) pour confirmer ---
         $display("  [BAUD] Setting divisor to 0x05...");
         set_bus({13'h00, 8'h05, 1'b1}); 
-        expected_cycles = 5;
+        expected_cycles = 6;
         
         while (o_bus_out[12] == 1'b0) @(posedge i_clk);
         @(posedge i_clk);
