@@ -1,3 +1,9 @@
+`include "headers/msk_wrapper_normal.svh"
+`include "headers/msk_wrapper_debug_enc.svh"
+`include "headers/msk_wrapper_debug_demux.svh"
+`include "headers/msk_wrapper_debug_shaping.svh"
+`include "headers/msk_wrapper_debug_all.svh"
+
 task automatic run_msk_wrapper_test_plan();
 begin
     test_msk_wrapper_debug_shaping();
