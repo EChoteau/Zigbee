@@ -1,4 +1,4 @@
-module cordic_top_hybride #(
+module cordic_hybride #(
     parameter int WIDTH_IN = 6,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,

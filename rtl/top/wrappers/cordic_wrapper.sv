@@ -146,14 +146,14 @@ module cordic_wrapper #(
     end
 
     // ====================================================================
-    // Instantiate cordic_system (ORIGINAL INSTANTIATION)
+    // Instantiate cordic_top (ORIGINAL INSTANTIATION)
     // ====================================================================
-    cordic_system #(
+    cordic_top #(
         .WIDTH_IN(WIDTH_IN),
         .FILTER_N(FILTER_N),
         .WIDTH_PHASE(WIDTH_PHASE),
         .INSIDE_WRAPPER(1)
-    ) cordic_system_inst (
+    ) cordic_top_inst (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_i(w_cordic_i),
