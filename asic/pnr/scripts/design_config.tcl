@@ -17,10 +17,10 @@
 # Creation et placement des PADs
 #////////////////////////////////////////////////////
 if {![info exists module_name] || $module_name eq ""} {
-	set module_name top
+	set module_name zigbee_top
 }
-if {$module_name eq "top"} {
-	loadIoFile ../input_data/${module_name}/${module_name}_pads.io
+if {$module_name eq "zigbee_top"} {
+	loadIoFile ../input_data/top/${module_name}_pads.io
 	floorPlan -site standard -d {2000.8 2000.8 80 80 80 80} -noSnapToGrid -coreMarginsBy io
 } else {
 	floorPlan -site standard -r 1 0.7 80 80 80 80

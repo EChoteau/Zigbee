@@ -3,6 +3,9 @@
 #////////////////////////////////////////////////////
 
 set output_root "../output_data/${module_name}"
+if {$module_name eq "zigbee_top"} {
+    set output_root "../output_data/top"
+}
 set reports_dir "$output_root/reports"
 set fab_dir "$output_root/fab"
 set gds_map_file "../input_data/gds2.map"

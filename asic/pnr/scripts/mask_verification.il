@@ -5,8 +5,8 @@
 ; Configuration
 let((outputRoot moduleName reportDir)
   
-  ; Set module name from variable or default to "top"
-  moduleName = getShellEnvVar("MODULE_NAME") || "top"
+  ; Set module name from variable or default to "zigbee_top"
+  moduleName = getShellEnvVar("MODULE_NAME") || "zigbee_top"
   outputRoot = sprintf("../output_data/%s" moduleName)
   reportDir = sprintf("%s/verification" outputRoot)
   libName = sprintf("%s_lib" moduleName)
