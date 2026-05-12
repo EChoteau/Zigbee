@@ -1,4 +1,4 @@
-`include "../input_data/top_synth.v"
+`include "../input_data/zigbee_top_synth.v"
 
 /////////////////////////////
 //  Top-level module for IO PAD
