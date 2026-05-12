@@ -14,6 +14,22 @@ module top_tb;
     // For demod wrapper tests
     logic [3:0] tb_i;
     logic [3:0] tb_q;
+    
+
+    // TODO This has to go somewhere else
+    // Alias for compatibility with wrapper test headers
+    logic [2:0] i_cfg_local;
+    assign i_cfg_local = i_wrapper_cfg;
+    
+    // Interface wrapper configuration constants
+    localparam logic [2:0] CFG_RX_ONLY   = 3'b000;  // APB + serial loopback
+    localparam logic [2:0] CFG_TX_ONLY   = 3'b001;  // TX path with FIFO control
+    localparam logic [2:0] CFG_RESERVED  = 3'b010;  // RESERVED NOT USED YET
+    localparam logic [2:0] CFG_LOOPBACK  = 3'b011;  // Serializer output looped to deserializer input
+    localparam logic [2:0] CFG_FIFO_TX   = 3'b100;  // Direct TX FIFO control
+    localparam logic [2:0] CFG_FIFO_RX   = 3'b101;  // Direct RX FIFO control
+    localparam logic [2:0] CFG_SERDES    = 3'b110;  // Serializer/deserializer chain testing
+    localparam logic [2:0] CFG_BAUD      = 3'b111;  // Baud rate generator control
 
     // =========================================================================
     // Helper tasks for wrapper tests
@@ -33,15 +49,7 @@ module top_tb;
     end
     endtask
 
-    task automatic apply_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        i_bus_in = '0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
+    `include "tb/top/generic/apply_reset.svh"
     
     task automatic apply_demod_reset(int cycles);
     begin
@@ -59,39 +67,6 @@ module top_tb;
     // Include wrapper test headers
     // =========================================================================
     
-    // CDR Wrapper tests
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_normal.svh"
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_decision.svh"
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_pd.svh"
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_lf.svh"
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_nco.svh"
-    `include "tb/wrappers/cdr/headers/cdr_wrapper_test_plan.svh"
-    
-    // DEMOD Wrapper tests
-    `include "tb/wrappers/demod/headers/demod_wrapper_normal.svh"
-    `include "tb/wrappers/demod/headers/demod_wrapper_debug_demod.svh"
-    `include "tb/wrappers/demod/headers/demod_wrapper_debug_fir.svh"
-    `include "tb/wrappers/demod/headers/demod_wrapper_debug_chain.svh"
-    `include "tb/wrappers/demod/headers/demod_wrapper_test_plan.svh"
-    
-    // INTERFACE Wrapper tests
-    `include "tb/wrappers/interface/headers/interface_wrapper_baud.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_fifo_rx.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_fifo_tx.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_loopback.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_rx_only.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_serdes.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_tx_only.svh"
-    `include "tb/wrappers/interface/headers/interface_wrapper_test_plan.svh"
-    
-    // MSK Wrapper tests
-    `include "tb/wrappers/msk/headers/msk_wrapper_normal.svh"
-    `include "tb/wrappers/msk/headers/msk_wrapper_debug_enc.svh"
-    `include "tb/wrappers/msk/headers/msk_wrapper_debug_demux.svh"
-    `include "tb/wrappers/msk/headers/msk_wrapper_debug_shaping.svh"
-    `include "tb/wrappers/msk/headers/msk_wrapper_debug_all.svh"
-    `include "tb/wrappers/msk/headers/msk_wrapper_test_plan.svh"
-
     `include "tb/top/configs/top_0_rx.svh"
     `include "tb/top/configs/top_1_tx.svh"
     `include "tb/top/configs/top_2_internal.svh"

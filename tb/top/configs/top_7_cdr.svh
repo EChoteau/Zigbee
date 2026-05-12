@@ -1,5 +1,13 @@
 task automatic test_7_cdr();
     begin
+        // CDR Wrapper tests
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_normal.svh"
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_decision.svh"
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_pd.svh"
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_lf.svh"
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_nco.svh"
+        `include "tb/wrappers/cdr/headers/cdr_wrapper_test_plan.svh"
+
         $display("[%0t] test_7_cdr", $time);
         i_top_cfg = 3'd7;
         i_wrapper_cfg = 3'b000;
