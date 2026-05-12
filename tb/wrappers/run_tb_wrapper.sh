@@ -1,5 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+
+source config/config_RTL
+
 cd "$(dirname "$0")"
 
 echo "Running interface TB..."
