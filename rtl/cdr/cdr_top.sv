@@ -75,6 +75,8 @@ module cdr_top #(
     end
     
     assign o_data = s_decision_out;
+
+    assign o_ctrl = s_control;
     
     // ==========================================================================
     // MODULE INSTANTIATIONS
