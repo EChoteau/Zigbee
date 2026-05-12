@@ -10,6 +10,87 @@ module top_tb;
 
     logic [21:0] i_bus_in;
     logic [13:0] o_bus_out;
+    
+    // For demod wrapper tests
+    logic [3:0] tb_i;
+    logic [3:0] tb_q;
+
+    // =========================================================================
+    // Helper tasks for wrapper tests
+    // =========================================================================
+    
+    task automatic set_config(logic [2:0] cfg);
+    begin
+        i_wrapper_cfg = cfg;
+        @(posedge i_clk);
+    end
+    endtask
+
+    task automatic set_bus(logic [21:0] bus_val);
+    begin
+        i_bus_in = bus_val;
+        @(posedge i_clk);
+    end
+    endtask
+
+    task automatic apply_reset(int cycles);
+    begin
+        i_rst_n = 1'b0;
+        i_bus_in = '0;
+        repeat(cycles) @(posedge i_clk);
+        i_rst_n = 1'b1;
+        repeat(2) @(posedge i_clk);
+    end
+    endtask
+    
+    task automatic apply_demod_reset(int cycles);
+    begin
+        i_rst_n = 1'b0;
+        tb_i = '0;
+        tb_q = '0;
+        i_bus_in = '0;
+        repeat(cycles) @(posedge i_clk);
+        i_rst_n = 1'b1;
+        repeat(2) @(posedge i_clk);
+    end
+    endtask
+
+    // =========================================================================
+    // Include wrapper test headers
+    // =========================================================================
+    
+    // CDR Wrapper tests
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_normal.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_decision.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_pd.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_lf.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_debug_nco.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_test_plan.svh"
+    
+    // DEMOD Wrapper tests
+    `include "tb/wrappers/demod/headers/demod_wrapper_normal.svh"
+    `include "tb/wrappers/demod/headers/demod_wrapper_debug_demod.svh"
+    `include "tb/wrappers/demod/headers/demod_wrapper_debug_fir.svh"
+    `include "tb/wrappers/demod/headers/demod_wrapper_debug_chain.svh"
+    `include "tb/wrappers/demod/headers/demod_wrapper_test_plan.svh"
+    
+    // INTERFACE Wrapper tests
+    `include "tb/wrappers/interface/headers/interface_wrapper_baud.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_fifo_rx.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_fifo_tx.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_loopback.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_rx_only.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_serdes.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_tx_only.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_test_plan.svh"
+    
+    // MSK Wrapper tests
+    `include "tb/wrappers/msk/headers/msk_wrapper_normal.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_debug_enc.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_debug_demux.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_debug_shaping.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_debug_all.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_test_plan.svh"
 
     `include "tb/top/configs/top_0_rx.svh"
     `include "tb/top/configs/top_1_tx.svh"

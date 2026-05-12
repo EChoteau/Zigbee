@@ -6,6 +6,9 @@ task automatic test_7_cdr();
         i_rst_n = 0;
         repeat (2) @(posedge i_clk);
         i_rst_n = 1;
-        repeat (20) @(posedge i_clk);
+        repeat (2) @(posedge i_clk);
+
+        // Run CDR wrapper test plan
+        run_cdr_wrapper_test_plan();
     end
 endtask

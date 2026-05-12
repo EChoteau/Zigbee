@@ -6,7 +6,9 @@ task automatic test_4_msk();
         i_rst_n = 0;
         repeat (2) @(posedge i_clk);
         i_rst_n = 1;
-        // Wrapper tests goes here
-        repeat (20) @(posedge i_clk);
+        repeat (2) @(posedge i_clk);
+
+        // Run MSK wrapper test plan
+        run_msk_wrapper_test_plan();
     end
 endtask
