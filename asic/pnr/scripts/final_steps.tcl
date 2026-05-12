@@ -4,7 +4,7 @@
 
 set output_root "../output_data/${module_name}"
 if {$module_name eq "zigbee_top"} {
-    set output_root "../output_data/top"
+    set output_root "../output_data/${sdc_dir}"
 }
 set reports_dir "$output_root/reports"
 set fab_dir "$output_root/fab"
