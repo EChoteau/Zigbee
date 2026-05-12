@@ -68,12 +68,7 @@ module tb_msk_wrapper;
     end
     endtask
 
-    // --- Inclusion des taches de test individuelles ---
-    `include "headers/msk_wrapper_normal.svh"
-    `include "headers/msk_wrapper_debug_enc.svh"
-    `include "headers/msk_wrapper_debug_demux.svh"
-    `include "headers/msk_wrapper_debug_shaping.svh"
-    `include "headers/msk_wrapper_debug_all.svh"
+    // Inclure les tâches de test spécifiques au wrapper MSK
     `include "headers/msk_wrapper_test_plan.svh"
 
     // =========================================================================
