@@ -67,7 +67,7 @@ module tb_demod_wrapper;
     end
     endtask
 
-    `include "headers/demod_wrapper_test_plan.svh"
+    `include "tb/wrappers/demod/headers/demod_wrapper_test_plan.svh"
 
     initial begin
         // init

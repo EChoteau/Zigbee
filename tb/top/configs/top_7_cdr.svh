@@ -1,9 +1,4 @@
 // CDR Wrapper tests - include task definitions at module level
-`include "tb/wrappers/cdr/headers/cdr_wrapper_normal.svh"
-`include "tb/wrappers/cdr/headers/cdr_wrapper_debug_decision.svh"
-`include "tb/wrappers/cdr/headers/cdr_wrapper_debug_pd.svh"
-`include "tb/wrappers/cdr/headers/cdr_wrapper_debug_lf.svh"
-`include "tb/wrappers/cdr/headers/cdr_wrapper_debug_nco.svh"
 `include "tb/wrappers/cdr/headers/cdr_wrapper_test_plan.svh"
 
 task automatic test_7_cdr();

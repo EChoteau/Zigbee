@@ -1,9 +1,4 @@
 // MSK Wrapper tests - include task definitions at module level
-`include "tb/wrappers/msk/headers/msk_wrapper_normal.svh"
-`include "tb/wrappers/msk/headers/msk_wrapper_debug_enc.svh"
-`include "tb/wrappers/msk/headers/msk_wrapper_debug_demux.svh"
-`include "tb/wrappers/msk/headers/msk_wrapper_debug_shaping.svh"
-`include "tb/wrappers/msk/headers/msk_wrapper_debug_all.svh"
 `include "tb/wrappers/msk/headers/msk_wrapper_test_plan.svh"
 
 task automatic test_4_msk();

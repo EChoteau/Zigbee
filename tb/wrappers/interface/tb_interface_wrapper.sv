@@ -80,7 +80,7 @@ module tb_interface_wrapper;
     end
     endtask
 
-    `include "headers/interface_wrapper_test_plan.svh"
+    `include "tb/wrappers/interface/headers/interface_wrapper_test_plan.svh"
 
     initial begin
         // init

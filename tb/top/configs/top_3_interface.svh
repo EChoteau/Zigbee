@@ -1,11 +1,4 @@
 // INTERFACE Wrapper tests - include task definitions at module level
-`include "tb/wrappers/interface/headers/interface_wrapper_baud.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_fifo_rx.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_fifo_tx.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_loopback.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_rx_only.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_serdes.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_tx_only.svh"
 `include "tb/wrappers/interface/headers/interface_wrapper_test_plan.svh"
 
 task automatic test_3_interface();

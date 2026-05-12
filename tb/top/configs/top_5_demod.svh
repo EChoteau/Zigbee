@@ -1,8 +1,4 @@
 // DEMOD Wrapper tests - include task definitions at module level
-`include "tb/wrappers/demod/headers/demod_wrapper_normal.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_demod.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_fir.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_chain.svh"
 `include "tb/wrappers/demod/headers/demod_wrapper_test_plan.svh"
 
 task automatic test_5_demod();

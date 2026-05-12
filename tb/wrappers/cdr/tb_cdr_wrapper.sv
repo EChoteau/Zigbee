@@ -64,7 +64,7 @@ module tb_cdr_wrapper;
     end
     endtask
 
-    `include "headers/cdr_wrapper_test_plan.svh"
+    `include "tb/wrappers/cdr/headers/cdr_wrapper_test_plan.svh"
 
     // =========================================================================
     // Séquence principale

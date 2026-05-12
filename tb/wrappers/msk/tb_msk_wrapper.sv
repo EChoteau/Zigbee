@@ -69,7 +69,7 @@ module tb_msk_wrapper;
     endtask
 
     // Inclure les tâches de test spécifiques au wrapper MSK
-    `include "headers/msk_wrapper_test_plan.svh"
+    `include "tb/wrappers/msk/headers/msk_wrapper_test_plan.svh"
 
     // =========================================================================
     // Séquence principale
