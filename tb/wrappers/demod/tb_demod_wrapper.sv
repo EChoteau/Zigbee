@@ -1,11 +1,12 @@
 `timescale 1ns/1ps
 
 module tb_demod_wrapper;
-
-    // localparams
-    localparam int CFG_WIDTH      = 3;
-    localparam int BUS_IN_WIDTH   = 22;
-    localparam int BUS_OUT_WIDTH  = 14;
+    import tb_pkg::*;
+    `include "headers/demod_wrapper_normal.svh"
+    `include "headers/demod_wrapper_debug_demod.svh"
+    `include "headers/demod_wrapper_debug_fir.svh"
+    `include "headers/demod_wrapper_debug_chain.svh"
+    `include "headers/demod_wrapper_test_plan.svh"
 
     // signals
     logic i_clk;
@@ -39,39 +40,6 @@ module tb_demod_wrapper;
         i_clk = 1'b0;
         forever #50 i_clk = ~i_clk;
     end
-
-    // minimal helpers
-    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
-    begin
-        d_cfg_local = cfg;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
-    begin
-        i_bus_in = bus_val;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic apply_demod_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        tb_i = '0; 
-        tb_q = '0; 
-        i_bus_in = '0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
-
-    `include "headers/demod_wrapper_normal.svh"
-    `include "headers/demod_wrapper_debug_demod.svh"
-    `include "headers/demod_wrapper_debug_fir.svh"
-    `include "headers/demod_wrapper_debug_chain.svh"
-    `include "headers/demod_wrapper_test_plan.svh"
 
     initial begin
         // init

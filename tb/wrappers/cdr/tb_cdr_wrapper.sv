@@ -1,11 +1,13 @@
 `timescale 1ns/1ps
 
 module tb_cdr_wrapper;
-
-    // Paramètres locaux (doivent correspondre au wrapper)
-    localparam int CFG_WIDTH      = 3;
-    localparam int BUS_IN_WIDTH   = 22;
-    localparam int BUS_OUT_WIDTH  = 14;
+    import tb_pkg::*;
+    `include "headers/cdr_wrapper_normal.svh"
+    `include "headers/cdr_wrapper_debug_decision.svh"
+    `include "headers/cdr_wrapper_debug_pd.svh"
+    `include "headers/cdr_wrapper_debug_lf.svh"
+    `include "headers/cdr_wrapper_debug_nco.svh"
+    `include "headers/cdr_wrapper_test_plan.svh"
 
     // Signaux de test
     logic i_clk;
@@ -36,44 +38,6 @@ module tb_cdr_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
-    // =========================================================================
-    // Helpers (Tâches utilitaires)
-    // =========================================================================
-    
-    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
-    begin
-        i_cfg_local = cfg;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
-    begin
-        i_bus_in = bus_val;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic apply_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        i_bus_in = '0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
-
-    `include "headers/cdr_wrapper_normal.svh"
-    `include "headers/cdr_wrapper_debug_decision.svh"
-    `include "headers/cdr_wrapper_debug_pd.svh"
-    `include "headers/cdr_wrapper_debug_lf.svh"
-    `include "headers/cdr_wrapper_debug_nco.svh"
-    `include "headers/cdr_wrapper_test_plan.svh"
-
-    // =========================================================================
-    // Séquence principale
-    // =========================================================================
     initial begin
         // Initialisation des signaux
         i_rst_n = 1'b0;

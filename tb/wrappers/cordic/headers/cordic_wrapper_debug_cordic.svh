@@ -3,31 +3,36 @@ task automatic test_cordic_wrapper_debug_cordic();
     logic signed [7:0] phase_out;
     begin
         $display("\n========== TEST: CFG1 (CORDIC ISOLÉ) ==========");
-        set_config(3'b001); // MODE_1 
+        set_config(3'b001); // MODE_1
         repeat(2) @(posedge i_clk);
 
-        $display("  [CORDIC] Injection I=31, Q=31 (Angle attendu: ~45 degres)...");
+        $display("  [CORDIC] Injection I=31, Q=31 (+45 degres)...");
         bus_val = '0;
-        // On suppose que i_i est sur [5:0] et i_q sur [11:6] selon ton top
         bus_val[5:0]  = 6'd31; 
         bus_val[11:6] = 6'd31; 
         set_bus(bus_val);
         
-        // Le CORDIC est pipeliné (NUM_STEPS cycles de latence), on attend un peu
+        // Latence du pipeline
         repeat(15) @(posedge i_clk);
-        
-        phase_out = o_bus_out[7:0]; // o_bus_out[7:0] = w_phase_cordic 
-        $display("  [CORDIC] Phase calculee : %d", phase_out);
-        assert (phase_out > 0) else $error("  [CORDIC] FAIL: La phase devrait etre positive.");
-
-        $display("  [CORDIC] Injection I=31, Q=-31 (Angle attendu: ~-45 degres)...");
-        bus_val[11:6] = -6'sd31; 
-        set_bus(bus_val);
-        repeat(15) @(posedge i_clk);
-        
         phase_out = o_bus_out[7:0];
-        $display("  [CORDIC] Phase calculee : %d", phase_out);
-        assert (phase_out < 0) else $error("  [CORDIC] FAIL: La phase devrait etre negative.");
+        
+        // ASSERTION : 45 degres correspond a 8'sh20 (32) dans ta table.
+        // On verifie que c'est strictement positif et > 20 pour eponger les arrondis fixes.
+        assert (phase_out > 8'sd20) 
+            $display("  [CORDIC] PASS: Phase positive calculee correctement : %d", phase_out);
+        else $error("  [CORDIC] FAIL: Phase attendue > 20 pour le quadrant 1. Lue = %d", phase_out);
+
+        $display("  [CORDIC] Injection I=31, Q=-31 (-45 degres)...");
+        bus_val[11:6] = -6'sd31; // Q negatif
+        set_bus(bus_val);
+        
+        repeat(15) @(posedge i_clk);
+        phase_out = o_bus_out[7:0];
+        
+        // ASSERTION : Phase doit etre strictement negative
+        assert (phase_out < -8'sd20) 
+            $display("  [CORDIC] PASS: Phase negative calculee correctement : %d", phase_out);
+        else $error("  [CORDIC] FAIL: Phase attendue < -20 pour le quadrant 4. Lue = %d", phase_out);
 
         $display("========== CFG1 COMPLETE ==========\n");
     end
