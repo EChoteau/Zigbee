@@ -4,6 +4,8 @@
 
 setMultiCpuUsage -localCpu 8
 
+source vars.tcl
+
 # Init le design (netlist, lef, alims, etc..)
 source ../scripts/init.tcl
 init_design

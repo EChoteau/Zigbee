@@ -5,7 +5,7 @@ set init_abstract_name ""
 
 set init_verilog "../input_data/${module_name}/${name_netlist}"
 if {$module_name eq "zigbee_top"} {
-	set init_verilog "$init_verilog ../input_data/${sdc_dir}/${module_name}_io.v"
+	set init_verilog "../input_data/${sdc_dir}/${module_name}_io.v"
 }
 
 set init_mmmc_file "../scripts/view_definition.tcl"
