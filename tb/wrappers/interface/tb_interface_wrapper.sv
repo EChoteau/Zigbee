@@ -80,13 +80,6 @@ module tb_interface_wrapper;
     end
     endtask
 
-    `include "headers/interface_wrapper_baud.svh"
-    `include "headers/interface_wrapper_fifo_rx.svh"
-    `include "headers/interface_wrapper_fifo_tx.svh"
-    `include "headers/interface_wrapper_loopback.svh"
-    `include "headers/interface_wrapper_rx_only.svh"
-    `include "headers/interface_wrapper_serdes.svh"
-    `include "headers/interface_wrapper_tx_only.svh"
     `include "headers/interface_wrapper_test_plan.svh"
 
     initial begin
