@@ -3,7 +3,7 @@ source ../scripts/vars.tcl
 set init_layout_view ""
 set init_abstract_name ""
 
-set init_verilog "../input_data/${module_name}/${name_netlist}"
+set init_verilog "../input_data/${sdc_dir}/${name_netlist}"
 if {$module_name eq "zigbee_top"} {
 	set init_verilog "../input_data/${sdc_dir}/${module_name}_io.v"
 }
