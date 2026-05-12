@@ -1,4 +1,4 @@
-task automatic test_msk_wrapper_debug_demux();
+task automatic run_msk_wrapper_test_plan();
 begin
     test_msk_wrapper_debug_shaping();
     apply_reset(5);
