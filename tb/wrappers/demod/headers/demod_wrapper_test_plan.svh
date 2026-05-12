@@ -1,3 +1,8 @@
+`include "headers/demod_wrapper_debug_chain.svh"
+`include "headers/demod_wrapper_debug_demod.svh"
+`include "headers/demod_wrapper_debug_fir.svh"
+`include "headers/demod_wrapper_normal.svh"
+
 task automatic run_demod_wrapper_test_plan();
 begin
 

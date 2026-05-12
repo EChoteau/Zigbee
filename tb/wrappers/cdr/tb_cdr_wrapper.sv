@@ -64,11 +64,6 @@ module tb_cdr_wrapper;
     end
     endtask
 
-    `include "headers/cdr_wrapper_normal.svh"
-    `include "headers/cdr_wrapper_debug_decision.svh"
-    `include "headers/cdr_wrapper_debug_pd.svh"
-    `include "headers/cdr_wrapper_debug_lf.svh"
-    `include "headers/cdr_wrapper_debug_nco.svh"
     `include "headers/cdr_wrapper_test_plan.svh"
 
     // =========================================================================
