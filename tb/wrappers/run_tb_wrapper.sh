@@ -1,7 +1,7 @@
 #!/bin/bash
-set -euo pipefail
-
 source config/config_RTL
+
+set -euo pipefail
 
 cd "$(dirname "$0")"
 
