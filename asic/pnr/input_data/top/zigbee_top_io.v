@@ -1,21 +1,21 @@
-`include "../input_data/zigbee_top_synth.v"
+`include "../input_data/top/zigbee_top_synth.v"
 
 /////////////////////////////
 //  Top-level module for IO PAD
 /////////////////////////////
 
-module top_io (
+module zigbee_top_io (
 	// System signals
 	input i_clk,
 	input i_rst_n,
 
 	// 6 dedicated configuration pins:
-    input logic [2:0]   i_cfg_top,
-    input logic [2:0]   i_cfg,
+    input [2:0]   i_cfg_top,
+    input [2:0]   i_cfg,
 
     // Test bus ports (external interface)
-    input  logic [21:0] i_bus_in,
-    output logic [13:0] o_bus_out
+    input  [21:0] i_bus_in,
+    output [13:0] o_bus_out
 
 );
 
@@ -43,7 +43,7 @@ wire  	[13:0] 	o_bus_out_P;
 //  Instantiation of the top module 
 //////////////////////////
 
-top top_inst(
+zigbee_top zigbee_top_inst(
 
 	.i_clk(i_clk_P),
     .i_rst_n(i_rst_n_P),
@@ -51,7 +51,7 @@ top top_inst(
 	.i_cfg_top(i_cfg_top_P),
 	.i_cfg(i_cfg_P),
 	.i_bus_in(i_bus_in_P),
-    .o_bus_out(o_bus_out_P),
+    .o_bus_out(o_bus_out_P)
 
 );
 
@@ -101,20 +101,20 @@ ITP	io_i_bus_in_21 ( .PAD(i_bus_in[21]), 	.Y(i_bus_in_P[21]) );
 
 // --- OUTPUT ---
 // Bus ports
-BU12SP io_o_bus_out_0  ( .A(o_bus_out_P[0]), 	.PAD(o_bus_c[0]) );
-BU12SP io_o_bus_out_1  ( .A(o_bus_out_P[1]), 	.PAD(o_bus_c[1]) );
-BU12SP io_o_bus_out_2  ( .A(o_bus_out_P[2]), 	.PAD(o_bus_c[2]) );
-BU12SP io_o_bus_out_3  ( .A(o_bus_out_P[3]), 	.PAD(o_bus_c[3]) );
-BU12SP io_o_bus_out_4  ( .A(o_bus_out_P[4]), 	.PAD(o_bus_c[4]) );
-BU12SP io_o_bus_out_5  ( .A(o_bus_out_P[5]), 	.PAD(o_bus_c[5]) );
-BU12SP io_o_bus_out_6  ( .A(o_bus_out_P[6]), 	.PAD(o_bus_c[6]) );
-BU12SP io_o_bus_out_7  ( .A(o_bus_out_P[7]), 	.PAD(o_bus_c[7]) );
-BU12SP io_o_bus_out_8  ( .A(o_bus_out_P[8]), 	.PAD(o_bus_c[8]) );
-BU12SP io_o_bus_out_9  ( .A(o_bus_out_P[9]), 	.PAD(o_bus_c[9]) );
-BU12SP io_o_bus_out_10 ( .A(o_bus_out_P[10]), 	.PAD(o_bus_c[10]) );
-BU12SP io_o_bus_out_11 ( .A(o_bus_out_P[11]), 	.PAD(o_bus_c[11]) );
-BU12SP io_o_bus_out_12 ( .A(o_bus_out_P[12]), 	.PAD(o_bus_c[12]) );
-BU12SP io_o_bus_out_13 ( .A(o_bus_out_P[13]), 	.PAD(o_bus_c[13]) );
+BU12SP io_o_bus_out_0  ( .A(o_bus_out_P[0]), 	.PAD(o_bus_out[0]) );
+BU12SP io_o_bus_out_1  ( .A(o_bus_out_P[1]), 	.PAD(o_bus_out[1]) );
+BU12SP io_o_bus_out_2  ( .A(o_bus_out_P[2]), 	.PAD(o_bus_out[2]) );
+BU12SP io_o_bus_out_3  ( .A(o_bus_out_P[3]), 	.PAD(o_bus_out[3]) );
+BU12SP io_o_bus_out_4  ( .A(o_bus_out_P[4]), 	.PAD(o_bus_out[4]) );
+BU12SP io_o_bus_out_5  ( .A(o_bus_out_P[5]), 	.PAD(o_bus_out[5]) );
+BU12SP io_o_bus_out_6  ( .A(o_bus_out_P[6]), 	.PAD(o_bus_out[6]) );
+BU12SP io_o_bus_out_7  ( .A(o_bus_out_P[7]), 	.PAD(o_bus_out[7]) );
+BU12SP io_o_bus_out_8  ( .A(o_bus_out_P[8]), 	.PAD(o_bus_out[8]) );
+BU12SP io_o_bus_out_9  ( .A(o_bus_out_P[9]), 	.PAD(o_bus_out[9]) );
+BU12SP io_o_bus_out_10 ( .A(o_bus_out_P[10]), 	.PAD(o_bus_out[10]) );
+BU12SP io_o_bus_out_11 ( .A(o_bus_out_P[11]), 	.PAD(o_bus_out[11]) );
+BU12SP io_o_bus_out_12 ( .A(o_bus_out_P[12]), 	.PAD(o_bus_out[12]) );
+BU12SP io_o_bus_out_13 ( .A(o_bus_out_P[13]), 	.PAD(o_bus_out[13]) );
 
 // --- PAD constraints ---
 //No constraints for now

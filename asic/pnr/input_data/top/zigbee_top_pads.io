@@ -75,10 +75,10 @@ Pad:    io_i_cfg_2          N               # N12
 #=========== EAST ===========
 Pad:    io_o_bus_out_13     E               # E1
 Pad:    io_o_bus_out_12     E               # E2
-Pad:    io_o_bus_out_11      E               # E3
-Pad:    io_o_bus_out_10      E               # E4
-Pad:	io_i_rst_n			E GND3ALLP      # E5
-Pad:	io_i_clk			E GND3ALLP      # E6
+Pad:    io_o_bus_out_11     E               # E3
+Pad:    io_o_bus_out_10     E               # E4
+Pad:	io_i_rst_n			E               # E5
+Pad:	io_i_clk			E               # E6
 Pad:	GND1				E GND3ALLP      # E7
 Pad:    io_o_bus_out_9      E               # E8
 Pad:    io_o_bus_out_8      E               # E9
