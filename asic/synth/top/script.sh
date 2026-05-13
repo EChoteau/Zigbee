@@ -52,7 +52,7 @@ if [ "$NB_ERRORS" -gt 0 ]; then
     # Design vision is on stop on fail so the log ends shortly after the error
     BLOCK_COMPILE=$(sed -n '/compile_ultra/,$p' log_synthese.log)
     BLOCK_ANALYZE=$(sed -n '/analyze -library/,$p' log_synthese.log)
-    BLOCK_ELABORATE=$(sed -n '/elaborate top/,$p' log_synthese.log)
+    BLOCK_ELABORATE=$(sed -n '/elaborate zigbee_top/,$p' log_synthese.log)
 
     # Check in reverse chronological order
     if [ -n "$BLOCK_COMPILE" ] && echo "$BLOCK_COMPILE" | grep -i -q "error:"; then
