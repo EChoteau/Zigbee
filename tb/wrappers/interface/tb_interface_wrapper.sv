@@ -1,11 +1,16 @@
 `timescale 1ns/1ps
 
 module tb_interface_wrapper;
-
-    // localparams (keep consistent with wrappers)
-    localparam int CFG_WIDTH      = 3;
-    localparam int BUS_IN_WIDTH   = 22;
-    localparam int BUS_OUT_WIDTH  = 14;
+    import tb_pkg::*;
+    `include "headers/interface_wrapper_baud.svh"
+    `include "headers/interface_wrapper_fifo_rx.svh"
+    `include "headers/interface_wrapper_fifo_tx.svh"
+    `include "headers/interface_wrapper_loopback.svh"
+    `include "headers/interface_wrapper_rx_only.svh"
+    `include "headers/interface_wrapper_serdes.svh"
+    `include "headers/interface_wrapper_tx_only.svh"
+    `include "headers/interface_wrapper_test_plan.svh"
+    
     // INTERFACE WRAPPER PARAMETERS
     localparam int APB_ADDR_WIDTH = 8;
     localparam int APB_DATA_WIDTH = 8;
@@ -55,39 +60,6 @@ module tb_interface_wrapper;
         i_clk = 1'b0;
         forever #50 i_clk = ~i_clk;
     end
-
-    // minimal helpers (subset of previous)
-    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
-    begin
-        i_cfg_local = cfg;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
-    begin
-        i_bus_in = bus_val;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic apply_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
-
-    `include "headers/interface_wrapper_baud.svh"
-    `include "headers/interface_wrapper_fifo_rx.svh"
-    `include "headers/interface_wrapper_fifo_tx.svh"
-    `include "headers/interface_wrapper_loopback.svh"
-    `include "headers/interface_wrapper_rx_only.svh"
-    `include "headers/interface_wrapper_serdes.svh"
-    `include "headers/interface_wrapper_tx_only.svh"
-    `include "headers/interface_wrapper_test_plan.svh"
 
     initial begin
         // init

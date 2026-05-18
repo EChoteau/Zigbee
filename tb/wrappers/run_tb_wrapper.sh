@@ -7,6 +7,11 @@ cd interface/
 source run_interface_tb.sh
 cd ..
 
+echo "Running msk TB..."
+cd msk/
+source run_msk_tb.sh
+cd ..
+
 echo "Running demod TB..."
 cd demod/
 source run_demod_tb.sh

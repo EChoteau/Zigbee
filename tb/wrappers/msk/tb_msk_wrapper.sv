@@ -2,12 +2,17 @@
 
 module tb_msk_wrapper;
 
+    import tb_pkg::*;
+    `include "headers/msk_wrapper_normal.svh"
+    `include "headers/msk_wrapper_debug_enc.svh"
+    `include "headers/msk_wrapper_debug_demux.svh"
+    `include "headers/msk_wrapper_debug_shaping.svh"
+    `include "headers/msk_wrapper_debug_all.svh"
+    `include "headers/msk_wrapper_test_plan.svh"
+
     // Paramètres locaux 
     localparam int SAMPLES_PER_HALF_SINE = 10;
     localparam int MSK_RES               = 6;
-    localparam int CFG_WIDTH             = 3;
-    localparam int BUS_IN_WIDTH          = 22;
-    localparam int BUS_OUT_WIDTH         = 14;
 
     // Signaux de test
     logic i_clk;
@@ -40,45 +45,6 @@ module tb_msk_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
-    // =========================================================================
-    // Helpers (Tâches utilitaires)
-    // =========================================================================
-    
-    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
-    begin
-        i_cfg_local = cfg;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
-    begin
-        i_bus_in = bus_val;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic apply_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        i_bus_in = '0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
-
-    // --- Inclusion des taches de test individuelles ---
-    `include "headers/msk_wrapper_normal.svh"
-    `include "headers/msk_wrapper_debug_enc.svh"
-    `include "headers/msk_wrapper_debug_demux.svh"
-    `include "headers/msk_wrapper_debug_shaping.svh"
-    `include "headers/msk_wrapper_debug_all.svh"
-    `include "headers/msk_wrapper_test_plan.svh"
-
-    // =========================================================================
-    // Séquence principale
-    // =========================================================================
     initial begin
         // Initialisation des signaux
         i_rst_n = 1'b0;
