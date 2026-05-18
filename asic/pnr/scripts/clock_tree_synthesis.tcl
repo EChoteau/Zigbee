@@ -15,8 +15,8 @@ setCCOptMode -cts_opt_type full
 setOptMode -usefulSkewCCOpt standard
 
 # --- 2. Clock Routing Rules (NDR) ---
-# Definition de la règle : Double Width & Double Spacing pour toutes les couches
-add_ndr -name cts_ndr -width_multiplier 2 -spacing_multiplier 2
+# Definition de la règle : Double Width & Double Spacing pour les métaux M1 à M4
+add_ndr -name cts_ndr -width_multiplier {M1:M4 2} -spacing_multiplier {M1:M4 2}
 
 set_ccopt_property route_type -net_type trunk trunk_route_type
 set_ccopt_property route_type -net_type leaf leaf_route_type
