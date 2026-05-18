@@ -9,7 +9,7 @@ toggle add -full -r /*
 run 20ms
 
 # Sauvegarde le coverage
-coverage save cov.ucdb
-
+coverage save -code bcesft -assert -cvg cov.ucdb
 # Quitte sans confirmation
 quit
+

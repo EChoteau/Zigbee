@@ -13,7 +13,7 @@ module tb_cdr;
     logic clk = 0;
     always #50 clk = ~clk;  // 100ns → 10 MHz
 
-    logic rst = 0;
+    logic rst ;
 
     // ==========================================================================
     // BUS
@@ -21,7 +21,7 @@ module tb_cdr;
     //   out_bus[0]   → decision_out
     //   out_bus[1]   → clk_rec
     // ==========================================================================
-    logic signed [5:0] in_bus;
+    logic signed [7:0] in_bus;
     logic        [1:0] out_bus;
 
     wire decision_out = out_bus[0];

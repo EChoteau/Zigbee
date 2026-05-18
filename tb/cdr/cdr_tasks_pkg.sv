@@ -14,11 +14,11 @@ package cdr_tasks_pkg;
     // Envoyer la dérivée de phase sur in_bus
     // ----------------------------------------------------------
     task automatic send_dphi(
-        ref   logic signed [5:0] in_bus,
+        ref   logic signed [7:0] in_bus,
         input logic               data_in
     );
-        if (data_in) in_bus = 6'sd8;
-        else         in_bus = -6'sd8;
+        if (data_in) in_bus = $random%(89);
+        else         in_bus = -($random%(89));
     endtask
 
     // ----------------------------------------------------------
@@ -40,11 +40,13 @@ package cdr_tasks_pkg;
     // ----------------------------------------------------------
     task automatic apply_reset(
         ref   logic               rst,
-        ref   logic signed [5:0]  in_bus,
+        ref   logic signed [7:0]  in_bus,
         input int                 duration_ns
     );
+        rst =1;
+        #(duration_ns);
         rst    = 0;
-        in_bus = 6'sd0;
+        in_bus = 8'sd0;
         #(duration_ns);
         rst = 1;
         $display("[RESET] Reset relâché à t=%0t", $time);
@@ -66,7 +68,7 @@ package cdr_tasks_pkg;
     // Envoyer N bits aléatoires avec contrainte run-length
     // ----------------------------------------------------------
     task automatic run_random_sequence(
-        ref   logic signed [5:0] in_bus,
+        ref   logic signed [7:0] in_bus,
         ref   logic [1:0]        out_bus,
         ref   logic              clk,
         input int                n_bits,
