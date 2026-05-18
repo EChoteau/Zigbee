@@ -110,7 +110,6 @@ module demod_wrapper #(
 
         endcase
 
-        o_bus_d = {s_i_bb[5], s_q_bb[5]};
     end
 
 endmodule
