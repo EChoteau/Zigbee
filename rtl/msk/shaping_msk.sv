@@ -135,7 +135,8 @@ endmodule
     //
     // CODE COMPLET ALTERNATIF :
     // =================================================================================
-  /*  
+
+ /*
     module shaping_msk_full_rom #(
         parameter int SAMPLES_PER_HALF_SINE = 10, // Nb points pour 1µs (bosse)
         parameter int MSK_RES               = 6   // Résolution (ex: 6 bits signés)
@@ -251,6 +252,6 @@ endmodule
 
 
     endmodule
-    
-
+ 
+*/
 

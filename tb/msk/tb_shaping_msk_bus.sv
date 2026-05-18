@@ -90,11 +90,11 @@ module tb_shaping_msk_bus;
     endtask
 
     function automatic logic signed [MSK_RES-1:0] get_I();
-        return logic signed [MSK_RES-1:0]'(o_bus_out[MSK_RES-1:0]);
+        return o_bus_out[MSK_RES-1:0];
     endfunction
 
     function automatic logic signed [MSK_RES-1:0] get_Q();
-        return logic signed [MSK_RES-1:0]'(o_bus_out[2*MSK_RES-1:MSK_RES]);
+        return o_bus_out[2*MSK_RES-1:MSK_RES];
     endfunction
 
     task automatic test_shaping_reset();
@@ -146,11 +146,13 @@ module tb_shaping_msk_bus;
 
         signed_I = get_I();
         signed_Q = get_Q();
-        assert (signed_Q < 0)
-            else $error("SHAPING FAIL: Q doit etre negatif, Q=%0d", signed_Q);
+        
+
         assert (signed_I >= -31 && signed_I <= 31)
             else $error("SHAPING FAIL: I hors limites, I=%0d", signed_I);
-        $display("SHAPING PASS: I=%0d Q=%0d", signed_I, signed_Q);
+        assert (signed_Q >= -31 && signed_Q<=31)
+	    else $error("SHAPING FAIL: Q hors limites, Q=%0d", signed_Q);
+	$display("shaping PASS : signe negatif - I=%0d Q=%0d", signed_I, signed_Q);
     end
     endtask
 

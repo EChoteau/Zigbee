@@ -75,7 +75,7 @@ module top_msk_bus_wrapper #(
 
 endmodule
 
-module tb_top_msk_bus;
+module top_msk_tb;
 
     localparam int SAMPLES_PER_HALF_SINE = 10;
     localparam int MSK_RES               = 6;
@@ -120,11 +120,11 @@ module tb_top_msk_bus;
     endtask
 
     function automatic logic signed [MSK_RES-1:0] get_I();
-        return logic signed [MSK_RES-1:0]'(o_bus_out[5:0]);
+ 	return o_bus_out[MSK_RES-1:0];
     endfunction
 
     function automatic logic signed [MSK_RES-1:0] get_Q();
-        return logic signed [MSK_RES-1:0]'(o_bus_out[11:6]);
+        return o_bus_out[2*MSK_RES-1:MSK_RES];
     endfunction
 
     task automatic run_top_test_plan();
