@@ -17,15 +17,14 @@ module tb_demod_system;
     localparam string I_FILENAME = "I_IF_data_IMG.txt";
     localparam string Q_FILENAME = "Q_IF_data_IMG.txt";
 
-    
     localparam int CFG_WIDTH   = 3;
     localparam int BUS_A_WIDTH = 10;
     localparam int BUS_B_WIDTH = 12;
     localparam int BUS_C_WIDTH = 12;
     localparam int BUS_D_WIDTH = 2;
 
-    // CFG modes 
-    localparam logic [2:0] MODE_IQ_BB = 3'b100; // MODE_4: o_bus_c = {s_i_bb, s_q_bb}
+    localparam logic [2:0] MODE_DEMOD_I = 3'b110;   // MODE_6: full chain → o_bus_c = {s_i_bb, s_q_bb}
+    localparam logic [2:0] MODE_DEMOD_Q = 3'b111;   // MODE_7: full chain → o_bus_c = {s_i_bb, s_q_bb}
 
     // ==========================================================
     // CLOCK & RESET
@@ -38,30 +37,27 @@ module tb_demod_system;
     // WRAPPER PORTS
     // ==========================================================
     logic [CFG_WIDTH-1:0]   i_cfg;
-    logic [BUS_A_WIDTH-1:0] i_bus_a;   // unused by wrapper 
+    logic [BUS_A_WIDTH-1:0] i_bus_a;
     logic [BUS_B_WIDTH-1:0] i_bus_b;   // [11:8] unused | [7:4]=I | [3:0]=Q
     logic [BUS_C_WIDTH-1:0] o_bus_c;
     logic [BUS_D_WIDTH-1:0] o_bus_d;
 
-    // ----------------------------------------------------------
-    // 
-    //   in_bus[7:4] → i_bus_b[7:4]  (i_I_in)
-    //   in_bus[3:0] → i_bus_b[3:0]  (i_Q_in)
-    //   out_bus value depends on i_cfg:
-    //     MODE_4-7  → o_bus_c[11:6] = s_i_bb, o_bus_c[5:0] = s_q_bb
-    // ----------------------------------------------------------
-    
+    // in_bus[7:4] → i_bus_b[7:4] (I)
+    // in_bus[3:0] → i_bus_b[3:0] (Q)
     logic [7:0] in_bus;
-    assign i_bus_b = {4'b0, in_bus};   // [11:8]=0, [7:0]=in_bus
+    assign i_bus_b = {4'b0, in_bus};
 
     wire [3:0]        i_I_in = in_bus[7:4];
     wire [3:0]        i_Q_in = in_bus[3:0];
 
-    // Output aliases valid when i_cfg selects MODE_4..7
-    wire signed [5:0] o_I_BB = o_bus_c[11:6];
-    wire signed [5:0] o_Q_BB = o_bus_c[5:0];
+    logic signed [5:0] o_I_BB;
+    logic signed [5:0] o_Q_BB;
 
-    // out_bus unchanged
+    always_comb begin
+        o_I_BB = o_bus_c[11:6];
+        o_Q_BB = o_bus_c[5:0];
+    end
+
     logic [11:0] out_bus;
     assign out_bus = o_bus_c;
 
@@ -114,26 +110,19 @@ module tb_demod_system;
     end
 
     // ==========================================================
-    // SÉQUENCE PRINCIPALE
+    // TASK : séquence DEMOD complète sur un canal
     // ==========================================================
-    initial begin : STIMULUS_MAIN
-
-        // Static port defaults
-        i_bus_a = '0;
-        i_cfg   = MODE_IQ_BB;   // route s_i_bb/s_q_bb to o_bus_c throughout
-
-        // Reset via task
-        in_bus = 8'h88;         // I=8, Q=8 par défaut
-        apply_reset(rst_n, 4, clk);
-
+    task automatic run_demod_sequence(
+        input string channel_name
+    );
         // --- Test 1 : valeur fixe I=8, Q=8 ---
-        report_case("TEST FIXE I=8 Q=8");
+        report_case({"TEST FIXE I=8 Q=8 — ", channel_name});
         send_iq(in_bus, clk, 4'd8, 4'd8);
         wait_clk(clk, 5);
         show_outputs("FIXE", in_bus, out_bus);
 
         // --- Test 2 : balayage des valeurs I/Q ---
-        report_case("SWEEP I/Q [0..15]");
+        report_case({"SWEEP I/Q [0..15] — ", channel_name});
         for (int i = 0; i < 16; i++) begin
             send_iq(in_bus, clk, i[3:0], i[3:0]);
             wait_clk(clk, 2);
@@ -141,7 +130,7 @@ module tb_demod_system;
         end
 
         // --- Test 3 : lecture fichiers I/Q ---
-        report_case("LECTURE FICHIERS I/Q");
+        report_case({"LECTURE FICHIERS I/Q — ", channel_name});
         apply_samples_from_files(
             in_bus, clk,
             I_FILENAME, Q_FILENAME,
@@ -149,6 +138,36 @@ module tb_demod_system;
         );
         wait_clk(clk, FIR_SETTLE);
         show_outputs("FIN FICHIER IQ", in_bus, out_bus);
+
+    endtask
+
+    // ==========================================================
+    // SÉQUENCE PRINCIPALE
+    // ==========================================================
+    initial begin : STIMULUS_MAIN
+
+        i_bus_a = '0;
+        in_bus  = 8'h88;
+
+        // --- Canal I (MODE_6) ---
+        $display("============================================================");
+        $display("CANAL I (MODE_6)");
+        $display("============================================================");
+        i_cfg = MODE_DEMOD_I;
+        apply_reset(rst_n, 4, clk);
+        run_demod_sequence("CANAL I");
+
+        // reset entre les deux canaux
+        apply_reset(rst_n, 4, clk);
+        wait_clk(clk, 3);
+
+        // --- Canal Q (MODE_7) ---
+        $display("============================================================");
+        $display("CANAL Q (MODE_7)");
+        $display("============================================================");
+        i_cfg = MODE_DEMOD_Q;
+        apply_reset(rst_n, 4, clk);
+        run_demod_sequence("CANAL Q");
 
         // --- Résultats finaux ---
         $display(" ");

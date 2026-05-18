@@ -39,7 +39,7 @@ vlog -sv +acc $RTL_DIR/demod/demod_top.sv
 # ==============================================================
 echo "--- Compilation Testbenches ---"
 vlog -sv +acc $TB_DIR/tb_all.sv
-vlog -sv +acc $TB_DIR/tb_fir.v
+vlog -sv +acc $TB_DIR/tb_fir.sv
 
 # ==============================================================
 # 5. RÉSUMÉ
