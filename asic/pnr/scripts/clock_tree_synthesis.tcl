@@ -18,10 +18,10 @@ setOptMode -usefulSkewCCOpt standard
 # Definition de la règle : Double Width & Double Spacing pour les métaux M1 à M4
 add_ndr -name cts_ndr -width_multiplier {M1:M4 2} -spacing_multiplier {M1:M4 2}
 
-set_ccopt_property route_type -net_type trunk trunk_route_type
-set_ccopt_property route_type -net_type leaf leaf_route_type
 create_route_type -name trunk_route_type -non_default_rule cts_ndr -bottom_preferred_layer M3
 create_route_type -name leaf_route_type -non_default_rule cts_ndr -bottom_preferred_layer M2
+set_ccopt_property route_type -net_type trunk trunk_route_type
+set_ccopt_property route_type -net_type leaf leaf_route_type
 
 # --- 3. Specification and Execution ---
 create_ccopt_clock_tree_spec -file ccopt.spec
