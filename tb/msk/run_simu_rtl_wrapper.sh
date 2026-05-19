@@ -13,4 +13,4 @@ vmap work work
 vlog -sv rtl/msk/*.sv rtl/top/wrappers/msk_wrapper.sv -work work
 vlog -sv tb/msk/wrapper_msk_tb.sv -work work
 
-vsim -c -voptargs=+acc work.wrapper_msk_tb
+vsim -c -voptargs=+acc work.wrapper_msk_tb -do "run; quit -f"
