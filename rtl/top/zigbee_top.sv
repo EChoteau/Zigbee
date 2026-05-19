@@ -151,7 +151,7 @@ module zigbee_top #(
         .i_bus_in(w_msk_input), .o_bus_out(w_msk_out)
     );
 
-    cordic_wrapper #(.BUS_IN_WIDTH(BUS_IN_WIDTH), .BUS_OUT_WIDTH(BUS_OUT_WIDTH)) cordic_inst (
+    cordic_system_wrapper #(.BUS_IN_WIDTH(BUS_IN_WIDTH), .BUS_OUT_WIDTH(BUS_OUT_WIDTH)) cordic_inst (
         .i_clk(i_clk), .i_rst_n(i_rst_n), .i_cfg(w_cordic_cfg), .i_out_en(w_cordic_out_en),
         .i_bus_in(w_cordic_input), .o_bus_out(w_cordic_out)
     );
