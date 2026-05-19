@@ -19,5 +19,5 @@ vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/cordic_system_wrapper.sv
 
 # run
 n=lib_RTL.cordic_system_wrapper_tb 
-vsim -c ${n} -do "cordic_system.do"
+vsim -c ${n} -do "tb/wrappers/cordic/cordic_system.do"
 
