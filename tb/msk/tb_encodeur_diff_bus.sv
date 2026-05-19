@@ -44,7 +44,7 @@ module tb_encodeur_diff_bus;
 
     initial begin
         i_clk = 1'b0;
-        forever #10 i_clk = ~i_clk;
+        forever #50 i_clk = ~i_clk;
     end
 
     task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
