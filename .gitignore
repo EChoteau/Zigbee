@@ -4,3 +4,4 @@ tb/interface/script/lib_rtl/
 asic/synth/top/work/*
 asic/synth/top/reports/*
 asic/synth/top/netlist/*
+config/modelsim.ini
