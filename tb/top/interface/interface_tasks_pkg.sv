@@ -21,8 +21,8 @@ package interface_tasks_pkg;
     // Bound by top_tb
     logic i_clk;
     logic i_rst_n;
-    logic [BUS_IN_WIDTH-1:0] i_bus_in;
-    logic [BUS_OUT_WIDTH-1:0] o_bus_out;
+    logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in;
+    logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out;
     logic [2:0] i_wrapper_cfg;
 
     // =========================================================================
@@ -616,10 +616,10 @@ package interface_tasks_pkg;
             test_byte = 8'hA0 + i;
             
             // Inject all 8 bits
-            for (int bit = 0; bit < 8; bit++) begin
+            for (int bit_idx = 0; bit_idx < 8; bit_idx++) begin
                 bus_val = '0;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
-                bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit];
+                bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit_idx];
                 set_bus(bus_val);
                 repeat(1) @(posedge i_clk);
                 set_bus('0);
