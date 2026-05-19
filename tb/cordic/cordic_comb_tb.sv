@@ -1,4 +1,4 @@
-module cordic_top_tb();
+module cordic_comb_tb();
     parameter WIDTH = 6;
     parameter WIDTH_PHASE = WIDTH + 2;
     parameter NUM_STEPS = WIDTH + 2;

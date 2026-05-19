@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module cordic_top_sine_tb;
+module cordic_comb_sine_tb;
 
     // Parameters
     parameter WIDTH = 6;
@@ -54,7 +54,7 @@ module cordic_top_sine_tb;
         i_i_in_reg = 0;
         i_q_in_reg = 0;
         s_angle = 0.0;
-	    i_rst_n = 1;
+        i_rst_n = 1;
         
         @(posedge i_clk);
         
