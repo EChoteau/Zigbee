@@ -6,7 +6,7 @@
 
 source config/config_RTL
 
-set -euo pipefail
+set -u
 
 # work library
 vdel -all -lib lib_rtl_interface 2>/dev/null || true

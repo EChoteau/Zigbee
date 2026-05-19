@@ -1,12 +1,23 @@
+#!/bin/bash
 # =====================================================
 # Script qui lance les sims
 # =====================================================
 
 source config/config_RTL
 
-vsim -c -do tb/cordic/cordic_init_tb.do
-vsim -c -do tb/cordic/cordic_step_tb.do
-vsim -c -do tb/cordic/cordic_top_tb.do
+exit_code=0
+
+echo "Running: cordic_init_tb"
+vsim -c -do tb/cordic/cordic_init_tb.do || exit_code=$?
+
+echo "Running: cordic_step_tb"
+vsim -c -do tb/cordic/cordic_step_tb.do || exit_code=$?
+
+echo "Running: cordic_top_tb"
+vsim -c -do tb/cordic/cordic_top_tb.do || exit_code=$?
+
+exit $exit_code
+
 #vsim -do tb/cordic/cordic_top_sine_tb.do
 #vsim -do tb/cordic/boxcar_filter_tb.do
 #vsim -do tb/cordic/derive_tb.do

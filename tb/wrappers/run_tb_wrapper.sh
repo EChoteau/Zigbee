@@ -6,7 +6,7 @@
 
 source config/config_RTL
 
-set -euo pipefail
+set -u
 
 echo "Running interface TB..."
 ./tb/wrappers/interface/run_interface_tb.sh

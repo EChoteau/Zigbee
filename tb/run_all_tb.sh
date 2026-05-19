@@ -6,7 +6,7 @@
 
 source config/config_RTL
 
-set -euo pipefail
+set -u  # Exit on undefined variables, but allow commands to fail
 
 # Colors for output
 RED='\033[0;31m'
@@ -30,13 +30,15 @@ run_test() {
     local script=$2
     
     echo -e "${YELLOW}[TEST] $name${NC}"
+    # Run script and capture exit code without exiting on failure
     if $script 2>&1; then
         echo -e "${GREEN}✓ PASSED: $name${NC}"
-        ((passed++))
+        ((passed++)) || true
     else
-        echo -e "${RED}✗ FAILED: $name${NC}"
-        ((failed++))
-        failed_tests="$failed_tests\n  - $name"
+        local exit_code=$?
+        echo -e "${RED}✗ FAILED: $name (exit code: $exit_code)${NC}"
+        ((failed++)) || true
+        failed_tests="$failed_tests\n  - $name (exit code: $exit_code)"
     fi
     echo ""
 }

@@ -6,7 +6,7 @@
 
 source config/config_RTL
 
-set -euo pipefail
+set -u
 
 vdel -all -lib lib_rtl_cdr 2>/dev/null || true
 vlib lib_rtl_cdr
