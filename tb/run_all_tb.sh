@@ -45,7 +45,6 @@ run_test() {
 
 # Run all testbenches
 run_test "CORDIC" "./tb/cordic/script"
-run_test "TOP" "./tb/top/run_tb_top.sh"
 run_test "MSK RTL" "./tb/msk/run_simu_rtl.sh"
 run_test "MSK Wrapper" "./tb/msk/run_simu_rtl_wrapper.sh"
 run_test "DEMOD Compile" "./tb/demod/compile.sh"
@@ -55,6 +54,7 @@ run_test "CDR Wrapper" "./tb/wrappers/cdr/run_cdr_tb.sh"
 run_test "MSK Wrapper (Wrappers Dir)" "./tb/wrappers/msk/run_msk_tb.sh"
 run_test "DEMOD Wrapper" "./tb/wrappers/demod/run_demod_tb.sh"
 run_test "All Wrappers" "./tb/wrappers/run_tb_wrapper.sh"
+run_test "TOP" "./tb/top/run_tb_top.sh"
 
 # Summary
 echo "======================================================"

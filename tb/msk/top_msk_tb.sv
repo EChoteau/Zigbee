@@ -20,6 +20,10 @@ module top_msk_tb();
     // Séquence de test (10 bits)
     logic s_sequence [0:9] = '{1, 0, 1, 1, 0, 0, 1, 1, 0, 1};
 
+    // Debug signals
+    logic s_dbg_b_enc, s_dbg_a_I, s_dbg_a_Q;
+    logic signed [MSK_RES-1:0] s_dbg_I_BB, s_dbg_Q_BB;
+
     // Instanciation
     top_msk #(
         .SAMPLES_PER_HALF_SINE(SAMPLES_PER_HALF_SINE),
@@ -27,14 +31,23 @@ module top_msk_tb();
     ) DUT (
         .i_clk(s_clk),
         .i_rst_n(s_rst_n),
-	.i_flag_enable(s_flag_enable),
+	    .i_flag_enable(s_flag_enable),
         .i_enable_ech(s_enable_ech),
         .i_b_in(s_b_in),
         .o_I_BB(s_I_BB),
         .o_Q_BB(s_Q_BB),
-	.i_dbg_enc_override_en(1'b0),
-	.i_dbg_demux_override_en(1'b0),
-	.i_dbg_shaping_override_en(1'b0)
+        .i_dbg_enc_override_en(1'b0),
+        .i_dbg_enc_b_in(1'b0),
+        .i_dbg_demux_override_en(1'b0),
+        .i_dbg_demux_b_enc(1'b0),
+        .i_dbg_shaping_override_en(1'b0),
+        .i_dbg_shaping_a_I(1'b0),
+        .i_dbg_shaping_a_Q(1'b0),
+        .o_dbg_b_enc(s_dbg_b_enc),
+        .o_dbg_a_I(s_dbg_a_I),
+        .o_dbg_a_Q(s_dbg_a_Q),
+        .o_dbg_I_BB(s_dbg_I_BB),
+        .o_dbg_Q_BB(s_dbg_Q_BB)
     );
 
     // -------------------------------------------------------------------------
