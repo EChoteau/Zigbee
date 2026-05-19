@@ -45,7 +45,7 @@ Ce depot contient:
 ### Chaine CORDIC
 - Dossier: `rtl/cordic/`
 - Blocs clefs:
-	- estimation de phase CORDIC (`cordic.sv` / version pipeline),
+	- estimation de phase CORDIC (`cordic_comb.sv` / version pipeline),
 	- derivee de phase (`derivate.sv`),
 	- filtrage boxcar (`boxcar_filter.sv`),
 	- integration de la chaine (`cordic_system_top.sv`).

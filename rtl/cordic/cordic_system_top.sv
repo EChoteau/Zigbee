@@ -44,7 +44,7 @@ module cordic_system_top #(
 	end
     end
 
-    cordic #(
+    cordic_comb #(
         .WIDTH_IN(WIDTH_IN),
         .WIDTH_PHASE(WIDTH_PHASE)
     ) cordic_top_inst (

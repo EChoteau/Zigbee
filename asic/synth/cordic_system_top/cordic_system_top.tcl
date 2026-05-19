@@ -11,7 +11,7 @@ analyze -library WORK -format sverilog { \
     ../../../rtl/cordic/cordic_init.sv \
     ../../../rtl/cordic/cordic_step.sv \
     ../../../rtl/cordic/cordic_system_top.sv \
-    ../../../rtl/cordic/cordic.sv \
+    ../../../rtl/cordic/cordic_comb.sv \
     ../../../rtl/cordic/cordic_pipeline.sv \
     ../../../rtl/cordic/cordic_hybride.sv \
     ../../../rtl/cordic/derivate.sv \
