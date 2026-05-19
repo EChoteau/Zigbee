@@ -1,8 +1,6 @@
 #!/bin/sh
-set -eu
-
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-cd "$ROOT_DIR"
+# FoOOT_DIR"
 
 source config/config_RTL
 
