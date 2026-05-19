@@ -1,6 +1,5 @@
-lib_RTL
+lib_rtl
 transcript
-tb/interface/script/lib_rtl/
 asic/synth/top/work/*
 asic/synth/top/reports/*
 asic/synth/top/netlist/*

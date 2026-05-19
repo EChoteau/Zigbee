@@ -10,13 +10,10 @@ Ce depot contient:
 ## 1. Composantes principales de la puce
 
 ### Top-level d'integration
-- `rtl/top/zigbee_chip_top.sv`
-- Rassemble les sous-blocs `interface_top`, `top_msk` et `cordic_top`.
+- `rtl/top/zigbee_top.sv`
+- Rassemble les sous-blocs.
 - Gere un banc de 48 pads via des wrappers de configuration IO.
-- Selectionne le mode de fonctionnement via `i_cfg_mode_pins`:
-	- mode interface seule,
-	- mode MSK baseband seul,
-	- mode CORDIC seul.
+- Selectionne le mode de fonctionnement via `i_cfg_mode_pins`.
 
 ### Interface numerique (APB + serial)
 - Dossier: `rtl/interface/`
