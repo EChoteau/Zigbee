@@ -97,7 +97,7 @@ package interface_tasks_pkg;
     begin
         $display("[INTERFACE T0] Reset/Smoke test start");
 
-        assert (o_bus_out[BUS_OUT_PRDATA_LSB:BUS_OUT_PRDATA_MSB] == 8'h00)
+        assert (o_bus_out[BUS_OUT_PRDATA_MSB:BUS_OUT_PRDATA_LSB] == 8'h00)
             else $fatal(1, "[INTERFACE T0] Initial data should be 0");
 
         // Read CONTROL register (should be 0 after reset)
