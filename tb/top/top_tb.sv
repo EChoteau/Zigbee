@@ -30,6 +30,35 @@ module top_tb;
     // Alias for compatibility with wrapper test headers
     logic [2:0] i_cfg_local;
     assign i_cfg_local = i_wrapper_cfg;
+
+    // Bind top_tb signals into task packages
+    always_comb begin
+        interface_tasks_pkg::i_clk = i_clk;
+        interface_tasks_pkg::i_rst_n = i_rst_n;
+        interface_tasks_pkg::i_bus_in = i_bus_in;
+        interface_tasks_pkg::o_bus_out = o_bus_out;
+        interface_tasks_pkg::i_wrapper_cfg = i_wrapper_cfg;
+
+        demod_tasks_pkg::i_clk = i_clk;
+        demod_tasks_pkg::i_rst_n = i_rst_n;
+        demod_tasks_pkg::i_bus_in = i_bus_in;
+        demod_tasks_pkg::o_bus_out = o_bus_out;
+        demod_tasks_pkg::i_wrapper_cfg = i_wrapper_cfg;
+
+        interface_wrapper_tasks_pkg::i_clk = i_clk;
+        interface_wrapper_tasks_pkg::i_rst_n = i_rst_n;
+        interface_wrapper_tasks_pkg::i_bus_in = i_bus_in;
+        interface_wrapper_tasks_pkg::o_bus_out = o_bus_out;
+        interface_wrapper_tasks_pkg::i_cfg_local = i_cfg_local;
+
+        demod_wrapper_tasks_pkg::i_clk = i_clk;
+        demod_wrapper_tasks_pkg::i_rst_n = i_rst_n;
+        demod_wrapper_tasks_pkg::i_bus_in = i_bus_in;
+        demod_wrapper_tasks_pkg::o_bus_out = o_bus_out;
+        demod_wrapper_tasks_pkg::d_cfg_local = i_wrapper_cfg;
+        demod_wrapper_tasks_pkg::tb_i = tb_i;
+        demod_wrapper_tasks_pkg::tb_q = tb_q;
+    end
     
     // Interface wrapper configuration constants
     localparam logic [2:0] CFG_RX_ONLY   = 3'b000;  // APB + serial loopback
