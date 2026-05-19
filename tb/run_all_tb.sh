@@ -46,14 +46,16 @@ run_test() {
 # Run all testbenches
 run_test "CORDIC" "./tb/cordic/script"
 run_test "MSK RTL" "./tb/msk/run_simu_rtl.sh"
-run_test "MSK Wrapper" "./tb/msk/run_simu_rtl_wrapper.sh"
 run_test "DEMOD Compile" "./tb/demod/compile.sh"
 run_test "DEMOD Compile All" "./tb/demod/compile_all.sh"
-run_test "Interface Wrapper" "./tb/wrappers/interface/run_interface_tb.sh"
-run_test "CDR Wrapper" "./tb/wrappers/cdr/run_cdr_tb.sh"
-run_test "MSK Wrapper (Wrappers Dir)" "./tb/wrappers/msk/run_msk_tb.sh"
-run_test "DEMOD Wrapper" "./tb/wrappers/demod/run_demod_tb.sh"
-run_test "All Wrappers" "./tb/wrappers/run_tb_wrapper.sh"
+#run_test "CDR" "./tb/cdr/sim_script.sh"
+run_test "INTERFACE" "./tb/interface/script/script1.sh"
+run_test "Wrapper INTERFACE" "./tb/wrappers/interface/run_interface_tb.sh"
+run_test "Wrapper CDR" "./tb/wrappers/cdr/run_cdr_tb.sh"
+run_test "Wrapper MSK" "./tb/wrappers/msk/run_msk_tb.sh"
+run_test "Wrapper DEMOD" "./tb/wrappers/demod/run_demod_tb.sh"
+#run_test "Wrapper CORDIC" "./tb/wrappers/cordic/run_cordic_tb.sh"
+run_test "Wrappers All" "./tb/wrappers/run_tb_wrapper.sh"
 run_test "TOP" "./tb/top/run_tb_top.sh"
 
 # Summary
