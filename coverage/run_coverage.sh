@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 # Force project root to Zigbee (some environments resolve to filesystem root)
 ROOT_DIR="$ROOT_DIR/Zigbee"
 cd "$ROOT_DIR"
