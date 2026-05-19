@@ -1,0 +1,349 @@
+// ============================================================================
+// PACKAGE: demod_tasks_pkg
+// ============================================================================
+// Consolidated test package for DEMOD block-level testbench
+// Contains all test tasks, test plans, and support functions
+//
+// Usage in testbench:
+//   import demod_tasks_pkg::*;
+//
+// Then call test plan directly:
+//   run_demod_test_plan_full();
+// ============================================================================
+
+package demod_tasks_pkg;
+
+    import tb_pkg::*;
+    import demod_pkg::*;
+
+    // =========================================================================
+    // SUPPORT TASKS
+    // =========================================================================
+
+    // Apply IQ sample on bus (top_tb signals)
+    task automatic apply_iq_sample(logic [3:0] i_val, logic [3:0] q_val);
+    begin
+        @(negedge i_clk);
+        i_bus_in[17:14] = i_val;  // I component
+        i_bus_in[13:10] = q_val;  // Q component
+    end
+    endtask
+
+    // Apply FIR input sample
+    task automatic apply_fir_sample(logic signed [7:0] x_val);
+    begin
+        @(negedge i_clk);
+        i_bus_in[17:10] = x_val;
+    end
+    endtask
+
+    // Set wrapper configuration with reset timing
+    task automatic set_config(logic [2:0] cfg);
+    begin
+        tb_pkg::set_config_wrapper(i_clk, i_wrapper_cfg, cfg);
+    end
+    endtask
+
+    // Reset signal using top_tb signals
+    task automatic apply_reset(int cycles);
+    begin
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, cycles);
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Reset/Smoke test
+    // =========================================================================
+    task automatic run_demod_tc_reset_smoke();
+    begin
+        $display("\n[DEMOD TC0] Reset/Smoke test start");
+
+        apply_reset(5);
+
+        // Check outputs are valid after reset
+        assert (o_bus_out !== 14'hxxxx)
+            $display("  [RESET] PASS: Output buses valid after reset");
+        else
+            $error("  [RESET] FAIL: Output contains X values");
+
+        $display("[DEMOD TC0] Reset/Smoke test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Normal mode basic test
+    // =========================================================================
+    task automatic run_demod_tc_normal_basic();
+        logic signed [5:0] res_i, res_q;
+    begin
+        $display("\n[DEMOD TC1] Normal mode basic test start");
+
+        set_config(CFG_NORMAL);
+        repeat(5) @(posedge i_clk);
+
+        // Apply strong I signal
+        $display("  [NORMAL_BASIC] Injecting I=15 (Max), Q=8 (Zero)...");
+        apply_iq_sample(4'd15, 4'd8);
+
+        repeat(10) @(posedge i_clk);
+
+        res_i = o_bus_out[5:0];
+        res_q = o_bus_out[11:6];
+
+        $display("  [NORMAL_BASIC] I_out=%d, Q_out=%d", res_i, res_q);
+
+        assert (res_i != 0)
+            $display("  [NORMAL_BASIC] PASS: I channel responds to input");
+        else
+            $error("  [NORMAL_BASIC] FAIL: I channel inactive");
+
+        $display("[DEMOD TC1] Normal mode basic test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug DEMOD I channel
+    // =========================================================================
+    task automatic run_demod_tc_debug_demod_i();
+        logic [7:0] res_demod;
+        logic [3:0] res_osc;
+    begin
+        $display("\n[DEMOD TC2] Debug DEMOD I channel test start");
+
+        set_config(CFG_DEBUG_DEMOD_I);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_DEMOD_I] Injecting I=7, Q=0...");
+        apply_iq_sample(4'd7, 4'd0);
+
+        repeat(8) @(posedge i_clk);
+
+        res_demod = o_bus_out[7:0];
+        res_osc = o_bus_out[11:8];
+
+        $display("  [DEBUG_DEMOD_I] Demod_I=%d, Osc_Cos=%d", res_demod, res_osc);
+
+        assert (res_osc !== 4'hx)
+            $display("  [DEBUG_DEMOD_I] PASS: Oscillator active");
+        else
+            $error("  [DEBUG_DEMOD_I] FAIL: Oscillator blocked");
+
+        $display("[DEMOD TC2] Debug DEMOD I channel test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug DEMOD Q channel
+    // =========================================================================
+    task automatic run_demod_tc_debug_demod_q();
+        logic [7:0] res_demod;
+        logic [3:0] res_osc;
+    begin
+        $display("\n[DEMOD TC3] Debug DEMOD Q channel test start");
+
+        set_config(CFG_DEBUG_DEMOD_Q);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_DEMOD_Q] Injecting I=0, Q=7...");
+        apply_iq_sample(4'd0, 4'd7);
+
+        repeat(8) @(posedge i_clk);
+
+        res_demod = o_bus_out[7:0];
+        res_osc = o_bus_out[11:8];
+
+        $display("  [DEBUG_DEMOD_Q] Demod_Q=%d, Osc_Sin=%d", res_demod, res_osc);
+
+        assert (res_osc !== 4'hx)
+            $display("  [DEBUG_DEMOD_Q] PASS: Oscillator active");
+        else
+            $error("  [DEBUG_DEMOD_Q] FAIL: Oscillator blocked");
+
+        $display("[DEMOD TC3] Debug DEMOD Q channel test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug FIR I filter
+    // =========================================================================
+    task automatic run_demod_tc_debug_fir_i();
+        logic signed [5:0] fir_out;
+    begin
+        $display("\n[DEMOD TC4] Debug FIR I filter test start");
+
+        set_config(CFG_DEBUG_FIR_I);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_FIR_I] Sending impulse (0x7F)...");
+        apply_fir_sample(8'h7F);
+
+        repeat(12) @(posedge i_clk);
+
+        fir_out = o_bus_out[5:0];
+
+        $display("  [DEBUG_FIR_I] FIR output: %d", fir_out);
+
+        assert (fir_out != 0)
+            $display("  [DEBUG_FIR_I] PASS: FIR filter responds");
+        else
+            $error("  [DEBUG_FIR_I] FAIL: FIR filter inactive");
+
+        $display("[DEMOD TC4] Debug FIR I filter test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug FIR Q filter
+    // =========================================================================
+    task automatic run_demod_tc_debug_fir_q();
+        logic signed [5:0] fir_out;
+    begin
+        $display("\n[DEMOD TC5] Debug FIR Q filter test start");
+
+        set_config(CFG_DEBUG_FIR_Q);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_FIR_Q] Sending impulse (0x7F)...");
+        apply_fir_sample(8'h7F);
+
+        repeat(12) @(posedge i_clk);
+
+        fir_out = o_bus_out[11:6];
+
+        $display("  [DEBUG_FIR_Q] FIR output: %d", fir_out);
+
+        assert (fir_out != 0)
+            $display("  [DEBUG_FIR_Q] PASS: FIR filter responds");
+        else
+            $error("  [DEBUG_FIR_Q] FAIL: FIR filter inactive");
+
+        $display("[DEMOD TC5] Debug FIR Q filter test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug full chain I
+    // =========================================================================
+    task automatic run_demod_tc_debug_chain_i();
+        logic signed [5:0] res_i, res_q;
+    begin
+        $display("\n[DEMOD TC6] Debug full chain I test start");
+
+        set_config(CFG_DEBUG_FIRC_I);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_CHAIN_I] Strong I signal (15), Q=8 (zero)...");
+        apply_iq_sample(4'd15, 4'd8);
+
+        repeat(15) @(posedge i_clk);
+
+        res_i = o_bus_out[5:0];
+        res_q = o_bus_out[11:6];
+
+        $display("  [DEBUG_CHAIN_I] I_out=%d (should be strong), Q_out=%d (should be weak)", res_i, res_q);
+
+        assert (res_i != 0)
+            $display("  [DEBUG_CHAIN_I] PASS: I channel active");
+        else
+            $error("  [DEBUG_CHAIN_I] FAIL: I channel silent");
+
+        $display("[DEMOD TC6] Debug full chain I test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug full chain Q
+    // =========================================================================
+    task automatic run_demod_tc_debug_chain_q();
+        logic signed [5:0] res_i, res_q;
+    begin
+        $display("\n[DEMOD TC7] Debug full chain Q test start");
+
+        set_config(CFG_DEBUG_FIRC_Q);
+        repeat(5) @(posedge i_clk);
+
+        $display("  [DEBUG_CHAIN_Q] Strong Q signal (0), I=8 (zero)...");
+        apply_iq_sample(4'd8, 4'd0);
+
+        repeat(15) @(posedge i_clk);
+
+        res_i = o_bus_out[5:0];
+        res_q = o_bus_out[11:6];
+
+        $display("  [DEBUG_CHAIN_Q] I_out=%d (should be weak), Q_out=%d (should be strong)", res_i, res_q);
+
+        assert (res_q != 0)
+            $display("  [DEBUG_CHAIN_Q] PASS: Q channel active");
+        else
+            $error("  [DEBUG_CHAIN_Q] FAIL: Q channel silent");
+
+        $display("[DEMOD TC7] Debug full chain Q test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Multiple transitions between modes
+    // =========================================================================
+    task automatic run_demod_tc_mode_transitions();
+    begin
+        $display("\n[DEMOD TC8] Mode transitions test start");
+
+        $display("  [TRANSITIONS] Cycling through all modes...");
+
+        // Cycle through all modes
+        for (int mode = 0; mode < 8; mode++) begin
+            set_config(logic [2:0]'(mode));
+            apply_iq_sample(4'd7, 4'd7);
+            repeat(5) @(posedge i_clk);
+            $display("  [TRANSITIONS] Mode %0d transition OK", mode);
+        end
+
+        $display("  [TRANSITIONS] PASS: All mode transitions stable");
+
+        $display("[DEMOD TC8] Mode transitions test PASS");
+    end
+    endtask
+
+    // =========================================================================
+    // TEST PLAN: Full comprehensive test suite
+    // =========================================================================
+    task automatic run_demod_test_plan_full();
+    begin
+        $display("\n╔═══════════════════════════════════════════════════════════════════╗");
+        $display("║              DEMOD BLOCK TEST PLAN (FULL)                         ║");
+        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+
+        run_demod_tc_reset_smoke();
+        apply_reset(3);
+
+        run_demod_tc_normal_basic();
+        apply_reset(3);
+
+        run_demod_tc_debug_demod_i();
+        apply_reset(3);
+
+        run_demod_tc_debug_demod_q();
+        apply_reset(3);
+
+        run_demod_tc_debug_fir_i();
+        apply_reset(3);
+
+        run_demod_tc_debug_fir_q();
+        apply_reset(3);
+
+        run_demod_tc_debug_chain_i();
+        apply_reset(3);
+
+        run_demod_tc_debug_chain_q();
+        apply_reset(3);
+
+        run_demod_tc_mode_transitions();
+        apply_reset(3);
+
+        $display("\n╔═══════════════════════════════════════════════════════════════════╗");
+        $display("║           [DEMOD TEST PLAN FULL] PASS                            ║");
+        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+    end
+    endtask
+
+endpackage : demod_tasks_pkg

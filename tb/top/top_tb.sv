@@ -2,8 +2,12 @@
 
 // Import generic testbench utilities
 import tb_pkg::*;
+import interface_pkg::*;
 import interface_wrapper_tasks_pkg::*;
 import interface_tasks_pkg::*;
+import demod_pkg::*;
+import demod_wrapper_tasks_pkg::*;
+import demod_tasks_pkg::*;
 
 module top_tb;
     // Clock and reset
