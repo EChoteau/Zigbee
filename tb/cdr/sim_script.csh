@@ -1,14 +1,34 @@
 #!/usr/bin/csh
+
+if ($#argv < 1) then
+    echo "Usage: $0 <testbench> [define]"
+    exit 1
+endif
+
+set tb         = $1
+set rtl_dir    = ../../rtl/cdr
+set tb_dir     = ../../tb/cdr
+set script_dir = `pwd`
+
 vdel -all -lib work
 vlib work
 vmap work work
-<<<<<<< HEAD:tb/CDR/sim_script.csh
-set test_bench_dir=test_bench
-=======
-set test_bench_dir=../../tb/cdr
->>>>>>> e3a47fc (renamed files and modules : CDR --> cdr):tb/cdr/sim_script.csh
-set rtl_dir="."
-vlog -sv $rtl_dir/*.sv -define $2 -define behaviour_model
-vlog -sv $test_bench_dir/*.sv
-vsim -voptargs=+acc work.$1 -L c35_CORELIB -sdfmax /tb_cdr/dut=dc/netlist/alexander.sdf -sdfnoerror -sdfnowarn
 
+vlog -sv $tb_dir/cdr_tasks_pkg.sv
+### specifique a la compile CDR. remplacer par votre code de compile et ajouter +cover
+if ($#argv >= 2) then
+    vlog -sv +cover $rtl_dir/*.sv -define $2 -define behaviour_model
+else
+    vlog -sv +cover $rtl_dir/*.sv -define behaviour_model
+endif
+
+vlog -sv `ls $tb_dir/*.sv | grep -v cdr_tasks_pkg`
+### work.$tb specifique cdr remplacer par le votre
+vsim -coverage -c \
+     -voptargs="+cover=bcest +acc=npr" \
+     work.$tb -L c35_CORELIB \
+     -do $script_dir/run_cov.do
+
+vcover report -code bcesft -details -file coverage_report.txt cov.ucdb
+vcover report -html -code bcesft -cvg -directive -details=abcdefgst -htmldir html_coverage/ cov.ucdb
+vcover report -totals -code bcesft cov.ucdb
