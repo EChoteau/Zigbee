@@ -1,142 +1,94 @@
+// ==============================================================
+// simple_bench.sv — Testbench CDR avec import du package
+// ==============================================================
 `timescale 1ns/1ps
+
+import cdr_tasks_pkg::*;
 
 module tb_cdr;
 
-    //---------------------------------
-    // Clock 50 MHz
-    //---------------------------------
-    reg clk = 0;
-    always #50 clk = ~clk;   // 20ns period → 50 MHz
+    // ==========================================================================
+    // CLOCK & RESET
+    // ==========================================================================
+    logic clk = 0;
+    always #50 clk = ~clk;  // 100ns → 10 MHz
 
-    //---------------------------------
-    // Reset
-    //---------------------------------
-    reg rst;
-    
-    //---------------------------------
-    // Inputs to CDR
-    //---------------------------------
-    reg  signed [5:0] dphi;
-    
-    //---------------------------------
-    // Outputs
-    //---------------------------------
-    wire decision_out;
-    wire clk_rec;
+    logic rst ;
 
-    //---------------------------------
-    // Instantiate DUT
-    //---------------------------------
+    // ==========================================================================
+    // BUS
+    //   in_bus[5:0]  → dphi (phase derivative, signed 6 bits)
+    //   out_bus[0]   → decision_out
+    //   out_bus[1]   → clk_rec
+    // ==========================================================================
+    logic signed [7:0] in_bus;
+    logic        [1:0] out_bus;
+
+    wire decision_out = out_bus[0];
+    wire clk_rec      = out_bus[1];
+
+    // ==========================================================================
+    // DUT
+    // ==========================================================================
     cdr_top dut (
-        .i_clk(clk),
-        .i_rst_n(rst),
-        .i_dphi(dphi),
-        .o_data(decision_out),
-<<<<<<< HEAD
-        .o_enable(clk_rec)
-=======
-        .o_enable(clk_rec),
-        // debug signals.
-        .i_recovered_clk_d('0),
-        .i_decision_d('0),
-        .i_up_d('0),
-        .i_down_d('0),
-        .i_ack_d('0),
-        .i_control_d('0),
-        //debug control 
-        .i_phase_detector_debug('0),
-        .i_loop_filter_debug('0),
-        .i_nco_debug('0)
->>>>>>> ebe6c18 (fixed the wrapper by adding output signal to top)
+        .i_clk    (clk),
+        .i_rst_n  (rst),
+        .i_dphi   (in_bus),
+        .o_data   (out_bus[0]),
+        .o_enable (out_bus[1]),
+        .i_recovered_clk_d      ('0),
+        .i_decision_d           ('0),
+        .i_up_d                 ('0),
+        .i_down_d               ('0),
+        .i_ack_d                ('0),
+        .i_control_d            ('0),
+        .i_phase_detector_debug ('0),
+        .i_loop_filter_debug    ('0),
+        .i_nco_debug            ('0)
     );
 
-    //---------------------------------
-    // Generate 2 MHz data (25 cycles of 50MHz)
-    //---------------------------------
-    reg data_bit;
-    integer cnt;
-
-    initial begin
-        data_bit = 0;
-        cnt = 0;
-    end
-    reg data_bit_p;
-    reg data_bit_i;
-    int nb_data_t=0;
-   reg [2:0] same_count = 0;
-    reg new_data;
-    always @(posedge clk) begin
-    if (cnt == 2) begin
-
-        new_data = $random; // génère une nouvelle valeur aléatoire
-
-        if (new_data == data_bit) begin
-            same_count <= same_count + 1;
-        end else begin
-            same_count <= 0;
-        end
-
-        // Si data_bit est resté identique 7 cycles, force changement
-        if (same_count >= 7) begin
-            data_bit <= ~data_bit; // ou data_bit <= $random; pour random
-            same_count <= 0;
-        end else begin
-            data_bit <= new_data;
-        end
-        data_bit_p <= data_bit;
-        nb_data_t <= nb_data_t + 1;
-        //data_bit_i <= data_bit;
-    
-    end 
-    if ( cnt==4 )begin
-    
-    cnt <= 0;
-    
-    end
-    else  begin
-        cnt <= cnt + 1;
-    end
-end
-
-
-    //---------------------------------
-    // Generate derivative phase model
-    // Simple model:
-    // If clock not aligned → produce +/- 8
-    //---------------------------------
-    
-    always @(posedge clk) begin
-        if (data_bit)
-            dphi <= 6'sd8;     // positive slope
-        else
-            dphi <= -6'sd8;    // negative slope
-    end
+    // ==========================================================================
+    // VÉRIFICATION CONTINUE
+    // ==========================================================================
     int nb_data = 0;
-    int nb_err = 0;
-    always @(posedge clk_rec)
-    begin
-        nb_data = nb_data+1;
-     assert(decision_out==data_bit_p);
-     if (decision_out!=data_bit_p) nb_err =nb_err+1;
-     
-     end
-    //---------------------------------
-    // Reset sequence
-    //---------------------------------
-    initial begin
-        rst = 0;
-        #500;
-        rst = 1;
+    int nb_err  = 0;
+
+    always @(posedge clk_rec) begin
+        nb_data++;
+        assert (out_bus[0] !== 1'bx)
+            else $error("[t=%0t] out_bus[0] indéfini (X)", $time);
     end
 
-    //---------------------------------
-    // Simulation time
-    //---------------------------------
+    // ==========================================================================
+    // SÉQUENCE PRINCIPALE
+    // ==========================================================================
+    int seq_errors;
+
     initial begin
-        #20000000;
-        
-        $display("nombre de data transmis = %0d, recu =%0d  erreur = %0d TEB = %0f",nb_data_t,nb_data,nb_err,nb_err/nb_data);
-        $stop;
+        // Reset
+        apply_reset(rst, in_bus, 500);
+        wait_cycles(clk, 5);
+
+        // --- Test 1 : séquence fixe ---
+        $display("\n--- Test 1: Séquence fixe ---");
+        send_dphi(in_bus, 1); #500;
+        send_dphi(in_bus, 0); #500;
+        send_dphi(in_bus, 1); #500;
+        send_dphi(in_bus, 0); #500;
+
+        // --- Test 2 : séquence aléatoire ---
+        $display("\n--- Test 2: Séquence aléatoire (20000 bits) ---");
+        run_random_sequence(in_bus, out_bus, clk, 20000, seq_errors);
+        nb_err += seq_errors;
+
+        // --- Résultats ---
+        $display("\n=== Résultats ===");
+        $display("  Données reçues : %0d", nb_data);
+        $display("  Erreurs        : %0d", nb_err);
+        if (nb_data > 0)
+            $display("  TEB            : %0e", real'(nb_err) / real'(nb_data));
+        $display("finish");
+        $finish;
     end
 
 endmodule

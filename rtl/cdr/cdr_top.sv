@@ -68,7 +68,7 @@ module cdr_top #(
         end else begin
             s_sample_clk_d <= s_sample_clk;
             // On capture la décision uniquement sur le front montant de l'horloge récupérée
-            if (s_sample_clk & ~s_sample_clk_d) begin
+            if (~s_sample_clk & s_sample_clk_d) begin
                 s_decision_out <= o_decision;
             end
         end
