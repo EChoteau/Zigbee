@@ -1,5 +1,7 @@
+#!/bin/bash
 # =====================================================
-# Script qui lance les sims
+# Testbench: TOP
+# Run from project root: ./tb/top/run_tb_top.sh
 # =====================================================
 
 source config/config_RTL

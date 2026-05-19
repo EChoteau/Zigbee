@@ -1,20 +1,23 @@
 #!/bin/bash
+# =====================================================
+# Master Testbench: All Wrappers
+# Run from project root: ./tb/wrappers/run_tb_wrapper.sh
+# =====================================================
+
+source config/config_RTL
+
 set -euo pipefail
-cd "$(dirname "$0")"
 
 echo "Running interface TB..."
-cd interface/
-source run_interface_tb.sh
-cd ..
+./tb/wrappers/interface/run_interface_tb.sh
 
 echo "Running demod TB..."
-cd demod/
-source run_demod_tb.sh
-cd ..
+./tb/wrappers/demod/run_demod_tb.sh
 
 echo "Running CDR TB..."
-cd cdr/
-source run_cdr_tb.sh
-cd ..
+./tb/wrappers/cdr/run_cdr_tb.sh
+
+echo "Running MSK TB..."
+./tb/wrappers/msk/run_msk_tb.sh
 
 echo "All done."

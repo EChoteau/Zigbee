@@ -1,4 +1,10 @@
 #!/bin/bash
+# =====================================================
+# Testbench: DEMOD - Compile
+# Run from project root: ./tb/demod/compile.sh
+# =====================================================
+
+source config/config_RTL
 
 # 1. Création de la librairie de travail (work)
 # On supprime l'ancienne si elle existe pour repartir de zéro
@@ -13,7 +19,7 @@ vmap work work
 # -sv indique que nous utilisons le SystemVerilog
 echo "Compiling design..."
 vlog -sv +acc rtl/demod/WAVE/wave_generator.sv
-vlog -sv +acc demod.sv
+vlog -sv +acc rtl/demod/demod.sv
 
 vlog -sv +acc rtl/demod/FIR/delay_line.v
 vlog -sv +acc rtl/demod/FIR/coeff_rom.v
