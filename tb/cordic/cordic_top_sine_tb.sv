@@ -24,7 +24,7 @@ module cordic_top_sine_tb;
     assign o_phase_out_reg = w_phase_out_raw;
 
     // --- Instantiate the Device Under Test (DUT) ---
-    cordic_top #(
+    cordic #(
         .WIDTH_IN(WIDTH),
         .WIDTH_PHASE(WIDTH_PHASE),
         .NUM_STEPS(NUM_STEPS)

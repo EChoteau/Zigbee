@@ -1,4 +1,4 @@
-module cordic_top #(
+module cordic #(
     parameter int WIDTH_IN = 6,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
@@ -26,10 +26,10 @@ module cordic_top #(
     // Elaboration-time parameter checks to ensure safe use of ATAN_TABLE
     initial begin
         if (NUM_STEPS > 8) begin
-            $error("cordic_top: NUM_STEPS (%0d) exceeds size of ATAN_TABLE (8 entries).", NUM_STEPS);
+            $error("cordic: NUM_STEPS (%0d) exceeds size of ATAN_TABLE (8 entries).", NUM_STEPS);
         end
         if (WIDTH_PHASE < 8) begin
-            $error("cordic_top: WIDTH_PHASE (%0d) is less than 8; ATAN_TABLE constants are 8-bit values.", WIDTH_PHASE);
+            $error("cordic: WIDTH_PHASE (%0d) is less than 8; ATAN_TABLE constants are 8-bit values.", WIDTH_PHASE);
         end
     end
 
@@ -84,4 +84,3 @@ module cordic_top #(
     end
 
 endmodule
-

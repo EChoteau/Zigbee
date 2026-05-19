@@ -11,7 +11,7 @@ Ce depot contient:
 
 ### Top-level d'integration
 - `rtl/top/zigbee_chip_top.sv`
-- Rassemble les sous-blocs `interface_top`, `top_msk` et `cordic_top`.
+ - Rassemble les sous-blocs `interface_top`, `top_msk` et `cordic`.
 - Gere un banc de 48 pads via des wrappers de configuration IO.
 - Selectionne le mode de fonctionnement via `i_cfg_mode_pins`:
 	- mode interface seule,
@@ -45,7 +45,7 @@ Ce depot contient:
 ### Chaine CORDIC
 - Dossier: `rtl/cordic/`
 - Blocs clefs:
-	- estimation de phase CORDIC (`cordic_top.sv` / version pipeline),
+	- estimation de phase CORDIC (`cordic.sv` / version pipeline),
 	- derivee de phase (`derivate.sv`),
 	- filtrage boxcar (`boxcar_filter.sv`),
 	- integration de la chaine (`cordic_system_top.sv`).
