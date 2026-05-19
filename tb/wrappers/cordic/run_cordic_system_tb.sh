@@ -3,14 +3,14 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # work library
-vdel -all -lib lib_rtl_cordic_system 2>/dev/null || true
-vlib lib_rtl_cordic_system
-vmap lib_rtl lib_rtl_cordic_system
+vdel -all -lib lib_rtl 2>/dev/null || true
+vlib lib_rtl
+vmap lib_rtl lib_rtl
 
 # compile RTL and TB
-vlog -sv ../../../rtl/cordic/*.sv -work lib_rtl_cordic_system
-vlog -sv ../../../rtl/top/wrappers/cordic_system_wrapper.sv -work lib_rtl_cordic_system
-vlog -sv ./tb_cordic_system_wrapper.sv -work lib_rtl_cordic_system
+vlog -sv ../../../rtl/cordic/*.sv -work lib_rtl
+vlog -sv ../../../rtl/top/wrappers/cordic_system_wrapper.sv -work lib_rtl
+vlog -sv ./tb_cordic_system_wrapper.sv -work lib_rtl
 
 
 vlog -incr -sv -work lib_RTL +acc ../../../rtl/cordic/*.sv
