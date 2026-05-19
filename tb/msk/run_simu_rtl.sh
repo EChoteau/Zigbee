@@ -13,4 +13,4 @@ vmap work work
 vlog -sv rtl/msk/*.sv -work work
 vlog -sv tb/msk/top_msk_tb.sv -work work
 
-vsim -voptargs=+acc work.top_msk_tb
+vsim -c -voptargs=+acc work.top_msk_tb
