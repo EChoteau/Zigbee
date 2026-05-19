@@ -2,15 +2,15 @@
 # TB Demod Complete - POST-SYNTHESIS
 # =====================================================
 
-if ![file isdirectory lib_SYNTH] {
-    vlib lib_SYNTH
-    vmap lib_SYNTH lib_SYNTH
+if ![file isdirectory lib_synth] {
+    vlib lib_synth
+    vmap lib_synth lib_synth
 }
 
-vlog -incr -sv -work lib_SYNTH +acc ../../asic/synth/demod_system/netlist/demod_system_synth.v
-vlog -incr -sv -work lib_SYNTH +acc tb_all.sv
+vlog -incr -sv -work lib_synth +acc ../../asic/synth/demod_system/netlist/demod_system_synth.v
+vlog -incr -sv -work lib_synth +acc tb_all.sv
 
-vsim -voptargs=+acc lib_SYNTH.tb_demod_system \
+vsim -voptargs=+acc lib_synth.tb_demod_system \
      -sdfmax /tb_demod_system/dut=../../asic/synth/demod_system/netlist/demod_system_synth.sdf \
      -sdfnoerror -sdfnowarn \
      -L c35_CORELIB

@@ -3,15 +3,15 @@
 # =====================================================
 
 # Create the library only if it doesn't exist
-if ![file isdirectory lib_RTL] {
-    vlib lib_RTL
-    vmap lib_RTL lib_RTL
+if ![file isdirectory lib_rtl] {
+    vlib lib_rtl
+    vmap lib_rtl lib_rtl
 }
 
-vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
-vlog -incr -sv -work lib_RTL +acc tb/cordic/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/cordic/*.sv
+vlog -incr -sv -work lib_rtl +acc tb/cordic/*.sv
 
-vsim -voptargs=+acc lib_RTL.boxcar_filter_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
+vsim -voptargs=+acc lib_rtl.boxcar_filter_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 add wave -position insertpoint  \
 sim:/boxcar_filter_tb/i_clk \

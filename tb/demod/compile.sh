@@ -6,14 +6,14 @@
 
 source config/config_RTL
 
-# 1. Création de la librairie de travail (work)
+# 1. Création de la librairie de travail (lib_rtl)
 # On supprime l'ancienne si elle existe pour repartir de zéro
-if [ -d "work" ]; then
-    rm -rf work
+if [ -d "lib_rtl" ]; then
+    rm -rf lib_rtl
 fi
 
-vlib work
-vmap work work
+vlib lib_rtl
+vmap lib_rtl lib_rtl
 
 # 2. Compilation des fichiers
 # -sv indique que nous utilisons le SystemVerilog
@@ -36,7 +36,7 @@ if [ $? -eq 0 ]; then
     echo "----------------------------------------------------"
     echo " Compilation réussie !"
     echo " Pour lancer la simulation, tapez :"
-    echo " vsim work.wave_generator_tb"
+    echo " vsim lib_rtl.wave_generator_tb"
     echo "----------------------------------------------------"
 else
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"

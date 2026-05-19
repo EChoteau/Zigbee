@@ -3,24 +3,24 @@
 # =====================================================
 
 # Create the library only if it doesn't exist
-if ![file isdirectory lib_RTL] {
-    vlib lib_RTL
-    vmap lib_RTL lib_RTL
+if ![file isdirectory lib_rtl] {
+    vlib lib_rtl
+    vmap lib_rtl lib_rtl
 }
 
-vlog -incr -sv -work lib_RTL +acc rtl/top/zigbee_top.sv
-vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/cdr/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/demod/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/demod/FIR/*.v
-vlog -incr -sv -work lib_RTL +acc rtl/demod/WAVE/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/msk/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/top/zigbee_top.sv
+vlog -incr -sv -work lib_rtl +acc rtl/top/wrappers/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/interface/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/cdr/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/cordic/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/demod/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/demod/FIR/*.v
+vlog -incr -sv -work lib_rtl +acc rtl/demod/WAVE/*.sv
+vlog -incr -sv -work lib_rtl +acc rtl/msk/*.sv
 
-vlog -incr -sv -work lib_RTL +acc tb/top/*.sv
+vlog -incr -sv -work lib_rtl +acc tb/top/*.sv
 
-vsim -voptargs=+acc lib_RTL.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
+vsim -voptargs=+acc lib_rtl.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 
 add wave -position insertpoint  \
 sim:/top_tb/i_clk \

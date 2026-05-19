@@ -6,13 +6,13 @@
 
 source config/config_RTL
 
-# 1. Création de la librairie de travail (work)
-if [ -d "work" ]; then
-    rm -rf work
+# 1. Création de la librairie de travail (lib_rtl)
+if [ -d "lib_rtl" ]; then
+    rm -rf lib_rtl
 fi
 
-vlib work
-vmap work work
+vlib lib_rtl
+vmap lib_rtl lib_rtl
 
 # 2. Compilation du Design (RTL)
 echo "Compiling design (WAVE, DEMOD, FIR)..."
@@ -43,7 +43,7 @@ if [ $? -eq 0 ]; then
     echo "----------------------------------------------------"
     echo " Compilation réussie !"
     echo " Pour lancer la simulation du système complet, tapez :"
-    echo " vsim -voptargs=\"+acc\" work.system_tb"
+    echo " vsim -voptargs=\"+acc\" lib_rtl.system_tb"
     echo "----------------------------------------------------"
 else
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
