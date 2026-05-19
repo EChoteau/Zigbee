@@ -4,19 +4,15 @@ module cordic_system_wrapper_tb();
 
     parameter int WIDTH = 6;
     parameter int WIDTH_PHASE = WIDTH + 2;
-    parameter int BUS_A_WIDTH = 12;
-    parameter int BUS_B_WIDTH = 10;
-    parameter int BUS_C_WIDTH = 12;
-    parameter int BUS_D_WIDTH = 2;
-    parameter int BUS_IN_WIDTH  = BUS_A_WIDTH + BUS_B_WIDTH;
-    parameter int BUS_OUT_WIDTH = BUS_C_WIDTH + BUS_D_WIDTH;
+    // unified bus widths (IN = 22 bits, OUT = 14 bits)
+    parameter int BUS_IN_WIDTH  = 22;
+    parameter int BUS_OUT_WIDTH = 14;
     parameter int CFG_WIDTH = 3;
     parameter real PI = 3.141592653589793;
  
     // DUT signals
     logic i_clk;
     logic i_rst_n;
-    logic [2:0] i_top_cfg;
     logic [2:0] i_wrapper_cfg;
     logic [BUS_IN_WIDTH-1:0] i_bus_in;
     logic [BUS_OUT_WIDTH-1:0] o_bus_out;
@@ -58,14 +54,35 @@ module cordic_system_wrapper_tb();
     );
 
     // Reset and init
+    task automatic set_config(logic [CFG_WIDTH-1:0] cfg);
+    begin
+        i_wrapper_cfg = cfg;
+        @(negedge i_clk);
+    end
+    endtask
+
+    task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
+    begin
+        i_bus_in = bus_val;
+        @(negedge i_clk);
+    end
+    endtask
+
+    task automatic apply_reset(int cycles);
+    begin
+        i_rst_n = 1'b0;
+        repeat(cycles) @(negedge i_clk);
+        i_rst_n = 1'b1;
+        repeat(2) @(negedge i_clk);
+    end
+    endtask
+
     initial begin
         i_rst_n = 1'b0;
-        i_top_cfg = 3'b010;    
-        i_wrapper_cfg = 3'b000; 
+        i_wrapper_cfg = 3'b000;
         i_bus_in = '0;
         i_out_en = 1'b1;
-        repeat (4) @(negedge i_clk);
-        i_rst_n = 1'b1;
+        apply_reset(4);
     end
 
 /*------------------------Sequence tasks--------------------------------*/
@@ -123,7 +140,7 @@ module cordic_system_wrapper_tb();
         logic signed [WIDTH_PHASE-1:0] curr_deriv;
 
         // Reset stimulus: check that the output is connected and stable at 0
-        i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, '0 };
+        i_bus_in = '0;
         repeat (5) @(negedge i_clk);
 
         assert (!$isunknown(o_bus_out[WIDTH_PHASE-1:0]))
@@ -135,7 +152,8 @@ module cordic_system_wrapper_tb();
         for (int i = 0; i < 20; i = i + 1) begin
             phase_val = i;
             @(negedge i_clk);
-            i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
+            i_bus_in = '0;
+            i_bus_in[19:12] = phase_val;
             @(negedge i_clk);
             curr_deriv = $signed(o_bus_out[WIDTH_PHASE-1:0]);
 
@@ -153,7 +171,8 @@ module cordic_system_wrapper_tb();
         for (int i = 20; i < 40; i = i + 1) begin
             phase_val = 39 - i;
             @(negedge i_clk);
-            i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
+            i_bus_in = '0;
+            i_bus_in[19:12] = phase_val;
             @(negedge i_clk);
             curr_deriv = $signed(o_bus_out[WIDTH_PHASE-1:0]);
 
@@ -177,12 +196,14 @@ module cordic_system_wrapper_tb();
 
         phase_step = '0;
         @(negedge i_clk);
-        i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
+        i_bus_in = '0;
+        i_bus_in[19:12] = phase_step;
         repeat (4) @(negedge i_clk);
 
         phase_step = {{(WIDTH_PHASE-WIDTH){1'b0}}, {1'b0, {(WIDTH-1){1'b1}}}};
         @(negedge i_clk);
-        i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_step };
+        i_bus_in = '0;
+        i_bus_in[19:12] = phase_step;
 
         prev_out = $signed(o_bus_out[WIDTH_PHASE-1:0]);
         seen_change = 1'b0;
@@ -353,7 +374,8 @@ module cordic_system_wrapper_tb();
         // Phase = 0 for several cycles (derivative = 0)
         phase_val = '0;
         @(negedge i_clk);
-        i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
+        i_bus_in = '0;
+        i_bus_in[19:12] = phase_val;
         repeat (5) @(negedge i_clk);
 
         assert (!$isunknown(o_bus_out))
@@ -363,7 +385,8 @@ module cordic_system_wrapper_tb();
         for (int i = 0; i < 20; i = i + 1) begin
             phase_val = i;
             @(negedge i_clk);
-            i_bus_in = { {(BUS_IN_WIDTH-WIDTH_PHASE){1'b0}}, phase_val };
+            i_bus_in = '0;
+            i_bus_in[19:12] = phase_val;
         end
 
         // Monitor filter response to derivative step for N cycles
