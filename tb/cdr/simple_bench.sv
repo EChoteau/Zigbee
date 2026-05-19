@@ -15,17 +15,19 @@ module tb_cdr;
 
     logic rst ;
 
-    // ==========================================================================
+    // ========in_bus==================================================================
     // BUS
-    //   in_bus[5:0]  → dphi (phase derivative, signed 6 bits)
-    //   out_bus[0]   → decision_out
-    //   out_bus[1]   → clk_rec
+    //   i_bus_in[5:0]  → dphi (phase derivative, signed 6 bits)
+    //   o_bus_out[0]   → decision_out
+    //   o_bus_out[1]   → clk_rec
     // ==========================================================================
-    logic signed [7:0] in_bus;
-    logic        [1:0] out_bus;
+    localparam BUS_IN_WIDTH =22;
+    localparam BUS_OUT_WIDTH = 14;
+    logic [BUS_IN_WIDTH-1:0]       i_bus_in;
+    logic [BUS_OUT_WIDTH-1:0] o_bus_out;
 
-    wire decision_out = out_bus[0];
-    wire clk_rec      = out_bus[1];
+    wire decision_out = o_bus_out[0];
+    wire clk_rec      = o_bus_out[1];
 
     // ==========================================================================
     // DUT
@@ -33,9 +35,9 @@ module tb_cdr;
     cdr_top dut (
         .i_clk    (clk),
         .i_rst_n  (rst),
-        .i_dphi   (in_bus),
-        .o_data   (out_bus[0]),
-        .o_enable (out_bus[1]),
+        .i_dphi   (i_bus_in[7:0]),
+        .o_data   (o_bus_out[0]),
+        .o_enable (o_bus_out[1]),
         .i_recovered_clk_d      ('0),
         .i_decision_d           ('0),
         .i_up_d                 ('0),
@@ -55,8 +57,8 @@ module tb_cdr;
 
     always @(posedge clk_rec) begin
         nb_data++;
-        assert (out_bus[0] !== 1'bx)
-            else $error("[t=%0t] out_bus[0] indéfini (X)", $time);
+        assert (o_bus_out[0] !== 1'bx)
+            else $error("[t=%0t] o_bus_out[0] indéfini (X)", $time);
     end
 
     // ==========================================================================
@@ -66,19 +68,19 @@ module tb_cdr;
 
     initial begin
         // Reset
-        apply_reset(rst, in_bus, 500);
+        apply_reset(rst, i_bus_in, 500);
         wait_cycles(clk, 5);
 
         // --- Test 1 : séquence fixe ---
         $display("\n--- Test 1: Séquence fixe ---");
-        send_dphi(in_bus, 1); #500;
-        send_dphi(in_bus, 0); #500;
-        send_dphi(in_bus, 1); #500;
-        send_dphi(in_bus, 0); #500;
+        send_dphi(i_bus_in, 1); #500;
+        send_dphi(i_bus_in, 0); #500;
+        send_dphi(i_bus_in, 1); #500;
+        send_dphi(i_bus_in, 0); #500;
 
         // --- Test 2 : séquence aléatoire ---
         $display("\n--- Test 2: Séquence aléatoire (20000 bits) ---");
-        run_random_sequence(in_bus, out_bus, clk, 20000, seq_errors);
+        run_random_sequence(i_bus_in, o_bus_out, clk, 20000, seq_errors);
         nb_err += seq_errors;
 
         // --- Résultats ---

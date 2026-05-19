@@ -24,7 +24,7 @@ endif
 
 vlog -sv `ls $tb_dir/*.sv | grep -v cdr_tasks_pkg`
 ### work.$tb specifique cdr remplacer par le votre
-vsim -coverage -c \
+vsim -coverage \
      -voptargs="+cover=bcest +acc=npr" \
      work.$tb -L c35_CORELIB \
      -do $script_dir/run_cov.do
