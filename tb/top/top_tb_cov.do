@@ -22,11 +22,12 @@ vlog -incr -sv -cover bcesft -work lib_RTL_cov +acc rtl/demod/WAVE/*.sv
 vlog -incr -sv -cover bcesft -work lib_RTL_cov +acc rtl/msk/*.sv
 
 # Compile TB without coverage to keep reports RTL-only
-vlog -incr -sv -work lib_RTL_cov +acc tb/top/*.sv
+vlog -incr -sv -work lib_RTL_cov +acc tb/top/include/*.sv
 vlog -incr -sv -work lib_RTL_cov +acc tb/top/interface/*.sv
 vlog -incr -sv -work lib_RTL_cov +acc tb/top/demod/*.sv
 vlog -incr -sv -work lib_RTL_cov +acc tb/wrappers/interface/*.sv
 vlog -incr -sv -work lib_RTL_cov +acc tb/wrappers/demod/*.sv
+vlog -incr -sv -work lib_RTL_cov +acc tb/top/*.sv
 
 # Run in console with coverage enabled
 vsim -coverage -voptargs=+acc lib_RTL_cov.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
