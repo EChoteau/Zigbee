@@ -4,10 +4,10 @@ module shaping_msk_bus_wrapper #(
     parameter int SAMPLES_PER_HALF_SINE = 10,
     parameter int MSK_RES               = 6
 )(
-    input  logic                     i_clk,
-    input  logic                     i_rst_n,
-    input  logic [2:0]               i_bus_in,
-    output logic [2*MSK_RES-1:0]     o_bus_out
+    input  logic                      i_clk,
+    input  logic                      i_rst_n,
+    input  logic [2:0]                i_bus_in,
+    output logic [2*MSK_RES-1:0]      o_bus_out
 );
 
     logic                    i_enable_ech;
@@ -61,11 +61,12 @@ module tb_shaping_msk_bus;
 
     initial begin
         i_clk = 1'b0;
-        forever #10 i_clk = ~i_clk;
+        forever #50 i_clk = ~i_clk;
     end
 
     task automatic set_bus(logic [BUS_IN_WIDTH-1:0] bus_val);
     begin
+        @(negedge i_clk);
         i_bus_in = bus_val;
         @(posedge i_clk);
     end
@@ -73,11 +74,14 @@ module tb_shaping_msk_bus;
 
     task automatic apply_reset(int cycles);
     begin
+        @(negedge i_clk);   // Alignement sur le front descendant
         i_rst_n = 1'b0;
         i_bus_in = '0;
         repeat(cycles) @(posedge i_clk);
+        
+        @(negedge i_clk);   // Libération propre sur le front descendant
         i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
+        repeat(2) @(posedge i_clk); // On laisse la ROM s'initialiser
     end
     endtask
 
@@ -89,6 +93,7 @@ module tb_shaping_msk_bus;
     end
     endtask
 
+  
     function automatic logic signed [MSK_RES-1:0] get_I();
         return o_bus_out[MSK_RES-1:0];
     endfunction
@@ -97,11 +102,15 @@ module tb_shaping_msk_bus;
         return o_bus_out[2*MSK_RES-1:MSK_RES];
     endfunction
 
+    // ==========================================================================
+    // SCÉNARIOS DE TEST SÉCURISÉS
+    // ==========================================================================
     task automatic test_shaping_reset();
-        logic [BUS_IN_WIDTH-1:0] bus_val;
     begin
         $display("--- SHAPING BUS TEST : reset ---");
         apply_reset(5);
+
+        #50; // Horloge en bas, les signaux de la Netlist sont figés et stables
         assert (o_bus_out == '0)
             else $error("SHAPING FAIL: reset non reinitialise, o_bus_out=%b", o_bus_out);
         $display("SHAPING PASS: reset OK");
@@ -119,10 +128,13 @@ module tb_shaping_msk_bus;
         bus_val[1] = 1'b1; // a_I = 1
         bus_val[2] = 1'b1; // a_Q = 1
         set_bus(bus_val);
-        repeat (8) @(posedge i_clk);
+        repeat (8) @(posedge i_clk); // On laisse le compteur de la ROM avancer
 
+        #50; // À CE MOMENT-LÀ, tout est stable, on peut capturer !
         signed_I = get_I();
         signed_Q = get_Q();
+
+        // Les assertions s'exécutent sur des valeurs stables
         assert (signed_Q > 0)
             else $error("SHAPING FAIL: Q doit etre positif, Q=%0d", signed_Q);
         assert (signed_I >= -31 && signed_I <= 31)
@@ -144,15 +156,15 @@ module tb_shaping_msk_bus;
         set_bus(bus_val);
         repeat (10) @(posedge i_clk);
 
+        #50; // À CE MOMENT-LÀ, tout est stable, on peut capturer !
         signed_I = get_I();
         signed_Q = get_Q();
         
-
         assert (signed_I >= -31 && signed_I <= 31)
             else $error("SHAPING FAIL: I hors limites, I=%0d", signed_I);
-        assert (signed_Q >= -31 && signed_Q<=31)
-	    else $error("SHAPING FAIL: Q hors limites, Q=%0d", signed_Q);
-	$display("shaping PASS : signe negatif - I=%0d Q=%0d", signed_I, signed_Q);
+        assert (signed_Q >= -31 && signed_Q <= 31)
+            else $error("SHAPING FAIL: Q hors limites, Q=%0d", signed_Q);
+        $display("SHAPING PASS : signe negatif - I=%0d Q=%0d", signed_I, signed_Q);
     end
     endtask
 
@@ -170,3 +182,5 @@ module tb_shaping_msk_bus;
     end
 
 endmodule
+
+

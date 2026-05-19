@@ -28,7 +28,7 @@ module tb_encodeur_diff;
     // =========================================================================
     // Horloge 50 MHz
     // =========================================================================
-    localparam time CLK_PERIOD = 20ns;
+    localparam time CLK_PERIOD = 100ns;
 
     initial i_clk = 1'b0;
     always #(CLK_PERIOD/2) i_clk = ~i_clk;
