@@ -1,24 +1,20 @@
-// INTERFACE Wrapper tests - include task definitions at module level
-`include "tb/wrappers/interface/headers/interface_wrapper_baud.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_fifo_rx.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_fifo_tx.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_loopback.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_rx_only.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_serdes.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_tx_only.svh"
-`include "tb/wrappers/interface/headers/interface_wrapper_test_plan.svh"
-
 task automatic test_3_interface();
     begin
-        $display("[%0t] test_3_interface", $time);
-        i_top_cfg = 3'd3;
-        i_wrapper_cfg = 3'b000;
-        i_rst_n = 0;
-        repeat (2) @(posedge i_clk);
-        i_rst_n = 1;
-        repeat (2) @(posedge i_clk);
-
-        // Run interface wrapper test plan
+        $display("[%0t] test_3_interface - Setting INTERFACE configuration", $time);
+        // Apply reset with safe negedge timing
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 2);
+        
+        // Set top configuration to INTERFACE mode (3'd3)
+        tb_pkg::set_config_top(i_clk, i_top_cfg, 3'd3);
+        repeat (20) @(posedge i_clk);
+        
+        $display("[%0t] test_3_interface - INTERFACE configuration complete", $time);
+        
+        // Run interface wrapper test plan first
         run_interface_wrapper_test_plan();
+        
+        // Then run interface block tests
+        run_interface_test_plan_full();
     end
 endtask
+

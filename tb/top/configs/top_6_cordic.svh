@@ -1,11 +1,14 @@
 task automatic test_6_cordic();
     begin
-        $display("[%0t] test_6_cordic", $time);
-        i_top_cfg = 3'd6;
-        i_wrapper_cfg = 3'b000;
-        i_rst_n = 0;
-        repeat (2) @(posedge i_clk);
-        i_rst_n = 1;
+        $display("[%0t] test_6_cordic - Setting CORDIC configuration", $time);
+        // Apply reset with safe negedge timing
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 2);
+        
+        // Set top configuration to CORDIC mode (3'd6)
+        tb_pkg::set_config_top(i_clk, i_top_cfg, 3'd6);
         repeat (20) @(posedge i_clk);
+        
+        // TODO: Test wrapper config setup from top level
+        $display("[%0t] test_6_cordic - CORDIC configuration complete", $time);
     end
 endtask

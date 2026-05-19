@@ -1,18 +1,11 @@
-// DEMOD Wrapper tests - include task definitions at module level
-`include "tb/wrappers/demod/headers/demod_wrapper_normal.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_demod.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_fir.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_debug_chain.svh"
-`include "tb/wrappers/demod/headers/demod_wrapper_test_plan.svh"
-
 task automatic test_5_demod();
     begin
-        $display("[%0t] test_5_demod", $time);
-        i_top_cfg = 3'd5;
-        i_wrapper_cfg = 3'b000;
-        i_rst_n = 0;
-        repeat (2) @(posedge i_clk);
-        i_rst_n = 1;
+        $display("[%0t] test_5_demod - Setting DEMOD configuration", $time);
+        // Apply reset with safe negedge timing
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 2);
+        
+        // Set top configuration to DEMOD mode (3'd5)
+        tb_pkg::set_config_top(i_clk, i_top_cfg, 3'd5);
         repeat (2) @(posedge i_clk);
 
         // Run demod wrapper test plan

@@ -1,4 +1,10 @@
 `timescale 1ns/1ps
+
+// Import generic testbench utilities
+import tb_pkg::*;
+import interface_wrapper_tasks_pkg::*;
+import interface_tasks_pkg::*;
+
 module top_tb;
     // Clock and reset
     logic i_clk;
@@ -30,38 +36,6 @@ module top_tb;
     localparam logic [2:0] CFG_FIFO_RX   = 3'b101;  // Direct RX FIFO control
     localparam logic [2:0] CFG_SERDES    = 3'b110;  // Serializer/deserializer chain testing
     localparam logic [2:0] CFG_BAUD      = 3'b111;  // Baud rate generator control
-
-    // =========================================================================
-    // Helper tasks for wrapper tests
-    // =========================================================================
-    
-    task automatic set_config(logic [2:0] cfg);
-    begin
-        i_wrapper_cfg = cfg;
-        @(posedge i_clk);
-    end
-    endtask
-
-    task automatic set_bus(logic [21:0] bus_val);
-    begin
-        i_bus_in = bus_val;
-        @(posedge i_clk);
-    end
-    endtask
-
-    `include "tb/top/generic/apply_reset.svh"
-    
-    task automatic apply_demod_reset(int cycles);
-    begin
-        i_rst_n = 1'b0;
-        tb_i = '0;
-        tb_q = '0;
-        i_bus_in = '0;
-        repeat(cycles) @(posedge i_clk);
-        i_rst_n = 1'b1;
-        repeat(2) @(posedge i_clk);
-    end
-    endtask
 
     // =========================================================================
     // Include wrapper test headers
