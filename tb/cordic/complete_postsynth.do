@@ -2,15 +2,15 @@
 # TB Cordic Complete - POST-SYNTHESIS
 # =====================================================
 
-if ![file isdirectory lib_route] {
-    vlib lib_route
-    vmap lib_route lib_route
+if ![file isdirectory lib_synth] {
+    vlib lib_synth
+    vmap lib_synth lib_synth
 }
 
-vlog -incr -sv -work lib_route +acc asic/synth/cordic/netlist/cordic_synth.v
-vlog -incr -sv -work lib_route +acc tb/cordic/complete_tb.sv
+vlog -incr -sv -work lib_synth +acc asic/synth/cordic/netlist/cordic_synth.v
+vlog -incr -sv -work lib_synth +acc tb/cordic/complete_tb.sv
 
-vsim -voptargs=+acc lib_route.complete_tb \
+vsim -voptargs=+acc lib_synth.complete_tb \
      -sdfmax /complete_tb/dut=asic/synth/cordic/netlist/cordic_synth.sdf \
      -sdfnoerror -sdfnowarn \
      -L c35_CORELIB
