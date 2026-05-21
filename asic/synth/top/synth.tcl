@@ -32,7 +32,7 @@ link
 set_operating_conditions -library c35_CORELIB_TYP TYPICAL
 create_clock -name i_clk -period 100 {i_clk}
 #set_clock_uncertainty 15 i_clk
-set_max_area 0
+set_max_area 1040000
 
 # --- 4. Synthesis ---
 set_boundary_optimization zigbee_top
