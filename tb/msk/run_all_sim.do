@@ -19,7 +19,7 @@ echo "=== COMPILATION DE TOUS LES TESTBENCHES ==="
 vlog -sv demux_msk_tb.sv            -work work
 vlog -sv encodeur_tb.sv             -work work
 vlog -sv shaping_msk_tb.sv          -work work
-vlog -sv top_msk_gl_tb.sv           -work work
+vlog -sv top_msk_tb.sv           -work work
 vlog -sv tb_demux_msk_bus.sv        -work work
 vlog -sv tb_encodeur_msk_bus.sv     -work work
 vlog -sv tb_shaping_msk_bus.sv      -work work
