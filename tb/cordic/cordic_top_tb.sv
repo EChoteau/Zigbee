@@ -23,7 +23,7 @@ module cordic_top_tb();
         i_rst_n = 1'b1;
     end
 
-    cordic_top #(
+    cordic_comb #(
         .WIDTH_IN(WIDTH),
         .WIDTH_PHASE(WIDTH_PHASE),
         .NUM_STEPS(NUM_STEPS)

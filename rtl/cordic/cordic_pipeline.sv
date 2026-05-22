@@ -1,4 +1,4 @@
-module cordic_top_pipeline #(
+module cordic_pipeline #(
     parameter int WIDTH_IN = 6,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
     parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
@@ -25,7 +25,7 @@ module cordic_top_pipeline #(
 
     // Elaboration-time guard: prevent out-of-bounds access to ATAN_TABLE
     if (NUM_STEPS > 8) begin : gen_num_steps_check
-        initial $error("cordic_top_pipeline: NUM_STEPS (%0d) exceeds ATAN_TABLE size (10).", NUM_STEPS);
+        initial $error("cordic_pipeline: NUM_STEPS (%0d) exceeds ATAN_TABLE size (10).", NUM_STEPS);
     end
 
     // --- 2. Pipeline Registers ---

@@ -1,87 +1,75 @@
 module cordic_top #(
     parameter int WIDTH_IN = 6,
+    parameter int FILTER_N = 5,
     parameter int WIDTH_PHASE = WIDTH_IN + 2,
-    parameter int WIDTH_INTERNAL = WIDTH_IN + 4,
-    parameter int NUM_STEPS = WIDTH_IN + 2
+    parameter int INSIDE_WRAPPER = 0
 )(
     input  logic i_clk,
     input  logic i_rst_n,
     input  logic signed [WIDTH_IN-1:0] i_i,
     input  logic signed [WIDTH_IN-1:0] i_q,
-    output logic signed [WIDTH_PHASE-1:0] o_phase
+    output logic signed [WIDTH_PHASE-1:0] o_phase,
+
+    // All intermediate signals for wrapper visibility
+    // w_signal_module_out is signal that comes out of module and is used as input to next module
+    // w_signal_module_in is signal that comes into the nextmodule and is driven by module
+    output  logic signed [WIDTH_PHASE-1:0] o_phase_cordic,          // Output of cordic
+    input   logic signed [WIDTH_PHASE-1:0] i_phase_to_derivative,   //input to derivate 
+    output  logic signed [WIDTH_PHASE-1:0] o_phase_derivative,      // Output of derivative,
+    input   logic signed [WIDTH_PHASE-1:0] i_phase_to_boxcar        // input to boxcar filter
 );
 
-    // --- 1. Angle Table Generation from python cordic-table.py ---
-    localparam logic signed [8-1:0] ATAN_TABLE [0:7] = '{
-        8'sh20, // step 0: 45.0000 deg
-        8'sh13, // step 1: 26.5651 deg
-        8'sh0a, // step 2: 14.0362 deg
-        8'sh05, // step 3: 7.1250 deg
-        8'sh03, // step 4: 3.5763 deg
-        8'sh01, // step 5: 1.7899 deg
-        8'sh01, // step 6: 0.8952 deg
-        8'sh00 // step 7: 0.4476 deg
-    };
+	logic signed [WIDTH_IN-1:0] s_i_buf;
+	logic signed [WIDTH_IN-1:0] s_q_buf;
+    logic signed [WIDTH_PHASE-1:0] w_phase_cordic;
+    logic signed [WIDTH_PHASE-1:0] w_phase_to_derivative;
+    logic signed [WIDTH_PHASE-1:0] w_phase_derivative;
+    logic signed [WIDTH_PHASE-1:0] w_phase_to_boxcar;
 
-    // Elaboration-time parameter checks to ensure safe use of ATAN_TABLE
-    initial begin
-        if (NUM_STEPS > 8) begin
-            $error("cordic_top: NUM_STEPS (%0d) exceeds size of ATAN_TABLE (8 entries).", NUM_STEPS);
-        end
-        if (WIDTH_PHASE < 8) begin
-            $error("cordic_top: WIDTH_PHASE (%0d) is less than 8; ATAN_TABLE constants are 8-bit values.", WIDTH_PHASE);
-        end
+    assign o_phase_cordic       = w_phase_cordic;
+    assign o_phase_derivative   = w_phase_derivative;
+    
+    // Si wrapper_flag == 1 : utilise inputs externes, sinon : utilise signaux internes
+    assign w_phase_to_derivative = INSIDE_WRAPPER ? i_phase_to_derivative : w_phase_cordic;
+    assign w_phase_to_boxcar     = INSIDE_WRAPPER ? i_phase_to_boxcar : w_phase_derivative;
+    
+
+    always_ff @(posedge i_clk or negedge i_rst_n) begin
+	if (!i_rst_n) begin
+	    s_q_buf <= '0;
+        s_i_buf <= 'd1; // Avoid undefined phase at reset (arctan(0/0) is undefined, arctan(1/0) is 90 degrees)
+	end else begin
+	    s_q_buf <= i_q;
+	    s_i_buf <= i_i;
+	end
     end
 
-    // --- 2. Internal Interconnects ---
-    // Arrays to hold the signals between each step
-    wire signed [WIDTH_INTERNAL-1:0] w_i_chain [0:NUM_STEPS];
-    wire signed [WIDTH_INTERNAL-1:0] w_q_chain [0:NUM_STEPS];
-    wire signed [WIDTH_PHASE-1:0] w_phase_chain [0:NUM_STEPS];
-
-    // --- 3. Pre-Processing ---
-    // Mandatory to move the vector to the Right Half Plane (I > 0)
-    cordic_init #(
+    cordic_comb #(
         .WIDTH_IN(WIDTH_IN),
-        .WIDTH_PHASE(WIDTH_PHASE),
-        .WIDTH_INTERNAL(WIDTH_INTERNAL)
-    ) init_inst (
-        .i_i(i_i),
-        .i_q(i_q),
-        .o_i_init(w_i_chain[0]),
-        .o_q_init(w_q_chain[0]),
-        .o_phase_init(w_phase_chain[0])
+        .WIDTH_PHASE(WIDTH_PHASE)
+    ) cordic_comb_inst (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_i(s_i_buf), .i_q(s_q_buf),
+        .o_phase(w_phase_cordic)
     );
 
-    // --- 4. Iterative Chain ---
-    genvar i;
-    generate
-        for (i = 0; i < NUM_STEPS; i = i + 1) begin : cordic_steps
-            cordic_step #(
-                .WIDTH(WIDTH_INTERNAL),
-                .WIDTH_PHASE(WIDTH_PHASE),
-                .ITER(i),
-                .ANGLE_VAL(ATAN_TABLE[i])
-            ) step_inst (
-                .i_i(w_i_chain[i]),
-                .i_q(w_q_chain[i]),
-                .i_phase(w_phase_chain[i]),
-                .o_i_next(w_i_chain[i+1]),
-                .o_q_next(w_q_chain[i+1]),
-                .o_phase_next(w_phase_chain[i+1])
-            );
-        end
-    endgenerate
+    derivative #(
+    	.WIDTH(WIDTH_PHASE)
+    ) derivative_inst (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_phase(w_phase_to_derivative),
+        .o_phase_deriv(w_phase_derivative)
+    );
 
-    // --- 5. Final Output ---
-    
-    always_ff @(posedge i_clk or negedge i_rst_n) begin
-        if (!i_rst_n) begin
-            o_phase <= '0;
-        end else begin
-            o_phase <= w_phase_chain[NUM_STEPS];
-        end
-    end
+    boxcar_filter #(
+        .WIDTH(WIDTH_PHASE), 
+        .N(FILTER_N)
+    ) boxcar_filter_inst (
+        .i_clk(i_clk), .i_rst_n(i_rst_n),
+        .i_data(w_phase_to_boxcar), .o_data(o_phase)
+    );
 
 endmodule
 
