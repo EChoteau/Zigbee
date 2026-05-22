@@ -22,7 +22,7 @@ module demux_msk_tb(); // Règle 4.1 : Aucune entrée/sortie
     );
 
     // Génération de l'horloge (Règle 3.1 : Système synchrone)
-    always #10 s_clk = ~s_clk;// 50Mhz
+    always #50 s_clk = ~s_clk;// 50Mhz
 
     // Scénario de test auto-vérifié
     initial begin

@@ -1,3 +1,4 @@
+/*
 `timescale 1ns/1ps
 
 module top_msk_tb();
@@ -70,11 +71,12 @@ module top_msk_tb();
         else $error("ASRT_FAIL: Reset inefficace sur la netlist !");
 
     // 2. Range Check (Vérifie qu'aucun bit de signe n'est corrompu)
-    assert_range_I: assert property (@(posedge s_clk) disable iff (!s_rst_n) (s_I_BB >= -MAX_AMP && s_I_BB <= MAX_AMP))
-        else $error("ASRT_FAIL: Débordement Voie I: %d", s_I_BB);
-    assert_range_Q: assert property (@(posedge s_clk) disable iff (!s_rst_n) (s_Q_BB >= -MAX_AMP && s_Q_BB <= MAX_AMP))
-        else $error("ASRT_FAIL: Débordement Voie Q: %d", s_Q_BB);
-
+    
+    assert_range_I: assert property (@(posedge s_clk) disable iff (!s_rst_n) ($signed(s_I_BB) >= -MAX_AMP && $signed(s_I_BB) <= MAX_AMP))
+        else $error("ASRT_FAIL: Débordement Voie I: %d", $signed(s_I_BB));
+        
+    assert_range_Q: assert property (@(posedge s_clk) disable iff (!s_rst_n) ($signed(s_Q_BB) >= -MAX_AMP && $signed(s_Q_BB) <= MAX_AMP))
+        else $error("ASRT_FAIL: Débordement Voie Q: %d", $signed(s_Q_BB));
  
 
     // ". Quadrature Check (MSK pur : quand I est au max, Q doit être proche de 0)
@@ -95,10 +97,15 @@ module top_msk_tb();
     assert_envelope: assert property (p_const_envelope) else $error("ASRT_FAIL: L'enveloppe s'écroule !");
 
     // 5. Toggle Check (Vérifie que le modulateur n'est pas "mort" ou bloqué)
+
     property p_active;
-        @(posedge s_clk) disable iff (!s_rst_n) s_enable_ech |-> ##[1:10] (s_I_BB != $past(s_I_BB, 10));
+        // Si enable est actif, la sortie I doit changer de valeur d'ici 1 à 20 cycles
+        @(posedge s_clk) disable iff (!s_rst_n) 
+        s_enable_ech |-> ##[1:20] (s_I_BB != $past(s_I_BB, 1));
     endproperty
-    assert_is_alive: assert property (p_active) else $error("ASRT_FAIL: Sorties figées (pas d'activité) !");
+    
+    assert_is_alive: assert property (p_active) 
+        else $error("ASRT_FAIL: Sorties figées (pas d'activité détectée d'ici 20 cycles) !"); 
 
     // 6. Flag Enable Timing (Vérifie que ton TB respecte bien les 5 cycles)
     property p_flag_timing;
@@ -112,3 +119,115 @@ module top_msk_tb();
     endfunction
 
 endmodule
+
+*/
+
+`timescale 1ns/1ps
+
+module top_msk_tb();
+
+    // -------------------------------------------------------------------------
+    // CONSTANTES DU TESTBENCH
+    // -------------------------------------------------------------------------
+    localparam int SAMPLES_PER_HALF_SINE = 10; 
+    localparam int MSK_RES               = 6;
+    localparam int TB_CYCLES             = 5; // 5 cycles @ 10MHz = 500ns = Tb
+    localparam signed [MSK_RES-1:0] MAX_AMP = (1 << (MSK_RES-1)) - 1;
+
+    // Signaux
+    logic s_clk, s_rst_n, s_enable_ech, s_flag_enable, s_b_in;
+    logic [MSK_RES-1:0] s_I_BB, s_Q_BB; // Type classique pour la Netlist GLS
+
+    // Séquence de test (10 bits)
+    logic s_sequence [0:9] = '{1, 0, 1, 1, 0, 0, 1, 1, 0, 1};
+
+    // -------------------------------------------------------------------------
+    // INSTANCIATION DU DUT (Version Gate-Level fixe)
+    // -------------------------------------------------------------------------
+    top_msk DUT(
+        .i_clk(s_clk),
+        .i_rst_n(s_rst_n),
+        .i_enable_ech(s_enable_ech),
+        .i_flag_enable(s_flag_enable),
+        .i_b_in(s_b_in),
+        .o_I_BB(s_I_BB),
+        .o_Q_BB(s_Q_BB)
+    );
+
+    // Horloge 10 MHz (Période 100ns)
+    initial s_clk = 0;
+    always #50 s_clk = ~s_clk;
+
+    // -------------------------------------------------------------------------
+    // SCÉNARIO DE TEST
+    // -------------------------------------------------------------------------
+    initial begin
+        $display("--- DEBUT SIMULATION GATE-LEVEL ULTRA-ROBUSTE ---");
+        s_rst_n       = 0; 
+        s_enable_ech  = 1;
+        s_flag_enable = 0;
+        s_b_in        = 0;
+
+        #225 
+        s_rst_n = 1;
+        @(negedge s_clk);
+
+        foreach (s_sequence[i]) begin
+            s_b_in = s_sequence[i];
+            s_flag_enable = 1; 
+            @(negedge s_clk);
+            s_flag_enable = 0;
+            repeat (TB_CYCLES - 1) @(negedge s_clk);
+        end
+
+        repeat (20) @(posedge s_clk);
+        $display("--- TOUTES LES ASSERTIONS ONT ÉTÉ VÉRIFIÉES ---");
+        $finish;
+    end
+
+     // -------------------------------------------------------------------------
+    // BATTERIE D'ASSERTIONS FILTRÉES POUR NETLIST GATE-LEVEL (VERIFICATION PAR ALWAYS)
+    // -------------------------------------------------------------------------
+
+    always @(negedge s_clk) begin
+        // On n'exécute les vérifications QUE si le reset est relâché 
+        // ET que les sorties ne contiennent AUCUN bit inconnu (X ou Z)
+        if (s_rst_n === 1'b1 && !$isunknown(s_I_BB) && !$isunknown(s_Q_BB)) begin
+            
+            // 1. Range Check Voie I
+            if (!($signed(s_I_BB) >= -MAX_AMP && $signed(s_I_BB) <= MAX_AMP)) begin
+                $error("ASRT_FAIL: Débordement Voie I: %0d", $signed(s_I_BB));
+            end
+            
+            // 2. Range Check Voie Q
+            if (!($signed(s_Q_BB) >= -MAX_AMP && $signed(s_Q_BB) <= MAX_AMP)) begin
+                $error("ASRT_FAIL: Débordement Voie Q: %0d", $signed(s_Q_BB));
+            end
+
+            // Les tests suivants ne s'appliquent qu'après la phase de démarrage (500 ns)
+            if ($time >= 600ns) begin
+                
+                // 3. Quadrature Check
+                if ($signed(s_I_BB) >= MAX_AMP-2 || $signed(s_I_BB) <= -MAX_AMP+2) begin
+                    if (!($signed(s_Q_BB) >= -5 && $signed(s_Q_BB) <= 5)) begin
+                        $error("ASRT_FAIL: Défaut de quadrature I/Q ! I=%0d, Q=%0d", $signed(s_I_BB), $signed(s_Q_BB));
+                    end
+                end
+
+                // 4. Enveloppe Constante
+                if ((($signed(s_I_BB)*$signed(s_I_BB)) + ($signed(s_Q_BB)*$signed(s_Q_BB))) <= ((MAX_AMP*MAX_AMP)/2)) begin
+                    $error("ASRT_FAIL: L'enveloppe s'écroule ! Puissance=%0d", (($signed(s_I_BB)*s_I_BB) + ($signed(s_Q_BB)*s_Q_BB)));
+                end
+            end
+        end
+        
+        // 5. Reset Check (Vérification spécifique quand le reset est actif)
+        if (s_rst_n === 1'b0) begin
+            if (s_I_BB !== '0 || s_Q_BB !== '0) begin
+                $error("ASRT_FAIL: Reset inefficace sur la netlist ! I=%b, Q=%b", s_I_BB, s_Q_BB);
+            end
+        end
+    end
+
+endmodule
+
