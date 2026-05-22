@@ -84,7 +84,7 @@ EOF
 
 echo "Run Calibre for DRC and LVS"
 
-ams_cds -tech c35b4 -mode fb -nologo &
+ams_cds -tech c35b4 -mode fb -nologo
 #ams_cds -tech c35b4 -mode fb -execute "source ../scripts/pnr_verification.il" &
 
 cd ../../../
