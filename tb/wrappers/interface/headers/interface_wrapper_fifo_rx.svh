@@ -6,7 +6,7 @@ task automatic test_interface_wrapper_fifo_rx();
     begin
         $display("\n========== START TEST: CFG_FIFO_RX (0x5) ==========");
         
-        set_config(CFG_FIFO_RX);
+        tb_pkg::set_config(i_clk, i_cfg_local, CFG_FIFO_RX);
         repeat(2) @(posedge i_clk);
 
         assert (i_cfg_local == CFG_FIFO_RX)
@@ -26,10 +26,10 @@ task automatic test_interface_wrapper_fifo_rx();
             bus_val = '0;
             bus_val[0] = 1'b1; // fifo_rx_wr_en
             bus_val[17:10] = 8'hC0 + i; // data_in (C0, C1, C2...)
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
             
             // On rabaisse le write enable
-            set_bus('0);
+            tb_pkg::set_bus(i_clk, i_bus_in, '0);
         end
 
         // --- 3. VERIFICATION DRAPEAUX FULL ET EMPTY ---
@@ -51,12 +51,12 @@ task automatic test_interface_wrapper_fifo_rx();
             // Impulsion de lecture (rd_en = 1)
             bus_val = '0;
             bus_val[1] = 1'b1; // fifo_rx_rd_en
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
             
             // On desactive la lecture.
             // L'appel a set_bus passe 1 cycle d'horloge. 
             // La memoire synchrone de la FIFO a donc sorti la donnee sur o_bus_out[7:0].
-            set_bus('0);
+            tb_pkg::set_bus(i_clk, i_bus_in, '0);
             
             read_data = o_bus_out[7:0];
             

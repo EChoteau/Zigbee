@@ -7,7 +7,7 @@ task automatic test_interface_wrapper_tx_only();
         $display("\n========== START TEST: CFG_TX_ONLY (0x1) ==========");
         
         // configuration du mode
-        set_config(CFG_TX_ONLY);
+        tb_pkg::set_config(i_clk, i_cfg_local, CFG_TX_ONLY);
         repeat(2) @(posedge i_clk);
 
         assert (i_cfg_local == CFG_TX_ONLY)
@@ -19,10 +19,10 @@ task automatic test_interface_wrapper_tx_only();
         $display("  [TX_ONLY] Configuration APB: Diviseur Baud Rate = 0x02...");
         // ADDR_DIVIDER = 0x0C, valeur = 0x02 (periode = 3 cycles)
         // APB SETUP
-        set_bus({1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b0, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b0, 1'b1});
         // APB ACCESS
-        set_bus({1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b1, 1'b1});
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, 8'h02, 8'h0C, 1'b1, 1'b1, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
         repeat(2) @(posedge i_clk);
 
         // --- 2. ECRITURE DANS LA FIFO (A FAIRE EN PREMIER) ---
@@ -30,20 +30,20 @@ task automatic test_interface_wrapper_tx_only();
         $display("  [TX_ONLY] Ecriture APB: Envoi de la donnee 0x%0h dans la FIFO...", test_data);
         // ADDR_DATA = 0x00
         // APB SETUP
-        set_bus({1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b0, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b0, 1'b1});
         // APB ACCESS
-        set_bus({1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b1, 1'b1});
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, test_data, 8'h00, 1'b1, 1'b1, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
         repeat(2) @(posedge i_clk);
 
         // --- 3. ACTIVATION DU TX ---
         $display("  [TX_ONLY] Configuration APB: Activation TX_START et GLOBAL_EN...");
         // ADDR_CONTROL = 0x08, valeur = 0x09 (tx_start + global_en)
         // APB SETUP
-        set_bus({1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b0, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b0, 1'b1});
         // APB ACCESS
-        set_bus({1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b1, 1'b1});
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, {1'b0, 1'b0, 1'b0, 8'h09, 8'h08, 1'b1, 1'b1, 1'b1});
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
 
         // --- 4. OBSERVATION DE LA SORTIE SERIE ---
         $display("  [TX_ONLY] Attente de la transmission serie (tx_valid=1)...");

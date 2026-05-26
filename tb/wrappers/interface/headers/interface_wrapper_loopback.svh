@@ -7,7 +7,7 @@ task automatic test_interface_wrapper_loopback();
     begin
         $display("\n========== START TEST: CFG_LOOPBACK (0x3) ==========");
         
-        set_config(CFG_LOOPBACK);
+        tb_pkg::set_config(i_clk, i_cfg_local, CFG_LOOPBACK);
         repeat(2) @(posedge i_clk);
 
         assert (i_cfg_local == CFG_LOOPBACK)
@@ -22,10 +22,10 @@ task automatic test_interface_wrapper_loopback();
         bus_val[2] = 1'b1; // pwrite
         bus_val[10:3] = 8'h0C; // paddr (ADDR_DIVIDER)
         bus_val[18:11] = 8'h02; // pwdata
-        set_bus(bus_val); // SETUP
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // SETUP
         bus_val[1] = 1'b1; // penable
-        set_bus(bus_val); // ACCESS
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // ACCESS
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
 
         // --- 2. ACTIVATION RX ET GLOBAL ---
         $display("  [LOOPBACK] Activation RX_EN et GLOBAL_EN (sans tx_start)...");
@@ -34,10 +34,10 @@ task automatic test_interface_wrapper_loopback();
         bus_val[2] = 1'b1;
         bus_val[10:3] = 8'h08; // paddr (ADDR_CONTROL)
         bus_val[18:11] = 8'h11; // pwdata (rx_enable=1, global_en=1) -> 00010001
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         bus_val[1] = 1'b1;
-        set_bus(bus_val);
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
         repeat(2) @(posedge i_clk);
 
         // --- 3. ECRITURE TX FIFO ---
@@ -47,10 +47,10 @@ task automatic test_interface_wrapper_loopback();
         bus_val[2] = 1'b1;
         bus_val[10:3] = 8'h00; // paddr (ADDR_DATA)
         bus_val[18:11] = test_data;
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         bus_val[1] = 1'b1;
-        set_bus(bus_val);
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
         repeat(2) @(posedge i_clk);
 
         // --- 4. START TX ---
@@ -60,10 +60,10 @@ task automatic test_interface_wrapper_loopback();
         bus_val[2] = 1'b1;
         bus_val[10:3] = 8'h08; // paddr
         bus_val[18:11] = 8'h19; // pwdata (rx_en=1, tx_start=1, global=1) -> 00011001
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         bus_val[1] = 1'b1;
-        set_bus(bus_val);
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
 
         // --- 5. SYNCHRO ET GENERATION DU CLOCK RECOVERY ---
         $display("  [LOOPBACK] Generation du signal sample_valid pour le Deserializer...");
@@ -85,10 +85,10 @@ task automatic test_interface_wrapper_loopback();
                 // On declenche notre sample_valid pour echantillonner la valeur !
                 bus_val = '0;
                 bus_val[20] = 1'b1; // cdr_sample_valid
-                set_bus(bus_val); // Dure 1 cycle d'horloge
+                tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // Dure 1 cycle d'horloge
                 
                 bus_val[20] = 1'b0;
-                set_bus(bus_val); // Retombe a 0
+                tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // Retombe a 0
             end
         end
 
@@ -106,13 +106,13 @@ task automatic test_interface_wrapper_loopback();
         bus_val[0] = 1'b1; // psel
         bus_val[2] = 1'b0; // pwrite (LECTURE)
         bus_val[10:3] = 8'h00; // paddr
-        set_bus(bus_val); // SETUP
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // SETUP
         bus_val[1] = 1'b1; // penable
-        set_bus(bus_val); // ACCESS
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val); // ACCESS
         
         // La donnee lue est sur o_bus_out[7:0]
         read_data = o_bus_out[7:0];
-        set_bus('0);
+        tb_pkg::set_bus(i_clk, i_bus_in, '0);
 
         assert (read_data === test_data)
             $display("  [LOOPBACK] PASS : Boucle complete reussie ! Donnee lue = 0x%0h", read_data);

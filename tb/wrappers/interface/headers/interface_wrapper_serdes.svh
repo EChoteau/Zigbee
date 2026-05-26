@@ -7,7 +7,7 @@ task automatic test_interface_wrapper_serdes();
     begin
         $display("\n========== START TEST: CFG_SERDES (0x6) ==========");
         
-        set_config(CFG_SERDES);
+        tb_pkg::set_config(i_clk, i_cfg_local, CFG_SERDES);
         repeat(2) @(posedge i_clk);
 
         assert (i_cfg_local == CFG_SERDES)
@@ -25,21 +25,21 @@ task automatic test_interface_wrapper_serdes();
         bus_val[7:0] = tx_test_data; 
         bus_val[8] = 1'b1;           
         bus_val[9] = 1'b0;           
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(2) @(posedge i_clk);
         
         bus_val[8] = 1'b0;           
         bus_val[9] = 1'b1;           
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(2) @(posedge i_clk);
 
         $display("  [SERDES] Generation de 8 baud ticks et capture...");
         for (int i = 0; i < 8; i++) begin
             bus_val[21] = 1'b1;
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
             
             bus_val[21] = 1'b0;
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
             
             captured_tx[i] = o_bus_out[10];
         end
@@ -60,7 +60,7 @@ task automatic test_interface_wrapper_serdes();
         for (int i = 0; i < 8; i++) begin
             bus_val[19] = rx_test_data[i]; 
             bus_val[20] = 1'b1;            
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
             
             // Au 8eme bit (i==7), le RTL a leve le flag push (o_bus_out[8])
             if (i == 7) begin
@@ -75,7 +75,7 @@ task automatic test_interface_wrapper_serdes();
             end
 
             bus_val[20] = 1'b0;            
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         end
 
         // La boucle est finie, la donnee parallele reconstruite nous attend sagement

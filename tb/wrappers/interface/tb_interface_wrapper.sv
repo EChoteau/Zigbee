@@ -1,8 +1,6 @@
 `timescale 1ns/1ps
-
+import tb_pkg::*;
 module tb_interface_wrapper;
-    import tb_pkg::*;
-
     // INTERFACE WRAPPER PARAMETERS
     localparam int APB_ADDR_WIDTH = 8;
     localparam int APB_DATA_WIDTH = 8;
@@ -23,15 +21,6 @@ module tb_interface_wrapper;
     logic [CFG_WIDTH-1:0]    i_cfg_local;
     logic [BUS_IN_WIDTH-1:0] i_bus_in;
     logic [BUS_OUT_WIDTH-1:0] o_bus_out;
-
-    `include "headers/interface_wrapper_baud.svh"
-    `include "headers/interface_wrapper_fifo_rx.svh"
-    `include "headers/interface_wrapper_fifo_tx.svh"
-    `include "headers/interface_wrapper_loopback.svh"
-    `include "headers/interface_wrapper_rx_only.svh"
-    `include "headers/interface_wrapper_serdes.svh"
-    `include "headers/interface_wrapper_tx_only.svh"
-    `include "headers/interface_wrapper_test_plan.svh"
 
     localparam logic [2:0] CFG_RX_ONLY   = 3'b000;  // APB + serial loopback
     localparam logic [2:0] CFG_TX_ONLY   = 3'b001;  // TX path with FIFO control
@@ -62,6 +51,16 @@ module tb_interface_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
+    `include "headers/interface_wrapper_baud.svh"
+    `include "headers/interface_wrapper_fifo_rx.svh"
+    `include "headers/interface_wrapper_fifo_tx.svh"
+    `include "headers/interface_wrapper_loopback.svh"
+
+    `include "headers/interface_wrapper_rx_only.svh"
+    `include "headers/interface_wrapper_serdes.svh"
+    `include "headers/interface_wrapper_tx_only.svh"
+    `include "headers/interface_wrapper_test_plan.svh"
+
     initial begin
         // init
         i_rst_n = 1'b0;
@@ -71,7 +70,7 @@ module tb_interface_wrapper;
 
         // reset
         repeat(5) @(posedge i_clk);
-        apply_reset(10);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 10);
 
         $display("\n===== INTERFACE WRAPPER TB START =====\n");
         run_interface_wrapper_test_plan();

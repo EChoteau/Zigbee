@@ -6,7 +6,7 @@ task automatic test_interface_wrapper_baud();
         $display("\n========== START TEST: CFG_BAUD (0x7) ==========");
         
         // set config
-        set_config(CFG_BAUD);
+        tb_pkg::set_config(i_clk, i_cfg_local, CFG_BAUD);
         repeat(2) @(posedge i_clk);
 
         assert (i_cfg_local == CFG_BAUD)
@@ -16,7 +16,7 @@ task automatic test_interface_wrapper_baud();
 
         // --- Test 1: Diviseur tres rapide (0x02) pour simu courte ---
         $display("  [BAUD] Setting fast divisor to 0x02...");
-        set_bus({13'h00, 8'h02, 1'b1}); 
+        tb_pkg::set_bus(i_clk, i_bus_in, {13'h00, 8'h02, 1'b1}); 
         
         // a ajuster si ton baud gen multiplie en interne (ex: diviseur * 16)
         expected_cycles = 3; 
@@ -39,7 +39,7 @@ task automatic test_interface_wrapper_baud();
 
         // --- Test 2: Diviseur un peu plus lent (0x05) pour confirmer ---
         $display("  [BAUD] Setting divisor to 0x05...");
-        set_bus({13'h00, 8'h05, 1'b1}); 
+        tb_pkg::set_bus(i_clk, i_bus_in, {13'h00, 8'h05, 1'b1}); 
         expected_cycles = 6;
         
         while (o_bus_out[12] == 1'b0) @(posedge i_clk);
@@ -58,7 +58,7 @@ task automatic test_interface_wrapper_baud();
 
         // --- Test 3: Disable generator ---
         $display("  [BAUD] Disabling generator...");
-        set_bus({13'h00, 8'h00, 1'b0});
+        tb_pkg::set_bus(i_clk, i_bus_in, {13'h00, 8'h00, 1'b0});
         
         cycle_count = 0;
         repeat(20) begin
