@@ -2,21 +2,21 @@ task automatic test_cdr_wrapper_debug_pd();
     logic [21:0] bus_val;
     begin
         $display("\n========== TEST: CFG2 (PHASE DETECTOR) ==========");
-        set_config(3'b010);
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b010);
         repeat(2) @(posedge i_clk);
 
         // Simulation d'une transition asynchrone
         $display("  [PD] Generation d'une transition asynchrone...");
         bus_val = '0;
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(2) @(posedge i_clk);
 
         bus_val[11] = 1'b1; // decision_in = 1
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(1) @(posedge i_clk);
 
         bus_val[10] = 1'b1; // sample_clk = 1
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(2) @(posedge i_clk);
 
         // On vérifie que le détecteur réagit (up ou down ne sont pas nuls)

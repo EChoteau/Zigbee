@@ -2,12 +2,6 @@
 
 module tb_cdr_wrapper;
     import tb_pkg::*;
-    `include "headers/cdr_wrapper_normal.svh"
-    `include "headers/cdr_wrapper_debug_decision.svh"
-    `include "headers/cdr_wrapper_debug_pd.svh"
-    `include "headers/cdr_wrapper_debug_lf.svh"
-    `include "headers/cdr_wrapper_debug_nco.svh"
-    `include "headers/cdr_wrapper_test_plan.svh"
 
     // Signaux de test
     logic i_clk;
@@ -38,6 +32,13 @@ module tb_cdr_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
+    `include "headers/cdr_wrapper_normal.svh"
+    `include "headers/cdr_wrapper_debug_decision.svh"
+    `include "headers/cdr_wrapper_debug_pd.svh"
+    `include "headers/cdr_wrapper_debug_lf.svh"
+    `include "headers/cdr_wrapper_debug_nco.svh"
+    `include "headers/cdr_wrapper_test_plan.svh"
+    
     initial begin
         // Initialisation des signaux
         i_rst_n = 1'b0;
@@ -47,7 +48,7 @@ module tb_cdr_wrapper;
 
         // Reset initial
         repeat(5) @(posedge i_clk);
-        apply_reset(10);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 10);
 
         $display("\n========================================================");
         $display("===== CDR WRAPPER TB START =====");

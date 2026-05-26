@@ -3,13 +3,13 @@ task automatic test_cdr_wrapper_normal();
     int timeout;
     begin
         $display("\n========== TEST: CFG0 (CDR NORMAL MODE) ==========");
-        set_config(3'b000);
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
 
         $display("  [NORMAL] Injection d'un flux DPHI stable (+8)...");
         bus_val = '0;
         bus_val[7:0] = 8'sd8; 
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         // Attente de l'echantillonnage par le NCO interne
         // o_bus_out[0] = s_sample_enable
