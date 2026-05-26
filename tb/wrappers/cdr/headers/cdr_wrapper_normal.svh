@@ -1,6 +1,7 @@
 task automatic test_cdr_wrapper_normal();
     logic [21:0] bus_val;
     int timeout;
+    bit data_ok;
     begin
         $display("\n========== TEST: CFG0 (CDR NORMAL MODE) ==========");
         tb_pkg::set_config(i_clk, i_cfg_local, 3'b000);
@@ -14,7 +15,7 @@ task automatic test_cdr_wrapper_normal();
         // Attente d'une impulsion sample_enable et validation de la donnee sur plusieurs cycles
         // o_bus_out[0] = s_sample_enable, o_bus_out[1] = s_data
         timeout = 0;
-        bit data_ok = 1'b0;
+        data_ok = 1'b0;
         while (timeout < 50 && data_ok == 1'b0) begin
             @(posedge i_clk);
             if (o_bus_out[0] == 1'b1) begin
