@@ -6,7 +6,7 @@ task automatic test_demod_wrapper_normal();
         $display("\n========== TEST: NORMAL MODE (0x0) ==========");
         
         // 1. Configurer en mode Normal
-        set_config(3'b000); 
+        tb_pkg::set_config(i_clk, d_cfg_local, 3'b000); 
         repeat(2) @(posedge i_clk);
 
         $display("  [NORMAL] Mode production actif. Ecoute des ports ADC directs.");
