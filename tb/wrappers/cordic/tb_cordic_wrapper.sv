@@ -3,6 +3,7 @@
 module tb_cordic_wrapper;
     import tb_pkg::*;
 
+    localparam int CORDIC_PIPELINE_STAGES = 8;
 
     logic i_clk, i_rst_n, i_out_en;
     logic [CFG_WIDTH-1:0]     i_cfg_local;
@@ -36,6 +37,7 @@ module tb_cordic_wrapper;
     initial begin
         i_rst_n = 0; i_out_en = 1; i_cfg_local = 0; i_bus_in = 0;
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 10);
+        repeat(CORDIC_PIPELINE_STAGES + 2) @(posedge i_clk);
 
         $display("\n========================================================");
         $display("===== CORDIC WRAPPER TB START =====");

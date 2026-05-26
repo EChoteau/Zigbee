@@ -44,10 +44,10 @@ module cordic_top #(
 	end
     end
 
-    cordic_comb #(
+    cordic_pipeline #(
         .WIDTH_IN(WIDTH_IN),
         .WIDTH_PHASE(WIDTH_PHASE)
-    ) cordic_comb_inst (
+    ) cordic_pipeline_inst (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
         .i_i(s_i_buf), .i_q(s_q_buf),
