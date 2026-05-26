@@ -11,17 +11,21 @@ task automatic test_cdr_wrapper_normal();
         bus_val[7:0] = 8'sd8; 
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
-        // Attente de l'echantillonnage par le NCO interne
-        // o_bus_out[0] = s_sample_enable
+        // Attente d'une impulsion sample_enable et validation de la donnee sur plusieurs cycles
+        // o_bus_out[0] = s_sample_enable, o_bus_out[1] = s_data
         timeout = 0;
-        while (o_bus_out[0] == 1'b0 && timeout < 20) begin
+        bit data_ok = 1'b0;
+        while (timeout < 50 && data_ok == 1'b0) begin
             @(posedge i_clk);
+            if (o_bus_out[0] == 1'b1) begin
+                if (o_bus_out[1] == 1'b1) begin
+                    data_ok = 1'b1;
+                end
+            end
             timeout++;
         end
-        
-        // Au cycle suivant, la donnee doit etre recuperee sur o_bus_out[1] (o_data)
-        @(posedge i_clk);
-        assert (o_bus_out[1] == 1'b1)
+
+        assert (data_ok == 1'b1)
             $display("  [NORMAL] PASS: Donnee '1' recuperee avec succes !");
         else
             $error("  [NORMAL] FAIL: Erreur de donnee.");

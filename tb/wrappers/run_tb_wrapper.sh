@@ -22,4 +22,9 @@ cd cdr/
 source run_cdr_tb.sh
 cd ..
 
+echo "Running cordic TB..."
+cd cordic/
+source run_cordic_tb.sh
+cd ..
+
 echo "All done."
