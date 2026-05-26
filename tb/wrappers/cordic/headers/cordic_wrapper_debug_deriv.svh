@@ -21,7 +21,10 @@ task automatic test_cordic_wrapper_debug_deriv();
             // Au front montant, le RTL fait : o_phase_deriv <= i_phase - s_phase_reg
             tb_pkg::set_bus(i_clk, i_bus_in, bus_val); 
             
-            // Des la sortie de set_bus, le resultat du cycle est disponible !
+            // Le tout premier echantillon peut sortir avec un cycle de latence.
+            if (i == 1) begin
+                @(posedge i_clk);
+            end
             deriv_out = o_bus_out[7:0]; 
             
             // ASSERTION A L'INTERIEUR DE LA BOUCLE : On check chaque pas !
