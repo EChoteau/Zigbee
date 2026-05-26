@@ -2,7 +2,7 @@ task automatic test_msk_wrapper_debug_all();
     logic [21:0] bus_val;
     begin
         $display("\n========== TEST: CFG4 (DEBUG ALL) ==========");
-        set_config(3'b100);
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b100);
         repeat(2) @(posedge i_clk);
 
         bus_val = '0;
@@ -12,7 +12,7 @@ task automatic test_msk_wrapper_debug_all();
         bus_val[6] = 1'b1; // shaping Q
         bus_val[0] = 1'b1; // flag_en
         bus_val[1] = 1'b1; // ech_en
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         repeat(2) @(posedge i_clk);
         assert (o_bus_out[2:0] != 3'b000)

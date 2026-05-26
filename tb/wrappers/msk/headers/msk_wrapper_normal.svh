@@ -2,7 +2,7 @@ task automatic test_msk_wrapper_normal();
     logic [21:0] bus_val;
     begin
         $display("\n========== TEST: CFG0 (NORMAL MODE) ==========");
-        set_config(3'b000);
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
 
         $display("  [NORMAL] Injection bit '1' avec horloges (flag_enable & enable_ech)...");
@@ -10,7 +10,7 @@ task automatic test_msk_wrapper_normal();
         bus_val[2] = 1'b1; // b_in
         bus_val[1] = 1'b1; // enable_ech
         bus_val[0] = 1'b1; // flag_enable
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         // On laisse tourner pour voir les filtres shaping se remplir
         repeat(15) @(posedge i_clk);

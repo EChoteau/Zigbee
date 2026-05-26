@@ -2,16 +2,16 @@ task automatic test_msk_wrapper_debug_demux();
     logic [21:0] bus_val;
     begin
         $display("\n========== TEST: CFG2 (DEBUG DEMUX) ==========");
-        set_config(3'b010);
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b010);
         repeat(2) @(posedge i_clk);
 
         $display("  [DEMUX] Injection d'un bit '1' pour basculer les voies...");
         bus_val = '0;
         bus_val[4] = 1'b1; // dbg_demux_b_enc
         bus_val[0] = 1'b1; // flag_enable pulse
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         bus_val[0] = 1'b0; // On relache le flag pour ne faire qu'un pas
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         repeat(2) @(posedge i_clk);
 
         // Sorties sur o_bus_out[1] (a_I) et o_bus_out[0] (a_Q)

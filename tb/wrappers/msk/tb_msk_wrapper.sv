@@ -3,12 +3,7 @@
 module tb_msk_wrapper;
 
     import tb_pkg::*;
-    `include "headers/msk_wrapper_normal.svh"
-    `include "headers/msk_wrapper_debug_enc.svh"
-    `include "headers/msk_wrapper_debug_demux.svh"
-    `include "headers/msk_wrapper_debug_shaping.svh"
-    `include "headers/msk_wrapper_debug_all.svh"
-    `include "headers/msk_wrapper_test_plan.svh"
+
 
     // Paramètres locaux 
     localparam int SAMPLES_PER_HALF_SINE = 10;
@@ -45,6 +40,13 @@ module tb_msk_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
+    `include "headers/msk_wrapper_normal.svh"
+    `include "headers/msk_wrapper_debug_enc.svh"
+    `include "headers/msk_wrapper_debug_demux.svh"
+    `include "headers/msk_wrapper_debug_shaping.svh"
+    `include "headers/msk_wrapper_debug_all.svh"
+    `include "headers/msk_wrapper_test_plan.svh"
+    
     initial begin
         // Initialisation des signaux
         i_rst_n = 1'b0;
@@ -54,7 +56,7 @@ module tb_msk_wrapper;
 
         // Reset initial
         repeat(5) @(posedge i_clk);
-        apply_reset(10);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 10);
 
         $display("\n========================================================");
         $display("===== MSK WRAPPER TB START =====");
