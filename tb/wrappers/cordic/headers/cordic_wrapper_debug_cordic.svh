@@ -3,14 +3,14 @@ task automatic test_cordic_wrapper_debug_cordic();
     logic signed [7:0] phase_out;
     begin
         $display("\n========== TEST: CFG1 (CORDIC ISOLÉ) ==========");
-        set_config(3'b001); // MODE_1
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b001); // MODE_1
         repeat(2) @(posedge i_clk);
 
         $display("  [CORDIC] Injection I=31, Q=31 (+45 degres)...");
         bus_val = '0;
         bus_val[5:0]  = 6'd31; 
         bus_val[11:6] = 6'd31; 
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         // Latence du pipeline
         repeat(15) @(posedge i_clk);
@@ -24,7 +24,7 @@ task automatic test_cordic_wrapper_debug_cordic();
 
         $display("  [CORDIC] Injection I=31, Q=-31 (-45 degres)...");
         bus_val[11:6] = -6'sd31; // Q negatif
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         repeat(15) @(posedge i_clk);
         phase_out = o_bus_out[7:0];

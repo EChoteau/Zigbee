@@ -3,7 +3,7 @@ task automatic test_cordic_wrapper_normal();
     logic signed [7:0] final_out;
     begin
         $display("\n========== TEST: CFG0 (CORDIC NORMAL CHAIN) ==========");
-        set_config(3'b000); // MODE_0
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b000); // MODE_0
         repeat(2) @(posedge i_clk);
 
         // ---------------------------------------------------------
@@ -13,7 +13,7 @@ task automatic test_cordic_wrapper_normal();
         bus_val = '0;
         bus_val[5:0]  = 6'd31; 
         bus_val[11:6] = 6'd31; 
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         // On attend que le pipeline se remplisse (CORDIC + DERIV + FILTRE)
         repeat(25) @(posedge i_clk);
@@ -40,7 +40,7 @@ task automatic test_cordic_wrapper_normal();
                 2: begin bus_val[5:0] = -6'sd31; bus_val[11:6] = -6'sd31; end // Quadrant 3 (-135°)
                 3: begin bus_val[5:0] =  6'sd31; bus_val[11:6] = -6'sd31; end // Quadrant 4 (-45°)
             endcase
-            set_bus(bus_val);
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         end
         
         final_out = o_bus_out[7:0];

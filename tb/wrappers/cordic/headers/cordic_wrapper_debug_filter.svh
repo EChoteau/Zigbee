@@ -3,13 +3,13 @@ task automatic test_cordic_wrapper_debug_filter();
     logic signed [7:0] filter_out;
     begin
         $display("\n========== TEST: CFG3 (FILTRE COMPACT) ==========");
-        set_config(3'b011); // MODE_3
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b011); // MODE_3
         repeat(2) @(posedge i_clk);
 
         $display("  [FILTER] Injection d'une constante de 20...");
         bus_val = '0;
         bus_val[7:0] = 8'sd20; // Constante a 20
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         
         // On attend que les N=5 etages de la ligne a retard se remplissent completement
         repeat(10) @(posedge i_clk);

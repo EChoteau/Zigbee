@@ -3,12 +3,12 @@ task automatic test_cordic_wrapper_debug_deriv();
     logic signed [7:0] deriv_out;
     begin
         $display("\n========== TEST: CFG2 (DERIVATEUR COMPACT) ==========");
-        set_config(3'b010); // MODE_2
+        tb_pkg::set_config(i_clk, i_cfg_local, 3'b010); // MODE_2
         repeat(2) @(posedge i_clk);
 
         $display("  [DERIV] Initialisation du derivateur a 0...");
         bus_val = '0;
-        set_bus(bus_val);
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         // On attend 2 cycles pour s'assurer que s_phase_reg et o_phase_deriv sont bien a 0
         repeat(2) @(posedge i_clk); 
 
@@ -19,7 +19,7 @@ task automatic test_cordic_wrapper_debug_deriv();
             
             // La tache set_bus ecrit la valeur ET attend le prochain front montant.
             // Au front montant, le RTL fait : o_phase_deriv <= i_phase - s_phase_reg
-            set_bus(bus_val); 
+            tb_pkg::set_bus(i_clk, i_bus_in, bus_val); 
             
             // Des la sortie de set_bus, le resultat du cycle est disponible !
             deriv_out = o_bus_out[7:0]; 

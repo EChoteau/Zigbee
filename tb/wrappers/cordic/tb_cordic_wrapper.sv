@@ -2,11 +2,7 @@
 
 module tb_cordic_wrapper;
     import tb_pkg::*;
-    `include "headers/cordic_wrapper_debug_cordic.svh"
-    `include "headers/cordic_wrapper_debug_deriv.svh"
-    `include "headers/cordic_wrapper_debug_filter.svh"
-    `include "headers/cordic_wrapper_normal.svh"
-    `include "headers/cordic_wrapper_test_plan.svh"
+
 
     logic i_clk, i_rst_n, i_out_en;
     logic [CFG_WIDTH-1:0]     i_cfg_local;
@@ -31,9 +27,15 @@ module tb_cordic_wrapper;
         forever #50 i_clk = ~i_clk;
     end
 
+    `include "headers/cordic_wrapper_debug_cordic.svh"
+    `include "headers/cordic_wrapper_debug_deriv.svh"
+    `include "headers/cordic_wrapper_debug_filter.svh"
+    `include "headers/cordic_wrapper_normal.svh"
+    `include "headers/cordic_wrapper_test_plan.svh"
+    
     initial begin
         i_rst_n = 0; i_out_en = 1; i_cfg_local = 0; i_bus_in = 0;
-        apply_reset(10);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 10);
 
         $display("\n========================================================");
         $display("===== CORDIC WRAPPER TB START =====");
