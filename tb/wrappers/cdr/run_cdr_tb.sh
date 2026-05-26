@@ -7,6 +7,7 @@ vlib lib_rtl_cdr
 vmap lib_rtl lib_rtl_cdr
 
 # compile necessary RTL
+vlog -sv ../include/tb_pkg.sv -work lib_rtl_cdr
 vlog -sv ../../../rtl/cdr/*.sv -work lib_rtl_cdr
 vlog -sv ../../../rtl/top/wrappers/cdr_wrapper.sv -work lib_rtl_cdr
 vlog -sv tb_cdr_wrapper.sv -work lib_rtl_cdr

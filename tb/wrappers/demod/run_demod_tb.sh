@@ -7,6 +7,7 @@ vlib lib_rtl_demod
 vmap lib_rtl lib_rtl_demod
 
 # compile necessary RTL
+vlog -sv ../include/tb_pkg.sv -work lib_rtl_demod
 vlog -sv ../../../rtl/demod/FIR/*.sv -work lib_rtl_demod
 vlog -sv ../../../rtl/demod/WAVE/*.sv -work lib_rtl_demod
 vlog -sv ../../../rtl/demod/*.sv -work lib_rtl_demod
