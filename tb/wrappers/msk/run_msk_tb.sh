@@ -15,4 +15,4 @@ vlog -sv ./tb_msk_wrapper.sv -work lib_rtl_msk
 
 # run
 n=lib_rtl_msk.tb_msk_wrapper
-vsim -c ${n} -do "msk_wrapper.do"
+vsim -c ${n} -do "msk.do"
