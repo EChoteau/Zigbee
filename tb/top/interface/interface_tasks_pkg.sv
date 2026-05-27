@@ -208,7 +208,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 8; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;  // fifo_tx_wr_en
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hD0 + i;  // data
+            bus_val[17:10] = 8'hD0 + i;  // fifo_tx_data
             `set_bus(bus_val);
             
             // Clear enable
@@ -280,7 +280,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 8; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;  // fifo_tx_wr_en
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h30 + i;
+            bus_val[17:10] = 8'h30 + i;
             `set_bus(bus_val);
             `set_bus('0);
             
@@ -300,7 +300,7 @@ package interface_tasks_pkg;
         // Attempt write when full (overflow - data should be discarded)
         bus_val = '0;
         bus_val[0] = 1'b1;
-        bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hFF;  // overflow data
+        bus_val[17:10] = 8'hFF;  // overflow data
         `set_bus(bus_val);
         `set_bus('0);
 
@@ -359,7 +359,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 3; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h10 + i;
+            bus_val[17:10] = 8'h10 + i;
             `set_bus(bus_val);
             `set_bus('0);
         end
@@ -380,7 +380,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 3; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h20 + i;
+            bus_val[17:10] = 8'h20 + i;
             `set_bus(bus_val);
             `set_bus('0);
         end
@@ -414,7 +414,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 8; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h30 + i;
+            bus_val[17:10] = 8'h30 + i;
             `set_bus(bus_val);
             `set_bus('0);
         end
@@ -705,7 +705,7 @@ package interface_tasks_pkg;
         for (i = 0; i < 4; i++) begin
             bus_val = '0;
             bus_val[0] = 1'b1;
-            bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h40 + i;
+            bus_val[17:10] = 8'h40 + i;
             `set_bus(bus_val);
             `set_bus('0);
         end
@@ -771,7 +771,7 @@ package interface_tasks_pkg;
             for (wr_count = 0; wr_count < 4; wr_count++) begin
                 bus_val = '0;
                 bus_val[0] = 1'b1;
-                bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h50 + (phase * 4) + wr_count;
+                bus_val[17:10] = 8'h50 + (phase * 4) + wr_count;
                 `set_bus(bus_val);
                 `set_bus('0);
             end
@@ -803,7 +803,7 @@ package interface_tasks_pkg;
             for (i = 0; i < 8; i++) begin
                 bus_val = '0;
                 bus_val[0] = 1'b1;
-                bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hD0 + i;
+                bus_val[17:10] = 8'hD0 + i;
                 `set_bus(bus_val);
                 `set_bus('0);
             end
