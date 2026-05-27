@@ -77,8 +77,17 @@ package interface_tasks_pkg;
     endtask
 
     // Helper macros bound to the current task arguments
-    `define apb_write_bus(addr, data) apb_write_bus_impl(i_clk, i_bus_in, addr, data)
-    `define apb_read_bus(addr, rd_data) apb_read_bus_impl(i_clk, i_bus_in, o_bus_out, addr, rd_data)
+    `define apb_write_bus(addr, data) \
+        begin \
+            logic [APB_ADDR_WIDTH-1:0] _addr_temp = addr; \
+            logic [APB_DATA_WIDTH-1:0] _data_temp = data; \
+            apb_write_bus_impl(i_clk, i_bus_in, _addr_temp, _data_temp); \
+        end
+    `define apb_read_bus(addr, rd_data) \
+        begin \
+            logic [APB_ADDR_WIDTH-1:0] _addr_temp = addr; \
+            apb_read_bus_impl(i_clk, i_bus_in, o_bus_out, _addr_temp, rd_data); \
+        end
     `define apply_reset(cycles) tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, cycles)
     `define set_bus(val) tb_pkg::set_bus(i_clk, i_bus_in, val)
     `define set_config_wrapper(clk, cfg_local, cfg) tb_pkg::set_config_wrapper(i_clk, i_cfg_local, cfg)
