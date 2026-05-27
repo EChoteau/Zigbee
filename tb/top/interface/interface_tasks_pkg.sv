@@ -18,8 +18,21 @@ package interface_tasks_pkg;
     import tb_pkg::*;
     import interface_pkg::*;
 
+    // Common task arguments for top_tb signals
+    `define IFACE_ARGS \
+        ref logic i_clk, \
+        ref logic i_rst_n, \
+        ref logic [CFG_WIDTH-1:0] i_cfg_local, \
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in, \
+        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+
     // APB write operation via bus interface
-    task automatic apb_write_bus(logic [APB_ADDR_WIDTH-1:0] addr, logic [APB_DATA_WIDTH-1:0] data);
+    task automatic apb_write_bus_impl(
+        ref logic i_clk,
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        logic [APB_ADDR_WIDTH-1:0] addr,
+        logic [APB_DATA_WIDTH-1:0] data
+    );
     begin
         i_bus_in[BUS_PWRITE_BIT] = 1'b1;
         i_bus_in[BUS_PSEL_BIT] = 1'b1;
@@ -38,7 +51,13 @@ package interface_tasks_pkg;
     endtask
 
     // APB read operation via bus interface
-    task automatic apb_read_bus(logic [APB_ADDR_WIDTH-1:0] addr, output logic [APB_DATA_WIDTH-1:0] rd_data);
+    task automatic apb_read_bus_impl(
+        ref logic i_clk,
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
+        logic [APB_ADDR_WIDTH-1:0] addr,
+        output logic [APB_DATA_WIDTH-1:0] rd_data
+    );
     begin
         i_bus_in[BUS_PWRITE_BIT] = 1'b0;
         i_bus_in[BUS_PSEL_BIT] = 1'b1;
@@ -57,10 +76,17 @@ package interface_tasks_pkg;
     end
     endtask
 
+    // Helper macros bound to the current task arguments
+    `define apb_write_bus(addr, data) apb_write_bus_impl(i_clk, i_bus_in, addr, data)
+    `define apb_read_bus(addr, rd_data) apb_read_bus_impl(i_clk, i_bus_in, o_bus_out, addr, rd_data)
+    `define apply_reset(cycles) tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, cycles)
+    `define set_bus(val) tb_pkg::set_bus(i_clk, i_bus_in, val)
+    `define set_config_wrapper(clk, cfg_local, cfg) tb_pkg::set_config_wrapper(i_clk, i_cfg_local, cfg)
+
     // =========================================================================
     // TEST CASE: Reset/Smoke test
     // =========================================================================
-    task automatic run_interface_tc_t0_reset_smoke;
+    task automatic run_interface_tc_t0_reset_smoke(`IFACE_ARGS);
         logic [APB_DATA_WIDTH-1:0] rd;
     begin
         $display("[INTERFACE T0] Reset/Smoke test start");
@@ -95,7 +121,7 @@ package interface_tasks_pkg;
     // =========================================================================
     // TEST CASE: APB registers test
     // =========================================================================
-    task automatic run_interface_tc_t1_apb_regs;
+    task automatic run_interface_tc_t1_apb_regs(`IFACE_ARGS);
         logic [APB_DATA_WIDTH-1:0] rd;
     begin
         $display("[INTERFACE T1] APB registers test start");
@@ -133,7 +159,7 @@ package interface_tasks_pkg;
     // NOTE: This test expects wrapper config to be pre-set by caller (test plan)
     //       If called standalone, caller must set config before calling this task
     // =========================================================================
-    task automatic run_interface_tc_fifo_tx_basic;
+    task automatic run_interface_tc_fifo_tx_basic(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] expected_data;
         logic [7:0] read_data;
@@ -207,7 +233,7 @@ package interface_tasks_pkg;
     // TEST CASE: TX FIFO full capacity test
     // CONFIG REQUIRED: CFG_FIFO_TX (3'b100) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_fifo_tx_full;
+    task automatic run_interface_tc_fifo_tx_full(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] expected_data;
         logic [7:0] read_data;
@@ -288,7 +314,7 @@ package interface_tasks_pkg;
     // TEST CASE: TX FIFO sequential operations
     // CONFIG REQUIRED: CFG_FIFO_TX (3'b100) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_fifo_sequential_ops;
+    task automatic run_interface_tc_fifo_sequential_ops(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] expected_data;
         logic [7:0] read_data;
@@ -393,7 +419,7 @@ package interface_tasks_pkg;
     // TEST CASE: RX nominal single byte test
     // CONFIG REQUIRED: CFG_RX_ONLY (3'b000) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_rx_nominal;
+    task automatic run_interface_tc_rx_nominal(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] rd_data;
         logic [7:0] rx_test_byte = 8'h3C;
@@ -449,7 +475,7 @@ package interface_tasks_pkg;
     // TEST CASE: RX multiple bytes reception
     // CONFIG REQUIRED: CFG_RX_ONLY (3'b000) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_rx_multiple_bytes;
+    task automatic run_interface_tc_rx_multiple_bytes(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] rd_data;
         logic [7:0] test_bytes [0:7] = '{8'h5A, 8'hA5, 8'h3C, 8'hC3, 8'hFF, 8'h00, 8'h99, 8'h66};
@@ -504,7 +530,7 @@ package interface_tasks_pkg;
     // TEST CASE: Data pattern test
     // CONFIG REQUIRED: CFG_RX_ONLY (3'b000) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_data_patterns;
+    task automatic run_interface_tc_data_patterns(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] rd_data;
         logic [7:0] test_patterns [0:7];
@@ -563,7 +589,7 @@ package interface_tasks_pkg;
     // TEST CASE: RX overflow error test
     // CONFIG REQUIRED: CFG_RX_ONLY (3'b000) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_rx_overflow_error;
+    task automatic run_interface_tc_rx_overflow_error(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] rd_data;
         logic [7:0] test_byte;
@@ -584,10 +610,10 @@ package interface_tasks_pkg;
             test_byte = 8'hA0 + i;
             
             // Inject all 8 bits
-            for (int bit = 0; bit < 8; bit++) begin
+            for (int bit_idx = 0; bit_idx < 8; bit_idx++) begin
                 bus_val = '0;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
-                bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit];
+                bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit_idx];
                 set_bus(bus_val);
                 repeat(1) @(posedge i_clk);
                 set_bus('0);
@@ -629,7 +655,7 @@ package interface_tasks_pkg;
     // =========================================================================
     // TEST CASE: Configuration transitions test
     // =========================================================================
-    task automatic run_interface_tc_config_transitions;
+    task automatic run_interface_tc_config_transitions(`IFACE_ARGS);
         logic [7:0] rd_data;
         logic [21:0] bus_val;
         int i;
@@ -703,7 +729,7 @@ package interface_tasks_pkg;
     // TEST CASE: FIFO stress test
     // CONFIG REQUIRED: CFG_FIFO_TX (3'b100) - pre-set by test plan
     // =========================================================================
-    task automatic run_interface_tc_stress_fifo_ops;
+    task automatic run_interface_tc_stress_fifo_ops(`IFACE_ARGS);
         logic [21:0] bus_val;
         logic [7:0] data;
         logic [7:0] expected;
@@ -783,38 +809,38 @@ package interface_tasks_pkg;
     // =========================================================================
     // TEST PLAN: Smoke tests
     // =========================================================================
-    task automatic run_interface_test_plan_smoke();
+    task automatic run_interface_test_plan_smoke(`IFACE_ARGS);
     begin
         $display("\n========== [INTERFACE TEST PLAN SMOKE] Start ==========\n");
 
         // Test 1: Reset and smoke test
         $display("[SMOKE] 1/5: Reset/smoke test...");
         apply_reset(5);
-        run_interface_tc_t0_reset_smoke();
+        run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 2: APB registers test
         $display("[SMOKE] 2/5: APB registers test...");
         apply_reset(5);
-        run_interface_tc_t1_apb_regs();
+        run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 3: TX FIFO basic test
         $display("[SMOKE] 3/5: TX FIFO basic test...");
         apply_reset(5);
-        run_interface_tc_fifo_tx_basic();
+        run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 4: RX nominal test
         $display("[SMOKE] 4/5: RX nominal test...");
         apply_reset(5);
-        run_interface_tc_rx_nominal();
+        run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 5: TX FIFO full test
         $display("[SMOKE] 5/5: TX FIFO full test...");
         apply_reset(5);
-        run_interface_tc_fifo_tx_full();
+        run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("\n========== [INTERFACE TEST PLAN SMOKE] PASS ==========\n");
@@ -824,7 +850,7 @@ package interface_tasks_pkg;
     // =========================================================================
     // TEST PLAN: Full comprehensive test suite
     // =========================================================================
-    task automatic run_interface_test_plan_full();
+    task automatic run_interface_test_plan_full(`IFACE_ARGS);
     begin
         $display("\n");
         $display("╔═══════════════════════════════════════════════════════════════════╗");
@@ -840,13 +866,13 @@ package interface_tasks_pkg;
         $display("[FULL] 1/15: Reset/smoke test...");
         apply_reset(5);
         // No specific config needed for reset/smoke
-        run_interface_tc_t0_reset_smoke();
+        run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 2/15: APB registers test...");
         apply_reset(5);
         // No specific config needed for APB register test
-        run_interface_tc_t1_apb_regs();
+        run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -859,21 +885,21 @@ package interface_tasks_pkg;
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
-        run_interface_tc_fifo_tx_basic();
+        run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 4/15: TX FIFO full capacity test...");
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
-        run_interface_tc_fifo_tx_full();
+        run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 5/15: TX FIFO sequential operations...");
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
-        run_interface_tc_fifo_sequential_ops();
+        run_interface_tc_fifo_sequential_ops(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -886,14 +912,14 @@ package interface_tasks_pkg;
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
-        run_interface_tc_rx_nominal();
+        run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 7/15: RX multiple bytes reception...");
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
-        run_interface_tc_rx_multiple_bytes();
+        run_interface_tc_rx_multiple_bytes(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -906,7 +932,7 @@ package interface_tasks_pkg;
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
-        run_interface_tc_data_patterns();
+        run_interface_tc_data_patterns(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -919,7 +945,7 @@ package interface_tasks_pkg;
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
-        run_interface_tc_rx_overflow_error();
+        run_interface_tc_rx_overflow_error(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -932,7 +958,7 @@ package interface_tasks_pkg;
         $display("[FULL] 10/15: Configuration transitions test...");
         apply_reset(5);
         // NOTE: This test manages its own config changes - do NOT pre-set config
-        run_interface_tc_config_transitions();
+        run_interface_tc_config_transitions(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -945,7 +971,7 @@ package interface_tasks_pkg;
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
-        run_interface_tc_stress_fifo_ops();
+        run_interface_tc_stress_fifo_ops(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================
@@ -956,26 +982,26 @@ package interface_tasks_pkg;
 
         $display("[FULL] 12/15: Repeat reset/smoke test...");
         apply_reset(5);
-        run_interface_tc_t0_reset_smoke();
+        run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 13/15: Repeat APB test...");
         apply_reset(5);
-        run_interface_tc_t1_apb_regs();
+        run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 14/15: Repeat RX nominal...");
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
-        run_interface_tc_rx_nominal();
+        run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 15/15: Repeat FIFO test...");
         apply_reset(5);
         set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
-        run_interface_tc_fifo_tx_basic();
+        run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // ========================================================================

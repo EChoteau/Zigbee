@@ -16,6 +16,15 @@ package demod_tasks_pkg;
     import tb_pkg::*;
     import demod_pkg::*;
 
+    // Common task arguments for top_tb signals
+    `define DEMOD_ARGS \
+        ref logic i_clk, \
+        ref logic i_rst_n, \
+        ref logic [CFG_WIDTH-1:0] i_wrapper_cfg, \
+        ref logic [CFG_WIDTH-1:0] i_top_cfg, \
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in, \
+        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+
     localparam logic [2:0] TOP_CFG_DEMODULATION = 3'b101;
 
     // =========================================================================
@@ -23,7 +32,12 @@ package demod_tasks_pkg;
     // =========================================================================
 
     // Apply IQ sample on bus (top_tb signals)
-    task automatic apply_iq_sample(logic [3:0] i_val, logic [3:0] q_val);
+    task automatic apply_iq_sample_impl(
+        ref logic i_clk,
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        logic [3:0] i_val,
+        logic [3:0] q_val
+    );
     begin
         @(negedge i_clk);
         i_bus_in[17:14] = i_val;  // I component
@@ -32,17 +46,24 @@ package demod_tasks_pkg;
     endtask
 
     // Apply FIR input sample
-    task automatic apply_fir_sample(logic signed [7:0] x_val);
+    task automatic apply_fir_sample_impl(
+        ref logic i_clk,
+        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        logic signed [7:0] x_val
+    );
     begin
         @(negedge i_clk);
         i_bus_in[17:10] = x_val;
     end
     endtask
 
+    `define apply_iq_sample(i_val, q_val) apply_iq_sample_impl(i_clk, i_bus_in, i_val, q_val)
+    `define apply_fir_sample(x_val) apply_fir_sample_impl(i_clk, i_bus_in, x_val)
+
     // =========================================================================
     // TEST CASE: Reset/Smoke test
     // =========================================================================
-    task automatic run_demod_tc_reset_smoke();
+    task automatic run_demod_tc_reset_smoke(`DEMOD_ARGS);
     begin
         $display("\n[DEMOD TC0] Reset/Smoke test start");
 
@@ -66,7 +87,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Normal mode basic test
     // =========================================================================
-    task automatic run_demod_tc_normal_basic();
+    task automatic run_demod_tc_normal_basic(`DEMOD_ARGS);
         logic signed [5:0] res_i, res_q;
     begin
         $display("\n[DEMOD TC1] Normal mode basic test start");
@@ -106,7 +127,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug DEMOD I channel
     // =========================================================================
-    task automatic run_demod_tc_debug_demod_i();
+    task automatic run_demod_tc_debug_demod_i(`DEMOD_ARGS);
         logic [7:0] res_demod;
         logic [3:0] res_osc;
     begin
@@ -146,7 +167,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug DEMOD Q channel
     // =========================================================================
-    task automatic run_demod_tc_debug_demod_q();
+    task automatic run_demod_tc_debug_demod_q(`DEMOD_ARGS);
         logic [7:0] res_demod;
         logic [3:0] res_osc;
     begin
@@ -186,7 +207,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug FIR I filter
     // =========================================================================
-    task automatic run_demod_tc_debug_fir_i();
+    task automatic run_demod_tc_debug_fir_i(`DEMOD_ARGS);
         logic signed [5:0] fir_out;
     begin
         $display("\n[DEMOD TC4] Debug FIR I filter test start");
@@ -224,7 +245,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug FIR Q filter
     // =========================================================================
-    task automatic run_demod_tc_debug_fir_q();
+    task automatic run_demod_tc_debug_fir_q(`DEMOD_ARGS);
         logic signed [5:0] fir_out;
     begin
         $display("\n[DEMOD TC5] Debug FIR Q filter test start");
@@ -262,7 +283,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug full chain I
     // =========================================================================
-    task automatic run_demod_tc_debug_chain_i();
+    task automatic run_demod_tc_debug_chain_i(`DEMOD_ARGS);
         logic signed [5:0] res_i, res_q;
     begin
         $display("\n[DEMOD TC6] Debug full chain I test start");
@@ -301,7 +322,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Debug full chain Q
     // =========================================================================
-    task automatic run_demod_tc_debug_chain_q();
+    task automatic run_demod_tc_debug_chain_q(`DEMOD_ARGS);
         logic signed [5:0] res_i, res_q;
     begin
         $display("\n[DEMOD TC7] Debug full chain Q test start");
@@ -340,7 +361,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST CASE: Multiple transitions between modes
     // =========================================================================
-    task automatic run_demod_tc_mode_transitions();
+    task automatic run_demod_tc_mode_transitions(`DEMOD_ARGS);
     begin
         $display("\n[DEMOD TC8] Mode transitions test start");
 
@@ -366,7 +387,7 @@ package demod_tasks_pkg;
     // =========================================================================
     // TEST PLAN: Full comprehensive test suite
     // =========================================================================
-    task automatic run_demod_test_plan_full();
+    task automatic run_demod_test_plan_full(`DEMOD_ARGS);
     begin
         $display("\n╔═══════════════════════════════════════════════════════════════════╗");
         $display("║              DEMOD BLOCK TEST PLAN (FULL)                         ║");
@@ -376,55 +397,55 @@ package demod_tasks_pkg;
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_reset_smoke();
+        run_demod_tc_reset_smoke(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_normal_basic();
+        run_demod_tc_normal_basic(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_demod_i();
+        run_demod_tc_debug_demod_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_I);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_demod_q();
+        run_demod_tc_debug_demod_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_Q);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_fir_i();
+        run_demod_tc_debug_fir_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_I);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_fir_q();
+        run_demod_tc_debug_fir_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_Q);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_chain_i();
+        run_demod_tc_debug_chain_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_I);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_chain_q();
+        run_demod_tc_debug_chain_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_Q);
         repeat(2) @(posedge i_clk);
 
-        run_demod_tc_mode_transitions();
+        run_demod_tc_mode_transitions(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
