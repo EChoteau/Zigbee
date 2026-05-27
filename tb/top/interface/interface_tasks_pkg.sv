@@ -22,14 +22,14 @@ package interface_tasks_pkg;
     `define IFACE_ARGS \
         ref logic i_clk, \
         ref logic i_rst_n, \
-        ref logic [CFG_WIDTH-1:0] i_cfg_local, \
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in, \
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+        ref logic [tb_pkg::CFG_WIDTH-1:0] i_cfg_local, \
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in, \
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
 
     // APB write operation via bus interface
     task automatic apb_write_bus_impl(
         ref logic i_clk,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
         logic [APB_ADDR_WIDTH-1:0] addr,
         logic [APB_DATA_WIDTH-1:0] data
     );
@@ -53,8 +53,8 @@ package interface_tasks_pkg;
     // APB read operation via bus interface
     task automatic apb_read_bus_impl(
         ref logic i_clk,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out,
         logic [APB_ADDR_WIDTH-1:0] addr,
         output logic [APB_DATA_WIDTH-1:0] rd_data
     );

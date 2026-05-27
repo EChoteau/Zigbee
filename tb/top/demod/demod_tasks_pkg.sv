@@ -20,10 +20,10 @@ package demod_tasks_pkg;
     `define DEMOD_ARGS \
         ref logic i_clk, \
         ref logic i_rst_n, \
-        ref logic [CFG_WIDTH-1:0] i_wrapper_cfg, \
-        ref logic [CFG_WIDTH-1:0] i_top_cfg, \
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in, \
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+        ref logic [tb_pkg::CFG_WIDTH-1:0] i_wrapper_cfg, \
+        ref logic [tb_pkg::CFG_WIDTH-1:0] i_top_cfg, \
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in, \
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
 
     localparam logic [2:0] TOP_CFG_DEMODULATION = 3'b101;
 
@@ -34,7 +34,7 @@ package demod_tasks_pkg;
     // Apply IQ sample on bus (top_tb signals)
     task automatic apply_iq_sample_impl(
         ref logic i_clk,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
         logic [3:0] i_val,
         logic [3:0] q_val
     );
@@ -48,7 +48,7 @@ package demod_tasks_pkg;
     // Apply FIR input sample
     task automatic apply_fir_sample_impl(
         ref logic i_clk,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
         logic signed [7:0] x_val
     );
     begin
