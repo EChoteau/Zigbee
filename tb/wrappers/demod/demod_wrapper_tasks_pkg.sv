@@ -11,9 +11,9 @@ package demod_wrapper_tasks_pkg;
 
     task automatic test_demod_wrapper_debug_demod(
         ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+        ref logic [tb_pkg::CFG_WIDTH-1:0] d_cfg_local,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
     );
         logic [21:0] bus_val;
         logic [7:0]  res_demod;
@@ -58,9 +58,9 @@ package demod_wrapper_tasks_pkg;
 
     task automatic test_demod_wrapper_debug_fir(
         ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+        ref logic [tb_pkg::CFG_WIDTH-1:0] d_cfg_local,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
     );
         logic [21:0] bus_val;
         logic signed [5:0] fir_out;
@@ -98,9 +98,9 @@ package demod_wrapper_tasks_pkg;
 
     task automatic test_demod_wrapper_debug_chain(
         ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
+        ref logic [tb_pkg::CFG_WIDTH-1:0] d_cfg_local,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
     );
         logic [21:0] bus_val;
 
@@ -138,9 +138,9 @@ package demod_wrapper_tasks_pkg;
 
     task automatic test_demod_wrapper_normal(
         ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
+        ref logic [tb_pkg::CFG_WIDTH-1:0] d_cfg_local,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out,
         ref logic [3:0] tb_i,
         ref logic [3:0] tb_q
     );
@@ -204,9 +204,9 @@ package demod_wrapper_tasks_pkg;
     task automatic run_demod_wrapper_test_plan(
         ref logic i_clk,
         ref logic i_rst_n,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
+        ref logic [tb_pkg::CFG_WIDTH-1:0] d_cfg_local,
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in,
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out,
         ref logic [3:0] tb_i,
         ref logic [3:0] tb_q
     );
