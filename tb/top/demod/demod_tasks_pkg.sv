@@ -57,7 +57,7 @@ package demod_tasks_pkg;
     end
     endtask
 
-    `define apply_iq_sample(i_val, q_val) \
+     `define apply_iq_sample(i_val, q_val) \
         begin \
             logic [3:0] _i_temp = i_val; \
             logic [3:0] _q_temp = q_val; \
@@ -110,7 +110,7 @@ package demod_tasks_pkg;
 
         // Apply strong I signal
         $display("  [NORMAL_BASIC] Injecting I=15 (Max), Q=8 (Zero)...");
-        apply_iq_sample(4'd15, 4'd8);
+        `apply_iq_sample(4'd15, 4'd8);
 
         repeat(10) @(posedge i_clk);
 
@@ -150,7 +150,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_DEMOD_I] Injecting I=7, Q=0...");
-        apply_iq_sample(4'd7, 4'd0);
+        `apply_iq_sample(4'd7, 4'd0);
 
         repeat(8) @(posedge i_clk);
 
@@ -190,7 +190,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_DEMOD_Q] Injecting I=0, Q=7...");
-        apply_iq_sample(4'd0, 4'd7);
+        `apply_iq_sample(4'd0, 4'd7);
 
         repeat(8) @(posedge i_clk);
 
@@ -229,7 +229,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_FIR_I] Sending impulse (0x7F)...");
-        apply_fir_sample(8'h7F);
+        `apply_fir_sample(8'h7F);
 
         repeat(12) @(posedge i_clk);
 
@@ -267,7 +267,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_FIR_Q] Sending impulse (0x7F)...");
-        apply_fir_sample(8'h7F);
+        `apply_fir_sample(8'h7F);
 
         repeat(12) @(posedge i_clk);
 
@@ -305,7 +305,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_CHAIN_I] Strong I signal (15), Q=8 (zero)...");
-        apply_iq_sample(4'd15, 4'd8);
+        `apply_iq_sample(4'd15, 4'd8);
 
         repeat(15) @(posedge i_clk);
 
@@ -344,7 +344,7 @@ package demod_tasks_pkg;
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_CHAIN_Q] Strong Q signal (0), I=8 (zero)...");
-        apply_iq_sample(4'd8, 4'd0);
+        `apply_iq_sample(4'd8, 4'd0);
 
         repeat(15) @(posedge i_clk);
 
@@ -382,7 +382,7 @@ package demod_tasks_pkg;
         // Cycle through all modes
         for (int mode = 0; mode < 8; mode++) begin
             set_config_wrapper(i_clk, i_wrapper_cfg, 3'(mode));
-            apply_iq_sample(4'd7, 4'd7);
+            `apply_iq_sample(4'd7, 4'd7);
             repeat(5) @(posedge i_clk);
             $display("  [TRANSITIONS] Mode %0d transition OK", mode);
         end
