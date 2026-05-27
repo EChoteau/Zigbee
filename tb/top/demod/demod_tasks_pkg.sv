@@ -372,7 +372,7 @@ package demod_tasks_pkg;
 
         // Cycle through all modes
         for (int mode = 0; mode < 8; mode++) begin
-            set_config_wrapper(i_clk, i_wrapper_cfg, logic [2:0]'(mode));
+            set_config_wrapper(i_clk, i_wrapper_cfg, 3'(mode));
             apply_iq_sample(4'd7, 4'd7);
             repeat(5) @(posedge i_clk);
             $display("  [TRANSITIONS] Mode %0d transition OK", mode);
