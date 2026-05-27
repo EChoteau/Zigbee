@@ -16,6 +16,8 @@ package demod_tasks_pkg;
     import tb_pkg::*;
     import demod_pkg::*;
 
+    localparam logic [2:0] TOP_CFG_DEMODULATION = 3'b101;
+
     // =========================================================================
     // SUPPORT TASKS
     // =========================================================================
@@ -37,20 +39,6 @@ package demod_tasks_pkg;
     end
     endtask
 
-    // Set wrapper configuration with reset timing
-    task automatic set_config(logic [2:0] cfg);
-    begin
-        tb_pkg::set_config_wrapper(i_clk, i_wrapper_cfg, cfg);
-    end
-    endtask
-
-    // Reset signal using top_tb signals
-    task automatic apply_reset(int cycles);
-    begin
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, cycles);
-    end
-    endtask
-
     // =========================================================================
     // TEST CASE: Reset/Smoke test
     // =========================================================================
@@ -58,13 +46,18 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC0] Reset/Smoke test start");
 
-        apply_reset(5);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [RESET] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_NORMAL)
+            else $error("  [RESET] FAIL: wrapper cfg is %0d, expected CFG_NORMAL", i_wrapper_cfg);
 
-        // Check outputs are valid after reset
-        assert (o_bus_out !== 14'hxxxx)
-            $display("  [RESET] PASS: Output buses valid after reset");
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 5);
+
+        // Check outputs are fully cleared after reset
+        assert (o_bus_out === '0)
+            $display("  [RESET] PASS: Output buses cleared after reset");
         else
-            $error("  [RESET] FAIL: Output contains X values");
+            $error("  [RESET] FAIL: Output not cleared, got=%0h", o_bus_out);
 
         $display("[DEMOD TC0] Reset/Smoke test PASS");
     end
@@ -78,7 +71,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC1] Normal mode basic test start");
 
-        set_config(CFG_NORMAL);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [NORMAL_BASIC] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_NORMAL)
+            else $error("  [NORMAL_BASIC] FAIL: wrapper cfg is %0d, expected CFG_NORMAL", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         // Apply strong I signal
@@ -97,6 +94,11 @@ package demod_tasks_pkg;
         else
             $error("  [NORMAL_BASIC] FAIL: I channel inactive");
 
+        assert (res_q != 0 || res_q == 0)
+            $display("  [NORMAL_BASIC] PASS: Q path produced a defined value");
+        else
+            $error("  [NORMAL_BASIC] FAIL: Q path invalid");
+
         $display("[DEMOD TC1] Normal mode basic test PASS");
     end
     endtask
@@ -110,7 +112,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC2] Debug DEMOD I channel test start");
 
-        set_config(CFG_DEBUG_DEMOD_I);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_DEMOD_I] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_DEMOD_I)
+            else $error("  [DEBUG_DEMOD_I] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_DEMOD_I", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_DEMOD_I] Injecting I=7, Q=0...");
@@ -122,6 +128,11 @@ package demod_tasks_pkg;
         res_osc = o_bus_out[11:8];
 
         $display("  [DEBUG_DEMOD_I] Demod_I=%d, Osc_Cos=%d", res_demod, res_osc);
+
+        assert (res_demod != 8'sd0)
+            $display("  [DEBUG_DEMOD_I] PASS: Demod output is non-zero");
+        else
+            $error("  [DEBUG_DEMOD_I] FAIL: Demod output stayed at zero");
 
         assert (res_osc !== 4'hx)
             $display("  [DEBUG_DEMOD_I] PASS: Oscillator active");
@@ -141,7 +152,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC3] Debug DEMOD Q channel test start");
 
-        set_config(CFG_DEBUG_DEMOD_Q);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_DEMOD_Q] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_DEMOD_Q)
+            else $error("  [DEBUG_DEMOD_Q] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_DEMOD_Q", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_DEMOD_Q] Injecting I=0, Q=7...");
@@ -153,6 +168,11 @@ package demod_tasks_pkg;
         res_osc = o_bus_out[11:8];
 
         $display("  [DEBUG_DEMOD_Q] Demod_Q=%d, Osc_Sin=%d", res_demod, res_osc);
+
+        assert (res_demod != 8'sd0)
+            $display("  [DEBUG_DEMOD_Q] PASS: Demod output is non-zero");
+        else
+            $error("  [DEBUG_DEMOD_Q] FAIL: Demod output stayed at zero");
 
         assert (res_osc !== 4'hx)
             $display("  [DEBUG_DEMOD_Q] PASS: Oscillator active");
@@ -171,7 +191,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC4] Debug FIR I filter test start");
 
-        set_config(CFG_DEBUG_FIR_I);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_FIR_I] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_FIR_I)
+            else $error("  [DEBUG_FIR_I] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_FIR_I", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_FIR_I] Sending impulse (0x7F)...");
@@ -188,6 +212,11 @@ package demod_tasks_pkg;
         else
             $error("  [DEBUG_FIR_I] FAIL: FIR filter inactive");
 
+        assert (o_bus_out[11:6] == 6'sd0)
+            $display("  [DEBUG_FIR_I] PASS: Q channel stays at zero");
+        else
+            $error("  [DEBUG_FIR_I] FAIL: Q channel unexpected value %0d", $signed(o_bus_out[11:6]));
+
         $display("[DEMOD TC4] Debug FIR I filter test PASS");
     end
     endtask
@@ -200,7 +229,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC5] Debug FIR Q filter test start");
 
-        set_config(CFG_DEBUG_FIR_Q);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_FIR_Q] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_FIR_Q)
+            else $error("  [DEBUG_FIR_Q] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_FIR_Q", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_FIR_Q] Sending impulse (0x7F)...");
@@ -217,6 +250,11 @@ package demod_tasks_pkg;
         else
             $error("  [DEBUG_FIR_Q] FAIL: FIR filter inactive");
 
+        assert (o_bus_out[5:0] == 6'sd0)
+            $display("  [DEBUG_FIR_Q] PASS: I channel stays at zero");
+        else
+            $error("  [DEBUG_FIR_Q] FAIL: I channel unexpected value %0d", $signed(o_bus_out[5:0]));
+
         $display("[DEMOD TC5] Debug FIR Q filter test PASS");
     end
     endtask
@@ -229,7 +267,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC6] Debug full chain I test start");
 
-        set_config(CFG_DEBUG_FIRC_I);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_CHAIN_I] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_FIRC_I)
+            else $error("  [DEBUG_CHAIN_I] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_FIRC_I", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_CHAIN_I] Strong I signal (15), Q=8 (zero)...");
@@ -247,6 +289,11 @@ package demod_tasks_pkg;
         else
             $error("  [DEBUG_CHAIN_I] FAIL: I channel silent");
 
+        assert (res_i >= res_q)
+            $display("  [DEBUG_CHAIN_I] PASS: I dominates Q");
+        else
+            $error("  [DEBUG_CHAIN_I] FAIL: I does not dominate Q");
+
         $display("[DEMOD TC6] Debug full chain I test PASS");
     end
     endtask
@@ -259,7 +306,11 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC7] Debug full chain Q test start");
 
-        set_config(CFG_DEBUG_FIRC_Q);
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [DEBUG_CHAIN_Q] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+        assert (i_wrapper_cfg == CFG_DEBUG_FIRC_Q)
+            else $error("  [DEBUG_CHAIN_Q] FAIL: wrapper cfg is %0d, expected CFG_DEBUG_FIRC_Q", i_wrapper_cfg);
+
         repeat(5) @(posedge i_clk);
 
         $display("  [DEBUG_CHAIN_Q] Strong Q signal (0), I=8 (zero)...");
@@ -277,6 +328,11 @@ package demod_tasks_pkg;
         else
             $error("  [DEBUG_CHAIN_Q] FAIL: Q channel silent");
 
+        assert (res_q >= res_i)
+            $display("  [DEBUG_CHAIN_Q] PASS: Q dominates I");
+        else
+            $error("  [DEBUG_CHAIN_Q] FAIL: Q does not dominate I");
+
         $display("[DEMOD TC7] Debug full chain Q test PASS");
     end
     endtask
@@ -288,11 +344,14 @@ package demod_tasks_pkg;
     begin
         $display("\n[DEMOD TC8] Mode transitions test start");
 
+        assert (i_top_cfg == TOP_CFG_DEMODULATION)
+            else $error("  [TRANSITIONS] FAIL: top cfg is %0d, expected DEMODULATION", i_top_cfg);
+
         $display("  [TRANSITIONS] Cycling through all modes...");
 
         // Cycle through all modes
         for (int mode = 0; mode < 8; mode++) begin
-            set_config(logic [2:0]'(mode));
+            set_config_wrapper(i_clk, i_wrapper_cfg, logic [2:0]'(mode));
             apply_iq_sample(4'd7, 4'd7);
             repeat(5) @(posedge i_clk);
             $display("  [TRANSITIONS] Mode %0d transition OK", mode);
@@ -313,32 +372,63 @@ package demod_tasks_pkg;
         $display("║              DEMOD BLOCK TEST PLAN (FULL)                         ║");
         $display("╚═══════════════════════════════════════════════════════════════════╝\n");
 
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
+        repeat(2) @(posedge i_clk);
+
         run_demod_tc_reset_smoke();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_normal_basic();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_demod_i();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_I);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_demod_q();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_Q);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_fir_i();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_I);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_fir_q();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_Q);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_chain_i();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_I);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_debug_chain_q();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_Q);
+        repeat(2) @(posedge i_clk);
 
         run_demod_tc_mode_transitions();
-        apply_reset(3);
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
+        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
+        repeat(2) @(posedge i_clk);
 
         $display("\n╔═══════════════════════════════════════════════════════════════════╗");
         $display("║           [DEMOD TEST PLAN FULL] PASS                            ║");

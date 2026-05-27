@@ -18,31 +18,6 @@ package interface_tasks_pkg;
     import tb_pkg::*;
     import interface_pkg::*;
 
-    // =========================================================================
-    // SUPPORT TASKS (wrappers around generic tb_pkg functions)
-    // =========================================================================
-
-    // Wrapper around tb_pkg::apply_reset - applies reset with proper signal passing
-    task automatic apply_reset(int num_cycles);
-    begin
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, num_cycles);
-    end
-    endtask
-
-    // Set wrapper configuration mode (generic, not using tb_pkg as it's interface-specific)
-    task automatic set_config(logic [2:0] cfg);
-    begin
-        i_wrapper_cfg = cfg;
-    end
-    endtask
-
-    // Wrapper around tb_pkg::set_bus - sets bus with proper signal passing
-    task automatic set_bus(logic [21:0] bus_val);
-    begin
-        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
-    end
-    endtask
-
     // APB write operation via bus interface
     task automatic apb_write_bus(logic [APB_ADDR_WIDTH-1:0] addr, logic [APB_DATA_WIDTH-1:0] data);
     begin
@@ -665,14 +640,14 @@ package interface_tasks_pkg;
         $display("  [CONFIG_TRANS] Switching RX_ONLY -> FIFO_TX -> RX_ONLY");
         
         // Start in RX_ONLY
-        set_config(3'b000);
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
         apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Switch to FIFO_TX
         apply_reset(3);
-        set_config(3'b100);
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);
         repeat(2) @(posedge i_clk);
 
         // Write to TX FIFO
@@ -698,7 +673,7 @@ package interface_tasks_pkg;
 
         // Switch back to RX_ONLY
         apply_reset(3);
-        set_config(3'b000);
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
         apb_write_bus(ADDR_CONTROL, 8'h11);
         repeat(2) @(posedge i_clk);
@@ -882,21 +857,21 @@ package interface_tasks_pkg;
 
         $display("[FULL] 3/15: TX FIFO basic (fill/read)...");
         apply_reset(5);
-        set_config(3'b100);  // CFG_FIFO_TX
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic();
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 4/15: TX FIFO full capacity test...");
         apply_reset(5);
-        set_config(3'b100);  // CFG_FIFO_TX
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_full();
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 5/15: TX FIFO sequential operations...");
         apply_reset(5);
-        set_config(3'b100);  // CFG_FIFO_TX
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_sequential_ops();
         repeat(5) @(posedge i_clk);
@@ -909,14 +884,14 @@ package interface_tasks_pkg;
 
         $display("[FULL] 6/15: RX nominal single byte test...");
         apply_reset(5);
-        set_config(3'b000);  // CFG_RX_ONLY
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal();
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 7/15: RX multiple bytes reception...");
         apply_reset(5);
-        set_config(3'b000);  // CFG_RX_ONLY
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_multiple_bytes();
         repeat(5) @(posedge i_clk);
@@ -929,7 +904,7 @@ package interface_tasks_pkg;
 
         $display("[FULL] 8/15: Data pattern verification...");
         apply_reset(5);
-        set_config(3'b000);  // CFG_RX_ONLY
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_data_patterns();
         repeat(5) @(posedge i_clk);
@@ -942,7 +917,7 @@ package interface_tasks_pkg;
 
         $display("[FULL] 9/15: RX overflow error test...");
         apply_reset(5);
-        set_config(3'b000);  // CFG_RX_ONLY
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_overflow_error();
         repeat(5) @(posedge i_clk);
@@ -968,7 +943,7 @@ package interface_tasks_pkg;
 
         $display("[FULL] 11/15: FIFO stress test (alternating ops)...");
         apply_reset(5);
-        set_config(3'b100);  // CFG_FIFO_TX
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_stress_fifo_ops();
         repeat(5) @(posedge i_clk);
@@ -991,14 +966,14 @@ package interface_tasks_pkg;
 
         $display("[FULL] 14/15: Repeat RX nominal...");
         apply_reset(5);
-        set_config(3'b000);  // CFG_RX_ONLY
+        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal();
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 15/15: Repeat FIFO test...");
         apply_reset(5);
-        set_config(3'b100);  // CFG_FIFO_TX
+        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic();
         repeat(5) @(posedge i_clk);
