@@ -57,8 +57,17 @@ package demod_tasks_pkg;
     end
     endtask
 
-    `define apply_iq_sample(i_val, q_val) apply_iq_sample_impl(i_clk, i_bus_in, i_val, q_val)
-    `define apply_fir_sample(x_val) apply_fir_sample_impl(i_clk, i_bus_in, x_val)
+    `define apply_iq_sample(i_val, q_val) \
+        begin \
+            logic [3:0] _i_temp = i_val; \
+            logic [3:0] _q_temp = q_val; \
+            apply_iq_sample_impl(i_clk, i_bus_in, _i_temp, _q_temp); \
+        end
+    `define apply_fir_sample(x_val) \
+        begin \
+            logic signed [7:0] _x_temp = x_val; \
+            apply_fir_sample_impl(i_clk, i_bus_in, _x_temp); \
+        end
 
     // =========================================================================
     // TEST CASE: Reset/Smoke test
