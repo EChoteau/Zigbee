@@ -91,26 +91,26 @@ package interface_tasks_pkg;
     begin
         $display("[INTERFACE T0] Reset/Smoke test start");
 
-        assert (o_bus_out[BUS_OUT_PRDATA_LSB:BUS_OUT_PRDATA_MSB] == 8'h00)
+        assert (o_bus_out[BUS_OUT_PRDATA_MSB:BUS_OUT_PRDATA_LSB] == 8'h00)
             else $fatal(1, "[INTERFACE T0] Initial data should be 0");
 
         // Read CONTROL register (should be 0 after reset)
-        apb_read_bus(ADDR_CONTROL, rd);
+        `apb_read_bus(ADDR_CONTROL, rd);
         assert (rd[4:0] == 5'b0)
             else $fatal(1, "[INTERFACE T0] CONTROL reset mismatch. got=%0h", rd[4:0]);
 
         // Read DIVIDER register (should be 0x01 after reset)
-        apb_read_bus(ADDR_DIVIDER, rd);
+        `apb_read_bus(ADDR_DIVIDER, rd);
         assert (rd[7:0] == 8'h01)
             else $fatal(1, "[INTERFACE T0] DIVIDER reset mismatch. got=%0h expected=01", rd[7:0]);
 
         // Read STATUS register (should be 0x01 after reset - baud enabled)
-        apb_read_bus(ADDR_STATUS, rd);
+        `apb_read_bus(ADDR_STATUS, rd);
         assert (rd[4:0] == 5'b00001)
             else $fatal(1, "[INTERFACE T0] STATUS reset mismatch. got=%0b expected=00001", rd[4:0]);
 
         // Read DATA register (should be 0 after reset)
-        apb_read_bus(ADDR_DATA, rd);
+        `apb_read_bus(ADDR_DATA, rd);
         assert (rd[7:0] == 8'h00)
             else $fatal(1, "[INTERFACE T0] DATA reset value mismatch. got=%0h", rd[7:0]);
 
@@ -126,18 +126,18 @@ package interface_tasks_pkg;
     begin
         $display("[INTERFACE T1] APB registers test start");
 
-        apb_write_bus(ADDR_DIVIDER, 8'h31);
-        apb_read_bus(ADDR_DIVIDER, rd);
+        `apb_write_bus(ADDR_DIVIDER, 8'h31);
+        `apb_read_bus(ADDR_DIVIDER, rd);
         assert (rd[7:0] == 8'h31)
             else $fatal(1, "[INTERFACE T1] DIVIDER write/read mismatch. got=%0h expected=31", rd[7:0]);
 
-        apb_write_bus(ADDR_CONTROL, 8'h1F);
+        `apb_write_bus(ADDR_CONTROL, 8'h1F);
         repeat (2) @(posedge i_clk);
-        apb_read_bus(ADDR_CONTROL, rd);
+        `apb_read_bus(ADDR_CONTROL, rd);
         assert (rd[4:0] == 5'b10001)
             else $fatal(1, "[INTERFACE T1] CONTROL autoclear mismatch. got=%0b expected=10001", rd[4:0]);
 
-        apb_read_bus(ADDR_STATUS, rd);
+        `apb_read_bus(ADDR_STATUS, rd);
         assert (rd[0] == 1'b1)
             else $fatal(1, "[INTERFACE T1] STATUS.rx_empty should be 1 after reset/config");
         assert (rd[1] == 1'b0)
@@ -184,10 +184,10 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;  // fifo_tx_wr_en
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hD0 + i;  // data
-            set_bus(bus_val);
+            `set_bus(bus_val);
             
             // Clear enable
-            set_bus('0);
+            `set_bus('0);
         end
 
         // Verify FIFO is full
@@ -205,10 +205,10 @@ package interface_tasks_pkg;
             // Issue read
             bus_val = '0;
             bus_val[1] = 1'b1;  // fifo_tx_rd_en
-            set_bus(bus_val);
+            `set_bus(bus_val);
             
             // Disable read
-            set_bus('0);
+            `set_bus('0);
             
             // In CFG_FIFO_TX: OUT[7:0] = s_dbg_tx_fifo_q (output data)
             read_data = o_bus_out[7:0];
@@ -256,8 +256,8 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;  // fifo_tx_wr_en
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h30 + i;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
             
             if (i < 7) begin
                 assert (o_bus_out[8] == 1'b0)
@@ -276,8 +276,8 @@ package interface_tasks_pkg;
         bus_val = '0;
         bus_val[0] = 1'b1;
         bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hFF;  // overflow data
-        set_bus(bus_val);
-        set_bus('0);
+        `set_bus(bus_val);
+        `set_bus('0);
 
         assert (o_bus_out[8] == 1'b1)
             else $error("  [FIFO_TX_FULL] FAIL: FIFO should still be full after overflow");
@@ -288,8 +288,8 @@ package interface_tasks_pkg;
             expected_data = 8'h30 + i;
             bus_val = '0;
             bus_val[1] = 1'b1;  // fifo_tx_rd_en
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
             
             read_data = o_bus_out[7:0];
             assert (read_data === expected_data)
@@ -335,16 +335,16 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h10 + i;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
         end
 
         // Read 2 bytes
         for (i = 0; i < 2; i++) begin
             bus_val = '0;
             bus_val[1] = 1'b1;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
             read_data = o_bus_out[7:0];
             expected_data = 8'h10 + i;
             assert (read_data === expected_data)
@@ -356,8 +356,8 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h20 + i;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
         end
 
         // Read remaining 4 bytes (1 from phase 1 + 3 from phase 2)
@@ -365,8 +365,8 @@ package interface_tasks_pkg;
         for (i = 0; i < 4; i++) begin
             bus_val = '0;
             bus_val[1] = 1'b1;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
             read_data = o_bus_out[7:0];
             
             if (i == 0) begin
@@ -390,8 +390,8 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h30 + i;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
         end
 
         assert (o_bus_out[8] == 1'b1)
@@ -400,8 +400,8 @@ package interface_tasks_pkg;
         for (i = 0; i < 8; i++) begin
             bus_val = '0;
             bus_val[1] = 1'b1;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
             read_data = o_bus_out[7:0];
             expected_data = 8'h30 + i;
             assert (read_data === expected_data)
@@ -431,7 +431,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX: enable global + rx_enable via APB
-        apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject serial data bit by bit (simulating CDR sample)
@@ -439,11 +439,11 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
             bus_val[BUS_SERIAL_RX_BIT] = rx_test_byte[i];
-            set_bus(bus_val);
+            `set_bus(bus_val);
             repeat(1) @(posedge i_clk);
             
             // Clear sample valid
-            set_bus('0);
+            `set_bus('0);
             repeat(1) @(posedge i_clk);
         end
 
@@ -455,7 +455,7 @@ package interface_tasks_pkg;
             else $error("  [RX_NOMINAL] FAIL: RX FIFO should not be empty after receive");
 
         // Read received data via APB
-        apb_read_bus(ADDR_DATA, rd_data);
+        `apb_read_bus(ADDR_DATA, rd_data);
         
         assert (rd_data === rx_test_byte)
             else $error("  [RX_NOMINAL] FAIL: Read 0x%0h, expected 0x%0h", rd_data, rx_test_byte);
@@ -488,7 +488,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX
-        apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject 8 different bytes
@@ -497,9 +497,9 @@ package interface_tasks_pkg;
                 bus_val = '0;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_bytes[byte_idx][bit_idx];
-                set_bus(bus_val);
+                `set_bus(bus_val);
                 repeat(1) @(posedge i_clk);
-                set_bus('0);
+                `set_bus('0);
                 repeat(1) @(posedge i_clk);
             end
         end
@@ -509,7 +509,7 @@ package interface_tasks_pkg;
         // Read back all 8 bytes via APB
         $display("  [RX_MULTIPLE] Reading 8 bytes from RX FIFO...");
         for (byte_idx = 0; byte_idx < 8; byte_idx++) begin
-            apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(ADDR_DATA, rd_data);
             
             assert (rd_data === test_bytes[byte_idx])
                 else $error("  [RX_MULTIPLE] FAIL: Byte %0d: Read 0x%0h, expected 0x%0h", 
@@ -550,7 +550,7 @@ package interface_tasks_pkg;
         test_patterns[7] = 8'b01110111;  // Mostly ones
 
         // Config pre-set by caller/test plan
-        apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Test each pattern
@@ -560,9 +560,9 @@ package interface_tasks_pkg;
                 bus_val = '0;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_patterns[pattern_idx][bit_idx];
-                set_bus(bus_val);
+                `set_bus(bus_val);
                 repeat(1) @(posedge i_clk);
-                set_bus('0);
+                `set_bus('0);
                 repeat(1) @(posedge i_clk);
             end
         end
@@ -572,7 +572,7 @@ package interface_tasks_pkg;
         // Read back and verify all patterns
         $display("  [DATA_PATTERNS] Verifying received patterns...");
         for (pattern_idx = 0; pattern_idx < 8; pattern_idx++) begin
-            apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(ADDR_DATA, rd_data);
             
             assert (rd_data === test_patterns[pattern_idx])
                 else $error("  [DATA_PATTERNS] FAIL: Pattern %0d: Read 0x%0h, expected 0x%0h", 
@@ -601,7 +601,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX
-        apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject 9 bytes (FIFO capacity is 8)
@@ -614,9 +614,9 @@ package interface_tasks_pkg;
                 bus_val = '0;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit_idx];
-                set_bus(bus_val);
+                `set_bus(bus_val);
                 repeat(1) @(posedge i_clk);
-                set_bus('0);
+                `set_bus('0);
                 repeat(1) @(posedge i_clk);
             end
         end
@@ -625,7 +625,7 @@ package interface_tasks_pkg;
 
         // Check STATUS register for overflow flag
         // In interface, RX overflow should set an error flag
-        apb_read_bus(ADDR_STATUS, rd_data);
+        `apb_read_bus(ADDR_STATUS, rd_data);
         
         // Bit 3 of STATUS is typically RX overflow error
         assert (rd_data[3] == 1'b1)
@@ -634,18 +634,18 @@ package interface_tasks_pkg;
         $display("  [RX_OVERFLOW] PASS: Overflow error detected as expected");
 
         // Clear error flag
-        apb_write_bus(ADDR_CONTROL, 8'h0E);  // clear_err=1
+        `apb_write_bus(ADDR_CONTROL, 8'h0E);  // clear_err=1
         repeat(1) @(posedge i_clk);
-        apb_write_bus(ADDR_CONTROL, 8'h11);
+        `apb_write_bus(ADDR_CONTROL, 8'h11);
 
         // Verify error is cleared
-        apb_read_bus(ADDR_STATUS, rd_data);
+        `apb_read_bus(ADDR_STATUS, rd_data);
         assert (rd_data[3] == 1'b0)
             else $error("  [RX_OVERFLOW] FAIL: RX overflow error flag should be cleared");
 
         // Drain FIFO to clean up
         for (i = 0; i < 8; i++) begin
-            apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(ADDR_DATA, rd_data);
         end
 
         $display("[INTERFACE RX_OVERFLOW] RX FIFO overflow error test PASS");
@@ -666,14 +666,14 @@ package interface_tasks_pkg;
         $display("  [CONFIG_TRANS] Switching RX_ONLY -> FIFO_TX -> RX_ONLY");
         
         // Start in RX_ONLY
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
-        apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Switch to FIFO_TX
-        apply_reset(3);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);
+        `apply_reset(3);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);
         repeat(2) @(posedge i_clk);
 
         // Write to TX FIFO
@@ -681,8 +681,8 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[0] = 1'b1;
             bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h40 + i;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
         end
 
         // Verify FIFO has data
@@ -693,15 +693,15 @@ package interface_tasks_pkg;
         for (i = 0; i < 4; i++) begin
             bus_val = '0;
             bus_val[1] = 1'b1;
-            set_bus(bus_val);
-            set_bus('0);
+            `set_bus(bus_val);
+            `set_bus('0);
         end
 
         // Switch back to RX_ONLY
-        apply_reset(3);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);
+        `apply_reset(3);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
-        apb_write_bus(ADDR_CONTROL, 8'h11);
+        `apb_write_bus(ADDR_CONTROL, 8'h11);
         repeat(2) @(posedge i_clk);
 
         // Verify RX can still receive
@@ -709,9 +709,9 @@ package interface_tasks_pkg;
             bus_val = '0;
             bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
             bus_val[BUS_SERIAL_RX_BIT] = 1'b1;
-            set_bus(bus_val);
+            `set_bus(bus_val);
             repeat(1) @(posedge i_clk);
-            set_bus('0);
+            `set_bus('0);
             repeat(1) @(posedge i_clk);
         end
 
@@ -747,8 +747,8 @@ package interface_tasks_pkg;
                 bus_val = '0;
                 bus_val[0] = 1'b1;
                 bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'h50 + (phase * 4) + wr_count;
-                set_bus(bus_val);
-                set_bus('0);
+                `set_bus(bus_val);
+                `set_bus('0);
             end
 
             repeat(2) @(posedge i_clk);
@@ -756,8 +756,8 @@ package interface_tasks_pkg;
             for (rd_count = 0; rd_count < 4; rd_count++) begin
                 bus_val = '0;
                 bus_val[1] = 1'b1;
-                set_bus(bus_val);
-                set_bus('0);
+                `set_bus(bus_val);
+                `set_bus('0);
                 
                 data = o_bus_out[7:0];
                 expected = 8'h50 + (phase * 4) + rd_count;
@@ -779,8 +779,8 @@ package interface_tasks_pkg;
                 bus_val = '0;
                 bus_val[0] = 1'b1;
                 bus_val[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = 8'hD0 + i;
-                set_bus(bus_val);
-                set_bus('0);
+                `set_bus(bus_val);
+                `set_bus('0);
             end
 
             // Verify full
@@ -791,8 +791,8 @@ package interface_tasks_pkg;
             for (i = 0; i < 8; i++) begin
                 bus_val = '0;
                 bus_val[1] = 1'b1;
-                set_bus(bus_val);
-                set_bus('0);
+                `set_bus(bus_val);
+                `set_bus('0);
             end
 
             // Verify empty
@@ -815,31 +815,31 @@ package interface_tasks_pkg;
 
         // Test 1: Reset and smoke test
         $display("[SMOKE] 1/5: Reset/smoke test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 2: APB registers test
         $display("[SMOKE] 2/5: APB registers test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 3: TX FIFO basic test
         $display("[SMOKE] 3/5: TX FIFO basic test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 4: RX nominal test
         $display("[SMOKE] 4/5: RX nominal test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         // Test 5: TX FIFO full test
         $display("[SMOKE] 5/5: TX FIFO full test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
@@ -864,13 +864,13 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 1/15: Reset/smoke test...");
-        apply_reset(5);
+        `apply_reset(5);
         // No specific config needed for reset/smoke
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 2/15: APB registers test...");
-        apply_reset(5);
+        `apply_reset(5);
         // No specific config needed for APB register test
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -882,22 +882,22 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 3/15: TX FIFO basic (fill/read)...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 4/15: TX FIFO full capacity test...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 5/15: TX FIFO sequential operations...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_sequential_ops(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -909,15 +909,15 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 6/15: RX nominal single byte test...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 7/15: RX multiple bytes reception...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_multiple_bytes(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -929,8 +929,8 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 8/15: Data pattern verification...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_data_patterns(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -942,8 +942,8 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 9/15: RX overflow error test...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_overflow_error(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -956,7 +956,7 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 10/15: Configuration transitions test...");
-        apply_reset(5);
+        `apply_reset(5);
         // NOTE: This test manages its own config changes - do NOT pre-set config
         run_interface_tc_config_transitions(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -968,8 +968,8 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 11/15: FIFO stress test (alternating ops)...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_stress_fifo_ops(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -981,25 +981,25 @@ package interface_tasks_pkg;
         $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 12/15: Repeat reset/smoke test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 13/15: Repeat APB test...");
-        apply_reset(5);
+        `apply_reset(5);
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 14/15: Repeat RX nominal...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
         $display("[FULL] 15/15: Repeat FIFO test...");
-        apply_reset(5);
-        set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+        `apply_reset(5);
+        `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
