@@ -11,7 +11,7 @@ task automatic test_5_demod();
         $display("[%0t] test_5_demod - DEMOD configuration complete", $time);
 
         // Run demod wrapper test plan first
-        run_demod_wrapper_test_plan();
+        run_demod_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out, tb_i, tb_q);
 
         // Then run demod block tests
         run_demod_test_plan_full();

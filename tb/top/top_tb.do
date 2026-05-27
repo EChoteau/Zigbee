@@ -23,6 +23,9 @@ vlog -incr -sv -work lib_RTL +acc tb/top/interface/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/top/demod/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/wrappers/interface/*.sv
 vlog -incr -sv -work lib_RTL +acc tb/wrappers/demod/*.sv
+vlog -incr -sv -work lib_RTL +acc tb/wrappers/cdr/*.sv
+vlog -incr -sv -work lib_RTL +acc tb/wrappers/cordic/*.sv
+vlog -incr -sv -work lib_RTL +acc tb/wrappers/msk/*.sv
 
 vsim -voptargs=+acc lib_RTL.top_tb -sdfnoerror -sdfnowarn -L c35_CORELIB
 

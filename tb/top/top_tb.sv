@@ -8,6 +8,9 @@ import interface_tasks_pkg::*;
 import demod_pkg::*;
 import demod_wrapper_tasks_pkg::*;
 import demod_tasks_pkg::*;
+import cdr_wrapper_tasks_pkg::*;
+import cordic_wrapper_tasks_pkg::*;
+import msk_wrapper_tasks_pkg::*;
 
 module top_tb;
     // Clock and reset
@@ -77,6 +80,8 @@ module top_tb;
         i_wrapper_cfg = 3'b000;
         i_top_cfg = 3'b000;
         i_bus_in = '0;
+        tb_i = '0;
+        tb_q = '0;
 
         $display("Starting top_tb at time %0t", $time);
         #10;

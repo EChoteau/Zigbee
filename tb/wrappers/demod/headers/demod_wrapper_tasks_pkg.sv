@@ -1,7 +1,14 @@
 // ============================================================================
 // PACKAGE: demod_wrapper_tasks_pkg
 // ============================================================================
-// Wrapper test tasks for DEMOD wrapper, callable from top_tb.
+// Consolidated wrapper test package for DEMOD testbench
+// Contains all wrapper test tasks, test plans, and support functions
+//
+// Usage in testbench:
+//   import demod_wrapper_tasks_pkg::*;
+//
+// Then call test plan directly:
+//   run_demod_wrapper_test_plan();
 // ============================================================================
 
 package demod_wrapper_tasks_pkg;
@@ -9,12 +16,35 @@ package demod_wrapper_tasks_pkg;
     import tb_pkg::*;
     import demod_pkg::*;
 
-    task automatic test_demod_wrapper_debug_demod(
-        ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
-    );
+    // =========================================================================
+    // SUPPORT TASKS (wrappers around tb_pkg and direct signal manipulation)
+    // =========================================================================
+
+    // Set wrapper configuration using tb_pkg::set_config
+    task automatic set_config(logic [2:0] cfg);
+    begin
+        tb_pkg::set_config(i_clk, i_cfg_local, cfg);
+    end
+    endtask
+
+    // Set bus value using tb_pkg::set_bus
+    task automatic set_bus(logic [21:0] bus_val);
+    begin
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+    end
+    endtask
+
+    // Apply reset using tb_pkg::apply_reset
+    task automatic apply_reset(int cycles);
+    begin
+        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, cycles);
+    end
+    endtask
+
+    // =========================================================================
+    // TEST CASE: Debug DEMOD channels (I and Q paths)
+    // =========================================================================
+    task automatic test_demod_wrapper_debug_demod();
         logic [21:0] bus_val;
         logic [7:0]  res_demod;
         logic [3:0]  res_osc;
@@ -23,15 +53,14 @@ package demod_wrapper_tasks_pkg;
             $display("\n========== TEST: DEBUG_DEMOD (0x1 & 0x2) ==========");
 
             // --- TEST CANAL I (0x1) ---
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b001); // CFG_DEBUG_DEMOD_I
+            set_config(CFG_DEBUG_DEMOD_I);
             repeat(2) @(posedge i_clk);
 
             $display("  [DEMOD_I] Injection I=4, Q=0 (test melangeur)...");
-            // s_test_i (bits 17:14), s_test_q (bits 13:10)
             bus_val = '0;
             bus_val[17:14] = 4'd4;
             bus_val[13:10] = 4'd0;
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            set_bus(bus_val);
 
             repeat(5) @(posedge i_clk);
             res_demod = o_bus_out[7:0];
@@ -41,11 +70,11 @@ package demod_wrapper_tasks_pkg;
             assert (res_osc !== 4'hx) else $error("  [DEMOD_I] FAIL: Oscillateur Cos bloque !");
 
             // --- TEST CANAL Q (0x2) ---
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b010); // CFG_DEBUG_DEMOD_Q
+            set_config(CFG_DEBUG_DEMOD_Q);
             repeat(2) @(posedge i_clk);
 
             $display("  [DEMOD_Q] Injection I=0, Q=4...");
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            set_bus(bus_val);
             repeat(5) @(posedge i_clk);
 
             res_demod = o_bus_out[7:0];
@@ -56,12 +85,10 @@ package demod_wrapper_tasks_pkg;
         end
     endtask
 
-    task automatic test_demod_wrapper_debug_fir(
-        ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
-    );
+    // =========================================================================
+    // TEST CASE: Debug FIR filters (I and Q channels)
+    // =========================================================================
+    task automatic test_demod_wrapper_debug_fir();
         logic [21:0] bus_val;
         logic signed [5:0] fir_out;
 
@@ -69,25 +96,24 @@ package demod_wrapper_tasks_pkg;
             $display("\n========== TEST: DEBUG_FIR (0x4 & 0x5) ==========");
 
             // --- TEST FIR I (0x4) ---
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b100); // CFG_DEBUG_FIR_I
+            set_config(CFG_DEBUG_FIR_I);
             repeat(2) @(posedge i_clk);
 
             $display("  [FIR_I] Envoi impulsion 0x7F (Max)...");
             bus_val = '0;
-            bus_val[17:10] = 8'h7F; // s_test_fir_in
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            bus_val[17:10] = 8'h7F;
+            set_bus(bus_val);
 
-            // On attend que les donnees traversent les 5 etages du FIR
             repeat(10) @(posedge i_clk);
             fir_out = o_bus_out[5:0];
             $display("  [FIR_I] Sortie filtree: %d", fir_out);
             assert (fir_out != 0) else $error("  [FIR_I] FAIL: Sortie nulle !");
 
             // --- TEST FIR Q (0x5) ---
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b101); // CFG_DEBUG_FIR_Q
+            set_config(CFG_DEBUG_FIR_Q);
             repeat(2) @(posedge i_clk);
 
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            set_bus(bus_val);
             repeat(10) @(posedge i_clk);
             fir_out = o_bus_out[11:6];
             $display("  [FIR_Q] Sortie filtree: %d", fir_out);
@@ -96,12 +122,10 @@ package demod_wrapper_tasks_pkg;
         end
     endtask
 
-    task automatic test_demod_wrapper_debug_chain(
-        ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out
-    );
+    // =========================================================================
+    // TEST CASE: Debug full chain (Mixer + FIR I and Q)
+    // =========================================================================
+    task automatic test_demod_wrapper_debug_chain();
         logic [21:0] bus_val;
 
         begin
@@ -109,12 +133,12 @@ package demod_wrapper_tasks_pkg;
 
             // --- TEST CHAIN I (0x6) ---
             $display("  [CHAIN_I] Test complet canal I (Q force a zero)...");
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b110); // CFG_DEBUG_FIRC_I
+            set_config(CFG_DEBUG_FIRC_I);
             repeat(2) @(posedge i_clk);
 
             bus_val = '0;
-            bus_val[17:14] = 4'd7; // I max
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            bus_val[17:14] = 4'd7;
+            set_bus(bus_val);
 
             repeat(15) @(posedge i_clk);
             $display("  [CHAIN_I] Sortie Baseband I: %d", $signed(o_bus_out[5:0]));
@@ -122,12 +146,12 @@ package demod_wrapper_tasks_pkg;
 
             // --- TEST CHAIN Q (0x7) ---
             $display("  [CHAIN_Q] Test complet canal Q (I force a zero)...");
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b111); // CFG_DEBUG_FIRC_Q
+            set_config(CFG_DEBUG_FIRC_Q);
             repeat(2) @(posedge i_clk);
 
             bus_val = '0;
-            bus_val[13:10] = 4'd7; // Q max
-            tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+            bus_val[13:10] = 4'd7;
+            set_bus(bus_val);
 
             repeat(15) @(posedge i_clk);
             $display("  [CHAIN_Q] Sortie Baseband Q: %d", $signed(o_bus_out[11:6]));
@@ -136,50 +160,40 @@ package demod_wrapper_tasks_pkg;
         end
     endtask
 
-    task automatic test_demod_wrapper_normal(
-        ref logic i_clk,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
-        ref logic [3:0] tb_i,
-        ref logic [3:0] tb_q
-    );
+    // =========================================================================
+    // TEST CASE: Normal production mode (Direct ADC data)
+    // =========================================================================
+    task automatic test_demod_wrapper_normal();
         logic signed [5:0] res_i;
         logic signed [5:0] res_q;
 
         begin
             $display("\n========== TEST: NORMAL MODE (0x0) ==========");
 
-            // 1. Configurer en mode Normal
-            tb_pkg::set_config_wrapper(i_clk, d_cfg_local, 3'b000);
+            set_config(CFG_NORMAL);
             repeat(2) @(posedge i_clk);
 
             $display("  [NORMAL] Mode production actif. Ecoute des ports ADC directs.");
 
-            // 2. Simuler une donnee provenant de l'ADC
+            // Test 1: I strong, Q zero
             $display("  [NORMAL] Injection ADC : I=15 (Max Positif), Q=8 (Zero)...");
+            tb_i = 4'd15;
+            tb_q = 4'd8;
 
-            // Pilotage direct des entrees ADC du Testbench
-            tb_i = 4'd15; // Valeur max
-            tb_q = 4'd8;  // Valeur neutre (DC offset)
-
-            // On laisse le filtre FIR se remplir (il a 5 etages de delai)
             repeat(10) @(posedge i_clk);
 
-            // 3. Capture des sorties Baseband
             res_i = o_bus_out[5:0];
             res_q = o_bus_out[11:6];
 
             $display("  [NORMAL] Sortie Baseband I: %d", res_i);
             $display("  [NORMAL] Sortie Baseband Q: %d", res_q);
 
-            // Verification basique : Si on met un I fort, la sortie I doit reagir et Q doit rester faible
             if (res_i != 0)
                 $display("  [NORMAL] PASS : La chaine I reagit aux donnees ADC !");
             else
                 $error("  [NORMAL] FAIL : La chaine I est muette !");
 
-            // 4. Inversion pour verifier Q
+            // Test 2: I zero, Q strong
             $display("  [NORMAL] Injection ADC : I=8 (Zero), Q=0 (Max Negatif)...");
             tb_i = 4'd8;
             tb_q = 4'd0;
@@ -201,27 +215,22 @@ package demod_wrapper_tasks_pkg;
         end
     endtask
 
-    task automatic run_demod_wrapper_test_plan(
-        ref logic i_clk,
-        ref logic i_rst_n,
-        ref logic [CFG_WIDTH-1:0] d_cfg_local,
-        ref logic [BUS_IN_WIDTH-1:0] i_bus_in,
-        ref logic [BUS_OUT_WIDTH-1:0] o_bus_out,
-        ref logic [3:0] tb_i,
-        ref logic [3:0] tb_q
-    );
+    // =========================================================================
+    // TEST PLAN: Full wrapper test suite
+    // =========================================================================
+    task automatic run_demod_wrapper_test_plan();
     begin
-        test_demod_wrapper_debug_demod(i_clk, d_cfg_local, i_bus_in, o_bus_out);
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        test_demod_wrapper_debug_demod();
+        apply_reset(3);
 
-        test_demod_wrapper_debug_fir(i_clk, d_cfg_local, i_bus_in, o_bus_out);
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        test_demod_wrapper_debug_fir();
+        apply_reset(3);
 
-        test_demod_wrapper_debug_chain(i_clk, d_cfg_local, i_bus_in, o_bus_out);
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        test_demod_wrapper_debug_chain();
+        apply_reset(3);
 
-        test_demod_wrapper_normal(i_clk, d_cfg_local, i_bus_in, o_bus_out, tb_i, tb_q);
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
+        test_demod_wrapper_normal();
+        apply_reset(3);
 
         $display("\n========== ALL DEMOD WRAPPER TESTS COMPLETED SUCCESSFULLY ==========");
     end
