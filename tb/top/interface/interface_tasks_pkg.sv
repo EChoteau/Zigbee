@@ -838,7 +838,6 @@ package interface_tasks_pkg;
         $display("[SMOKE] 1/5: Reset/smoke test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -847,7 +846,6 @@ package interface_tasks_pkg;
         $display("[SMOKE] 2/5: APB registers test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -856,7 +854,6 @@ package interface_tasks_pkg;
         $display("[SMOKE] 3/5: TX FIFO basic test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
@@ -864,7 +861,6 @@ package interface_tasks_pkg;
         $display("[SMOKE] 4/5: RX nominal test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
@@ -872,7 +868,6 @@ package interface_tasks_pkg;
         $display("[SMOKE] 5/5: TX FIFO full test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
 
@@ -899,7 +894,6 @@ package interface_tasks_pkg;
         $display("[FULL] 1/15: Reset/smoke test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         // No specific config needed for reset/smoke
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
@@ -908,7 +902,6 @@ package interface_tasks_pkg;
         $display("[FULL] 2/15: APB registers test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         // No specific config needed for APB register test
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
@@ -953,7 +946,6 @@ package interface_tasks_pkg;
         $display("[FULL] 6/15: RX nominal single byte test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -961,7 +953,6 @@ package interface_tasks_pkg;
         $display("[FULL] 7/15: RX multiple bytes reception...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_multiple_bytes(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -975,7 +966,6 @@ package interface_tasks_pkg;
         $display("[FULL] 8/15: Data pattern verification...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_data_patterns(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -1004,7 +994,6 @@ package interface_tasks_pkg;
         $display("[FULL] 10/15: Configuration transitions test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // Start in CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  //
         repeat(2) @(posedge i_clk);
         // NOTE: This test manages its own config changes - do NOT pre-set config
         run_interface_tc_config_transitions(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
@@ -1019,7 +1008,6 @@ package interface_tasks_pkg;
         $display("[FULL] 11/15: FIFO stress test (alternating ops)...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_stress_fifo_ops(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -1033,7 +1021,6 @@ package interface_tasks_pkg;
         $display("[FULL] 12/15: Repeat reset/smoke test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -1041,7 +1028,6 @@ package interface_tasks_pkg;
         $display("[FULL] 13/15: Repeat APB test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -1049,7 +1035,6 @@ package interface_tasks_pkg;
         $display("[FULL] 14/15: Repeat RX nominal...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -1057,7 +1042,6 @@ package interface_tasks_pkg;
         $display("[FULL] 15/15: Repeat FIFO test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
