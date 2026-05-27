@@ -14,7 +14,7 @@ task automatic test_3_interface();
         run_interface_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
         
         // Then run interface block tests
-        run_interface_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
+        run_interface_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
     end
 endtask
 
