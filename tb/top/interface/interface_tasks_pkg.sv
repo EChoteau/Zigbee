@@ -465,11 +465,9 @@ package interface_tasks_pkg;
             bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
             bus_val[BUS_SERIAL_RX_BIT] = rx_test_byte[i];
             `set_bus(bus_val);
-            repeat(1) @(posedge i_clk);
             
             // Clear sample valid
             `set_bus('0);
-            repeat(1) @(posedge i_clk);
         end
 
         // Wait for deserializer to push data into FIFO
@@ -523,9 +521,7 @@ package interface_tasks_pkg;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_bytes[byte_idx][bit_idx];
                 `set_bus(bus_val);
-                repeat(1) @(posedge i_clk);
                 `set_bus('0);
-                repeat(1) @(posedge i_clk);
             end
         end
 
@@ -586,9 +582,7 @@ package interface_tasks_pkg;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_patterns[pattern_idx][bit_idx];
                 `set_bus(bus_val);
-                repeat(1) @(posedge i_clk);
                 `set_bus('0);
-                repeat(1) @(posedge i_clk);
             end
         end
 
@@ -640,9 +634,7 @@ package interface_tasks_pkg;
                 bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
                 bus_val[BUS_SERIAL_RX_BIT] = test_byte[bit_idx];
                 `set_bus(bus_val);
-                repeat(1) @(posedge i_clk);
                 `set_bus('0);
-                repeat(1) @(posedge i_clk);
             end
         end
 
@@ -735,9 +727,7 @@ package interface_tasks_pkg;
             bus_val[BUS_CDR_SAMPLE_BIT] = 1'b1;
             bus_val[BUS_SERIAL_RX_BIT] = 1'b1;
             `set_bus(bus_val);
-            repeat(1) @(posedge i_clk);
             `set_bus('0);
-            repeat(1) @(posedge i_clk);
         end
 
         repeat(5) @(posedge i_clk);
