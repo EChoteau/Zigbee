@@ -916,7 +916,6 @@ package interface_tasks_pkg;
         $display("[FULL] 3/15: TX FIFO basic (fill/read)...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -924,7 +923,6 @@ package interface_tasks_pkg;
         $display("[FULL] 4/15: TX FIFO full capacity test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -932,7 +930,6 @@ package interface_tasks_pkg;
         $display("[FULL] 5/15: TX FIFO sequential operations...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_fifo_sequential_ops(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
@@ -979,7 +976,6 @@ package interface_tasks_pkg;
         $display("[FULL] 9/15: RX overflow error test...");
         `apply_reset(5);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
-        `set_config_top(i_clk, i_top_cfg, 3'd3);  // INTERFACE mode
         repeat(2) @(posedge i_clk);
         run_interface_tc_rx_overflow_error(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
         repeat(5) @(posedge i_clk);
