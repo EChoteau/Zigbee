@@ -95,22 +95,22 @@ package interface_tasks_pkg;
             else $fatal(1, "[INTERFACE T0] Initial data should be 0");
 
         // Read CONTROL register (should be 0 after reset)
-        `apb_read_bus(ADDR_CONTROL, rd);
+        `apb_read_bus(interface_pkg::ADDR_CONTROL, rd);
         assert (rd[4:0] == 5'b0)
             else $fatal(1, "[INTERFACE T0] CONTROL reset mismatch. got=%0h", rd[4:0]);
 
         // Read DIVIDER register (should be 0x01 after reset)
-        `apb_read_bus(ADDR_DIVIDER, rd);
+        `apb_read_bus(interface_pkg::ADDR_DIVIDER, rd);
         assert (rd[7:0] == 8'h01)
             else $fatal(1, "[INTERFACE T0] DIVIDER reset mismatch. got=%0h expected=01", rd[7:0]);
 
         // Read STATUS register (should be 0x01 after reset - baud enabled)
-        `apb_read_bus(ADDR_STATUS, rd);
+        `apb_read_bus(interface_pkg::ADDR_STATUS, rd);
         assert (rd[4:0] == 5'b00001)
             else $fatal(1, "[INTERFACE T0] STATUS reset mismatch. got=%0b expected=00001", rd[4:0]);
 
         // Read DATA register (should be 0 after reset)
-        `apb_read_bus(ADDR_DATA, rd);
+        `apb_read_bus(interface_pkg::ADDR_DATA, rd);
         assert (rd[7:0] == 8'h00)
             else $fatal(1, "[INTERFACE T0] DATA reset value mismatch. got=%0h", rd[7:0]);
 
@@ -126,18 +126,18 @@ package interface_tasks_pkg;
     begin
         $display("[INTERFACE T1] APB registers test start");
 
-        `apb_write_bus(ADDR_DIVIDER, 8'h31);
-        `apb_read_bus(ADDR_DIVIDER, rd);
+        `apb_write_bus(interface_pkg::ADDR_DIVIDER, 8'h31);
+        `apb_read_bus(interface_pkg::ADDR_DIVIDER, rd);
         assert (rd[7:0] == 8'h31)
             else $fatal(1, "[INTERFACE T1] DIVIDER write/read mismatch. got=%0h expected=31", rd[7:0]);
 
-        `apb_write_bus(ADDR_CONTROL, 8'h1F);
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h1F);
         repeat (2) @(posedge i_clk);
-        `apb_read_bus(ADDR_CONTROL, rd);
+        `apb_read_bus(interface_pkg::ADDR_CONTROL, rd);
         assert (rd[4:0] == 5'b10001)
             else $fatal(1, "[INTERFACE T1] CONTROL autoclear mismatch. got=%0b expected=10001", rd[4:0]);
 
-        `apb_read_bus(ADDR_STATUS, rd);
+        `apb_read_bus(interface_pkg::ADDR_STATUS, rd);
         assert (rd[0] == 1'b1)
             else $fatal(1, "[INTERFACE T1] STATUS.rx_empty should be 1 after reset/config");
         assert (rd[1] == 1'b0)
@@ -431,7 +431,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX: enable global + rx_enable via APB
-        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject serial data bit by bit (simulating CDR sample)
@@ -455,7 +455,7 @@ package interface_tasks_pkg;
             else $error("  [RX_NOMINAL] FAIL: RX FIFO should not be empty after receive");
 
         // Read received data via APB
-        `apb_read_bus(ADDR_DATA, rd_data);
+        `apb_read_bus(interface_pkg::ADDR_DATA, rd_data);
         
         assert (rd_data === rx_test_byte)
             else $error("  [RX_NOMINAL] FAIL: Read 0x%0h, expected 0x%0h", rd_data, rx_test_byte);
@@ -488,7 +488,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX
-        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject 8 different bytes
@@ -509,7 +509,7 @@ package interface_tasks_pkg;
         // Read back all 8 bytes via APB
         $display("  [RX_MULTIPLE] Reading 8 bytes from RX FIFO...");
         for (byte_idx = 0; byte_idx < 8; byte_idx++) begin
-            `apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(interface_pkg::ADDR_DATA, rd_data);
             
             assert (rd_data === test_bytes[byte_idx])
                 else $error("  [RX_MULTIPLE] FAIL: Byte %0d: Read 0x%0h, expected 0x%0h", 
@@ -550,7 +550,7 @@ package interface_tasks_pkg;
         test_patterns[7] = 8'b01110111;  // Mostly ones
 
         // Config pre-set by caller/test plan
-        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Test each pattern
@@ -572,7 +572,7 @@ package interface_tasks_pkg;
         // Read back and verify all patterns
         $display("  [DATA_PATTERNS] Verifying received patterns...");
         for (pattern_idx = 0; pattern_idx < 8; pattern_idx++) begin
-            `apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(interface_pkg::ADDR_DATA, rd_data);
             
             assert (rd_data === test_patterns[pattern_idx])
                 else $error("  [DATA_PATTERNS] FAIL: Pattern %0d: Read 0x%0h, expected 0x%0h", 
@@ -601,7 +601,7 @@ package interface_tasks_pkg;
         repeat(2) @(posedge i_clk);
 
         // Configure RX
-        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Inject 9 bytes (FIFO capacity is 8)
@@ -625,7 +625,7 @@ package interface_tasks_pkg;
 
         // Check STATUS register for overflow flag
         // In interface, RX overflow should set an error flag
-        `apb_read_bus(ADDR_STATUS, rd_data);
+        `apb_read_bus(interface_pkg::ADDR_STATUS, rd_data);
         
         // Bit 3 of STATUS is typically RX overflow error
         assert (rd_data[3] == 1'b1)
@@ -634,18 +634,18 @@ package interface_tasks_pkg;
         $display("  [RX_OVERFLOW] PASS: Overflow error detected as expected");
 
         // Clear error flag
-        `apb_write_bus(ADDR_CONTROL, 8'h0E);  // clear_err=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h0E);  // clear_err=1
         repeat(1) @(posedge i_clk);
-        `apb_write_bus(ADDR_CONTROL, 8'h11);
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);
 
         // Verify error is cleared
-        `apb_read_bus(ADDR_STATUS, rd_data);
+        `apb_read_bus(interface_pkg::ADDR_STATUS, rd_data);
         assert (rd_data[3] == 1'b0)
             else $error("  [RX_OVERFLOW] FAIL: RX overflow error flag should be cleared");
 
         // Drain FIFO to clean up
         for (i = 0; i < 8; i++) begin
-            `apb_read_bus(ADDR_DATA, rd_data);
+            `apb_read_bus(interface_pkg::ADDR_DATA, rd_data);
         end
 
         $display("[INTERFACE RX_OVERFLOW] RX FIFO overflow error test PASS");
@@ -668,7 +668,7 @@ package interface_tasks_pkg;
         // Start in RX_ONLY
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
-        `apb_write_bus(ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);  // global_en=1, rx_enable=1
         repeat(2) @(posedge i_clk);
 
         // Switch to FIFO_TX
@@ -701,7 +701,7 @@ package interface_tasks_pkg;
         `apply_reset(3);
         `set_config_wrapper(i_clk, i_cfg_local, 3'b000);
         repeat(2) @(posedge i_clk);
-        `apb_write_bus(ADDR_CONTROL, 8'h11);
+        `apb_write_bus(interface_pkg::ADDR_CONTROL, 8'h11);
         repeat(2) @(posedge i_clk);
 
         // Verify RX can still receive

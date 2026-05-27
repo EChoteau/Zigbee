@@ -26,9 +26,6 @@ package interface_pkg;
     //   IN[19]      = serial_rx (RX path)
     //   IN[20]      = cdr_sample_valid (RX path)
     // =========================================================================
-    localparam int BUS_IN_WIDTH   = 22;
-    localparam int BUS_OUT_WIDTH  = 14;
-
     // Bus input bit positions (for clarity in test headers)
     localparam int BUS_PWRITE_BIT      = 0;
     localparam int BUS_PENABLE_BIT     = 1;
