@@ -37,19 +37,22 @@ package interface_tasks_pkg;
         logic [APB_DATA_WIDTH-1:0] data
     );
     begin
-        i_bus_in[BUS_PWRITE_BIT] = 1'b1;
+        @(posedge i_clk);
         i_bus_in[BUS_PSEL_BIT] = 1'b1;
         i_bus_in[BUS_PENABLE_BIT] = 1'b0;
+        i_bus_in[BUS_PWRITE_BIT] = 1'b1;
         i_bus_in[BUS_PADDR_MSB:BUS_PADDR_LSB] = addr;
         i_bus_in[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = data;
+
         @(posedge i_clk);
-        
         i_bus_in[BUS_PENABLE_BIT] = 1'b1;
+
         @(posedge i_clk);
-        
         i_bus_in[BUS_PSEL_BIT] = 1'b0;
         i_bus_in[BUS_PENABLE_BIT] = 1'b0;
         i_bus_in[BUS_PWRITE_BIT] = 1'b0;
+        i_bus_in[BUS_PADDR_MSB:BUS_PADDR_LSB] = '0;
+        i_bus_in[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = '0;
     end
     endtask
 
@@ -62,20 +65,21 @@ package interface_tasks_pkg;
         output logic [APB_DATA_WIDTH-1:0] rd_data
     );
     begin
-        i_bus_in[BUS_PWRITE_BIT] = 1'b0;
+        @(posedge i_clk);
         i_bus_in[BUS_PSEL_BIT] = 1'b1;
         i_bus_in[BUS_PENABLE_BIT] = 1'b0;
+        i_bus_in[BUS_PWRITE_BIT] = 1'b0;
         i_bus_in[BUS_PADDR_MSB:BUS_PADDR_LSB] = addr;
         i_bus_in[BUS_PWDATA_MSB:BUS_PWDATA_LSB] = '0;
+
         @(posedge i_clk);
-        
         i_bus_in[BUS_PENABLE_BIT] = 1'b1;
+
         @(posedge i_clk);
-        
         rd_data = o_bus_out[BUS_OUT_PRDATA_MSB:BUS_OUT_PRDATA_LSB];
-        
         i_bus_in[BUS_PSEL_BIT] = 1'b0;
         i_bus_in[BUS_PENABLE_BIT] = 1'b0;
+        i_bus_in[BUS_PADDR_MSB:BUS_PADDR_LSB] = '0;
     end
     endtask
 

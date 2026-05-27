@@ -27,9 +27,9 @@ package interface_pkg;
     //   IN[20]      = cdr_sample_valid (RX path)
     // =========================================================================
     // Bus input bit positions (for clarity in test headers)
-    localparam int BUS_PWRITE_BIT      = 0;
+    localparam int BUS_PSEL_BIT        = 0;
     localparam int BUS_PENABLE_BIT     = 1;
-    localparam int BUS_PSEL_BIT        = 2;
+    localparam int BUS_PWRITE_BIT      = 2;
     localparam int BUS_PADDR_MSB       = 10;
     localparam int BUS_PADDR_LSB       = 3;
     localparam int BUS_PWDATA_MSB      = 18;
