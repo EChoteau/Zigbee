@@ -1,6 +1,5 @@
-# =====================================================
-# Script qui lance les sims
-# =====================================================
+set -euo pipefail
+cd "$(dirname "$0")"
 
 source ../../config/config_RTL
 
