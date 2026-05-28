@@ -1043,7 +1043,7 @@ package interface_tasks_pkg;
         $display("╔═══════════════════════════════════════════════════════════════════╗");
         $display("║                 [INTERFACE TEST PLAN FULL] - PASS                 ║");
         $display("║                   All 15 tests completed successfully             ║");
-        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+        $display("╚═══════════════════════════════════════════════════════════════════╝");
     end
     endtask
 
