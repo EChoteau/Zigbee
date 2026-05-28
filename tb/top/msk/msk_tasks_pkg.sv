@@ -112,8 +112,14 @@ package msk_tasks_pkg;
         bus_val[4] = 1'b1;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
         #1;
+        assert (o_bus_out[1:0] == 2'b10)
+            else $error("MSK TOP FAIL: demux debug pulse2 attendu 10, obtenu=%b", o_bus_out[1:0]);
+
+        // Third pulse keeps b_enc=1 and updates Q path
+        tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+        #1;
         assert (o_bus_out[1:0] == 2'b11)
-            else $error("MSK TOP FAIL: demux debug pulse2 attendu 11, obtenu=%b", o_bus_out[1:0]);
+            else $error("MSK TOP FAIL: demux debug pulse3 attendu 11, obtenu=%b", o_bus_out[1:0]);
 
         $display("MSK TOP PASS: debug demux observé");
     end
