@@ -400,63 +400,67 @@ package demod_tasks_pkg;
     begin
         $display("              DEMOD BLOCK TEST PLAN (FULL)                         ");
 
+        // RESET/SMOKE
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
-
         run_demod_tc_reset_smoke(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+
+        // NORMAL BASIC
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
-
         run_demod_tc_normal_basic(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
-        tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
-        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
-        set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
-        repeat(2) @(posedge i_clk);
 
-        run_demod_tc_debug_demod_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG DEMOD I
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_I);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_demod_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_debug_demod_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG DEMOD Q
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_DEMOD_Q);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_demod_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_debug_fir_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG FIR I
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_I);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_fir_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_debug_fir_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG FIR Q
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIR_Q);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_fir_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_debug_chain_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG CHAIN I
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_I);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_chain_i(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_debug_chain_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // DEBUG CHAIN Q
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_FIRC_Q);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_debug_chain_q(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
-        run_demod_tc_mode_transitions(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        // MODE TRANSITIONS
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
+        run_demod_tc_mode_transitions(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
         $display("           [DEMOD TEST PLAN FULL] PASS                            ");
     end
