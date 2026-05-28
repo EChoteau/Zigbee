@@ -5,10 +5,13 @@ task automatic test_7_cdr();
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 2);
         
         // Set top configuration to CDR mode (3'd7)
-        tb_pkg::set_config_top(i_clk, i_top_cfg, 3'd7);
+        tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_CDR);
         repeat (2) @(posedge i_clk);
 
         // Run CDR wrapper test plan
         run_cdr_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
+
+        // Run CDR top-level test plan
+        run_cdr_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
     end
 endtask

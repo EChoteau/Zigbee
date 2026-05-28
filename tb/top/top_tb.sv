@@ -10,6 +10,8 @@ import msk_tasks_pkg::*;
 import demod_pkg::*;
 import demod_wrapper_tasks_pkg::*;
 import demod_tasks_pkg::*;
+import cdr_pkg::*;
+import cdr_tasks_pkg::*;
 import cordic_pkg::*;
 import cordic_tasks_pkg::*;
 import cdr_wrapper_tasks_pkg::*;
