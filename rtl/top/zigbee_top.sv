@@ -183,6 +183,7 @@ module zigbee_top #(
             CFG_DEMODULATION: o_bus_out = w_demod_out;
             CFG_CORDIC:       o_bus_out = w_cordic_out;
             CFG_CDR:          o_bus_out = w_cdr_out;
+            default:          o_bus_out = '0;
         endcase
     end
 
