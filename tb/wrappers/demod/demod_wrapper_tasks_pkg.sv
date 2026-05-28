@@ -211,6 +211,8 @@ package demod_wrapper_tasks_pkg;
         ref logic [3:0] tb_q
     );
     begin
+        $display("\n========== DEMOD WRAPPER TESTS START ==========");
+
         test_demod_wrapper_debug_demod(i_clk, d_cfg_local, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
 
