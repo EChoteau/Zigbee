@@ -7,10 +7,15 @@ task automatic test_6_cordic();
         // Set top configuration to CORDIC mode (3'd6)
         tb_pkg::set_config_top(i_clk, i_top_cfg, 3'd6);
         repeat (20) @(posedge i_clk);
+
+        $display("[%0t] test_6_cordic - CORDIC configuration complete", $time);
         
         // Run CORDIC wrapper test plan
         run_cordic_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
 
-        $display("[%0t] test_6_cordic - CORDIC configuration complete", $time);
+        // Run CORDIC top-level test plan (includes wrapper legacy plan)
+        run_cordic_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+
+        $display("[%0t] test_6_cordic - CORDIC tests complete", $time);
     end
 endtask

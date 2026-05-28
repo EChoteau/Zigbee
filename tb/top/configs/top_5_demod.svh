@@ -15,5 +15,7 @@ task automatic test_5_demod();
 
         // Then run demod block tests
         run_demod_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+
+        $display("[%0t] test_5_demod - DEMOD tests completed", $time);
     end
 endtask
