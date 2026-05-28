@@ -2,7 +2,6 @@ package msk_tasks_pkg;
 
     import tb_pkg::*;
     import msk_pkg::*;
-    import msk_wrapper_tasks_pkg::*;
 
     // ----------------------------
     // Bus-style tests adapted from tb/msk
