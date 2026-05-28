@@ -47,40 +47,40 @@ cd asic/pnr/work_virtuoso
 
 source ../../../config/bashrc_cdsic617_ams_410_isr15
 
-echo "exactProcessOption C35B4C3" > .amsenv
-
-# DRC runset for Calibre
-echo "*DRC Rules File creation"
-cat << 'EOF' > .calibreDrcRunset
-*drcRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
-*drcIncludeSVRFCmds: 1
-*drcSVRFCmds: {#DEFINE NO_METRES}
-*cmnVConnectNamesState: ALL
-*cmnVConnectReport: 1
-EOF
-
-#LVS runset for Calibre
-echo "*LVS Rules File creation"
-cat << 'EOF' > .calibreLvsRunset
-*lvsRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
-*pexRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
-*cmnPreTrigger: $AMS_DIR/programs/bin/rewrite_cal_netlist %s
-EOF
-
-#PERC runset for Calibre
-echo "*PERC Rules File creation"
-cat << 'EOF' > .calibrePercRunset
-*percRulesFile: 
-*percSourceGetFromViewer: 1
-*percPercInput: SOURCENETLIST
-*percReportMaximumAll: 1
-*percReportOptions: NO_NET_TYPE
-*percEnvVars: {KV 2 Runset}
-*cmnTemplate_RN: CALIBRE/%l/PERC/SCHEMA
-*cmnPreTrigger: $AMS_DIR/programs/bin/rewrite_cal_netlist -perc %s
-*cmnShowOptions: 1
-*cmnRunHier: 0
-EOF
+#echo "exactProcessOption C35B4C3" > .amsenv
+#
+## DRC runset for Calibre
+#echo "*DRC Rules File creation"
+#cat << 'EOF' > .calibreDrcRunset
+#*drcRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
+#*drcIncludeSVRFCmds: 1
+#*drcSVRFCmds: {#DEFINE NO_METRES}
+#*cmnVConnectNamesState: ALL
+#*cmnVConnectReport: 1
+#EOF
+#
+##LVS runset for Calibre
+#echo "*LVS Rules File creation"
+#cat << 'EOF' > .calibreLvsRunset
+#*lvsRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
+#*pexRulesFile: $AMS_DIR/calibre/c35b4/c35b4c3.rules
+#*cmnPreTrigger: $AMS_DIR/programs/bin/rewrite_cal_netlist %s
+#EOF
+#
+##PERC runset for Calibre
+#echo "*PERC Rules File creation"
+#cat << 'EOF' > .calibrePercRunset
+#*percRulesFile: 
+#*percSourceGetFromViewer: 1
+#*percPercInput: SOURCENETLIST
+#*percReportMaximumAll: 1
+#*percReportOptions: NO_NET_TYPE
+#*percEnvVars: {KV 2 Runset}
+#*cmnTemplate_RN: CALIBRE/%l/PERC/SCHEMA
+#*cmnPreTrigger: $AMS_DIR/programs/bin/rewrite_cal_netlist -perc %s
+#*cmnShowOptions: 1
+#*cmnRunHier: 0
+#EOF
 
 echo "Run Calibre for DRC and LVS"
 
