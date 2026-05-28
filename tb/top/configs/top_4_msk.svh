@@ -10,5 +10,8 @@ task automatic test_4_msk();
 
         // Run MSK wrapper test plan
         run_msk_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
+
+        // Run MSK top-level test plan
+        run_msk_test_plan_full(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
     end
 endtask
