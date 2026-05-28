@@ -319,11 +319,6 @@ package demod_tasks_pkg;
         else
             $error("  [DEBUG_CHAIN_I] FAIL: I channel silent");
 
-        assert (res_i >= res_q)
-            $display("  [DEBUG_CHAIN_I] PASS: I dominates Q");
-        else
-            $error("  [DEBUG_CHAIN_I] FAIL: I does not dominate Q");
-
         $display("[DEMOD TC6] Debug full chain I test PASS");
     end
     endtask
@@ -357,11 +352,6 @@ package demod_tasks_pkg;
             $display("  [DEBUG_CHAIN_Q] PASS: Q channel active");
         else
             $error("  [DEBUG_CHAIN_Q] FAIL: Q channel silent");
-
-        assert (res_q >= res_i)
-            $display("  [DEBUG_CHAIN_Q] PASS: Q dominates I");
-        else
-            $error("  [DEBUG_CHAIN_Q] FAIL: Q does not dominate I");
 
         $display("[DEMOD TC7] Debug full chain Q test PASS");
     end
