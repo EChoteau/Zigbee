@@ -2,11 +2,9 @@
 # TB Top
 # =====================================================
 
-# Create the library only if it doesn't exist
-if ![file isdirectory lib_RTL] {
-    vlib lib_RTL
-    vmap lib_RTL lib_RTL
-}
+vdel -all -lib lib_RTL 2>/dev/null || true
+vlib lib_RTL
+vmap lib_RTL lib_RTL
 
 vlog -incr -sv -work lib_RTL +acc rtl/top/zigbee_top.sv
 vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
