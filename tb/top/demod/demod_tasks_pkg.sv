@@ -343,8 +343,8 @@ package demod_tasks_pkg;
 
         repeat(5) @(posedge i_clk);
 
-        $display("  [DEBUG_CHAIN_Q] Strong Q signal (0), I=8 (zero)...");
-        `apply_iq_sample(4'd8, 4'd0);
+        $display("  [DEBUG_CHAIN_Q] Strong Q signal (15), I=8 (zero)...");
+        `apply_iq_sample(4'd8, 4'd15);
 
         repeat(15) @(posedge i_clk);
 
