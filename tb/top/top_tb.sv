@@ -97,7 +97,7 @@ module top_tb;
         $display("[TOP_TB] <<< test_2_internal");
         #100;
         $display("[TOP_TB] >>> test_3_interface");
-        //test_3_interface();
+        test_3_interface();
         $display("[TOP_TB] <<< test_3_interface");
         #100;
         $display("[TOP_TB] >>> test_4_msk");

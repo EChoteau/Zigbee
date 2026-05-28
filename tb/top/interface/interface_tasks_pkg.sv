@@ -875,15 +875,14 @@ package interface_tasks_pkg;
     task automatic run_interface_test_plan_full(`IFACE_ARGS);
     begin
         $display("\n");
-        $display("╔═══════════════════════════════════════════════════════════════════╗");
-        $display("║         [INTERFACE TEST PLAN FULL] - Complete Test Suite          ║");
-        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+
+        $display("         [INTERFACE TEST PLAN FULL] - Complete Test Suite          ");
+
 
         // ========================================================================
         // BASIC TESTS (Reset, Smoke, Register Access)
         // ========================================================================
         $display("[FULL] Category: BASIC TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 1/15: Reset/smoke test...");
         `apply_reset(5);
@@ -905,7 +904,6 @@ package interface_tasks_pkg;
         // TX FIFO TESTS
         // ========================================================================
         $display("\n[FULL] Category: TX FIFO TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 3/15: TX FIFO basic (fill/read)...");
         `apply_reset(5);
@@ -932,7 +930,6 @@ package interface_tasks_pkg;
         // RX RECEPTION TESTS
         // ========================================================================
         $display("\n[FULL] Category: RX RECEPTION TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 6/15: RX nominal single byte test...");
         `apply_reset(5);
@@ -952,7 +949,6 @@ package interface_tasks_pkg;
         // DATA PATTERN TESTS
         // ========================================================================
         $display("\n[FULL] Category: DATA PATTERN TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 8/15: Data pattern verification...");
         `apply_reset(5);
@@ -965,7 +961,6 @@ package interface_tasks_pkg;
         // ERROR HANDLING TESTS
         // ========================================================================
         $display("\n[FULL] Category: ERROR HANDLING TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 9/15: RX overflow error test...");
         `apply_reset(5);
@@ -979,7 +974,6 @@ package interface_tasks_pkg;
         // IMPORTANT: config_transitions tests config switching, so it sets configs itself
         // ========================================================================
         $display("\n[FULL] Category: CONFIGURATION TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 10/15: Configuration transitions test...");
         `apply_reset(5);
@@ -993,7 +987,6 @@ package interface_tasks_pkg;
         // STRESS TESTS
         // ========================================================================
         $display("\n[FULL] Category: STRESS TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 11/15: FIFO stress test (alternating ops)...");
         `apply_reset(5);
@@ -1006,7 +999,6 @@ package interface_tasks_pkg;
         // REPEAT SMOKE TESTS TO VERIFY STABILITY
         // ========================================================================
         $display("\n[FULL] Category: REGRESSION/STABILITY TESTS");
-        $display("────────────────────────────────────────────────────────────────────");
 
         $display("[FULL] 12/15: Repeat reset/smoke test...");
         `apply_reset(5);
@@ -1040,10 +1032,8 @@ package interface_tasks_pkg;
         // TEST SUMMARY
         // ========================================================================
         $display("\n");
-        $display("╔═══════════════════════════════════════════════════════════════════╗");
-        $display("║                 [INTERFACE TEST PLAN FULL] - PASS                 ║");
-        $display("║                   All 15 tests completed successfully             ║");
-        $display("╚═══════════════════════════════════════════════════════════════════╝");
+        $display("===========[INTERFACE TEST PLAN FULL] - PASS===========");
+        $display("===========All 15 tests completed successfully===========");
     end
     endtask
 
