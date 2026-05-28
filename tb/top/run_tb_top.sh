@@ -28,4 +28,4 @@ vlog -incr -sv -work lib_RTL +acc tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv
 vlog -incr -sv -work lib_RTL +acc tb/top/top_tb.sv
 
 n=lib_RTL.top_tb
-sim -coverage -c ${n} -voptargs="+cover=bcest +acc=npr" -do "tb/top/top_tb.do; coverage save -code bcesft -assert -cvg $coverage_ucdb; quit -f"
+vsim -coverage -c ${n} -voptargs="+cover=bcest +acc=npr" -do "tb/top/top_tb.do; coverage save -code bcesft -assert -cvg $coverage_ucdb; quit -f"
