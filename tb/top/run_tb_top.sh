@@ -1,18 +1,20 @@
 source config/config_RTL
 
+coverage_ucdb=tb/top/cov.ucdb
+
 vdel -all -lib lib_RTL 2>/dev/null || true
 vlib lib_RTL
 vmap lib_RTL lib_RTL
 
-vlog -incr -sv -work lib_RTL +acc rtl/top/zigbee_top.sv
-vlog -incr -sv -work lib_RTL +acc rtl/top/wrappers/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/interface/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/cdr/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/cordic/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/demod/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/demod/FIR/*.v
-vlog -incr -sv -work lib_RTL +acc rtl/demod/WAVE/*.sv
-vlog -incr -sv -work lib_RTL +acc rtl/msk/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/top/zigbee_top.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/top/wrappers/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/interface/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/cdr/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/cordic/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/demod/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/demod/FIR/*.v
+vlog -incr -sv -work lib_RTL +acc +cover rtl/demod/WAVE/*.sv
+vlog -incr -sv -work lib_RTL +acc +cover rtl/msk/*.sv
 
 vlog -incr -sv -work lib_RTL +acc tb/top/include/tb_pkg.sv
 vlog -incr -sv -work lib_RTL +acc tb/top/interface/*.sv
