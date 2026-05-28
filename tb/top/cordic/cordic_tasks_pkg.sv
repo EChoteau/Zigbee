@@ -3,6 +3,15 @@ package cordic_tasks_pkg;
     import tb_pkg::*;
     import cordic_pkg::*;
 
+
+    `define CORDIC_ARGS \
+        ref logic i_clk, \
+        ref logic i_rst_n, \
+        ref logic [tb_pkg::CFG_WIDTH-1:0] i_wrapper_cfg, \
+        ref logic [tb_pkg::CFG_WIDTH-1:0] i_top_cfg, \
+        ref logic [tb_pkg::BUS_IN_WIDTH-1:0] i_bus_in, \
+        ref logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out
+
     function automatic logic signed [7:0] get_phase(input logic [tb_pkg::BUS_OUT_WIDTH-1:0] o_bus_out);
         return $signed(o_bus_out[7:0]);
     endfunction
