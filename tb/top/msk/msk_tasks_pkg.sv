@@ -83,7 +83,7 @@ package msk_tasks_pkg;
     begin
         test_msk_top_basic_operation(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
-        test_msk_top_debug_bypass(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
+        test_msk_top_debug_bypass(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 3);
     end
     endtask
@@ -164,8 +164,9 @@ package msk_tasks_pkg;
         tb_pkg::set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat (2) @(posedge i_clk);
 
-        // Run wrapper-level tests first
-        run_msk_wrapper_test_plan(i_clk, i_rst_n, i_wrapper_cfg, i_bus_in, o_bus_out);
+        // Additional coverage: reset and encoder sequencing
+        test_msk_reset_behavior(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
+        test_msk_encoder_sequence(i_clk, i_rst_n, i_wrapper_cfg, i_top_cfg, i_bus_in, o_bus_out);
 
         // ===== Bus-based top tests (adapted from legacy TBs) =====
 
