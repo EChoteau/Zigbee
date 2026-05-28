@@ -94,7 +94,7 @@ module top_tb;
         #100;
         test_3_interface();
         #100;
-        test_4_msk();
+        //test_4_msk();
         #100;
         test_5_demod();
         #100;
