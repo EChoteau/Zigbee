@@ -182,7 +182,7 @@ package msk_wrapper_tasks_pkg;
         test_msk_wrapper_normal(i_clk, i_cfg_local, i_bus_in, o_bus_out);
         tb_pkg::apply_reset(i_clk, i_rst_n, i_bus_in, 5);
 
-        $display("\n========== ALL INTERFACE WRAPPER TESTS COMPLETED SUCCESSFULLY ==========");
+        $display("\n========== ALL MSK WRAPPER TESTS COMPLETED SUCCESSFULLY ==========");
     end
     endtask
 
