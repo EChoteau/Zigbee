@@ -398,9 +398,7 @@ package demod_tasks_pkg;
     // =========================================================================
     task automatic run_demod_test_plan_full(`DEMOD_ARGS);
     begin
-        $display("\n╔═══════════════════════════════════════════════════════════════════╗");
-        $display("║              DEMOD BLOCK TEST PLAN (FULL)                         ║");
-        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+        $display("              DEMOD BLOCK TEST PLAN (FULL)                         ");
 
         tb_pkg::set_config_top(i_clk, i_top_cfg, TOP_CFG_DEMODULATION);
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
@@ -460,9 +458,7 @@ package demod_tasks_pkg;
         set_config_wrapper(i_clk, i_wrapper_cfg, CFG_NORMAL);
         repeat(2) @(posedge i_clk);
 
-        $display("\n╔═══════════════════════════════════════════════════════════════════╗");
-        $display("║           [DEMOD TEST PLAN FULL] PASS                            ║");
-        $display("╚═══════════════════════════════════════════════════════════════════╝\n");
+        $display("           [DEMOD TEST PLAN FULL] PASS                            ");
     end
     endtask
 
