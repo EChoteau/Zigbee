@@ -80,8 +80,7 @@ module top_tb;
         i_wrapper_cfg = 3'b000;
         i_top_cfg = 3'b000;
         i_bus_in = '0;
-        tb_i = '0;
-        tb_q = '0;
+        o_bus_out = '0;
 
         $display("Starting top_tb at time %0t", $time);
         #10;
