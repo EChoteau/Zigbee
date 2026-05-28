@@ -56,28 +56,38 @@ package msk_tasks_pkg;
 
     task automatic test_msk_top_debug_enc(`MSK_ARGS);
         logic [tb_pkg::BUS_IN_WIDTH-1:0] bus_val;
+        logic dbg_expected;
     begin
         $display("--- MSK TOP TEST : debug encodeur ---");
 
         tb_pkg::set_config_wrapper(i_clk, i_wrapper_cfg, CFG_DEBUG_ENC);
         repeat (2) @(posedge i_clk);
 
+        // encodeur_diff reset state is 1 in this design
+        dbg_expected = 1'b1;
+
         bus_val = '0;
         bus_val[0] = 1'b1;
         bus_val[3] = 1'b0;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
-        assert (o_bus_out[0] === 1'b1)
-            else $error("MSK TOP FAIL: encodeur debug attendu=1, obtenu=%b", o_bus_out[0]);
+        #1;
+        dbg_expected = ~(bus_val[3] ^ dbg_expected);
+        assert (o_bus_out[0] === dbg_expected)
+            else $error("MSK TOP FAIL: encodeur debug step1 attendu=%b obtenu=%b", dbg_expected, o_bus_out[0]);
 
         bus_val[3] = 1'b1;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
-        assert (o_bus_out[0] === 1'b1)
-            else $error("MSK TOP FAIL: encodeur debug attendu=1 après toggle, obtenu=%b", o_bus_out[0]);
+        #1;
+        dbg_expected = ~(bus_val[3] ^ dbg_expected);
+        assert (o_bus_out[0] === dbg_expected)
+            else $error("MSK TOP FAIL: encodeur debug step2 attendu=%b obtenu=%b", dbg_expected, o_bus_out[0]);
 
         bus_val[3] = 1'b0;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
-        assert (o_bus_out[0] !== 1'bx)
-            else $error("MSK TOP FAIL: encodeur debug contient X");
+        #1;
+        dbg_expected = ~(bus_val[3] ^ dbg_expected);
+        assert (o_bus_out[0] === dbg_expected)
+            else $error("MSK TOP FAIL: encodeur debug step3 attendu=%b obtenu=%b", dbg_expected, o_bus_out[0]);
 
         $display("MSK TOP PASS: debug encodeur observé");
     end
@@ -95,13 +105,15 @@ package msk_tasks_pkg;
         bus_val[0] = 1'b1;
         bus_val[4] = 1'b0;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
+        #1;
         assert (o_bus_out[1:0] == 2'b10)
             else $error("MSK TOP FAIL: demux debug pulse1 attendu 10, obtenu=%b", o_bus_out[1:0]);
 
         bus_val[4] = 1'b1;
         tb_pkg::set_bus(i_clk, i_bus_in, bus_val);
-        assert (o_bus_out[1:0] == 2'b10 || o_bus_out[1:0] == 2'b11)
-            else $error("MSK TOP FAIL: demux debug pulse2 inattendu=%b", o_bus_out[1:0]);
+        #1;
+        assert (o_bus_out[1:0] == 2'b11)
+            else $error("MSK TOP FAIL: demux debug pulse2 attendu 11, obtenu=%b", o_bus_out[1:0]);
 
         $display("MSK TOP PASS: debug demux observé");
     end
