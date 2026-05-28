@@ -8,10 +8,7 @@ module demod_wrapper #(
     input  logic              i_out_en,    
     input  logic [CFG_WIDTH-1:0] i_cfg,
 
-    // ADC inputs for normal mode testing
-    input  logic [3:0]       i_i,
-    input  logic [3:0]       i_q,
-
+    // ADC inputs are taken from the bus (i_bus_in) for wrapper mode
     input  logic [BUS_IN_WIDTH-1:0]  i_bus_in,
     output logic [BUS_OUT_WIDTH-1:0] o_bus_out
 );
@@ -123,11 +120,14 @@ module demod_wrapper #(
         end
     end
 
+    // Connect demod_top inputs to bus-decoded signals inside the wrapper.
+    // For normal operation these are the ADC samples decoded from i_bus_in;
+    // when debug override is active the demod_top will use the debug inputs.
     demod_top u_demod_top (
         .i_clk                   (i_clk),
         .i_rst_n                 (i_rst_n),
-        .i_i                     (i_i),
-        .i_q                     (i_q),
+        .i_i                     (s_test_i),
+        .i_q                     (s_test_q),
         .i_dbg_demod_override_en (s_if_demod_override_en),
         .i_dbg_demod_i           (s_if_demod_i),
         .i_dbg_demod_q           (s_if_demod_q),
