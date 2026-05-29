@@ -24,8 +24,8 @@ rm -rf asic/pnr/work_virtuoso
 echo "Creating new work directory"
 mkdir -p asic/pnr/work_virtuoso
 
-SOURCE_FILE="asic/synth/top/netlist/zigbee_top_synth.v"
-TARGET_FILE="asic/pnr/input_data/top/zigbee_top_synth.v"
+SOURCE_FILE="asic/synth/zigbee_top/netlist/zigbee_top_synth.v"
+TARGET_FILE="asic/pnr/input_data/zigbee_top/zigbee_top_synth.v"
 
 if [ ! -f "$SOURCE_FILE" ]; then
 	echo "Error: Source file '$SOURCE_FILE' not found."

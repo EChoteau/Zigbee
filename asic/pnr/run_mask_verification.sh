@@ -8,7 +8,7 @@ if [ "$#" -gt 1 ]; then
 	exit 1
 fi
 
-MODULE="${1:-top}"
+MODULE="${1:-zigbee_top}"
 
 cd asic/pnr/work_virtuoso
 
