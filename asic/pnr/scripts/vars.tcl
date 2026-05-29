@@ -11,7 +11,7 @@ set vars(data_dir) {../input_data}
 
 set sdc_dir $module_name
 if { $module_name == "zigbee_top" } {
-   set sdc_dir "top"
+   set sdc_dir "zigbee_top"
 }
 
 set env(VPATH) make
