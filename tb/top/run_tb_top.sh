@@ -32,6 +32,7 @@ vlog -incr -sv -work lib_RTL +acc tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv
 vlog -incr -sv -work lib_RTL +acc tb/top/top_tb.sv
 
 n=lib_RTL.top_tb
-vsim -c ${n} -coverage -voptargs="+cover=${coverage_code}" -do "do tb/top/top_tb.do; coverage save -onexit ${coverage_ucdb}; coverage save -onexit -instance top_tb.uut ${coverage_core}; quit -f"
-
-vcover report ${coverage_code} -details -testdetails > coverage_report.txt
+#vsim -c ${n} -coverage -voptargs="+cover=${coverage_code}" -do "do tb/top/top_tb.do; coverage save -onexit ${coverage_ucdb}; coverage save -onexit -instance top_tb.uut ${coverage_core}; quit -f"
+vsim -c -coverage work.tb_top -do "coverage save -onexit global_cov.ucdb; run -all; quit"
+vcover report -file rapport_global.txt global_cov.ucdb
+#vcover report ${coverage_code} -details -testdetails > coverage_report.txt
