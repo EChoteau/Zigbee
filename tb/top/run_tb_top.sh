@@ -32,6 +32,6 @@ vlog -incr -sv -work lib_RTL +acc tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv
 vlog -incr -sv -work lib_RTL +acc tb/top/top_tb.sv
 
 n=lib_RTL.top_tb
-vsim  -c ${n} -coverage -voptargs="+cover=${coverage_code}"; -do "coverage save -onexit ${coverage_ucdb}"; -do "coverage save -onexit -instance top_tb.zigbee_top ${coverage_core}"; -do "tb/top/top_tb.do; quit -f"
+vsim -c ${n} -coverage -voptargs="+cover=${coverage_code}" -do "do tb/top/top_tb.do; coverage save -onexit ${coverage_ucdb}; coverage save -onexit -instance top_tb.uut ${coverage_core}; quit -f"
 
 vcover report -code ${coverage_code} -details -file coverage_report.txt tb/top/cov.ucdb
