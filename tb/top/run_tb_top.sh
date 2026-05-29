@@ -33,6 +33,6 @@ vlog -incr -sv -work lib_RTL +acc tb/top/top_tb.sv
 
 n=lib_RTL.top_tb
 #vsim -c ${n} -coverage -voptargs="+cover=${coverage_code}" -do "do tb/top/top_tb.do; coverage save -onexit ${coverage_ucdb}; coverage save -onexit -instance top_tb.uut ${coverage_core}; quit -f"
-vsim -c -coverage work.tb_top -do "coverage save -onexit reports/global_cov.ucdb; run -all; quit"
+vsim -c -coverage -voptargs="+cover=bces" work.tb_top -do "coverage save -onexit reports/global_cov.ucdb; run -all; quit"
 vcover report -file reports/rapport_global.txt reports/global_cov.ucdb
 #vcover report ${coverage_code} -details -testdetails > coverage_report.txt
