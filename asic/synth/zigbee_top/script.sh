@@ -17,7 +17,7 @@ echo "----------------------------------------"
 
 
 source config/config_ASIC
-cd asic/synth/top
+cd asic/synth/zigbee_top
 
 #Clean previous results
 rm -rf reports
