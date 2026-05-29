@@ -4,11 +4,11 @@ set -e
 
 if [ "$#" -gt 1 ]; then
 	echo "Usage: $0 <module>"
-	echo "Example: $0 top"
+	echo "Example: $0 zigbee_top"
 	exit 1
 fi
 
-MODULE="${1:-top}"
+MODULE="${1:-zigbee_top}"
 
 # Run the selected synthesis script
 ./asic/synth/"$MODULE"/script.sh
