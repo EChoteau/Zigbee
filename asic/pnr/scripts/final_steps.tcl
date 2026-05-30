@@ -42,7 +42,7 @@ write_sdf "$output_root/${module_name}_postroute.sdf"
 
 puts "=== Export GDSII ==="
 
-streamOut "$fab_dir/${module_name}.gds"
+streamOut "$fab_dir/${module_name}.gds" -mapFile "${gds_map_file}"
 
 puts "=== Save DEF ==="
 defOut -floorplan -netlist -routing "$fab_dir/${module_name}.def"
