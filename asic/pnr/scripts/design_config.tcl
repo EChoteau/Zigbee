@@ -21,7 +21,7 @@ if {![info exists module_name] || $module_name eq ""} {
 }
 if {$module_name eq "zigbee_top"} {
 	loadIoFile ../input_data/${sdc_dir}/${module_name}_pads.io
-	floorPlan -site standard -d {1800 1800 80 80 80 80} -noSnapToGrid -coreMarginsBy io
+	floorPlan -site standard -d {1958 1958 80 80 80 80} -noSnapToGrid -coreMarginsBy io
 } else {
 	floorPlan -site standard -r 1 0.7 80 80 80 80
 	#floorPlan -site standard -d {2000 2000 80 80 80 80} -noSnapToGrid
@@ -57,7 +57,7 @@ setMetalFill -gapSpacing 0.6	-layer MET4
 setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer MET4 -stacked_via_bottom_layer MET1 -via_using_exact_crossover_size 1 -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }
 
 #Ajoute la grille
-addRing -nets {gnd! vdd!} -type core_rings -follow core -layer {top MET1 bottom MET1 left MET2 right MET2} -width {top 20 bottom 20 left 20 right 20} -spacing {top 10 bottom 10 left 10 right 10} -offset {top 0.7 bottom 0.7 left 0.7 right 0.7} -center 1 -extend_corner {} -threshold 0 -jog_distance 0 -snap_wire_center_to_grid None
+addRing -nets {gnd! vdd!} -type core_rings -follow core -layer {top MET3 bottom MET3 left MET4 right MET4} -width {top 20 bottom 20 left 20 right 20} -spacing {top 10 bottom 10 left 10 right 10} -offset {top 0.7 bottom 0.7 left 0.7 right 0.7} -center 1 -extend_corner {} -threshold 0 -jog_distance 0 -snap_wire_center_to_grid None
 
 
 #Variables pour la création des stripes
