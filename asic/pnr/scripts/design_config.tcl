@@ -141,6 +141,6 @@ applyGlobalNets
 #Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
-sroute -connect { padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -corePinTarget { firstAfterRowEnd } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
+sroute -connect { padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
