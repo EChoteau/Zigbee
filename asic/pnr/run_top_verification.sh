@@ -19,11 +19,6 @@ echo ""
 echo "----------------------------------------"
 
 
-echo "Clean previous results"
-rm -rf asic/pnr/work_virtuoso
-echo "Creating new work directory"
-mkdir -p asic/pnr/work_virtuoso
-
 SOURCE_FILE="asic/synth/zigbee_top/netlist/zigbee_top_synth.v"
 TARGET_FILE="asic/pnr/input_data/zigbee_top/zigbee_top_synth.v"
 

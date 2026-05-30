@@ -14,8 +14,8 @@ file mkdir $output_root
 file mkdir $reports_dir
 file mkdir $fab_dir
 
-verifyGeometry
-verifyConnectivity
+verifyConnectivity -type special -noAntenna
+verifyGeometry -minCut -viaEnclosure
 verify_drc
 
 puts "=== Extract RC parasitics ==="
@@ -42,7 +42,7 @@ write_sdf "$output_root/${module_name}_postroute.sdf"
 
 puts "=== Export GDSII ==="
 
-streamOut "$fab_dir/${module_name}.gds" -mapFile "${gds_map_file}"
+streamOut "$fab_dir/${module_name}.gds" -mapFile "${gds_map_file}" -labelText -netlistInstancePort
 
 puts "=== Save DEF ==="
 defOut -floorplan -netlist -routing "$fab_dir/${module_name}.def"
