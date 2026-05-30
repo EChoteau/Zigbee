@@ -21,7 +21,7 @@ if {![info exists module_name] || $module_name eq ""} {
 }
 if {$module_name eq "zigbee_top"} {
 	loadIoFile ../input_data/${sdc_dir}/${module_name}_pads.io
-	floorPlan -site standard -d {2000 2000 80 80 80 80} -noSnapToGrid -coreMarginsBy io
+	floorPlan -site standard -d {1300 1300 80 80 80 80} -noSnapToGrid -coreMarginsBy io
 } else {
 	floorPlan -site standard -r 1 0.7 80 80 80 80
 	#floorPlan -site standard -d {2000 2000 80 80 80 80} -noSnapToGrid
