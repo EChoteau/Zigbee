@@ -15,7 +15,7 @@ file mkdir $reports_dir
 file mkdir $fab_dir
 
 verifyConnectivity -type special -noAntenna
-verifyGeometry -minCut -viaEnclosure
+verifyGeometry
 verify_drc
 
 puts "=== Extract RC parasitics ==="
