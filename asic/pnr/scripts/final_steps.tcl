@@ -43,7 +43,7 @@ write_sdf "$output_root/${module_name}_postroute.sdf"
 puts "=== Export GDSII ==="
 
 streamOut zigbee_top_io.gds \
-    -mapFile  /softslin/AMS_410_ISR15/cds/HK_C35/TECH_C35B4/TECH_C35B4.layermap\
+    -mapFile  gds2.map\
     -attachNetName 1 \
     -units 1000 \
     -mode ALL
