@@ -42,12 +42,7 @@ write_sdf "$output_root/${module_name}_postroute.sdf"
 
 puts "=== Export GDSII ==="
 
-streamOut zigbee_top_io.gds \
-    -mapFile gds_layer.map \
-    -merge [list /softslin/AMS_410_ISR15/cds/HK_C35/GDS/c35b4_cells.gds] \
-    -attachNetName 1 \
-    -units 1000 \
-    -mode ALL
+streamOut zigbee_top_io.gds
 
 puts "=== Save DEF ==="
 defOut -floorplan -netlist -routing "$fab_dir/${module_name}.def"
