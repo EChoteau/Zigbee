@@ -46,11 +46,6 @@ echo ""
 echo "----------------------------------------"
 
 
-echo "Clean previous results"
-rm -rf asic/pnr/work_innovus
-echo "Creating new work directory"
-mkdir -p asic/pnr/work_innovus
-
 cd asic/pnr/work_innovus
 
 echo "Sourcing config"
