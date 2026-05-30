@@ -1,18 +1,17 @@
+# ==============================================================================
+# INSERTION DES CELLULES DE REMPLISSAGE
+# AMS C35B4C3 - Innovus
+# ==============================================================================
 
-proc amsFillperi {} {
-	##-- Add Peri Filler cells
-	set fillerList {100_P 50_P 20_P 10_P 5_P 2_P 1_P 01_P}
-	set cellNames {}
-	foreach size $fillerList {
-		lappend cellNames "PERI_SPACER_$size"
-	}
-	addIoFiller -cell $cellNames -prefix pfill
-}
 
+# Fillers core (avec antennes pour les règles DRC AMS)
 setFillerMode -core {FILLANT1 FILLANT2 FILLANT5 FILLANT10 FILLANT25} -preserveUserOrder true
+addFiller -cell {FILL25 FILL10 FILL5 FILL2 FILL1} -prefix FILLER -fitGap
 
-addFiller -cell FILL25 FILL10 FILL5 FILL2 FILL1 -prefix FILLER -fitGap
-
-if {[info exists module_name] && $module_name eq "zigbee_top"} {
-	amsFillperi
+# Fillers périphérie IO (uniquement pour le top avec ring IO)
+if {$module_name eq "zigbee_top"} {
+    addIoFiller \
+        -cell {PERI_SPACER_100_P PERI_SPACER_50_P PERI_SPACER_20_P PERI_SPACER_10_P \
+               PERI_SPACER_5_P  PERI_SPACER_2_P  PERI_SPACER_1_P  PERI_SPACER_01_P} \
+        -prefix pfill
 }

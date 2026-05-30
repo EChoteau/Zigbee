@@ -1,88 +1,74 @@
 # ==============================================================================
-#                   PHYSICAL DESIGN FLOW EXECUTION (INNOVUS)
+# FLOW PnR COMPLET - AMS C35B4C3
+# Innovus
+#
+# Usage : innovus -execute flow.tcl -overwrite
 # ==============================================================================
 
 setMultiCpuUsage -localCpu 8
 source ../scripts/vars.tcl
 
+
 # ------------------------------------------------------------------------------
-# 1. INITIALIZATION
+# 1. INIT
 # ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 1. INITIALIZATION ---\n======================================================\n"
-# Loading the netlist, libraries (LEF) and power definitions
+puts "\n=== 1. INITIALISATION ===\n"
 source ../scripts/init.tcl
 init_design
+
 
 # ------------------------------------------------------------------------------
 # 2. FLOORPLAN & POWER GRID
 # ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 2. FLOORPLAN & POWER GRID ---\n======================================================\n"
-# Pads placement, power grid creation and power pad connections
+puts "\n=== 2. FLOORPLAN & POWER GRID ===\n"
 source ../scripts/design_config.tcl
 setAnalysisMode -analysisType onChipVariation
 saveDesign dbs/floorplan_enc
 
+
 # ------------------------------------------------------------------------------
 # 3. PLACEMENT
 # ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 3. PLACEMENT ---\n======================================================\n"
-# Standard cells placement
+puts "\n=== 3. PLACEMENT ===\n"
 source ../scripts/placement.tcl
 saveDesign dbs/prects_enc
 
+
 # ------------------------------------------------------------------------------
-# 4. CLOCK TREE SYNTHESIS (CTS)
-puts "\n======================================================\n--- 4. CLOCK TREE SYNTHESIS (CTS) ---\n======================================================\n"
+# 4. CLOCK TREE SYNTHESIS
 # ------------------------------------------------------------------------------
-# Clock tree creation and balancing
+puts "\n=== 4. CTS ===\n"
 source ../scripts/clock_tree_synthesis.tcl
 saveDesign dbs/postcts_enc
 
+
 # ------------------------------------------------------------------------------
-# 5. ROUTING AND OPTIMIZATION
+# 5. ROUTING
 # ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 5. ROUTING AND OPTIMIZATION ---\n======================================================\n"
-# Prerequisites validation (complete power grid, no congestion)
+puts "\n=== 5. ROUTING ===\n"
 verifyConnectivity -type special
-
-# Main routing
 routeDesign
-
-# Extraction RC
 setExtractRCMode -engine postRoute
 extractRC
-
-# Post-Route Optimizations (Hold, Setup, DRC)
 optDesign -postRoute
 optDesign -postRoute -hold
-
 saveDesign dbs/postroute_enc
 
-# ------------------------------------------------------------------------------
-# 6. INTERNAL SIGNOFF AND VERIFICATIONS
-# ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 6. INTERNAL SIGNOFF AND VERIFICATIONS ---\n======================================================\n"
-# Unconnected pins check
-verifyConnectivity -type all
-
-# Geometric Design Rule Checking (DRC)
-verifyGeometry
 
 # ------------------------------------------------------------------------------
-# 7. FILLER INSERTION
+# 6. FILLERS
 # ------------------------------------------------------------------------------
-puts "\n======================================================\n--- 7. FILLER INSERTION ---\n======================================================\n"
-# Filling empty spaces in core and pads
+puts "\n=== 6. FILLERS ===\n"
 source ../scripts/add_fillers.tcl
-saveDesign dbs/addFiller_enc
+saveDesign dbs/filler_enc
+
 
 # ------------------------------------------------------------------------------
-# 8. FINAL STEPS
-puts "\n======================================================\n--- 8. FINAL STEPS ---\n======================================================\n"
+# 7. EXPORT
 # ------------------------------------------------------------------------------
-# Final checks, report generation and fabrication files output
+puts "\n=== 7. EXPORT ===\n"
 source ../scripts/final_steps.tcl
 
-# Open graphical interface for visual inspection
+
 win
 suspend
