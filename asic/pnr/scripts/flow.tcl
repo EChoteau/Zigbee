@@ -46,7 +46,7 @@ puts "\n======================================================\n--- 5. ROUTING A
 verifyConnectivity -type special
 
 # 1. Création de la règle
-add_ndr -name wide_enclosure_rule -width {MET1:MET4 0.8}
+add_ndr -name wide_enclosure_rule -width {MET1:MET4 0.9} -spacing {MET1:MET4 0.55}
 
 # 2. Application aux signaux de données (on ignore l'horloge)
 set_interactive_constraint_modes [all_constraint_modes -active]
