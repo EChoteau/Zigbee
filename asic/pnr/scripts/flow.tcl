@@ -45,6 +45,15 @@ puts "\n======================================================\n--- 5. ROUTING A
 # Prerequisites validation (complete power grid, no congestion)
 verifyConnectivity -type special
 
+# 1. Création de la règle
+add_ndr -name wide_enclosure_rule -width {MET1:MET4 0.9}
+
+# 2. Application aux signaux de données (on ignore l'horloge)
+set_interactive_constraint_modes [all_constraint_modes -active]
+set all_data_nets [get_nets * -filter "is_clock == false"]
+setAttribute -net $all_data_nets -non_default_rule wide_enclosure_rule
+set_interactive_constraint_modes {}
+
 # Main routing
 routeDesign
 
