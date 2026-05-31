@@ -38,15 +38,14 @@ setEdit -spacing 0.5 -layer MET2
 setEdit -spacing 0.6 -layer MET3
 setEdit -spacing 0.6 -layer MET4
 
-setViaEdit -x_size 0.6 -y_size 0.6 -viacell *VIA1*
-setViaEdit -x_size 0.8 -y_size 0.8 -viacell *VIA2*
+setViaEdit -x_size 0.6 -y_size 0.9 -viacell *VIA1*
+setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA2*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA3*
 
-
-setMetalFill -gapSpacing 0.45 	-layer MET1
-setMetalFill -gapSpacing 0.5 	-layer MET2
-setMetalFill -gapSpacing 0.6	-layer MET3
-setMetalFill -gapSpacing 0.6	-layer MET4
+setRouteMode -wireWidth {MET1 0.9}
+setRouteMode -wireWidth {MET2 0.9}
+setRouteMode -wireWidth {MET3 0.9}
+setRouteMode -wireWidth {MET4 0.9}
 
 
 #////////////////////////////////////////////////////
@@ -54,7 +53,7 @@ setMetalFill -gapSpacing 0.6	-layer MET4
 #////////////////////////////////////////////////////
 
 #Set les modes de création de la grille
-setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer MET4 -stacked_via_bottom_layer MET1 -via_using_exact_crossover_size 1 -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }
+setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer MET4 -stacked_via_bottom_layer MET1 -via_using_exact_crossover_size true -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }
 
 #Ajoute la grille
 addRing -nets {gnd! vdd!} -type core_rings -follow core -layer {top MET3 bottom MET3 left MET4 right MET4} -width {top 20 bottom 20 left 20 right 20} -spacing {top 10 bottom 10 left 10 right 10} -offset {top 0.7 bottom 0.7 left 0.7 right 0.7} -center 1 -extend_corner {} -threshold 0 -jog_distance 0 -snap_wire_center_to_grid None
