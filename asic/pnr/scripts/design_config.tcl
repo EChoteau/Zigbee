@@ -42,6 +42,16 @@ setViaEdit -x_size 0.6 -y_size 0.9 -viacell *VIA1*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA2*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA3*
 
+# 1. Création de la règle qui force tous les métaux à 0.9µm de large
+add_ndr -name wide_enclosure_rule -width {MET1:MET4 0.9}
+
+# 2. Application de la règle à tous les signaux standards
+# (On filtre les horloges pour ne pas écraser ta règle cts_ndr)
+set_interactive_constraint_modes [all_constraint_modes -active]
+set all_data_nets [get_nets * -filter "is_clock == false"]
+setAttribute -net $all_data_nets -non_default_rule wide_enclosure_rule
+set_interactive_constraint_modes {}
+
 #////////////////////////////////////////////////////
 # Creation de la grille d'alimentation
 #////////////////////////////////////////////////////
