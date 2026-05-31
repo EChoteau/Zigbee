@@ -39,8 +39,8 @@ setEdit -spacing 0.6 -layer MET3
 setEdit -spacing 0.6 -layer MET4
 
 setViaEdit -x_size 0.6 -y_size 0.6 -viacell *VIA1*
-setViaEdit -x_size 0.6 -y_size 0.6 -viacell *VIA2*
-setViaEdit -x_size 0.65 -y_size 0.65 -viacell *VIA3*
+setViaEdit -x_size 0.8 -y_size 0.8 -viacell *VIA2*
+setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA3*
 
 
 setMetalFill -gapSpacing 0.45 	-layer MET1
