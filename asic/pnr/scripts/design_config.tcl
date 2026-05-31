@@ -64,7 +64,7 @@ set x [expr $size_of_partition / 125]
 set nb_of_sets [expr int($x) - 1]
 
 #Valeurs spécifique à la techno (NE PAS CHANGER !!!)
-set stripe_spacing 0.5
+set stripe_spacing 0.6
 set stripe_width 5
 set stripe_direction vertical
 set stripe_layer MET4
