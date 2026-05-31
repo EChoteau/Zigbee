@@ -1,5 +1,5 @@
 let((sourceLibs targetLib srcLibObj targetLibObj cellList masterLayout newLayout)
-    sourceLibs = list("CORELIB" "IOLIB_4M")
+    sourceLibs = list("CORELIB" "IOLIB_4M" "TECH_C35B4")
     targetLib = "zigbee_lib" ; Replace with your actual library name if different
 
     targetLibObj = ddGetObj(targetLib)
