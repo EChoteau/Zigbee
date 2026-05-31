@@ -43,7 +43,7 @@ write_sdf "$output_root/${module_name}_postroute.sdf"
 puts "=== Export GDSII ==="
 
 streamOut zigbee_top_io.gds \
-    -mapFile qrclay.map \
+    -mapFile gds2.map \
     -libName DesignLib \
     -attachInstanceName 13 \
     -attachNetName 13 \
