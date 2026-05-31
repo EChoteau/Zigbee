@@ -48,6 +48,9 @@ add_ndr -name wide_signal \
     -generate_via
 
 
+set all_nets [get_db nets -if {.is_power == false && .is_ground == false}]
+set_db $all_nets .non_default_rule wide_signal
+
 #////////////////////////////////////////////////////
 # Creation de la grille d'alimentation
 #////////////////////////////////////////////////////
