@@ -42,7 +42,10 @@ setViaEdit -x_size 0.6 -y_size 0.9 -viacell *VIA1*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA2*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA3*
 
-setNanoRouteMode -routeWithMinimumCut 1
+add_ndr -name wide_signal \
+    -width {MET1 0.9 MET2 0.9 MET3 0.9 MET4 0.9} \
+    -spacing {MET1 0.45 MET2 0.5 MET3 0.6 MET4 0.6} \
+    -generate_via
 
 
 #////////////////////////////////////////////////////
