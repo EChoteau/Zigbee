@@ -42,10 +42,7 @@ setViaEdit -x_size 0.6 -y_size 0.9 -viacell *VIA1*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA2*
 setViaEdit -x_size 0.9 -y_size 0.9 -viacell *VIA3*
 
-setRouteMode -wireWidth {MET1 0.9}
-setRouteMode -wireWidth {MET2 0.9}
-setRouteMode -wireWidth {MET3 0.9}
-setRouteMode -wireWidth {MET4 0.9}
+setNanoRouteMode -routeWithMinimumCut 1
 
 
 #////////////////////////////////////////////////////
