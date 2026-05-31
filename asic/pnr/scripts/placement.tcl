@@ -20,7 +20,7 @@ foreach net {"vdd!" "gnd!"} {
     if {$net_ptr != "0x0" && $net_ptr != ""} {
         foreach sw [dbGet $net_ptr.sWires -e] {
             # Looking specifically for vertical stripes drawn on Metal 2
-            if {[dbGet $sw.shape] == "stripe" && [dbGet $sw.layer.name] == "MET2"} {
+            if {[dbGet $sw.shape] == "stripe" && [dbGet $sw.layer.name] == "MET4"} {
                 # Get the bounding box
                 set box [lindex [dbGet $sw.box] 0]
                 set x1 [expr [lindex $box 0] - $stripe_margin]

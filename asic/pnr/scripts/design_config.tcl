@@ -67,7 +67,7 @@ set nb_of_sets [expr int($x) - 1]
 set stripe_spacing 0.5
 set stripe_width 5
 set stripe_direction vertical
-set stripe_layer MET2
+set stripe_layer MET4
 set stripe_start_offset 80
 set stripe_stop_offset 100
 
