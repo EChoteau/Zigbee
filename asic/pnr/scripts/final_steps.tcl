@@ -19,20 +19,6 @@ verifyGeometry
 verify_drc
 
 puts "=== Extract RC parasitics ==="
-# --- Configuration du mapping des couches pour l'extraction ---
-extraction_setup \
- -technology_layer_map \
-  POLY1  poly1 \
-  MET1  met1 \
-  VIA1  via_m2_m1 \
-  MET2  met2 \
-  VIA2  via_m3_m2 \
-  MET3  met3 \
-  VIA3  via_m4_m3 \
-  MET4  met4
-
-# --- Lancement de l'extraction RC ---
-setExtractRCMode -engine postRoute
 extractRC
 
 puts "=== Generate Reports ==="
