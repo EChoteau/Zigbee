@@ -32,7 +32,7 @@ ccopt_design
 
 # --- 4. Post-CTS Optimization and Reports ---
 # Final datapath cleanup
-optDesign -postCTS
+optDesign -postCTS -hold
 
 # Timing reports (Setup and Hold)
 timeDesign -postCTS
