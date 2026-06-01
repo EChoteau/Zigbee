@@ -27,6 +27,12 @@ if {$module_name eq "zigbee_top"} {
 	#floorPlan -site standard -d {2000 2000 80 80 80 80} -noSnapToGrid
 }
 
+# Renommer vdd! en VDD dans la base de données Innovus
+set vdd_net [dbGet top.nets.name vdd!]
+dbSet $vdd_net.name VDD
+
+set gnd_net [dbGet top.nets.name gnd!]
+dbSet $gnd_net.name GND
 
 setEdit -layer_horizontal {MET1}
 setEdit -layer_horizontal {MET3}

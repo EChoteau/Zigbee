@@ -14,16 +14,6 @@ file mkdir $output_root
 file mkdir $reports_dir
 file mkdir $fab_dir
 
-# Renommage des nets pour compatibilité Calibre DRC
-# Calibre cherche VDD/GND, Innovus utilise vdd!/gnd!
-editNetName -net vdd!    -newName VDD
-editNetName -net gnd!    -newName GND
-editNetName -net vdd3r1! -newName VDD
-editNetName -net vdd3r2! -newName VDD
-editNetName -net vdd3o!  -newName VDD
-editNetName -net gnd3r!  -newName GND
-editNetName -net gnd3o!  -newName GND
-
 verifyConnectivity -type special -noAntenna
 verifyGeometry
 verify_drc
