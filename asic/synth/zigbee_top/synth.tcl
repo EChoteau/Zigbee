@@ -31,6 +31,8 @@ link
 # --- 3. Constrains ---
 set_operating_conditions -library c35_CORELIB_TYP TYPICAL
 create_clock -name i_clk -period 100 {i_clk}
+set_clock_uncertainty -hold 0.1 i_clk
+set_fix_hold i_clk
 #set_clock_uncertainty 15 i_clk
 set_max_area 1040000
 
@@ -40,16 +42,18 @@ set_scan_configuration -style none
 set_flatten true -design zigbee_top -effort high -minimize multiple_output -phase true
 set_structure true -design zigbee_top -boolean true -timing false
 
-set_max_fanout 3 zigbee_top
+#set_max_fanout 3 zigbee_top
 # set_max_transition 1.5 zigbee_top
-set_dynamic_optimization true
-set_leakage_optimization true
+#set_dynamic_optimization true
+#set_leakage_optimization true
 # set_max_dynamic_power 0
 # set_max_leakage_power 0
-compile_ultra
+compile_ultra -timing_high_effort_script -no_autoungroup
+set_fix_hold i_clk
+compile_ultra -incremental
 
 # --- 5. Reports ---
-report_timing > ../reports/timing.rpt
+report_timing > -delay min ../reports/timing.rpt
 report_area > ../reports/area.rpt
 report_power > ../reports/power.rpt
 report_constraint -all_violators > ../reports/violations.rpt

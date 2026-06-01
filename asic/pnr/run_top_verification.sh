@@ -79,7 +79,7 @@ source ../../../config/bashrc_cdsic617_ams_410_isr15
 
 echo "Run Calibre for DRC and LVS"
 
-ams_cds -tech c35b4 -mode fb -nologo
+ams_cds -tech c35b4 -mode fb -nologo &
 #ams_cds -tech c35b4 -mode fb -execute "source ../scripts/pnr_verification.il" &
 
 cd ../../../
