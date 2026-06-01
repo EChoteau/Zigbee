@@ -35,4 +35,4 @@ ccopt_design
 optDesign -postCTS
 
 # Timing reports (Setup and Hold)
-timeDesign -postCTS -hold
+timeDesign -postCTS -hold -expandedViews
