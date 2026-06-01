@@ -59,5 +59,6 @@ report_clock_gating > ../reports/report_cg_summary.txt
 # --- 6. Export Files for Simulation ---
 write -format verilog -hierarchy -output ../netlist/zigbee_top_synth.v
 write_sdf ../netlist/zigbee_top_synth.sdf
+write_sdc ../netlist/zigbee_top_synth.sdc
 
 exit
