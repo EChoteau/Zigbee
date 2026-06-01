@@ -1,7 +1,6 @@
 create_rc_corner -name rc_best \
    -cap_table /softslin/AMS_410_ISR15/cds/HK_C35/LEF/encounter/c35b4_thick-best.capTable \
-   -T \
-   -25 \
+   -T 25 \
    -qx_tech_file /softslin/AMS_410_ISR15/assura/c35b4/c35b4thickall/RCX-best/qrcTechFile \
    -preRoute_res 1.0 \
    -preRoute_cap 1.0 \
