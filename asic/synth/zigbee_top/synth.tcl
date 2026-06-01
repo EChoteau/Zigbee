@@ -53,7 +53,8 @@ set_fix_hold i_clk
 compile_ultra -incremental
 
 # --- 5. Reports ---
-report_timing > -delay min ../reports/timing.rpt
+report_timing -delay max > ../reports/timing_setup.rpt
+report_timing -delay min > ../reports/timing_hold.rpt
 report_area > ../reports/area.rpt
 report_power > ../reports/power.rpt
 report_constraint -all_violators > ../reports/violations.rpt
