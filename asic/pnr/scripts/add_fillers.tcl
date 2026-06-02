@@ -16,8 +16,3 @@ addFiller -cell FILL25 FILL10 FILL5 FILL2 FILL1 -prefix FILLER -fitGap
 if {[info exists module_name] && $module_name eq "zigbee_top"} {
 	amsFillperi
 }
-
-setMetalFill -layer {MET1 MET2} -honorLefValue
-
-# Lancement du remplissage
-addMetalFill -layer {MET1 MET2}
