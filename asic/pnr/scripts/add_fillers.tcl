@@ -17,9 +17,7 @@ if {[info exists module_name] && $module_name eq "zigbee_top"} {
 	amsFillperi
 }
 
-setMetalFill -layer {MET1 MET2 MET3 MET4} \
-             -timingAware true \
-             -slackThreshold 0.2
+setMetalFill -layer {MET1 MET2 MET3 MET4} -honorLefValue
 
 # Lancement du remplissage
 addMetalFill -layer {MET1 MET2 MET3 MET4}
