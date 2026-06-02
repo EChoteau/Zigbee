@@ -64,13 +64,6 @@ set size_of_partition [expr $x2 - $x1]
 set x [expr $size_of_partition / 125]
 set nb_of_sets [expr int($x) - 1]
 
-#Valeurs spécifique à la techno (NE PAS CHANGER !!!)
-set stripe_spacing 0.6
-set stripe_width 5
-set stripe_direction vertical
-set stripe_layer MET4
-set stripe_start_offset 80
-set stripe_stop_offset 100
 
 #Set les modes pour les stripes
 setAddStripeMode -ignore_block_check false -break_at none -route_over_rows_only false -rows_without_stripes_only false -extend_to_closest_target none -stop_at_last_wire_for_area false -partial_set_thru_domain false -ignore_nondefault_domains false -trim_antenna_back_to_shape none -spacing_type edge_to_edge -spacing_from_block 5 -stripe_min_length 0 -stacked_via_top_layer MET4 -stacked_via_bottom_layer MET1 -via_using_exact_crossover_size false -split_vias false -orthogonal_only true -allow_jog { padcore_ring  block_ring }
