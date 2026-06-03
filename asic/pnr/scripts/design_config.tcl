@@ -73,7 +73,6 @@ globalNetConnect vdd! -type pgpin -pin vdd3r1! -all
 globalNetConnect vdd! -type pgpin -pin vdd3r2! -all
 globalNetConnect vdd! -type pgpin -pin vdd3o!  -all
 globalNetConnect gnd! -type pgpin -pin gnd3r!  -all
-globalNetConnect gnd! -type pgpin -pin gnd3o!  -all
 globalNetConnect vdd! -type pgpin -pin A -inst PWR*
 globalNetConnect gnd! -type pgpin -pin A -inst GND*
 
