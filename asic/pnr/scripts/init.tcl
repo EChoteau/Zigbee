@@ -5,7 +5,7 @@ set init_abstract_name ""
 
 set init_verilog "../input_data/${sdc_dir}/${name_netlist}"
 if {$module_name eq "zigbee_top"} {
-	set init_verilog "../input_data/${sdc_dir}/${module_name}.v"
+	set init_verilog "../input_data/${sdc_dir}/${module_name}_io.v"
 }
 
 set init_mmmc_file "../scripts/view_definition.tcl"
@@ -19,7 +19,7 @@ if {$module_name eq "zigbee_top"} {
 #set init_lef_file "/softslin/AMS_410_ISR15/cds/HK_C35/LEF/c35b4/c35b4.lef /softslin/AMS_410_ISR15/cds/HK_C35/LEF/c35b4/CORELIB.lef ../input_data/IOLIB_4M.lef"
 
 if {$module_name eq "zigbee_top"} {
-	set init_top_cell "${module_name}"
+	set init_top_cell "${module_name}_io"
 } else {
 	set init_top_cell "${module_name}"
 }
