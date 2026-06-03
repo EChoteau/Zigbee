@@ -19,7 +19,7 @@ if {$module_name eq "zigbee_top"} {
 #set init_lef_file "/softslin/AMS_410_ISR15/cds/HK_C35/LEF/c35b4/c35b4.lef /softslin/AMS_410_ISR15/cds/HK_C35/LEF/c35b4/CORELIB.lef ../input_data/IOLIB_4M.lef"
 
 if {$module_name eq "zigbee_top"} {
-	set init_top_cell "${module_name}_io"
+	set init_top_cell "${module_name}"
 } else {
 	set init_top_cell "${module_name}"
 }
