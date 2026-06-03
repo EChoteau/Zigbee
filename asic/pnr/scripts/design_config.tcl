@@ -69,6 +69,11 @@ addStripe -nets {gnd! vdd!} -layer $stripe_layer -direction $stripe_direction -w
 
 globalNetConnect vdd! -type pgpin -pin vdd! -all
 globalNetConnect gnd! -type pgpin -pin gnd! -all
+globalNetConnect vdd! -type pgpin -pin vdd3r1! -all
+globalNetConnect vdd! -type pgpin -pin vdd3r2! -all
+globalNetConnect vdd! -type pgpin -pin vdd3o!  -all
+globalNetConnect gnd! -type pgpin -pin gnd3r!  -all
+globalNetConnect gnd! -type pgpin -pin gnd3o!  -all
 globalNetConnect vdd! -type pgpin -pin A -inst PWR*
 globalNetConnect gnd! -type pgpin -pin A -inst GND*
 
@@ -80,6 +85,6 @@ globalNetConnect gnd! -type pgpin -pin A -inst GND*
 #Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
-sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
+sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gn vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
