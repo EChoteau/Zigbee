@@ -4,7 +4,7 @@
 //  Top-level module for IO PAD
 /////////////////////////////
 
-module zigbee_top_io (
+module zigbee_top (
 	// System signals
 	input i_clk,
 	input i_rst_n,
