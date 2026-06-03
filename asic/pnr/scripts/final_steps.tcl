@@ -36,13 +36,13 @@ saveNetlist "$output_root/${module_name}_postroute.v"
 
 # VIRTUOSO / LVS: Physical netlist with VDD/VSS connected throughout the design
 puts "=== Save Physical Netlist for Virtuoso/LVS ==="
-saveNetlist "zigbee_top_io.v" -phys
+saveNetlist "zigbee_top.v" -phys
 
 write_sdf "$output_root/${module_name}_postroute.sdf"
 
 puts "=== Export GDSII ==="
 
-streamOut zigbee_top_io.gds \
+streamOut zigbee_top.gds \
     -mapFile gds2.map \
     -libName DesignLib \
     -attachInstanceName 61 \
