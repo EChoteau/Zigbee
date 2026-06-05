@@ -1,0 +1,1932 @@
+Coverage Report by file with details
+
+=================================================================================
+=== File: rtl/cdr/cdr_top.sv
+=================================================================================
+Expression Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Expression Terms            15        14         1     93.33
+
+================================Expression Details================================
+
+Expression Coverage for file rtl/cdr/cdr_top.sv --
+
+
+
+
+
+-----------Focused Expression View (Bimodal)------------
+Line       57 Item    1  (i_loop_filter_debug? i_down_d: o_down)
+Expression totals: 2 of 3 input terms covered = 66.66%
+
+             Input Term   Covered  Reason for no coverage                  Hint
+            -----------  --------  --------------------------------------  --------------
+               i_down_d         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->1
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target               Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------     -----------------------------------
+ Row   1:           1           1  i_loop_filter_debug_0    -                                  
+ Row   2:           1           0  i_loop_filter_debug_1    -                                  
+ Row   3:           1           0  i_down_d_0               i_loop_filter_debug                
+ Row   4:           0           0  i_down_d_1               i_loop_filter_debug                
+ Row   5:           1           0  o_down_0                 ~i_loop_filter_debug               
+ Row   6:           0           1  o_down_1                 ~i_loop_filter_debug               
+
+
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                     98        96         2     97.95
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/cdr/cdr_top.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         34                             s_decision           0           0        0.00 
+
+Total Node Count     =         49 
+Toggled Node Count   =         48 
+Untoggled Node Count =          1 
+
+Toggle Coverage      =      97.95% (96 of 98 bins)
+
+=================================================================================
+=== File: rtl/cdr/nco.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                     34        28         6     82.35
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/cdr/nco.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         14                            s_period[3]           0           0        0.00 
+         14                            s_period[2]           0           0        0.00 
+         15                               s_cnt[3]           0           0        0.00 
+
+Total Node Count     =         17 
+Toggled Node Count   =         14 
+Untoggled Node Count =          3 
+
+Toggle Coverage      =      82.35% (28 of 34 bins)
+
+=================================================================================
+=== File: rtl/cordic/cordic_init.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    120        80        40     66.66
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/cordic/cordic_init.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+          8                            o_i_init[9]           0           0        0.00 
+          8                            o_i_init[8]           0           0        0.00 
+          8                            o_i_init[2]           0           0        0.00 
+          8                            o_i_init[1]           0           0        0.00 
+          8                            o_i_init[0]           0           0        0.00 
+          9                            o_q_init[2]           0           0        0.00 
+          9                            o_q_init[1]           0           0        0.00 
+          9                            o_q_init[0]           0           0        0.00 
+         10                        o_phase_init[5]           0           0        0.00 
+         10                        o_phase_init[4]           0           0        0.00 
+         10                        o_phase_init[3]           0           0        0.00 
+         10                        o_phase_init[2]           0           0        0.00 
+         10                        o_phase_init[1]           0           0        0.00 
+         10                        o_phase_init[0]           0           0        0.00 
+         20                             w_q_ext[2]           0           0        0.00 
+         20                             w_q_ext[1]           0           0        0.00 
+         20                             w_q_ext[0]           0           0        0.00 
+         20                             w_i_ext[2]           0           0        0.00 
+         20                             w_i_ext[1]           0           0        0.00 
+         20                             w_i_ext[0]           0           0        0.00 
+
+Total Node Count     =         60 
+Toggled Node Count   =         40 
+Untoggled Node Count =         20 
+
+Toggle Coverage      =      66.66% (80 of 120 bins)
+
+=================================================================================
+=== File: rtl/cordic/cordic_pipeline.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    156       128        28     82.05
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/cordic/cordic_pipeline.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         39                       w_i_init_comb[9]           0           0        0.00 
+         39                       w_i_init_comb[8]           0           0        0.00 
+         39                       w_i_init_comb[2]           0           0        0.00 
+         39                       w_i_init_comb[1]           0           0        0.00 
+         39                       w_i_init_comb[0]           0           0        0.00 
+         40                       w_q_init_comb[2]           0           0        0.00 
+         40                       w_q_init_comb[1]           0           0        0.00 
+         40                       w_q_init_comb[0]           0           0        0.00 
+         41                   w_phase_init_comb[5]           0           0        0.00 
+         41                   w_phase_init_comb[4]           0           0        0.00 
+         41                   w_phase_init_comb[3]           0           0        0.00 
+         41                   w_phase_init_comb[2]           0           0        0.00 
+         41                   w_phase_init_comb[1]           0           0        0.00 
+         41                   w_phase_init_comb[0]           0           0        0.00 
+
+Total Node Count     =         78 
+Toggled Node Count   =         64 
+Untoggled Node Count =         14 
+
+Toggle Coverage      =      82.05% (128 of 156 bins)
+
+=================================================================================
+=== File: rtl/demod/FIR/fir_core.v
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    206       202         4     98.05
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/demod/FIR/fir_core.v --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         18                             s_prod0[0]           0           0        0.00 
+         19                             s_prod1[0]           0           0        0.00 
+
+Total Node Count     =        103 
+Toggled Node Count   =        101 
+Untoggled Node Count =          2 
+
+Toggle Coverage      =      98.05% (202 of 206 bins)
+
+=================================================================================
+=== File: rtl/demod/demod_top.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    224       220         4     98.21
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/demod/demod_top.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         15                      i_dbg_fir_i_in[7]           0           0        0.00 
+         16                      i_dbg_fir_q_in[7]           0           0        0.00 
+
+Total Node Count     =        112 
+Toggled Node Count   =        110 
+Untoggled Node Count =          2 
+
+Toggle Coverage      =      98.21% (220 of 224 bins)
+
+=================================================================================
+=== File: rtl/interface/apb_slave_regs.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           37        35         2     94.59
+
+================================Statement Details================================
+
+Statement Coverage for file rtl/interface/apb_slave_regs.sv --
+
+    119             1                             s_reg_divider_n = 8'h01;
+    177             1                     default: o_prdata = '0;
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                        27        23         4     85.18
+
+================================Branch Details================================
+
+Branch Coverage for file rtl/interface/apb_slave_regs.sv --
+
+------------------------------------CASE Branch------------------------------------
+    124             1                    ***0***                     default: ;
+Branch totals: 3 hits of 4 branches = 75.00%
+
+------------------------------------IF Branch------------------------------------
+    109                                        4     Count coming in to IF
+    109             1                          4                         if (!i_tx_full) begin
+                                         ***0***     All False Count
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    118                                        6     Count coming in to IF
+    118             1                    ***0***                         if (i_pwdata[7:0] == 8'h00) begin
+    120             1                          6                         end else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------CASE Branch------------------------------------
+    177             1                    ***0***                     default: o_prdata = '0;
+Branch totals: 4 hits of 5 branches = 80.00%
+
+
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms              2         1         1     50.00
+
+================================Condition Details================================
+
+Condition Coverage for file rtl/interface/apb_slave_regs.sv --
+
+
+----------------Focused Condition View-------------------
+Line       118 Item    1  (i_pwdata == 0)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+  (i_pwdata == 0)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (i_pwdata == 0)_0     -                             
+  Row   2:    ***0***  (i_pwdata == 0)_1     -                             
+
+
+Expression Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Expression Terms             9         8         1     88.88
+
+================================Expression Details================================
+
+Expression Coverage for file rtl/interface/apb_slave_regs.sv --
+
+----------------Focused Expression View-----------------
+Line       74 Item    1  ((i_psel & i_penable) & i_pwrite)
+Expression totals: 2 of 3 input terms covered = 66.66%
+
+  Input Term   Covered  Reason for no coverage   Hint
+ -----------  --------  -----------------------  --------------
+      i_psel         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  i_psel_0              (i_pwrite && i_penable)       
+  Row   2:          1  i_psel_1              (i_pwrite && i_penable)       
+  Row   3:          1  i_penable_0           (i_pwrite && i_psel)          
+  Row   4:          1  i_penable_1           (i_pwrite && i_psel)          
+  Row   5:          1  i_pwrite_0            (i_psel & i_penable)          
+  Row   6:          1  i_pwrite_1            (i_psel & i_penable)          
+
+
+
+
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    208       158        50     75.96
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/interface/apb_slave_regs.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         19                             i_paddr[7]           0           0        0.00 
+         19                             i_paddr[6]           0           0        0.00 
+         19                             i_paddr[5]           0           0        0.00 
+         19                             i_paddr[4]           0           0        0.00 
+         19                             i_paddr[1]           0           0        0.00 
+         19                             i_paddr[0]           0           0        0.00 
+         22                               o_pready           0           0        0.00 
+         23                              o_pslverr           0           0        0.00 
+         26                           o_tx_data[4]           0           0        0.00 
+         26                           o_tx_data[3]           0           0        0.00 
+         30                           i_tx_und_err           0           0        0.00 
+         44                           o_div_val[7]           0           0        0.00 
+         44                           o_div_val[6]           0           0        0.00 
+         44                           o_div_val[3]           0           0        0.00 
+         44                           o_div_val[2]           0           0        0.00 
+         60                       s_reg_divider[7]           0           0        0.00 
+         60                       s_reg_divider[6]           0           0        0.00 
+         60                       s_reg_divider[3]           0           0        0.00 
+         60                       s_reg_divider[2]           0           0        0.00 
+         62                     s_reg_divider_n[7]           0           0        0.00 
+         62                     s_reg_divider_n[6]           0           0        0.00 
+         62                     s_reg_divider_n[3]           0           0        0.00 
+         62                     s_reg_divider_n[2]           0           0        0.00 
+         63                         s_tx_data_n[4]           0           0        0.00 
+         63                         s_tx_data_n[3]           0           0        0.00 
+
+Total Node Count     =        104 
+Toggled Node Count   =         79 
+Untoggled Node Count =         25 
+
+Toggle Coverage      =      75.96% (158 of 208 bins)
+
+=================================================================================
+=== File: rtl/interface/baud_rate_gen.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                     56        34        22     60.71
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/interface/baud_rate_gen.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         15                           i_div_val[7]           0           0        0.00 
+         15                           i_div_val[6]           0           0        0.00 
+         15                           i_div_val[3]           0           0        0.00 
+         21                           s_counter[7]           0           0        0.00 
+         21                           s_counter[6]           0           0        0.00 
+         21                           s_counter[5]           0           0        0.00 
+         21                           s_counter[4]           0           0        0.00 
+         21                           s_counter[3]           0           0        0.00 
+         22                           w_div_eff[7]           0           0        0.00 
+         22                           w_div_eff[6]           0           0        0.00 
+         22                           w_div_eff[3]           0           0        0.00 
+
+Total Node Count     =         28 
+Toggled Node Count   =         17 
+Untoggled Node Count =         11 
+
+Toggle Coverage      =      60.71% (34 of 56 bins)
+
+=================================================================================
+=== File: rtl/interface/interface_top.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           32        31         1     96.87
+
+================================Statement Details================================
+
+Statement Coverage for file rtl/interface/interface_top.sv --
+
+    269             1     					s_tx_und_err <= 1'b1;
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                        45        44         1     97.77
+
+================================Branch Details================================
+
+Branch Coverage for file rtl/interface/interface_top.sv --
+
+------------------------------------IF Branch------------------------------------
+    268                                      141     Count coming in to IF
+    268             1                    ***0***     				if (w_tx_path_en && !s_tx_path_en_d && !w_tx_busy && w_tx_fifo_empty) begin
+                                             141     All False Count
+Branch totals: 1 hit of 2 branches = 50.00%
+
+
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms             11         5         6     45.45
+
+================================Condition Details================================
+
+Condition Coverage for file rtl/interface/interface_top.sv --
+
+
+----------------Focused Condition View-------------------
+Line       256 Item    1  ((s_tx_run && ~w_tx_busy) && w_tx_fifo_empty)
+Condition totals: 2 of 3 input terms covered = 66.66%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+        w_tx_busy         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  s_tx_run_0            -                             
+  Row   2:          1  s_tx_run_1            (w_tx_fifo_empty && ~w_tx_busy)
+  Row   3:          1  w_tx_busy_0           (w_tx_fifo_empty && s_tx_run) 
+  Row   4:    ***0***  w_tx_busy_1           s_tx_run                      
+  Row   5:          1  w_tx_fifo_empty_0     (s_tx_run && ~w_tx_busy)      
+  Row   6:          1  w_tx_fifo_empty_1     (s_tx_run && ~w_tx_busy)      
+
+----------------Focused Condition View-------------------
+Line       261 Item    1  (w_sw_reset || w_clear_err)
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+   Input Term   Covered  Reason for no coverage   Hint
+  -----------  --------  -----------------------  --------------
+  w_clear_err         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  w_sw_reset_0          ~w_clear_err                  
+  Row   2:          1  w_sw_reset_1          -                             
+  Row   3:          1  w_clear_err_0         ~w_sw_reset                   
+  Row   4:    ***0***  w_clear_err_1         ~w_sw_reset                   
+
+----------------Focused Condition View-------------------
+Line       268 Item    1  (((w_tx_path_en && ~s_tx_path_en_d) && ~w_tx_busy) && w_tx_fifo_empty)
+Condition totals: 0 of 4 input terms covered = 0.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+     w_tx_path_en         N  '_1' not hit             Hit '_1'
+   s_tx_path_en_d         N  '_0' not hit             Hit '_0'
+        w_tx_busy         N  No hits                  Hit '_0' and '_1'
+  w_tx_fifo_empty         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  w_tx_path_en_0        -                             
+  Row   2:    ***0***  w_tx_path_en_1        (w_tx_fifo_empty && ~w_tx_busy && ~s_tx_path_en_d)
+  Row   3:    ***0***  s_tx_path_en_d_0      (w_tx_fifo_empty && ~w_tx_busy && w_tx_path_en)
+  Row   4:          1  s_tx_path_en_d_1      w_tx_path_en                  
+  Row   5:    ***0***  w_tx_busy_0           (w_tx_fifo_empty && (w_tx_path_en && ~s_tx_path_en_d))
+  Row   6:    ***0***  w_tx_busy_1           (w_tx_path_en && ~s_tx_path_en_d)
+  Row   7:          1  w_tx_fifo_empty_0     ((w_tx_path_en && ~s_tx_path_en_d) && ~w_tx_busy)
+  Row   8:    ***0***  w_tx_fifo_empty_1     ((w_tx_path_en && ~s_tx_path_en_d) && ~w_tx_busy)
+
+
+Expression Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Expression Terms            43        39         4     90.69
+
+================================Expression Details================================
+
+Expression Coverage for file rtl/interface/interface_top.sv --
+
+----------------Focused Expression View-----------------
+Line       182 Item    1  (w_global_en & s_tx_run)
+Expression totals: 1 of 2 input terms covered = 50.00%
+
+   Input Term   Covered  Reason for no coverage   Hint
+  -----------  --------  -----------------------  --------------
+  w_global_en         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  w_global_en_0         s_tx_run                      
+  Row   2:          1  w_global_en_1         s_tx_run                      
+  Row   3:          1  s_tx_run_0            w_global_en                   
+  Row   4:          1  s_tx_run_1            w_global_en                   
+
+----------------Focused Expression View-----------------
+Line       183 Item    1  (w_global_en & w_rx_enable)
+Expression totals: 1 of 2 input terms covered = 50.00%
+
+   Input Term   Covered  Reason for no coverage   Hint
+  -----------  --------  -----------------------  --------------
+  w_global_en         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  w_global_en_0         w_rx_enable                   
+  Row   2:          1  w_global_en_1         w_rx_enable                   
+  Row   3:          1  w_rx_enable_0         w_global_en                   
+  Row   4:          1  w_rx_enable_1         w_global_en                   
+
+
+
+
+
+
+
+-----------Focused Expression View (Bimodal)------------
+Line       207 Item    1  (i_dbg_des_override_en? i_dbg_des_enable: w_rx_path_en)
+Expression totals: 2 of 3 input terms covered = 66.66%
+
+               Input Term   Covered  Reason for no coverage                  Hint
+              -----------  --------  --------------------------------------  --------------
+         i_dbg_des_enable         N  '_1' hit but '_0' is not hit           Hit '_0' for output ->0
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target                 Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------       -----------------------------------
+ Row   1:           1           1  i_dbg_des_override_en_0    -                                  
+ Row   2:           0           1  i_dbg_des_override_en_1    -                                  
+ Row   3:           0           0  i_dbg_des_enable_0         i_dbg_des_override_en              
+ Row   4:           0           1  i_dbg_des_enable_1         i_dbg_des_override_en              
+ Row   5:           1           0  w_rx_path_en_0             ~i_dbg_des_override_en             
+ Row   6:           0           1  w_rx_path_en_1             ~i_dbg_des_override_en             
+
+-----------Focused Expression View (Bimodal)------------
+Line       208 Item    1  (i_dbg_des_override_en? i_dbg_des_fifo_full: w_rx_fifo_full)
+Expression totals: 2 of 3 input terms covered = 66.66%
+
+               Input Term   Covered  Reason for no coverage                  Hint
+              -----------  --------  --------------------------------------  --------------
+      i_dbg_des_fifo_full         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->1
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target                 Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------       -----------------------------------
+ Row   1:           1           1  i_dbg_des_override_en_0    -                                  
+ Row   2:           1           0  i_dbg_des_override_en_1    -                                  
+ Row   3:           1           0  i_dbg_des_fifo_full_0      i_dbg_des_override_en              
+ Row   4:           0           0  i_dbg_des_fifo_full_1      i_dbg_des_override_en              
+ Row   5:           1           0  w_rx_fifo_full_0           ~i_dbg_des_override_en             
+ Row   6:           0           1  w_rx_fifo_full_1           ~i_dbg_des_override_en             
+
+
+
+
+
+
+
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    464       400        64     86.20
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/interface/interface_top.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         14                             i_paddr[7]           0           0        0.00 
+         14                             i_paddr[6]           0           0        0.00 
+         14                             i_paddr[5]           0           0        0.00 
+         14                             i_paddr[4]           0           0        0.00 
+         14                             i_paddr[1]           0           0        0.00 
+         14                             i_paddr[0]           0           0        0.00 
+         17                               o_pready           0           0        0.00 
+         18                              o_pslverr           0           0        0.00 
+         23                   i_dbg_ser_tx_data[5]           0           0        0.00 
+         23                   i_dbg_ser_tx_data[4]           0           0        0.00 
+         23                   i_dbg_ser_tx_data[2]           0           0        0.00 
+         23                   i_dbg_ser_tx_data[0]           0           0        0.00 
+         32                    i_dbg_des_fifo_full           0           0        0.00 
+         41                  i_dbg_fifo_rx_data[5]           0           0        0.00 
+         41                  i_dbg_fifo_rx_data[4]           0           0        0.00 
+         41                  i_dbg_fifo_rx_data[3]           0           0        0.00 
+         46                  i_dbg_baud_div_val[7]           0           0        0.00 
+         46                  i_dbg_baud_div_val[6]           0           0        0.00 
+         46                  i_dbg_baud_div_val[5]           0           0        0.00 
+         46                  i_dbg_baud_div_val[4]           0           0        0.00 
+         46                  i_dbg_baud_div_val[3]           0           0        0.00 
+         68                       o_dbg_tx_und_err           0           0        0.00 
+         81                      w_tx_fifo_data[4]           0           0        0.00 
+         81                      w_tx_fifo_data[3]           0           0        0.00 
+        109                           w_div_val[7]           0           0        0.00 
+        109                           w_div_val[6]           0           0        0.00 
+        109                           w_div_val[3]           0           0        0.00 
+        109                           w_div_val[2]           0           0        0.00 
+        118                           s_tx_und_err           0           0        0.00 
+        174                   w_baud_div_val_in[7]           0           0        0.00 
+        174                   w_baud_div_val_in[6]           0           0        0.00 
+        174                   w_baud_div_val_in[3]           0           0        0.00 
+
+Total Node Count     =        232 
+Toggled Node Count   =        200 
+Untoggled Node Count =         32 
+
+Toggle Coverage      =      86.20% (400 of 464 bins)
+
+=================================================================================
+=== File: rtl/msk/shaping_msk.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                     58        56         2     96.55
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/msk/shaping_msk.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         19                              o_Q_BB[5]           0           0        0.00 
+
+Total Node Count     =         29 
+Toggled Node Count   =         28 
+Untoggled Node Count =          1 
+
+Toggle Coverage      =      96.55% (56 of 58 bins)
+
+=================================================================================
+=== File: rtl/msk/top_msk.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                     92        88         4     95.65
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/msk/top_msk.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         29                              o_Q_BB[5]           0           0        0.00 
+         36                          o_dbg_Q_BB[5]           0           0        0.00 
+
+Total Node Count     =         46 
+Toggled Node Count   =         44 
+Untoggled Node Count =          2 
+
+Toggle Coverage      =      95.65% (88 of 92 bins)
+
+=================================================================================
+=== File: rtl/top/wrappers/cdr_wrapper.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    172       140        32     81.39
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/wrappers/cdr_wrapper.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         11                           o_bus_out[9]           0           0        0.00 
+         11                           o_bus_out[8]           0           0        0.00 
+         11                           o_bus_out[7]           0           0        0.00 
+         11                           o_bus_out[6]           0           0        0.00 
+         11                           o_bus_out[5]           0           0        0.00 
+         11                           o_bus_out[4]           0           0        0.00 
+         11                           o_bus_out[3]           0           0        0.00 
+         11                           o_bus_out[2]           0           0        0.00 
+         11                          o_bus_out[13]           0           0        0.00 
+         11                          o_bus_out[12]           0           0        0.00 
+         11                          o_bus_out[11]           0           0        0.00 
+         11                          o_bus_out[10]           0           0        0.00 
+         78                              s_ctrl[3]           0           0        0.00 
+         78                              s_ctrl[2]           0           0        0.00 
+         78                              s_ctrl[1]           0           0        0.00 
+         78                              s_ctrl[0]           0           0        0.00 
+
+Total Node Count     =         86 
+Toggled Node Count   =         70 
+Untoggled Node Count =         16 
+
+Toggle Coverage      =      81.39% (140 of 172 bins)
+
+=================================================================================
+=== File: rtl/top/wrappers/cordic_wrapper.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    204       192        12     94.11
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/wrappers/cordic_wrapper.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         15                           o_bus_out[9]           0           0        0.00 
+         15                           o_bus_out[8]           0           0        0.00 
+         15                          o_bus_out[13]           0           0        0.00 
+         15                          o_bus_out[12]           0           0        0.00 
+         15                          o_bus_out[11]           0           0        0.00 
+         15                          o_bus_out[10]           0           0        0.00 
+
+Total Node Count     =        102 
+Toggled Node Count   =         96 
+Untoggled Node Count =          6 
+
+Toggle Coverage      =      94.11% (192 of 204 bins)
+
+=================================================================================
+=== File: rtl/top/wrappers/demod_wrapper.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    240       236         4     98.33
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/wrappers/demod_wrapper.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         41                       s_if_fir_i_in[7]           0           0        0.00 
+         42                       s_if_fir_q_in[7]           0           0        0.00 
+
+Total Node Count     =        120 
+Toggled Node Count   =        118 
+Untoggled Node Count =          2 
+
+Toggle Coverage      =      98.33% (236 of 240 bins)
+
+=================================================================================
+=== File: rtl/top/wrappers/interface_wrapper.sv
+=================================================================================
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                        10         9         1     90.00
+
+================================Branch Details================================
+
+Branch Coverage for file rtl/top/wrappers/interface_wrapper.sv --
+
+------------------------------------CASE Branch------------------------------------
+    348             1                    ***0***                     default: begin
+Branch totals: 7 hits of 8 branches = 87.50%
+
+
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    328       284        44     86.58
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/wrappers/interface_wrapper.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         38                          s_if_paddr[7]           0           0        0.00 
+         38                          s_if_paddr[6]           0           0        0.00 
+         38                          s_if_paddr[5]           0           0        0.00 
+         38                          s_if_paddr[4]           0           0        0.00 
+         38                          s_if_paddr[1]           0           0        0.00 
+         38                          s_if_paddr[0]           0           0        0.00 
+         41                            s_if_pready           0           0        0.00 
+         42                           s_if_pslverr           0           0        0.00 
+         69                       s_dbg_tx_und_err           0           0        0.00 
+         77                    s_if_ser_tx_data[5]           0           0        0.00 
+         77                    s_if_ser_tx_data[4]           0           0        0.00 
+         77                    s_if_ser_tx_data[2]           0           0        0.00 
+         77                    s_if_ser_tx_data[0]           0           0        0.00 
+         92                   s_if_baud_div_val[7]           0           0        0.00 
+         92                   s_if_baud_div_val[6]           0           0        0.00 
+         92                   s_if_baud_div_val[5]           0           0        0.00 
+         92                   s_if_baud_div_val[4]           0           0        0.00 
+         92                   s_if_baud_div_val[3]           0           0        0.00 
+        101                     s_if_des_fifo_full           0           0        0.00 
+        110                   s_if_fifo_rx_data[5]           0           0        0.00 
+        110                   s_if_fifo_rx_data[4]           0           0        0.00 
+        110                   s_if_fifo_rx_data[3]           0           0        0.00 
+
+Total Node Count     =        164 
+Toggled Node Count   =        142 
+Untoggled Node Count =         22 
+
+Toggle Coverage      =      86.58% (284 of 328 bins)
+
+=================================================================================
+=== File: rtl/top/wrappers/msk_wrapper.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           28        27         1     96.42
+
+================================Statement Details================================
+
+Statement Coverage for file rtl/top/wrappers/msk_wrapper.sv --
+
+    197             1                         o_bus_out = '0;
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                        13        12         1     92.30
+
+================================Branch Details================================
+
+Branch Coverage for file rtl/top/wrappers/msk_wrapper.sv --
+
+------------------------------------CASE Branch------------------------------------
+    196             1                    ***0***                     default: begin
+Branch totals: 5 hits of 6 branches = 83.33%
+
+
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    158       150         8     94.93
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/wrappers/msk_wrapper.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         18                           o_bus_out[5]           0           0        0.00 
+         18                          o_bus_out[13]           0           0        0.00 
+         96                              s_Q_BB[5]           0           0        0.00 
+        101                          s_dbg_Q_BB[5]           0           0        0.00 
+
+Total Node Count     =         79 
+Toggled Node Count   =         75 
+Untoggled Node Count =          4 
+
+Toggle Coverage      =      94.93% (150 of 158 bins)
+
+=================================================================================
+=== File: rtl/top/zigbee_top.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    488       447        41     91.59
+
+================================Toggle Details================================
+
+Toggle Coverage for File rtl/top/zigbee_top.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+          9                           i_cfg_top[2]           0           1       50.00 
+         35                           w_msk_out[5]           0           0        0.00 
+         35                          w_msk_out[13]           0           0        0.00 
+         36                        w_cordic_out[9]           0           0        0.00 
+         36                        w_cordic_out[8]           0           0        0.00 
+         36                       w_cordic_out[13]           0           0        0.00 
+         36                       w_cordic_out[12]           0           0        0.00 
+         36                       w_cordic_out[11]           0           0        0.00 
+         36                       w_cordic_out[10]           0           0        0.00 
+         37                           w_cdr_out[9]           0           0        0.00 
+         37                           w_cdr_out[8]           0           0        0.00 
+         37                           w_cdr_out[7]           0           0        0.00 
+         37                           w_cdr_out[6]           0           0        0.00 
+         37                           w_cdr_out[5]           0           0        0.00 
+         37                           w_cdr_out[4]           0           0        0.00 
+         37                           w_cdr_out[3]           0           0        0.00 
+         37                           w_cdr_out[2]           0           0        0.00 
+         37                          w_cdr_out[13]           0           0        0.00 
+         37                          w_cdr_out[12]           0           0        0.00 
+         37                          w_cdr_out[11]           0           0        0.00 
+         37                          w_cdr_out[10]           0           0        0.00 
+
+Total Node Count     =        244 
+Toggled Node Count   =        223 
+Untoggled Node Count =         21 
+
+Toggle Coverage      =      91.59% (447 of 488 bins)
+
+=================================================================================
+=== File: tb/top/cdr/cdr_tasks_pkg.sv
+=================================================================================
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms              4         2         2     50.00
+
+================================Condition Details================================
+
+Condition Coverage for file tb/top/cdr/cdr_tasks_pkg.sv --
+
+----------------Focused Condition View-------------------
+Line       61 Item    1  ((timeout < 50) && ~data_ok)
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+  (timeout < 50)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  (timeout < 50)_0      -                             
+  Row   2:          1  (timeout < 50)_1      ~data_ok                      
+  Row   3:          1  data_ok_0             (timeout < 50)                
+  Row   4:          1  data_ok_1             (timeout < 50)                
+
+----------------Focused Condition View-------------------
+Line       187 Item    1  (~get_ack(o_bus_out) && (timeout < 20))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+          Input Term   Covered  Reason for no coverage   Hint
+         -----------  --------  -----------------------  --------------
+      (timeout < 20)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  get_ack(o_bus_out)_0  (timeout < 20)                
+  Row   2:          1  get_ack(o_bus_out)_1  -                             
+  Row   3:    ***0***  (timeout < 20)_0      ~get_ack(o_bus_out)           
+  Row   4:          1  (timeout < 20)_1      ~get_ack(o_bus_out)           
+
+
+
+=================================================================================
+=== File: tb/top/interface/interface_tasks_pkg.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                          619       563        56     90.95
+
+================================Statement Details================================
+
+Statement Coverage for file tb/top/interface/interface_tasks_pkg.sv --
+
+    829             1             $display("\n========== [INTERFACE TEST PLAN SMOKE] Start ==========\n");
+    832             1             $display("[SMOKE] 1/5: Reset/smoke test...");
+    833             1             `apply_reset(5);
+    833             2     
+    833             3     
+    833             4     
+    834             1             `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+    834             2     
+    835             1             repeat(2) @(posedge i_clk);
+    835             2     
+    836             1             run_interface_tc_t0_reset_smoke(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
+    837             1             repeat(5) @(posedge i_clk);
+    837             2     
+    840             1             $display("[SMOKE] 2/5: APB registers test...");
+    841             1             `apply_reset(5);
+    841             2     
+    841             3     
+    841             4     
+    842             1             `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+    842             2     
+    843             1             repeat(2) @(posedge i_clk);
+    843             2     
+    844             1             run_interface_tc_t1_apb_regs(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
+    845             1             repeat(5) @(posedge i_clk);
+    845             2     
+    848             1             $display("[SMOKE] 3/5: TX FIFO basic test...");
+    849             1             `apply_reset(5);
+    849             2     
+    849             3     
+    849             4     
+    850             1             `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+    850             2     
+    851             1             run_interface_tc_fifo_tx_basic(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
+    852             1             repeat(5) @(posedge i_clk);
+    852             2     
+    855             1             $display("[SMOKE] 4/5: RX nominal test...");
+    856             1             `apply_reset(5);
+    856             2     
+    856             3     
+    856             4     
+    857             1             `set_config_wrapper(i_clk, i_cfg_local, 3'b000);  // CFG_RX_ONLY
+    857             2     
+    858             1             run_interface_tc_rx_nominal(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
+    859             1             repeat(5) @(posedge i_clk);
+    859             2     
+    862             1             $display("[SMOKE] 5/5: TX FIFO full test...");
+    863             1             `apply_reset(5);
+    863             2     
+    863             3     
+    863             4     
+    864             1             `set_config_wrapper(i_clk, i_cfg_local, 3'b100);  // CFG_FIFO_TX
+    864             2     
+    865             1             run_interface_tc_fifo_tx_full(i_clk, i_rst_n, i_cfg_local, i_top_cfg, i_bus_in, o_bus_out);
+    866             1             repeat(5) @(posedge i_clk);
+    866             2     
+    868             1             $display("\n========== [INTERFACE TEST PLAN SMOKE] PASS ==========\n");
+
+=================================================================================
+=== File: tb/top/msk/msk_tasks_pkg.sv
+=================================================================================
+Expression Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Expression Terms             6         0         6      0.00
+
+================================Expression Details================================
+
+Expression Coverage for file tb/top/msk/msk_tasks_pkg.sv --
+
+-----------Focused Expression View (Bimodal)------------
+Line       74 Item    1  (bus_val[3] ~^ dbg_expected)
+Expression totals: 0 of 2 input terms covered = 0.00%
+
+      Input Term   Covered  Reason for no coverage                  Hint
+     -----------  --------  --------------------------------------  --------------
+      bus_val[3]         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->1
+    dbg_expected         N  '_1' hit but '_0' is not hit           Hit '_0' for output ->1
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target            Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------  -----------------------------------
+ Row   1:           1           0  bus_val[3]_0          -                                  
+ Row   2:           0           0  bus_val[3]_1          -                                  
+ Row   3:           0           0  dbg_expected_0        -                                  
+ Row   4:           1           0  dbg_expected_1        -                                  
+
+-----------Focused Expression View (Bimodal)------------
+Line       81 Item    1  (bus_val[3] ~^ dbg_expected)
+Expression totals: 0 of 2 input terms covered = 0.00%
+
+      Input Term   Covered  Reason for no coverage                  Hint
+     -----------  --------  --------------------------------------  --------------
+      bus_val[3]         N  '_1' hit but '_0' is not hit           Hit '_0' for output ->1
+    dbg_expected         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->1
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target            Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------  -----------------------------------
+ Row   1:           0           0  bus_val[3]_0          -                                  
+ Row   2:           1           0  bus_val[3]_1          -                                  
+ Row   3:           1           0  dbg_expected_0        -                                  
+ Row   4:           0           0  dbg_expected_1        -                                  
+
+-----------Focused Expression View (Bimodal)------------
+Line       88 Item    1  (bus_val[3] ~^ dbg_expected)
+Expression totals: 0 of 2 input terms covered = 0.00%
+
+      Input Term   Covered  Reason for no coverage                  Hint
+     -----------  --------  --------------------------------------  --------------
+      bus_val[3]         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->0
+    dbg_expected         N  '_0' hit but '_1' is not hit           Hit '_1' for output ->0
+
+    Rows:   Hits(->0)   Hits(->1)  FEC Target            Non-masking condition(s)           
+
+---------  ----------  ----------  --------------------  -----------------------------------
+ Row   1:           0           1  bus_val[3]_0          -                                  
+ Row   2:           0           0  bus_val[3]_1          -                                  
+ Row   3:           0           1  dbg_expected_0        -                                  
+ Row   4:           0           0  dbg_expected_1        -                                  
+
+
+
+=================================================================================
+=== File: tb/top/top_tb.sv
+=================================================================================
+Toggle Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Toggle Bins                    110        97        13     88.18
+
+================================Toggle Details================================
+
+Toggle Coverage for File tb/top/top_tb.sv --
+
+       Line                                   Node      1H->0L      0L->1H  "Coverage"
+--------------------------------------------------------------------------------------
+         28                           i_top_cfg[2]           0           1       50.00 
+         34                                tb_i[3]           0           0        0.00 
+         34                                tb_i[2]           1           0       50.00 
+         34                                tb_i[1]           1           0       50.00 
+         34                                tb_i[0]           1           0       50.00 
+         35                                tb_q[3]           1           0       50.00 
+         35                                tb_q[2]           0           0        0.00 
+         35                                tb_q[1]           0           0        0.00 
+         35                                tb_q[0]           0           0        0.00 
+
+Total Node Count     =         55 
+Toggled Node Count   =         46 
+Untoggled Node Count =          9 
+
+Toggle Coverage      =      88.18% (97 of 110 bins)
+
+=================================================================================
+=== File: tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           96        93         3     96.87
+
+================================Statement Details================================
+
+Statement Coverage for file tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv --
+
+    110             1                     @(posedge i_clk);
+    111             1                     timeout++;
+    114             1                 if (timeout >= 20) $error("  [NCO] FAIL: L'oscillateur est bloque !");
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                         6         4         2     66.66
+
+================================Branch Details================================
+
+Branch Coverage for file tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv --
+
+------------------------------------IF Branch------------------------------------
+    114                                        1     Count coming in to IF
+    114             1                    ***0***                 if (timeout >= 20) $error("  [NCO] FAIL: L'oscillateur est bloque !");
+    115             1                          1                 else $display("  [NCO] PASS: Tick d'horloge genere avec succes.");
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    183                                        1     Count coming in to IF
+    183             1                          1                         if (o_bus_out[1] == 1'b1) begin
+                                         ***0***     All False Count
+Branch totals: 1 hit of 2 branches = 50.00%
+
+
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms              5         1         4     20.00
+
+================================Condition Details================================
+
+Condition Coverage for file tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv --
+
+----------------Focused Condition View-------------------
+Line       109 Item    1  (~o_bus_out[0] && (timeout < 20))
+Condition totals: 0 of 2 input terms covered = 0.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+    o_bus_out[0]         N  '_0' not hit             Hit '_0'
+  (timeout < 20)         N  No hits                  Hit '_0' and '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  o_bus_out[0]_0        (timeout < 20)                
+  Row   2:          1  o_bus_out[0]_1        -                             
+  Row   3:    ***0***  (timeout < 20)_0      ~o_bus_out[0]                 
+  Row   4:    ***0***  (timeout < 20)_1      ~o_bus_out[0]                 
+
+----------------Focused Condition View-------------------
+Line       114 Item    1  (timeout >= 20)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+  (timeout >= 20)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (timeout >= 20)_0     -                             
+  Row   2:    ***0***  (timeout >= 20)_1     -                             
+
+----------------Focused Condition View-------------------
+Line       180 Item    1  ((timeout < 50) && ~data_ok)
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+  (timeout < 50)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  (timeout < 50)_0      -                             
+  Row   2:          1  (timeout < 50)_1      ~data_ok                      
+  Row   3:          1  data_ok_0             (timeout < 50)                
+  Row   4:          1  data_ok_1             (timeout < 50)                
+
+
+
+=================================================================================
+=== File: tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv
+=================================================================================
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                         5         4         1     80.00
+
+================================Branch Details================================
+
+Branch Coverage for file tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv --
+
+------------------------------------CASE Branch------------------------------------
+                                         ***0***     All False Count
+Branch totals: 4 hits of 5 branches = 80.00%
+
+
+
+=================================================================================
+=== File: tb/wrappers/demod/demod_wrapper_tasks_pkg.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                          107       105         2     98.13
+
+================================Statement Details================================
+
+Statement Coverage for file tb/wrappers/demod/demod_wrapper_tasks_pkg.sv --
+
+    180             1                     $error("  [NORMAL] FAIL : La chaine I est muette !");
+    198             1                     $error("  [NORMAL] FAIL : La chaine Q est muette !");
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                         4         2         2     50.00
+
+================================Branch Details================================
+
+Branch Coverage for file tb/wrappers/demod/demod_wrapper_tasks_pkg.sv --
+
+------------------------------------IF Branch------------------------------------
+    177                                        1     Count coming in to IF
+    177             1                          1                 if (res_i != 0)
+    179             1                    ***0***                 else
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    195                                        1     Count coming in to IF
+    195             1                          1                 if (res_q != 0)
+    197             1                    ***0***                 else
+Branch totals: 1 hit of 2 branches = 50.00%
+
+
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms              2         0         2      0.00
+
+================================Condition Details================================
+
+Condition Coverage for file tb/wrappers/demod/demod_wrapper_tasks_pkg.sv --
+
+----------------Focused Condition View-------------------
+Line       177 Item    1  (res_i != 0)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+    Input Term   Covered  Reason for no coverage   Hint
+   -----------  --------  -----------------------  --------------
+  (res_i != 0)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  (res_i != 0)_0        -                             
+  Row   2:          1  (res_i != 0)_1        -                             
+
+----------------Focused Condition View-------------------
+Line       195 Item    1  (res_q != 0)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+    Input Term   Covered  Reason for no coverage   Hint
+   -----------  --------  -----------------------  --------------
+  (res_q != 0)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  (res_q != 0)_0        -                             
+  Row   2:          1  (res_q != 0)_1        -                             
+
+
+
+=================================================================================
+=== File: tb/wrappers/interface/interface_wrapper_tasks_pkg.sv
+=================================================================================
+Statement Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                          270       264         6     97.77
+
+================================Statement Details================================
+
+Statement Coverage for file tb/wrappers/interface/interface_wrapper_tasks_pkg.sv --
+
+    98              1                     $error("  [TX_ONLY] Timeout: TX n'a jamais demarre !");
+    120             2                 while (o_bus_out[13] == 1'b1) @(posedge i_clk);
+    280             1                     $error("  [LOOPBACK] Timeout: Le TX n'a pas demarre !");
+    301             1                     @(posedge i_clk);
+    302             1                     timeout++;
+    656             1                     if (o_bus_out[12] == 1'b1) cycle_count++;
+Branch Coverage:
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Branches                        10         7         3     70.00
+
+================================Branch Details================================
+
+Branch Coverage for file tb/wrappers/interface/interface_wrapper_tasks_pkg.sv --
+
+------------------------------------IF Branch------------------------------------
+    97                                         1     Count coming in to IF
+    97              1                    ***0***                 if (timeout >= 50) begin
+    99              1                          1                 end else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    279                                        1     Count coming in to IF
+    279             1                    ***0***                 if (timeout >= 50) begin
+    281             1                          1                 end else begin
+Branch totals: 1 hit of 2 branches = 50.00%
+
+------------------------------------IF Branch------------------------------------
+    656                                       20     Count coming in to IF
+    656             1                    ***0***                     if (o_bus_out[12] == 1'b1) cycle_count++;
+                                              20     All False Count
+Branch totals: 1 hit of 2 branches = 50.00%
+
+
+Condition Coverage:
+    Enabled Coverage            Active   Covered    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    FEC Condition Terms             16         7         9     43.75
+
+================================Condition Details================================
+
+Condition Coverage for file tb/wrappers/interface/interface_wrapper_tasks_pkg.sv --
+
+----------------Focused Condition View-------------------
+Line       92 Item    1  (~o_bus_out[13] && (timeout < 50))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+  (timeout < 50)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  o_bus_out[13]_0       (timeout < 50)                
+  Row   2:          1  o_bus_out[13]_1       -                             
+  Row   3:    ***0***  (timeout < 50)_0      ~o_bus_out[13]                
+  Row   4:          1  (timeout < 50)_1      ~o_bus_out[13]                
+
+----------------Focused Condition View-------------------
+Line       97 Item    1  (timeout >= 50)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+  (timeout >= 50)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (timeout >= 50)_0     -                             
+  Row   2:    ***0***  (timeout >= 50)_1     -                             
+
+
+----------------Focused Condition View-------------------
+Line       170 Item    1  (o_bus_out[9] && (timeout < 50))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+  (timeout < 50)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  o_bus_out[9]_0        -                             
+  Row   2:          1  o_bus_out[9]_1        (timeout < 50)                
+  Row   3:    ***0***  (timeout < 50)_0      o_bus_out[9]                  
+  Row   4:          1  (timeout < 50)_1      o_bus_out[9]                  
+
+----------------Focused Condition View-------------------
+Line       274 Item    1  (~o_bus_out[13] && (timeout < 50))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+  (timeout < 50)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  o_bus_out[13]_0       (timeout < 50)                
+  Row   2:          1  o_bus_out[13]_1       -                             
+  Row   3:    ***0***  (timeout < 50)_0      ~o_bus_out[13]                
+  Row   4:          1  (timeout < 50)_1      ~o_bus_out[13]                
+
+----------------Focused Condition View-------------------
+Line       279 Item    1  (timeout >= 50)
+Condition totals: 0 of 1 input term covered = 0.00%
+
+       Input Term   Covered  Reason for no coverage   Hint
+      -----------  --------  -----------------------  --------------
+  (timeout >= 50)         N  '_1' not hit             Hit '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:          1  (timeout >= 50)_0     -                             
+  Row   2:    ***0***  (timeout >= 50)_1     -                             
+
+----------------Focused Condition View-------------------
+Line       300 Item    1  (~o_bus_out[10] && (timeout < 50))
+Condition totals: 0 of 2 input terms covered = 0.00%
+
+      Input Term   Covered  Reason for no coverage   Hint
+     -----------  --------  -----------------------  --------------
+   o_bus_out[10]         N  '_0' not hit             Hit '_0'
+  (timeout < 50)         N  No hits                  Hit '_0' and '_1'
+
+     Rows:       Hits  FEC Target            Non-masking condition(s)      
+ ---------  ---------  --------------------  -------------------------     
+  Row   1:    ***0***  o_bus_out[10]_0       (timeout < 50)                
+  Row   2:          1  o_bus_out[10]_1       -                             
+  Row   3:    ***0***  (timeout < 50)_0      ~o_bus_out[10]                
+  Row   4:    ***0***  (timeout < 50)_1      ~o_bus_out[10]                
+
+
+----------------Focused Condition View-------------------
+Line       620 Item    1  (~o_bus_out[12] && (cycle_count < 100))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+           Input Term   Covered  Reason for no coverage   Hint
+          -----------  --------  -----------------------  --------------
+  (cycle_count < 100)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target             Non-masking condition(s)      
+ ---------  ---------  --------------------   -------------------------     
+  Row   1:          1  o_bus_out[12]_0        (cycle_count < 100)           
+  Row   2:          1  o_bus_out[12]_1        -                             
+  Row   3:    ***0***  (cycle_count < 100)_0  ~o_bus_out[12]                
+  Row   4:          1  (cycle_count < 100)_1  ~o_bus_out[12]                
+
+----------------Focused Condition View-------------------
+Line       639 Item    1  (~o_bus_out[12] && (cycle_count < 100))
+Condition totals: 1 of 2 input terms covered = 50.00%
+
+           Input Term   Covered  Reason for no coverage   Hint
+          -----------  --------  -----------------------  --------------
+  (cycle_count < 100)         N  '_0' not hit             Hit '_0'
+
+     Rows:       Hits  FEC Target             Non-masking condition(s)      
+ ---------  ---------  --------------------   -------------------------     
+  Row   1:          1  o_bus_out[12]_0        (cycle_count < 100)           
+  Row   2:          1  o_bus_out[12]_1        -                             
+  Row   3:    ***0***  (cycle_count < 100)_0  ~o_bus_out[12]                
+  Row   4:          1  (cycle_count < 100)_1  ~o_bus_out[12]                
+
+
+
+
+ASSERTION RESULTS:
+--------------------------------------------------------------------
+Name                 File(Line)                   Failure      Pass 
+                                                  Count        Count
+--------------------------------------------------------------------
+/msk_wrapper_tasks_pkg/test_msk_wrapper_normal/#ublk#260305223#18/immed__38
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(38)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_normal/#ublk#260305223#18/immed__37
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(37)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_normal/#ublk#260305223#18/immed__34
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(34)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_debug_enc/#ublk#260305223#52/immed__65
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(65)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_debug_demux/#ublk#260305223#80/immed__95
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(95)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_debug_shaping/#ublk#260305223#110/immed__124
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(124)
+                                                        0          1
+/msk_wrapper_tasks_pkg/test_msk_wrapper_debug_all/#ublk#260305223#139/immed__154
+                     tb/wrappers/msk/msk_wrapper_tasks_pkg.sv(154)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_debug_cordic/#ublk#20516631#19/immed__48
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(48)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_debug_cordic/#ublk#20516631#19/immed__36
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(36)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_debug_deriv/#anonblk#20516631#77#4#/#ublk#20516631#77/immed__89
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(89)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_debug_filter/#ublk#20516631#106/immed__122
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(122)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_normal/#ublk#20516631#138/immed__184
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(184)
+                                                        0          1
+/cordic_wrapper_tasks_pkg/test_cordic_wrapper_normal/#ublk#20516631#138/immed__159
+                     tb/wrappers/cordic/cordic_wrapper_tasks_pkg.sv(159)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_debug_decision/#ublk#142863959#18/immed__37
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(37)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_debug_decision/#ublk#142863959#18/immed__29
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(29)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_debug_lf/#ublk#142863959#53/immed__82
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(82)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_debug_lf/#ublk#142863959#53/immed__68
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(68)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_debug_pd/#ublk#142863959#128/immed__149
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(149)
+                                                        0          1
+/cdr_wrapper_tasks_pkg/test_cdr_wrapper_normal/#ublk#142863959#166/immed__190
+                     tb/wrappers/cdr/cdr_wrapper_tasks_pkg.sv(190)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode1_debug_cordic/#ublk#81308439#22/immed__43
+                     tb/top/cordic/cordic_tasks_pkg.sv(43)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode1_debug_cordic/#ublk#81308439#22/immed__35
+                     tb/top/cordic/cordic_tasks_pkg.sv(35)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode2_debug_deriv/#ublk#81308439#53/immed__74
+                     tb/top/cordic/cordic_tasks_pkg.sv(74)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode2_debug_deriv/#ublk#81308439#53/immed__67
+                     tb/top/cordic/cordic_tasks_pkg.sv(67)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode3_debug_filter/#ublk#81308439#84/immed__96
+                     tb/top/cordic/cordic_tasks_pkg.sv(96)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode4_cordic_deriv/#ublk#81308439#106/immed__119
+                     tb/top/cordic/cordic_tasks_pkg.sv(119)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode5_full_chain/#ublk#81308439#129/immed__151
+                     tb/top/cordic/cordic_tasks_pkg.sv(151)
+                                                        0          1
+/cordic_tasks_pkg/test_cordic_mode5_full_chain/#ublk#81308439#129/immed__149
+                     tb/top/cordic/cordic_tasks_pkg.sv(149)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode0_normal/#ublk#26283511#46/immed__69
+                     tb/top/cdr/cdr_tasks_pkg.sv(69)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode0_normal/#ublk#26283511#46/immed__49
+                     tb/top/cdr/cdr_tasks_pkg.sv(49)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode1_debug_decision/#ublk#26283511#78/immed__99
+                     tb/top/cdr/cdr_tasks_pkg.sv(99)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode1_debug_decision/#ublk#26283511#78/immed__92
+                     tb/top/cdr/cdr_tasks_pkg.sv(92)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode1_debug_decision/#ublk#26283511#78/immed__81
+                     tb/top/cdr/cdr_tasks_pkg.sv(81)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode2_debug_pd/#ublk#26283511#108/immed__129
+                     tb/top/cdr/cdr_tasks_pkg.sv(129)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode2_debug_pd/#ublk#26283511#108/immed__111
+                     tb/top/cdr/cdr_tasks_pkg.sv(111)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode3_debug_lf/#ublk#26283511#138/immed__164
+                     tb/top/cdr/cdr_tasks_pkg.sv(164)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode3_debug_lf/#ublk#26283511#138/immed__154
+                     tb/top/cdr/cdr_tasks_pkg.sv(154)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode3_debug_lf/#ublk#26283511#138/immed__141
+                     tb/top/cdr/cdr_tasks_pkg.sv(141)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode4_debug_nco/#ublk#26283511#174/immed__192
+                     tb/top/cdr/cdr_tasks_pkg.sv(192)
+                                                        0          1
+/cdr_tasks_pkg/test_cdr_mode4_debug_nco/#ublk#26283511#174/immed__177
+                     tb/top/cdr/cdr_tasks_pkg.sv(177)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_reset_smoke/#ublk#242444119#76/immed__87
+                     tb/top/demod/demod_tasks_pkg.sv(87)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_reset_smoke/#ublk#242444119#76/immed__81
+                     tb/top/demod/demod_tasks_pkg.sv(81)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_reset_smoke/#ublk#242444119#76/immed__79
+                     tb/top/demod/demod_tasks_pkg.sv(79)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_normal_basic/#ublk#242444119#101/immed__127
+                     tb/top/demod/demod_tasks_pkg.sv(127)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_normal_basic/#ublk#242444119#101/immed__122
+                     tb/top/demod/demod_tasks_pkg.sv(122)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_normal_basic/#ublk#242444119#101/immed__106
+                     tb/top/demod/demod_tasks_pkg.sv(106)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_normal_basic/#ublk#242444119#101/immed__104
+                     tb/top/demod/demod_tasks_pkg.sv(104)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_i/#ublk#242444119#142/immed__167
+                     tb/top/demod/demod_tasks_pkg.sv(167)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_i/#ublk#242444119#142/immed__162
+                     tb/top/demod/demod_tasks_pkg.sv(162)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_i/#ublk#242444119#142/immed__147
+                     tb/top/demod/demod_tasks_pkg.sv(147)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_i/#ublk#242444119#142/immed__145
+                     tb/top/demod/demod_tasks_pkg.sv(145)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_q/#ublk#242444119#182/immed__207
+                     tb/top/demod/demod_tasks_pkg.sv(207)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_q/#ublk#242444119#182/immed__202
+                     tb/top/demod/demod_tasks_pkg.sv(202)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_q/#ublk#242444119#182/immed__187
+                     tb/top/demod/demod_tasks_pkg.sv(187)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_demod_q/#ublk#242444119#182/immed__185
+                     tb/top/demod/demod_tasks_pkg.sv(185)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_i/#ublk#242444119#221/immed__245
+                     tb/top/demod/demod_tasks_pkg.sv(245)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_i/#ublk#242444119#221/immed__240
+                     tb/top/demod/demod_tasks_pkg.sv(240)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_i/#ublk#242444119#221/immed__226
+                     tb/top/demod/demod_tasks_pkg.sv(226)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_i/#ublk#242444119#221/immed__224
+                     tb/top/demod/demod_tasks_pkg.sv(224)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_q/#ublk#242444119#259/immed__283
+                     tb/top/demod/demod_tasks_pkg.sv(283)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_q/#ublk#242444119#259/immed__278
+                     tb/top/demod/demod_tasks_pkg.sv(278)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_q/#ublk#242444119#259/immed__264
+                     tb/top/demod/demod_tasks_pkg.sv(264)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_fir_q/#ublk#242444119#259/immed__262
+                     tb/top/demod/demod_tasks_pkg.sv(262)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_i/#ublk#242444119#297/immed__317
+                     tb/top/demod/demod_tasks_pkg.sv(317)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_i/#ublk#242444119#297/immed__302
+                     tb/top/demod/demod_tasks_pkg.sv(302)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_i/#ublk#242444119#297/immed__300
+                     tb/top/demod/demod_tasks_pkg.sv(300)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_q/#ublk#242444119#331/immed__351
+                     tb/top/demod/demod_tasks_pkg.sv(351)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_q/#ublk#242444119#331/immed__336
+                     tb/top/demod/demod_tasks_pkg.sv(336)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_debug_chain_q/#ublk#242444119#331/immed__334
+                     tb/top/demod/demod_tasks_pkg.sv(334)
+                                                        0          1
+/demod_tasks_pkg/run_demod_tc_mode_transitions/#ublk#242444119#364/immed__367
+                     tb/top/demod/demod_tasks_pkg.sv(367)
+                                                        0          1
+/demod_wrapper_tasks_pkg/test_demod_wrapper_debug_demod/#ublk#116212151#22/immed__41
+                     tb/wrappers/demod/demod_wrapper_tasks_pkg.sv(41)
+                                                        0          1
+/demod_wrapper_tasks_pkg/test_demod_wrapper_debug_fir/#ublk#116212151#68/immed__84
+                     tb/wrappers/demod/demod_wrapper_tasks_pkg.sv(84)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_basic_operation/#ublk#243928551#29/immed__50
+                     tb/top/msk/msk_tasks_pkg.sv(50)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_basic_operation/#ublk#243928551#29/immed__48
+                     tb/top/msk/msk_tasks_pkg.sv(48)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_basic_operation/#ublk#243928551#29/immed__46
+                     tb/top/msk/msk_tasks_pkg.sv(46)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_enc/#ublk#243928551#60/immed__89
+                     tb/top/msk/msk_tasks_pkg.sv(89)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_enc/#ublk#243928551#60/immed__82
+                     tb/top/msk/msk_tasks_pkg.sv(82)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_enc/#ublk#243928551#60/immed__75
+                     tb/top/msk/msk_tasks_pkg.sv(75)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_demux/#ublk#243928551#98/immed__121
+                     tb/top/msk/msk_tasks_pkg.sv(121)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_demux/#ublk#243928551#98/immed__115
+                     tb/top/msk/msk_tasks_pkg.sv(115)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_demux/#ublk#243928551#98/immed__109
+                     tb/top/msk/msk_tasks_pkg.sv(109)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_shaping/#ublk#243928551#132/immed__153
+                     tb/top/msk/msk_tasks_pkg.sv(153)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_shaping/#ublk#243928551#132/immed__151
+                     tb/top/msk/msk_tasks_pkg.sv(151)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_shaping/#ublk#243928551#132/immed__149
+                     tb/top/msk/msk_tasks_pkg.sv(149)
+                                                        0          1
+/msk_tasks_pkg/test_msk_top_debug_all/#ublk#243928551#162/immed__177
+                     tb/top/msk/msk_tasks_pkg.sv(177)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t0_reset_smoke/#ublk#267044135#116/immed__139
+                     tb/top/interface/interface_tasks_pkg.sv(139)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t0_reset_smoke/#ublk#267044135#116/immed__134
+                     tb/top/interface/interface_tasks_pkg.sv(134)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t0_reset_smoke/#ublk#267044135#116/immed__129
+                     tb/top/interface/interface_tasks_pkg.sv(129)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t0_reset_smoke/#ublk#267044135#116/immed__124
+                     tb/top/interface/interface_tasks_pkg.sv(124)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t0_reset_smoke/#ublk#267044135#116/immed__119
+                     tb/top/interface/interface_tasks_pkg.sv(119)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__174
+                     tb/top/interface/interface_tasks_pkg.sv(174)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__172
+                     tb/top/interface/interface_tasks_pkg.sv(172)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__170
+                     tb/top/interface/interface_tasks_pkg.sv(170)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__168
+                     tb/top/interface/interface_tasks_pkg.sv(168)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__166
+                     tb/top/interface/interface_tasks_pkg.sv(166)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__162
+                     tb/top/interface/interface_tasks_pkg.sv(162)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_t1_apb_regs/#ublk#267044135#151/immed__156
+                     tb/top/interface/interface_tasks_pkg.sv(156)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_basic/#ublk#267044135#192/immed__248
+                     tb/top/interface/interface_tasks_pkg.sv(248)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_basic/#ublk#267044135#192/immed__220
+                     tb/top/interface/interface_tasks_pkg.sv(220)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_basic/#ublk#267044135#192/immed__201
+                     tb/top/interface/interface_tasks_pkg.sv(201)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_basic/#ublk#267044135#192/#ublk#267044135#227/immed__241
+                     tb/top/interface/interface_tasks_pkg.sv(241)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__331
+                     tb/top/interface/interface_tasks_pkg.sv(331)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__329
+                     tb/top/interface/interface_tasks_pkg.sv(329)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__307
+                     tb/top/interface/interface_tasks_pkg.sv(307)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__297
+                     tb/top/interface/interface_tasks_pkg.sv(297)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__275
+                     tb/top/interface/interface_tasks_pkg.sv(275)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/immed__273
+                     tb/top/interface/interface_tasks_pkg.sv(273)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/#ublk#267044135#287/immed__288
+                     tb/top/interface/interface_tasks_pkg.sv(288)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/#ublk#267044135#290/immed__292
+                     tb/top/interface/interface_tasks_pkg.sv(292)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/#ublk#267044135#312/immed__324
+                     tb/top/interface/interface_tasks_pkg.sv(324)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_tx_full/#ublk#267044135#266/#ublk#267044135#312/immed__320
+                     tb/top/interface/interface_tasks_pkg.sv(320)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/immed__436
+                     tb/top/interface/interface_tasks_pkg.sv(436)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/immed__422
+                     tb/top/interface/interface_tasks_pkg.sv(422)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/immed__408
+                     tb/top/interface/interface_tasks_pkg.sv(408)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/#ublk#267044135#368/immed__375
+                     tb/top/interface/interface_tasks_pkg.sv(375)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/#ublk#267044135#390/immed__403
+                     tb/top/interface/interface_tasks_pkg.sv(403)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_fifo_sequential_ops/#ublk#267044135#349/#ublk#267044135#425/immed__432
+                     tb/top/interface/interface_tasks_pkg.sv(432)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_nominal/#ublk#267044135#452/immed__490
+                     tb/top/interface/interface_tasks_pkg.sv(490)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_nominal/#ublk#267044135#452/immed__483
+                     tb/top/interface/interface_tasks_pkg.sv(483)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_nominal/#ublk#267044135#452/immed__477
+                     tb/top/interface/interface_tasks_pkg.sv(477)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_multiple_bytes/#ublk#267044135#507/immed__543
+                     tb/top/interface/interface_tasks_pkg.sv(543)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_multiple_bytes/#ublk#267044135#507/#ublk#267044135#532/immed__535
+                     tb/top/interface/interface_tasks_pkg.sv(535)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_data_patterns/#ublk#267044135#593/immed__596
+                     tb/top/interface/interface_tasks_pkg.sv(596)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_overflow_error/#ublk#267044135#616/immed__660
+                     tb/top/interface/interface_tasks_pkg.sv(660)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_rx_overflow_error/#ublk#267044135#616/immed__648
+                     tb/top/interface/interface_tasks_pkg.sv(648)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_config_transitions/#ublk#267044135#679/immed__734
+                     tb/top/interface/interface_tasks_pkg.sv(734)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_config_transitions/#ublk#267044135#679/immed__706
+                     tb/top/interface/interface_tasks_pkg.sv(706)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_stress_fifo_ops/#ublk#267044135#760/immed__785
+                     tb/top/interface/interface_tasks_pkg.sv(785)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_stress_fifo_ops/#ublk#267044135#760/#ublk#267044135#771/immed__779
+                     tb/top/interface/interface_tasks_pkg.sv(779)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_stress_fifo_ops/#ublk#267044135#791/immed__814
+                     tb/top/interface/interface_tasks_pkg.sv(814)
+                                                        0          1
+/interface_tasks_pkg/run_interface_tc_stress_fifo_ops/#ublk#267044135#791/immed__802
+                     tb/top/interface/interface_tasks_pkg.sv(802)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_tx_only/#ublk#256586791#47/immed__54
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(54)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_tx_only/#ublk#256586791#47/#ublk#256586791#99/immed__113
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(113)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_rx_only/#ublk#256586791#137/immed__189
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(189)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_rx_only/#ublk#256586791#137/immed__176
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(176)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_rx_only/#ublk#256586791#137/immed__144
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(144)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_loopback/#ublk#256586791#209/immed__319
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(319)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_loopback/#ublk#256586791#209/immed__215
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(215)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/immed__400
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(400)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/immed__373
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(373)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/immed__368
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(368)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/immed__350
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(350)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/immed__344
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(344)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_tx/#ublk#256586791#338/#anonblk#256586791#380#4#/#ublk#256586791#380/immed__393
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(393)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/immed__483
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(483)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/immed__454
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(454)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/immed__449
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(449)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/immed__431
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(431)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/immed__425
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(425)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_fifo_rx/#ublk#256586791#419/#anonblk#256586791#461#4#/#ublk#256586791#461/immed__476
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(476)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_serdes/#ublk#256586791#503/immed__577
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(577)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_serdes/#ublk#256586791#503/immed__543
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(543)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_serdes/#ublk#256586791#503/immed__509
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(509)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_serdes/#ublk#256586791#503/#anonblk#256586791#555#4#/#ublk#256586791#561/immed__566
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(566)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_baud/#ublk#256586791#595/immed__659
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(659)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_baud/#ublk#256586791#595/immed__644
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(644)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_baud/#ublk#256586791#595/immed__625
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(625)
+                                                        0          1
+/interface_wrapper_tasks_pkg/test_interface_wrapper_baud/#ublk#256586791#595/immed__602
+                     tb/wrappers/interface/interface_wrapper_tasks_pkg.sv(602)
+                                                        0          1
+
+Total Coverage By File (code coverage only, filtered view): 78.79%
+
