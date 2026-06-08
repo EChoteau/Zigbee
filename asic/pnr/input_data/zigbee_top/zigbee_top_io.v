@@ -17,8 +17,8 @@ module zigbee_top_io (
     input  [21:0] i_bus_in,
     output [13:0] o_bus_out,
 
-	inout VDD,
-	inout GND
+	inout vdd,
+	inout gnd
 
 );
 
