@@ -15,7 +15,10 @@ module zigbee_top_io (
 
     // Test bus ports (external interface)
     input  [21:0] i_bus_in,
-    output [13:0] o_bus_out
+    output [13:0] o_bus_out,
+
+	inout VDD,
+	inout GND
 
 );
 
@@ -59,6 +62,11 @@ zigbee_top zigbee_top_inst(
 ////////////////////////////
 //  IO PAD 
 ///////////////////////////
+
+VDD3ALLP PWR1 ( .A(VDD) );
+GND3ALLP GND1 ( .A(GND) );
+VDD3ALLP PWR2 ( .A(VDD) );
+GND3ALLP GND2 ( .A(GND) );
 
 // --- INPUT ---
 // System signals
