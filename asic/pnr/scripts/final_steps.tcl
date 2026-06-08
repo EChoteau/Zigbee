@@ -38,13 +38,13 @@ saveNetlist "$output_root/${module_name}_postroute.v"
 puts "=== Save Physical Netlist for Virtuoso/LVS ==="
 saveNetlist "zigbee_top_lvs.v" \
     -phys \
-    -includePowerGround \
-    -excludeCellInst {FILL25 FILL10 FILL5 FILL2 FILL1 \
-                      FILLANT25 FILLANT10 FILLANT5 FILLANT2 FILLANT1 \
-                      ENDCAPL ENDCAPR \
-                      PERI_SPACER_100_P PERI_SPACER_50_P PERI_SPACER_20_P \
-                      PERI_SPACER_10_P PERI_SPACER_5_P PERI_SPACER_2_P \
-                      PERI_SPACER_1_P PERI_SPACER_01_P}
+    #-includePowerGround \
+    # -excludeCellInst {FILL25 FILL10 FILL5 FILL2 FILL1 \
+    #                   FILLANT25 FILLANT10 FILLANT5 FILLANT2 FILLANT1 \
+    #                   ENDCAPL ENDCAPR \
+    #                   PERI_SPACER_100_P PERI_SPACER_50_P PERI_SPACER_20_P \
+    #                   PERI_SPACER_10_P PERI_SPACER_5_P PERI_SPACER_2_P \
+    #                   PERI_SPACER_1_P PERI_SPACER_01_P}
 
 write_sdf "$output_root/${module_name}_postroute.sdf"
 
