@@ -63,10 +63,10 @@ zigbee_top zigbee_top_inst(
 //  IO PAD 
 ///////////////////////////
 
-VDD3ALLP PWR1 ( .A(VDD) );
-GND3ALLP GND1 ( .A(GND) );
-VDD3ALLP PWR2 ( .A(VDD) );
-GND3ALLP GND2 ( .A(GND) );
+VDD3ALLP PWR1 ( .A(vdd) );
+GND3ALLP GND1 ( .A(gnd) );
+VDD3ALLP PWR2 ( .A(vdd) );
+GND3ALLP GND2 ( .A(gnd) );
 
 // --- INPUT ---
 // System signals
