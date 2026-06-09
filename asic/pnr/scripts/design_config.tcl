@@ -88,6 +88,8 @@ add_text -layer MET4 -pt {1823.0 983.0} -label gnd -drafting true
 # Special_route
 #////////////////////////////////////////////////////
 
+read_power_intent -1801 ../scripts/zigbee_top_io.upf
+commit_power_intent
 #Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
