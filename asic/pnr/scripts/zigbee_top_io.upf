@@ -4,17 +4,17 @@ create_supply_net gnd
 create_supply_port vdd
 create_supply_port gnd
 
-connect_supply_net vdd -port vdd
-connect_supply_net gnd -port gnd
+connect_supply_net vdd -ports vdd
+connect_supply_net gnd -ports gnd
 
-connect_supply_net vdd -pin vdd!
-connect_supply_net gnd -pin gnd!
+connect_supply_net vdd -pins vdd!
+connect_supply_net gnd -pins gnd!
 
 connect_supply_net vdd -pin  PWR*/A
-connect_supply_net gnd -pin  GND*/A
+connect_supply_net gnd -pins  GND*/A
 
-connect_supply_net vdd -pin vdd3r1!
-connect_supply_net vdd -pin vdd3r2!
-connect_supply_net vdd -pin vdd3o!
-connect_supply_net gnd -pin gnd3r!
-connect_supply_net gnd -pin gnd3o!
+connect_supply_net vdd -pins vdd3r1!
+connect_supply_net vdd -pins vdd3r2!
+connect_supply_net vdd -pins vdd3o!
+connect_supply_net gnd -pins gnd3r!
+connect_supply_net gnd -pins gnd3o!
