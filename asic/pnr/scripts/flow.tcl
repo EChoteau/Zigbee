@@ -13,6 +13,8 @@ puts "\n======================================================\n--- 1. INITIALIZ
 source ../scripts/init.tcl
 init_design
 read_power_intent -1801 ../scripts/zigbee_top_io.upf
+commit_power_intent
+
 # ------------------------------------------------------------------------------
 # 2. FLOORPLAN & POWER GRID
 # ------------------------------------------------------------------------------
