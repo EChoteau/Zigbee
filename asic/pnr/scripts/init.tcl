@@ -24,8 +24,9 @@ if {$module_name eq "zigbee_top"} {
 	set init_top_cell "${module_name}"
 }
 
-set init_gnd_net [list gnd! gnd3r! gnd3o!]
-set init_pwr_net [list vdd! vdd3o! vdd3r1! vdd3r2!]
+# set init_gnd_net [list gnd! gnd3r! gnd3o!]
+# set init_pwr_net [list vdd! vdd3o! vdd3r1! vdd3r2!]
+read_power_intent -1801 zigbee_top_io.upf
 set cts_cell_list [list CLKIN0 CLKIN1 CLKIN2 CLKIN3 CLKIN4 CLKIN6 CLKIN8 CLKIN10 CLKIN12 CLKIN15 CLKBU2 CLKBU4 CLKBU6 CLKBU8 CLKBU12 CLKBU15]
 
 

@@ -67,17 +67,23 @@ addStripe -nets {gnd vdd} -layer $stripe_layer -direction $stripe_direction -wid
 # ConnectGlobalNets
 #////////////////////////////////////////////////////
 
-globalNetConnect vdd -type pgpin -pin vdd! -all
-globalNetConnect gnd -type pgpin -pin gnd! -all
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -all
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -all
-globalNetConnect vdd3o!  -type pgpin -pin vdd3o!  -all
-globalNetConnect gnd3r!  -type pgpin -pin gnd3r!  -all
-globalNetConnect gnd3o!  -type pgpin -pin gnd3o!  -all
-globalNetConnect vdd -type pgpin -pin A -inst PWR*
-globalNetConnect gnd -type pgpin -pin A -inst GND*
+# globalNetConnect vdd -type pgpin -pin vdd! -all
+# globalNetConnect gnd -type pgpin -pin gnd! -all
+# globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -all
+# globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -all
+# globalNetConnect vdd3o!  -type pgpin -pin vdd3o!  -all
+# globalNetConnect gnd3r!  -type pgpin -pin gnd3r!  -all
+# globalNetConnect gnd3o!  -type pgpin -pin gnd3o!  -all
+# globalNetConnect vdd -type pgpin -pin A -inst PWR*
+# globalNetConnect gnd -type pgpin -pin A -inst GND*
 
-applyGlobalNets
+# applyGlobalNets
+
+add_text -layer MET4 -pt {50.0 885.0} -label vdd -drafting true
+add_text -layer MET4 -pt {890.0 1826.0} -label vdd -drafting true
+add_text -layer MET4 -pt {55.0 988.0} -label gnd -drafting true
+add_text -layer MET4 -pt {1823.0 983.0} -label gnd -drafting true
+
 #////////////////////////////////////////////////////
 # Special_route
 #////////////////////////////////////////////////////
