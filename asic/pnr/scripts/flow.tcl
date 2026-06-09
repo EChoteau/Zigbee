@@ -15,6 +15,7 @@ init_design
 # set init_ignore_pgpin_polarity_check "gnd!"
 read_power_intent -1801 ../scripts/zigbee_top_io.upf
 commit_power_intent
+saveDesign dbs/init_enc
 
 # ------------------------------------------------------------------------------
 # 2. FLOORPLAN & POWER GRID
