@@ -12,7 +12,7 @@ puts "\n======================================================\n--- 1. INITIALIZ
 # Loading the netlist, libraries (LEF) and power definitions
 source ../scripts/init.tcl
 init_design
-
+read_power_intent -1801 ../scripts/zigbee_top_io.upf
 # ------------------------------------------------------------------------------
 # 2. FLOORPLAN & POWER GRID
 # ------------------------------------------------------------------------------
