@@ -1,22 +1,22 @@
 create_power_domain PD_top -include_scope
 
-create_supply_net VDD -domain PD_top
-create_supply_net GND -domain PD_top
+create_supply_net vdd -domain PD_top
+create_supply_net gnd -domain PD_top
 
-create_supply_port VDD -domain PD_top
-create_supply_port GND -domain PD_top
+create_supply_port vdd -domain PD_top
+create_supply_port gnd -domain PD_top
 
-connect_supply_net VDD -ports VDD
-connect_supply_net GND -ports GND
+connect_supply_net vdd -ports vdd
+connect_supply_net gnd -ports gnd
 
-connect_supply_net VDD -pins vdd!
-connect_supply_net GND -pins gnd!
+connect_supply_net vdd -pins vdd!
+connect_supply_net gnd -pins gnd!
 
-connect_supply_net VDD -pins PWR*/A
-connect_supply_net GND -pins GND*/A
+connect_supply_net vdd -pins PWR1/A
+connect_supply_net gnd -pins GND1/A
 
-connect_supply_net VDD -pins vdd3r1!
-connect_supply_net VDD -pins vdd3r2!
-connect_supply_net VDD -pins vdd3o!
-connect_supply_net GND -pins gnd3r!
-connect_supply_net GND -pins gnd3o!
+connect_supply_net vdd -pins vdd3r1!
+connect_supply_net vdd -pins vdd3r2!
+connect_supply_net vdd -pins vdd3o!
+connect_supply_net gnd -pins gnd3r!
+connect_supply_net gnd -pins gnd3o!
