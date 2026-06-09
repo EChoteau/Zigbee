@@ -10,7 +10,7 @@ connect_supply_net gnd -ports gnd
 connect_supply_net vdd -pins vdd!
 connect_supply_net gnd -pins gnd!
 
-connect_supply_net vdd -pin  PWR*/A
+connect_supply_net vdd -pins  PWR*/A
 connect_supply_net gnd -pins  GND*/A
 
 connect_supply_net vdd -pins vdd3r1!
