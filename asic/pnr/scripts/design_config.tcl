@@ -67,15 +67,15 @@ addStripe -nets {gnd vdd} -layer $stripe_layer -direction $stripe_direction -wid
 # ConnectGlobalNets
 #////////////////////////////////////////////////////
 
-# globalNetConnect vdd -type pgpin -pin vdd! -all
-# globalNetConnect gnd -type pgpin -pin gnd! -all
-# globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -all
-# globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -all
-# globalNetConnect vdd3o!  -type pgpin -pin vdd3o!  -all
-# globalNetConnect gnd3r!  -type pgpin -pin gnd3r!  -all
-# globalNetConnect gnd3o!  -type pgpin -pin gnd3o!  -all
-# globalNetConnect vdd -type pgpin -pin A -inst PWR*
-# globalNetConnect gnd -type pgpin -pin A -inst GND*
+globalNetConnect vdd -type pgpin -pin vdd! -all
+globalNetConnect gnd -type pgpin -pin gnd! -all
+globalNetConnect vdd -type pgpin -pin vdd3r1! -all
+globalNetConnect vdd -type pgpin -pin vdd3r2! -all
+globalNetConnect vdd -type pgpin -pin vdd3o!  -all
+globalNetConnect gnd -type pgpin -pin gnd3r!  -all
+globalNetConnect gnd -type pgpin -pin gnd3o!  -all
+globalNetConnect vdd -type pgpin -pin A -inst PWR*
+globalNetConnect gnd -type pgpin -pin A -inst GND*
 
 # applyGlobalNets
 
@@ -88,8 +88,6 @@ add_text -layer MET4 -pt {1823.0 983.0} -label gnd -drafting true
 # Special_route
 #////////////////////////////////////////////////////
 
-read_power_intent -1801 ../scripts/zigbee_top_io.upf
-commit_power_intent
 #Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
