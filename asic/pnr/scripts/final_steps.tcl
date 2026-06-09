@@ -53,9 +53,11 @@ puts "=== Export GDSII ==="
 streamOut zigbee_top_io.gds \
     -mapFile gds2.map \
     -libName DesignLib \
-    -attachInstanceName 61 \
-    -attachNetName 61 \
-    -stripes 1 -units 1000 -mode ALL
+    -attachInstanceName 15 \
+    -attachNetName 15 \
+    -stripes 1 \
+    -units 1000 \
+    -mode ALL
 
 puts "=== Save DEF ==="
 defOut -floorplan -netlist -routing "$fab_dir/${module_name}.def"
