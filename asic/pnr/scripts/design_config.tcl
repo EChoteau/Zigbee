@@ -84,6 +84,10 @@ add_text -layer MET4 -pt {890.0 1826.0} -label vdd! -drafting true
 add_text -layer MET4 -pt {55.0 988.0} -label gnd! -drafting true
 add_text -layer MET4 -pt {1823.0 983.0} -label gnd! -drafting true
 
+# Adding decoupling capacitors
+setEndCapMode -rightEdge ENDCAPR -leftEdge ENDCAPL -prefix ENDCAP
+addEndCap -prefix ENDCAP
+
 #////////////////////////////////////////////////////
 # Special_route
 #////////////////////////////////////////////////////
@@ -94,7 +98,3 @@ setSrouteMode -viaConnectToShape { noshape }
 sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort allGeom } -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
-
-# Adding decoupling capacitors
-setEndCapMode -rightEdge ENDCAPR -leftEdge ENDCAPL -prefix ENDCAP
-addEndCap -prefix ENDCAP
