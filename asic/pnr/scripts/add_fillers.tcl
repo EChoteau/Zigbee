@@ -16,3 +16,11 @@ addFiller -cell FILL25 FILL10 FILL5 FILL2 FILL1 -prefix FILLER -fitGap
 if {[info exists module_name] && $module_name eq "zigbee_top"} {
 	amsFillperi
 }
+
+# Metal fill pour respecter les règles de densité AMS
+setMetalFill -layer MET2 \
+    -honorLefValue
+    -windowSize 100 100 -windowStep 50 50 \
+    -minWidth 0.8 -maxWidth 2 -minLength 1 -maxLength 20 \
+    -activeSpacing 0.8 -gapSpacing 1
+addMetalFill -layer {MET2}
