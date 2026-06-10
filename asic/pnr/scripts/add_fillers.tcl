@@ -11,16 +11,19 @@ proc amsFillperi {} {
 
 setFillerMode -core {FILLANT1 FILLANT2 FILLANT5 FILLANT10 FILLANT25} -preserveUserOrder true
 
-addFiller -cell FILL25 FILL10 FILL5 FILL2 FILL1 -prefix FILLER -fitGap
+addFiller -cell {FILLANT25 FILLANT10 FILLANT5 FILLANT2 FILLANT1 \
+                 FILLRT25 FILLRT10 FILLRT5 FILLRT2 FILLRT1 \
+                 FILL25 FILL10 FILL5 FILL2 FILL1} \
+    -prefix FILLER -fitGap
 
 if {[info exists module_name] && $module_name eq "zigbee_top"} {
 	amsFillperi
 }
 
 # Metal fill pour respecter les règles de densité AMS
-setMetalFill -layer MET2 \
-    -minDensity 30 -maxDensity 80 -preferredDensity 35 \
-    -windowSize 100 100 -windowStep 50 50 \
-    -minWidth 0.8 -maxWidth 2 -minLength 1 -maxLength 20 \
-    -activeSpacing 0.8 -gapSpacing 1
-addMetalFill -layer {MET2}
+# setMetalFill -layer MET2 \
+#     -minDensity 30 -maxDensity 80 -preferredDensity 35 \
+#     -windowSize 100 100 -windowStep 50 50 \
+#     -minWidth 0.8 -maxWidth 2 -minLength 1 -maxLength 20 \
+#     -activeSpacing 0.8 -gapSpacing 1
+# addMetalFill -layer {MET2}
