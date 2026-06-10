@@ -91,10 +91,15 @@ add_text -layer MET4 -pt {1823.0 983.0} -label gnd! -drafting true
 #Pour faire les stripe d'alimentation à l'horizontal
 setSrouteMode -viaConnectToShape { noshape }
 
-sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
+sroute -connect { blockPin padPin padRing corePin floatingStripe } -layerChangeRange { MET1 MET4 } -padPinPortConnect { allPort oneGeom } -padRingWidth 30 -padPinTarget { nearestTarget } -floatingStripeTarget { blockring padring ring stripe ringpin blockpin followpin } -allowJogging 1 -crossoverViaLayerRange { MET1 MET4 } -nets { gnd! vdd! } -allowLayerChange 1 -targetViaLayerRange { MET1 MET4 }
 
 editPowerVia -add_vias 1
 
 # Adding decoupling capacitors
 setEndCapMode -rightEdge ENDCAPR -leftEdge ENDCAPL -prefix ENDCAP
 addEndCap -prefix ENDCAP
+
+# Metal fill pour respecter les règles de densité AMS
+setMetalFill -layer POLY1 -minDensity 14 -maxDensity 80 -windowSize 200 -windowStep 100
+setMetalFill -layer MET2  -minDensity 30 -maxDensity 80 -windowSize 200 -windowStep 100
+addMetalFill -layer {POLY1 MET2}
