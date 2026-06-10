@@ -100,6 +100,9 @@ setEndCapMode -rightEdge ENDCAPR -leftEdge ENDCAPL -prefix ENDCAP
 addEndCap -prefix ENDCAP
 
 # Metal fill pour respecter les règles de densité AMS
-setMetalFill -layer POLY1 -minDensity 14 -maxDensity 80 -windowSize {2000 2000} -windowStep {100 100}
-setMetalFill -layer MET2  -minDensity 30 -maxDensity 80 -windowSize {2000 2000} -windowStep {100 100}
-addMetalFill -layer {POLY1 MET2}
+setMetalFill -layer MET2 \
+    -minDensity 30 -maxDensity 80 -preferredDensity 35 \
+    -windowSize 200 200 -windowStep 100 100 \
+    -minWidth 0.6 -maxWidth 10 -minLength 1 -maxLength 20 \
+    -activeSpacing 0.8 -gapSpacing 0.5
+addMetalFill -layer {MET2}
