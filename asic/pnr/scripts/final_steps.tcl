@@ -37,7 +37,7 @@ saveNetlist "$output_root/${module_name}_postroute.v"
 # VIRTUOSO / LVS: Physical netlist with VDD/VSS connected throughout the design
 puts "=== Save Physical Netlist for Virtuoso/LVS ==="
 saveNetlist "zigbee_top_lvs.v" -excludeCellInst {FILLRT1 FILLRT2 FILLRT5 FILLRT10 FILLRT25 FILL1 ENDCAPL ENDCAPR ENDCAP \
-                                            PERI_SPACER_100_P PERI_SPACER_50_P PERI_SPACER_20_P PERI_SPACER_10_P PERI_SPACER_5_P PERI_SPACER_2_P PERI_SPACER_1_P PERI_SPACER_01_P CORNERP \} -includePhysicalInst -excludeLeafCell
+                                            PERI_SPACER_100_P PERI_SPACER_50_P PERI_SPACER_20_P PERI_SPACER_10_P PERI_SPACER_5_P PERI_SPACER_2_P PERI_SPACER_1_P PERI_SPACER_01_P CORNERP} -includePhysicalInst -excludeLeafCell
  #   -phys \
 #    -includePowerGround \
     # -excludeCellInst {FILL25 FILL10 FILL5 FILL2 FILL1 \
