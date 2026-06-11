@@ -13,7 +13,7 @@ setFillerMode -core {FILLANT1 FILLANT2 FILLANT5 FILLANT10 FILLANT25} -preserveUs
 
 addFiller -cell {FILLANT25 FILLANT10 FILLANT5 FILLANT2 FILLANT1 \
                  FILLRT25 FILLRT10 FILLRT5 FILLRT2 FILLRT1 \
-                 FILL25 FILL10 FILL5 FILL2 FILL1} \
+                 FILL25 FILL10 FILL5 FILL2 } \
     -prefix FILLER -fitGap
 
 if {[info exists module_name] && $module_name eq "zigbee_top"} {
