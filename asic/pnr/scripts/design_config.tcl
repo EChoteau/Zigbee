@@ -67,15 +67,29 @@ addStripe -nets {gnd! vdd!} -layer $stripe_layer -direction $stripe_direction -w
 # ConnectGlobalNets
 #////////////////////////////////////////////////////
 
-globalNetConnect vdd! -type pgpin -pin vdd! -all
-globalNetConnect gnd! -type pgpin -pin gnd! -all
-globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -all
-globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -all
-globalNetConnect vdd3o! -type pgpin -pin vdd3o!  -all
-globalNetConnect gnd3r! -type pgpin -pin gnd3r!  -all
-globalNetConnect gnd3o! -type pgpin -pin gnd3o!  -all
-globalNetConnect vdd! -type pgpin -pin A -inst PWR*
-globalNetConnect gnd! -type pgpin -pin A -inst GND*
+# globalNetConnect vdd! -type pgpin -pin vdd! -all
+# globalNetConnect gnd! -type pgpin -pin gnd! -all
+# globalNetConnect vdd3r1! -type pgpin -pin vdd3r1! -all
+# globalNetConnect vdd3r2! -type pgpin -pin vdd3r2! -all
+# globalNetConnect vdd3o! -type pgpin -pin vdd3o!  -all
+# globalNetConnect gnd3r! -type pgpin -pin gnd3r!  -all
+# globalNetConnect gnd3o! -type pgpin -pin gnd3o!  -all
+# globalNetConnect vdd! -type pgpin -pin A -inst PWR*
+# globalNetConnect gnd! -type pgpin -pin A -inst GND*
+
+##--- Define global Power nets - make global connections
+clearGlobalNets
+set globalNetsList {{vdd! vdd!} {gnd! gnd!}}
+set globalNetsList [lappend globalNetsList {vdd3r1! vdd3r1!} {vdd3r2! vdd3r2!} {vdd3o! vdd3o!} {gnd3r! gnd3r!} {gnd3o! gnd3o!}]
+clearGlobalNets
+foreach net $globalNetsList {
+    set n [lindex $net 0]
+    set p [lindex $net 1]
+    globalNetConnect $n -type pgpin -pin $p -inst * -module {}
+    print "---# GlobalConnect all $p pins to net $n"
+}
+
+
 
 # applyGlobalNets
 
