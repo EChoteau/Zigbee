@@ -74,8 +74,7 @@ addStripe -nets {gnd! vdd!} -layer $stripe_layer -direction $stripe_direction -w
 # globalNetConnect vdd3o! -type pgpin -pin vdd3o!  -all
 # globalNetConnect gnd3r! -type pgpin -pin gnd3r!  -all
 # globalNetConnect gnd3o! -type pgpin -pin gnd3o!  -all
-# globalNetConnect vdd! -type pgpin -pin A -inst PWR*
-# globalNetConnect gnd! -type pgpin -pin A -inst GND*
+
 
 ##--- Define global Power nets - make global connections
 clearGlobalNets
@@ -89,7 +88,8 @@ foreach net $globalNetsList {
     print "---# GlobalConnect all $p pins to net $n"
 }
 
-
+globalNetConnect vdd! -type pgpin -pin A -inst PWR*
+globalNetConnect gnd! -type pgpin -pin A -inst GND*
 
 # applyGlobalNets
 
