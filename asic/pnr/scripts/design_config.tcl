@@ -84,9 +84,7 @@ add_text -layer MET4 -pt {890.0 1826.0} -label vdd! -drafting true
 add_text -layer MET4 -pt {55.0 988.0} -label gnd! -drafting true
 add_text -layer MET4 -pt {1823.0 983.0} -label gnd! -drafting true
 
-# Adding decoupling capacitors
-setEndCapMode -rightEdge ENDCAPR -leftEdge ENDCAPL -prefix ENDCAP
-addEndCap -prefix ENDCAP
+
 
 #////////////////////////////////////////////////////
 # Special_route

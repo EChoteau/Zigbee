@@ -5,9 +5,8 @@
 # Using a technology node greater than or equal to 130 nm
 setDesignMode -process 250
 
-# Placement of decoupling capacitors between vdd! gnd! power rails
-setEndCapMode -prefix ENDCAP -leftEdge ENDCAPL -rightEdge ENDCAPR
-addEndCap -prefix ENDCAP
+# Adding decoupling capacitors
+addEndCap -preCap ENDCAPL -postCap ENDCAPR -prefix ENDCAP
 #addEndCap -preCap ENDCAPL -postCap ENDCAPR -prefix ENDCAP
 
 setViaGenMode -optimize_cross_via true -optimize_via_on_routing_track true
