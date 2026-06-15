@@ -54,9 +54,6 @@ puts "=== Export GDSII ==="
 streamOut zigbee_top_io.gds \
     -mapFile gds2.map \
     -libName DesignLib \
-    -attachInstanceName 15 \
-    -attachNetName 15 \
-    -stripes 1 \
     -units 1000 \
     -mode ALL
 
